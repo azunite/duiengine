@@ -1,0 +1,47 @@
+#pragma once
+
+#include "DuiWindowManager.h"
+
+namespace DuiEngine{
+
+typedef struct tagTIMERINFO
+{
+	HDUIWND hDuiWnd;
+	UINT_PTR uTimerID;
+}TIMERINFO;
+
+
+class DUI_EXP CDuiTimerEx:public Singleton<CDuiTimerEx>
+{
+public:
+	static BOOL SetTimer(HDUIWND hDuiWnd,UINT_PTR uTimerID,UINT nElapse)
+	{
+		return getSingleton()._SetTimer(hDuiWnd,uTimerID,nElapse);
+	}
+
+	static void KillTimer(HDUIWND hDuiWnd,UINT_PTR uTimerID)
+	{
+		getSingleton()._KillTimer(hDuiWnd,uTimerID);
+	}
+
+	static void KillTimer(HDUIWND hDuiWnd)
+	{
+		getSingleton()._KillTimer(hDuiWnd);
+	}
+protected:
+	BOOL _SetTimer(HDUIWND hDuiWnd,UINT_PTR uTimerID,UINT nElapse);
+
+	void _KillTimer(HDUIWND hDuiWnd,UINT_PTR uTimerID);
+
+	void _KillTimer(HDUIWND hDuiWnd);
+
+	CAtlMap<UINT_PTR,TIMERINFO> m_mapId2Info;
+
+	static VOID CALLBACK _TimerProc(HWND hwnd,
+		UINT uMsg,
+		UINT_PTR idEvent,
+		DWORD dwTime
+		);
+};
+
+}//namespace DuiEngine

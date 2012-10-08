@@ -1,0 +1,170 @@
+﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="1" translucent="0"  nomaxsize="0">
+	<body>
+    <dlg id="100" pos="0,0,-0,-0" class="cls_dlg_frame">
+      <caption id="101" pos="0,0,-0,29">
+        <text pos="11,9" class="cls_txt_red">DUI-Demo ver:%str1%</text>
+        <imgbtn id="1" skin="btn_sys_close"    pos="-45,0" tip="close" animate="0"/>
+        <imgbtn id="2" skin="btn_sys_maximize"  pos="-83,0" animate="0" />
+        <imgbtn id="3" skin="btn_sys_restore"  pos="-83,0" show="0" animate="0" />
+        <imgbtn id="5" skin="btn_sys_minimize" pos="-121,0" animate="0" />
+      </caption>
+
+      <tabctrl pos="5,29,-5,-5" id="2000" cursel="1" animatesteps="10">
+        <tab id="113" title="miscellaneous" sep="5">
+          <img pos="0,0" skin="icons" tip="img tip" msgtransparent="0"/>
+          <check id="1300" pos="40,20" crtext="ff0000" >test1</check>
+          <check id="1301" pos="40,70">test2</check>
+          <dlg pos="0,90,-0,-0">
+            <radio id="1303" pos="10,10">radio1</radio>
+            <radio id="1304" pos="110,10">radio2</radio>
+            <radio id="1305" pos="10,60">radio3</radio>
+            <radio id="1306" pos="110,60">radio4</radio>
+          </dlg>
+          <link id="1380" pos="10,250" maxwidth="100" class="cls_btn_weblink" dotted="1" href="www.yy.com">link</link>
+          <img skin="icons"/>
+          <button id="1360" class="normalbtn" pos="10,200,150,230">dui menu</button>
+          <hotkey id="1340" pos="350,20,450,45" />
+          <button id="1307" pos="200,10,300,35" class="normalbtn">IE Ctrl</button>
+          <combobox id="1310" pos="100,40,300,64" dropdown="0" dropheight="250" class="cls_edit" font="8300" dotted="0" cursel="0">
+            <liststyle  class="cls_edit" crbg="FF0000" itemheight="50" id_text="1" id_icon="2" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
+              <template>
+                <text id="1" pos="5,2" crtext="ff0000"/>
+                <button id="3" pos="0,20,100,40" class="normalbtn" tip="delete cur item">delete</button>
+                <link id="4" pos="100,0" maxwidth="20" class="cls_btn_weblink" dotted="1" href="www.yy.com">link test</link>
+                 <img id="2" pos1="1,2" skin="icons" msgtransparent="0"/>
+             </template>
+            </liststyle>
+            <editstyle crtext="ff0000" align="left" crbg="000088"/>
+            <items>
+              <item text="combobox.item1" icon="1" data="100"/>
+              <item text="combobox.item2" icon="2" data="100"/>
+              <item text="combobox.item3" icon="3" data="103"/>
+              <item text="combobox.item4" icon="4" data="100"/>
+              <item text="combobox.item5" icon="5" data="105"/>
+              <item text="combobox.item6" icon="6" data="100"/>
+            </items>
+          </combobox>
+        </tab>
+        <tab id="114" title="richedit">
+          <duiedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,40,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" hscrollbar="0" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left">richedit test 2012</duiedit>
+          <check id="1142" pos="10,|10">check 1</check>
+          <check id="1143" pos="100,|10">check 2</check>
+          <button name="IDC_REPSEL"  pos="200,|10,300,|35" class="normalbtn">repsel</button>
+        </tab>
+        <tab id="115" title="scrollview">
+          <scrollview id="1150" pos="10,0,-10,-10" viewwid="900" viewhei="5000">
+            <button class="normalbtn" id="11501" tip="tip test" pos="20,50,200,80">test</button>
+          </scrollview>
+        </tab>
+        <tab id="116" title="attribute">
+          <button class="normalbtn" tabstop="1"  name="测试" pos="20,50,200,80">reposition</button>
+        </tab>
+        <tab id="117" title="duilistbox">
+          <duilistbox name="mylist" pos="10,0,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
+            <items>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" id="20" pos="300,3,-10,-3" tip="list item tip">button</button>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3"  tip="list item tip2">button</button>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              </item>
+            </items>
+          </duilistbox>
+        </tab>
+        <tab id="118" title="duitreectrl">
+          <treectrl pos="10,0,-10,-10"  name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10">
+            <!--             <switch /> -->
+            <item>
+              <text pos="10,5" crtext="ff0000">red test</text>
+              <text>normal text</text>
+              <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+                <item>
+                  <text pos="10,5" crtext="ff0000">red test</text>
+                  <text>normal text</text>
+                  <button class="normalbtn" pos="300,3,-10,-3">button</button>
+                  <item>
+                    <text pos="10,5" crtext="ff0000">red test</text>
+                    <text>normal text</text>
+                    <button class="normalbtn" pos="300,3,-10,-3">button</button>
+                  </item>
+                </item>
+              </item>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test</text>
+                <text>normal text</text>
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+              </item>
+            </item>
+          </treectrl>
+        </tab>
+        <tab id="118" title="splitwnd">
+          <splitrow id="1180" pos="10,0,-10,-10" skinsep="skin_split_horz" sepsize="6">
+            <pane idealsize="250" minsize="30" priority="0" crbg="FF0000">
+              <text pos="|-50,|-20">pane1 priority=2</text>
+            </pane>
+            <pane idealsize="400" minsize="30" priority="1">
+              <splitcol id="1180" pos="0,0,-0,-0" skinsep="skin_split_vert" sepsize="6">
+                <pane idealsize="200" minsize="30" priority="0" crbg="000088">
+                  <text pos="|-50,|-20">pane2.1 priority=0</text>
+                </pane>
+                <pane idealsize="400" minsize="30" priority="1" crbg="008800">
+                  <text pos="|-50,|-20">pane2.2 priority=1</text>
+                </pane>
+              </splitcol>
+            </pane>
+          </splitrow>
+        </tab>
+      </tabctrl>
+
+      <img pos="100,100" skin="bmpmask"/>
+
+    </dlg>
+	</body>
+</layer>
+
+
+
+

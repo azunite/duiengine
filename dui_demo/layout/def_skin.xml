@@ -1,0 +1,41 @@
+<skins>
+  <imgframe name="dlg_frame" owner="DUI-DEMO"   src="1" left="5" right="5" top="40" bottom="40"/>
+  
+	<imglst name="ico_logo"          src="500"/>
+
+	<imglst name="btncheckbox"         src="51" subwidth="15"  />
+	<imglst name="btnRadio"            src="52" subwidth="15"  />
+  <imglst name="focuscheckbox" src="53"/>
+  <imglst name="focusRadio" src="54"/>
+  
+	<imglst name="btn_sys_close"    src="80" subwidth="38" />
+	<imglst name="btn_sys_minimize" src="81" subwidth="36" />
+  <imglst name="btn_sys_maximize" src="82" subwidth="36" />
+  <imglst name="btn_sys_restore" src="83" subwidth="36" />
+
+  <imglst name="tabskin_default" src="103" subwidth="94"/>
+  
+	<button name="normalbtn" border="7D9EBC" bg="FBFCFD" bgup="FEFEFE" 
+			bgdown="C6E2FD" bguphover="FEFEFE" bgdownhover="DBEDFE" 
+			bguppush="C6E2FD" bgdownpush="FEFEFE"/>
+
+  <scrollbar name="sb_common" src="104" thumbleft="3"/>
+
+  <imgframe name="skin_editnc" src="105" subwidth="26" left="2" top="2"/>
+  <imgframe name="skin_split_vert" src="106" top="20" bottom="10"/>
+  <imgframe name="skin_split_horz" src="107" left="20" right="10"/>
+  <imgframe name="comboboxbtn" src="108" subwidth="16"/>
+  <imglst name="icons" src="109" subwidth="32"/>
+  <imglst name="skin_menuicon" src="110" subwidth="18"/>
+  <imglst name="skin_menusplit" src="201"/>
+  <imgframe name="skin_menuitem" src="200" subwidth="100" left="35" right="5"/>
+  <imgframe name="skin_menubg" src="202" left="30" top="5" right="5"/>
+  <imglst name="skin_menucheck" src="203" subwidth="16"/>
+  <border name="skin_menuborder" src="204" left="2" top="2" border="2,2,2,2" key="FF00FF" alpha="100"/>
+  <imglst name="skin_webbtn_back" src="210" subwidth="27"/>
+  <imglst name="skin_webbtn_forward" src="211" subwidth="27"/>
+  <imglst name="skin_webbtn_refresh" src="212" subwidth="27"/>
+  <imglst name="bmpmask" src="300">
+    <imgparam mask="FF00FF"/>
+  </imglst>
+</skins>

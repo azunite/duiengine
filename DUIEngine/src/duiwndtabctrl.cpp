@@ -1,0 +1,491 @@
+#include "duistd.h"
+#include "duiwndtabctrl.h"
+
+namespace DuiEngine{
+
+void CDuiTabSlide::SetPage1( CDuiWindow *pPage1 )
+{
+	ATLASSERT(!m_hMemDC && !m_hBmp);
+
+	CRect rcPage=m_rcWindow;
+	CDCHandle dcPage=pPage1->GetDuiDC(&rcPage,OLEDC_NODRAW);
+	m_hMemDC=CreateCompatibleDC(dcPage);
+	m_hBmp=CGdiAlpha::CreateBitmap32(dcPage,rcPage.Width()*2,rcPage.Height());
+	::SelectObject(m_hMemDC,m_hBmp);
+
+	CRgn  rngNull;
+	pPage1->PaintBackground(dcPage,&rcPage);
+	int nSaveDC=dcPage.SaveDC();
+	pPage1->BeforePaintEx(dcPage);
+	pPage1->RedrawRegion(dcPage,rngNull);
+	dcPage.RestoreDC(nSaveDC);
+
+	BitBlt(m_hMemDC,0,0,rcPage.Width(),rcPage.Height(),dcPage,rcPage.left,rcPage.top,SRCCOPY);
+	pPage1->ReleaseDuiDC(dcPage);
+}
+
+void CDuiTabSlide::SetPage2( CDuiWindow *pPage2 )
+{
+	ATLASSERT(m_hMemDC && m_hBmp);
+	CRect rcPage=m_rcWindow;
+	CDCHandle dcPage=pPage2->GetDuiDC(&rcPage,OLEDC_NODRAW);
+
+	CRgn  rngNull;
+	pPage2->PaintBackground(dcPage,&rcPage);
+	int nSaveDC=dcPage.SaveDC();
+	pPage2->BeforePaintEx(dcPage);
+	pPage2->RedrawRegion(dcPage,rngNull);
+	dcPage.RestoreDC(nSaveDC);
+	BitBlt(m_hMemDC,rcPage.Width(),0,rcPage.Width(),rcPage.Height(),dcPage,rcPage.left,rcPage.top,SRCCOPY);
+	pPage2->ReleaseDuiDC(dcPage);
+}
+
+void CDuiTabSlide::Slide( SLIDEDIR sd,int nSteps/*=20*/ )
+{
+	CRect rcPage=m_rcWindow;
+
+	SetVisible(TRUE);
+
+	BringWindowToTop();
+	for(int i=0;i<nSteps;i++)
+	{
+		CDCHandle dcPage=GetDuiDC(NULL,OLEDC_OFFSCREEN);
+		switch(sd)
+		{
+		case SD_LEFTRIGHT:
+			BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width()*(i+1)/nSteps,rcPage.Height(),m_hMemDC,rcPage.Width()+rcPage.Width()*(nSteps-i-1)/nSteps,0,SRCCOPY);
+			BitBlt(dcPage,rcPage.left+rcPage.Width()*(i+1)/nSteps,rcPage.top,rcPage.Width()*(nSteps-i-1)/nSteps,rcPage.Height(),m_hMemDC,0,0,SRCCOPY);
+			break;
+		case SD_RIGHTLEFT:
+			BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height(),m_hMemDC,rcPage.Width()*(i+1)/nSteps,0,SRCCOPY);
+			break;
+		case SD_TOPBOTTOM:
+			BitBlt(dcPage,rcPage.left,rcPage.top+rcPage.Height()*(nSteps-i-1)/nSteps,rcPage.Width(),rcPage.Height()*(i+1)/nSteps,
+				m_hMemDC,rcPage.Width(),0,SRCCOPY);//new
+			BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,
+				m_hMemDC,0,rcPage.Height()*(i+1)/nSteps,SRCCOPY);//old
+			break;
+		case SD_BOTTOMTOP:
+			BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height()*(i+1)/nSteps,
+				m_hMemDC,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,SRCCOPY);//new
+			BitBlt(dcPage,rcPage.left,rcPage.top+rcPage.Height()*(i+1)/nSteps,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,
+				m_hMemDC,0,0,SRCCOPY);//old
+			break;
+		}
+		PaintForeground(dcPage,&rcPage);
+		ReleaseDuiDC(dcPage);
+		Sleep(10);
+	}
+
+	DeleteDC(m_hMemDC);
+	DeleteObject(m_hBmp);
+	m_hMemDC=NULL;
+	m_hBmp=NULL;
+	SetVisible(FALSE);
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+// CDuiTabCtrl
+
+CDuiTabCtrl::CDuiTabCtrl() : m_nCurrentPage(0)
+, m_pSkinTab(NULL)
+, m_pSkinIcon(NULL)
+, m_pSkinSplitter(NULL)
+, m_nTabSpacing(0)
+, m_nTabWidth(0)
+, m_nTabHeight(0)
+, m_nHoverTabItem(-1)
+, m_nTabAlign(AlignTop)
+, m_nAnimateSteps(0)
+{
+
+}
+
+void CDuiTabCtrl::OnPaint( CDCHandle dc )
+{
+	DuiDCPaint duiDC;
+	BeforePaint(dc,duiDC);
+	CRect rcTabs;
+	CRect rcItem,rcItemPrev;
+	CRect rcSplit;
+	DWORD dwState;
+	GetClient(&rcTabs);
+	if(m_nTabAlign==AlignLeft)
+		rcTabs.right=rcTabs.left+m_nTabWidth;
+	else
+		rcTabs.bottom=rcTabs.top+m_nTabHeight;
+	int nSaveDC=dc.SaveDC();
+	CRgn rgnTabs;
+	rgnTabs.CreateRectRgnIndirect(&rcTabs);
+	dc.SelectClipRgn(rgnTabs,RGN_AND);
+	for(int i=0;i<GetItemCount();i++)
+	{
+		dwState=DuiWndState_Normal;
+		if(i == m_nCurrentPage) dwState=DuiWndState_PushDown;
+		else if(i== m_nHoverTabItem) dwState=DuiWndState_Hover;
+
+		GetItemRect(i,rcItem);
+		if(i>0)
+		{
+			rcSplit=rcItem;
+			if(m_nTabAlign==AlignLeft)
+			{
+				rcSplit.top=rcItemPrev.bottom;
+			}else
+			{
+				rcSplit.left=rcItemPrev.right;
+			}
+		}
+
+		if(!rcSplit.IsRectEmpty() && m_pSkinSplitter)
+		{
+			m_pSkinSplitter->Draw(dc,rcSplit,0);
+		}
+		DrawItem(dc,rcItem,i,dwState);
+		rcItemPrev=rcItem;
+	}
+	dc.RestoreDC(nSaveDC);
+	AfterPaint(dc,duiDC);
+}
+
+void CDuiTabCtrl::OnCalcChildPos( CDuiWindow *pDuiWndChild )
+{
+	CRect rcClient;
+	GetClient(&rcClient);
+	if(m_nTabAlign==AlignLeft)
+		rcClient.left+=m_nTabWidth;
+	else
+		rcClient.top+=m_nTabHeight;
+	DUIWNDPOS WndPos = {rcClient.left,rcClient.top,rcClient.Width(),rcClient.Height()};
+	pDuiWndChild->DuiSendMessage(WM_WINDOWPOSCHANGED, NULL, (LPARAM)&WndPos);
+}
+
+void CDuiTabCtrl::OnLButtonDown( UINT nFlags, CPoint point )
+{
+	CRect rcItem;
+	BOOL bClickMove = TRUE;
+	int nTabCount=GetItemCount();
+	for (int i = 0; i < nTabCount; i ++)
+	{
+		GetItemRect(i, rcItem);
+
+		if (rcItem.PtInRect(point))
+		{
+			bClickMove = FALSE;
+			if (i == m_nCurrentPage)         
+				continue;
+
+			SetCurSel(i);				
+			break;
+		}
+	}
+	if (bClickMove)
+	{
+		__super::OnLButtonDown(nFlags,point);
+	}
+}
+
+BOOL CDuiTabCtrl::RemoveItem( int nIndex )
+{
+	CDuiTab * pTab = GetItem(nIndex); 
+
+	DestroyChild(pTab); 
+	m_lstPages.RemoveAt(nIndex);
+
+	if (m_nCurrentPage < 0 || m_nCurrentPage >= GetItemCount())
+	{
+		SetCurSel(0); 
+	}
+
+	NotifyInvalidate(); 
+	return TRUE;
+}
+
+void CDuiTabCtrl::RemoveAllItems( void )
+{
+	int Count = GetItemCount(); 
+	for (int i = 0; i < Count; i++)
+	{
+		RemoveItem(0); 
+	}
+}
+
+void CDuiTabCtrl::OnMouseMove( UINT nFlags, CPoint point )
+{
+	CRect rcItem;
+	int nOldHover=m_nHoverTabItem;
+	m_nHoverTabItem=-1;
+	int nTabCount=GetItemCount();
+	for (int i = 0; i < nTabCount; i ++)
+	{
+		GetItemRect(i, rcItem);
+
+		if (rcItem.PtInRect(point))
+		{
+			m_nHoverTabItem=i;
+			break;
+		}
+	}
+
+	if (m_nHoverTabItem != nOldHover)
+	{
+		if(nOldHover!=-1)
+		{
+			GetItemRect(nOldHover, rcItem);
+			if(nOldHover!=m_nCurrentPage) 
+				NotifyInvalidateRect(rcItem);
+			DUINMTABITEMLEAVE nms;
+			nms.hdr.code=DUINM_TAB_ITEMLEAVE;
+			nms.hdr.hwndFrom=0;
+			nms.hdr.idFrom=GetCmdID();
+			nms.iItem=nOldHover;
+			nms.rcItem=rcItem;
+			DuiNotify((LPNMHDR)&nms);
+		}
+		if(m_nHoverTabItem!=-1)
+		{
+			GetItemRect(m_nHoverTabItem, rcItem);
+			if(m_nHoverTabItem!=m_nCurrentPage)
+				NotifyInvalidateRect(rcItem);
+			DUINMTABITEMHOVER nms;
+			nms.hdr.code = DUINM_TAB_ITEMHOVER;
+			nms.hdr.hwndFrom = 0;
+			nms.hdr.idFrom = GetCmdID();
+			nms.iItem = m_nHoverTabItem;
+			nms.rcItem = rcItem;
+			DuiNotify((LPNMHDR)&nms);
+		}
+	}
+}
+
+void CDuiTabCtrl::OnDestroy()
+{
+	for(int i=GetItemCount()-1;i>=0;i--)
+	{
+		DestroyChild(m_lstPages[i]); 
+	}
+	m_lstPages.RemoveAll();
+}
+
+LRESULT CDuiTabCtrl::OnCreate( LPVOID )
+{
+	InsertChild(&m_tabSlide);
+	return 0;
+}
+
+BOOL CDuiTabCtrl::SetCurSel( int nIndex )
+{
+	if( nIndex < 0 || (m_nCurrentPage == nIndex)) return FALSE;
+	int nOldPage = m_nCurrentPage;
+
+	DUINMTABSELCHANGE nms;
+	nms.hdr.code = DUINM_TAB_SELCHANGING;
+	nms.hdr.hwndFrom = NULL;
+	nms.hdr.idFrom = GetCmdID();
+	nms.uTabID = GetCmdID();
+	nms.uTabItemIDNew = nIndex;
+	nms.uTabItemIDOld = nOldPage;
+	nms.bCancel = FALSE;
+
+	LRESULT lRet = DuiNotify((LPNMHDR)&nms);
+
+	if (nms.bCancel)
+		return FALSE;
+
+	CDuiTab *pTab=GetItem(nIndex);
+
+	CRect rcItem;
+
+	GetItemRect(m_nCurrentPage, rcItem);
+	NotifyInvalidateRect(rcItem);
+	GetItemRect(nIndex, rcItem);
+	NotifyInvalidateRect(rcItem);
+
+	if(m_nAnimateSteps && IsVisible(TRUE))
+	{
+		CDuiTab *pTab=GetItem(m_nCurrentPage);
+		CRect rcTab;
+		pTab->GetRect(&rcTab);
+		m_tabSlide.Move(rcTab);
+		m_tabSlide.SetPage1(pTab);
+	}
+
+	pTab = GetItem(m_nCurrentPage);
+	if( pTab) pTab->DuiSendMessage(WM_SHOWWINDOW,FALSE);
+
+	m_nCurrentPage = nIndex;
+
+	pTab = GetItem(m_nCurrentPage);
+	if( pTab) pTab->DuiSendMessage(WM_SHOWWINDOW,TRUE);
+
+	DUINMTABSELCHANGED nms2;
+	nms2.hdr.code = DUINM_TAB_SELCHANGED;
+	nms2.hdr.hwndFrom = NULL;
+	nms2.hdr.idFrom = GetCmdID();
+	nms2.uTabID = GetCmdID();
+	nms2.uTabItemIDNew = nIndex;
+	nms2.uTabItemIDOld = nOldPage;
+
+	if(m_nAnimateSteps && IsVisible(TRUE))
+	{
+		SLIDEDIR sd=SD_RIGHTLEFT;
+		if(m_nTabAlign==AlignTop)
+		{
+			if(nOldPage<nIndex) sd=SD_RIGHTLEFT;
+			else sd=SD_LEFTRIGHT;
+		}else
+		{
+			if(nOldPage<nIndex) sd=SD_BOTTOMTOP;
+			else sd=SD_TOPBOTTOM;
+		}
+		m_tabSlide.SetPage2(GetItem(m_nCurrentPage));
+
+		m_tabSlide.Slide(sd,m_nAnimateSteps);
+	}
+	DuiNotify((LPNMHDR)&nms2);
+	if(IsVisible(TRUE))
+	{
+		NotifyInvalidate();
+	}
+
+	return TRUE;
+}
+
+BOOL CDuiTabCtrl::SetItemTitle( int nIndex, LPCTSTR lpszTitle )
+{
+	CDuiTab* pTab = GetItem(nIndex);
+	if (pTab)
+	{
+		pTab->SetTitle(lpszTitle);
+
+		CRect rcTabs;
+		GetClient(&rcTabs);
+		if(m_nTabAlign==AlignLeft)
+			rcTabs.right=rcTabs.left+m_nTabWidth;
+		else
+			rcTabs.bottom=rcTabs.top+m_nTabHeight;
+		NotifyInvalidateRect(rcTabs);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+BOOL CDuiTabCtrl::LoadChildren( TiXmlElement* pTiXmlChildElem )
+{
+	for (TiXmlElement* pXmlChild = pTiXmlChildElem; NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement())
+	{
+		InsertItem(pXmlChild,-1,TRUE);
+	}
+
+	if((m_nCurrentPage==-1 || m_nCurrentPage>=m_lstPages.GetCount()) && m_lstPages.GetCount()>0)
+	{
+		m_nCurrentPage=0;
+	}
+	if(m_nCurrentPage!=-1)
+	{
+		GetItem(m_nCurrentPage)->DuiSendMessage(WM_SHOWWINDOW,TRUE);
+	}
+	return TRUE;
+}
+
+BOOL CDuiTabCtrl::InsertItem( LPCWSTR lpContent ,int iInsert/*=-1*/)
+{
+	CStringA utf8_xml=CW2A(lpContent,CP_UTF8); 
+	TiXmlDocument * doc = new TiXmlDocument();
+	doc->Parse( utf8_xml ); 
+
+	TiXmlHandle docHandle(doc); 
+	TiXmlNode * root = docHandle.FirstChild("tab").ToElement(); 
+	if (root == NULL)
+	{
+		delete doc; 
+		return NULL; 
+	}
+	TiXmlElement * pTabElement = root->ToElement(); 
+	BOOL val =InsertItem(pTabElement,iInsert)!=-1; 
+	delete doc; 
+	return val;
+}
+
+int CDuiTabCtrl::InsertItem( TiXmlElement *pXmlElement,int iInsert/*=-1*/,BOOL bLoading/*=FALSE*/ )
+{
+	CDuiTab *pChild=NULL;
+	if (!CDuiTab::CheckAndNew(pXmlElement->Value(),(void**)&pChild)) return -1;
+
+	if(iInsert==-1) iInsert=m_lstPages.GetCount();
+	InsertChild(pChild);
+	m_lstPages.InsertAt(iInsert,pChild);
+
+	pChild->Load(pXmlElement);
+	pChild->SetPositionType(SizeX_FitParent|SizeY_FitParent);
+
+	if(!bLoading && m_nCurrentPage>=iInsert) m_nCurrentPage++;
+
+	if(!bLoading)
+	{
+		OnCalcChildPos(pChild);
+		NotifyInvalidate();
+	}
+
+	return iInsert;
+}
+
+BOOL CDuiTabCtrl::GetItemRect( int nIndex, CRect &rcItem )
+{
+	if (nIndex < 0 || nIndex >= (int)GetItemCount())
+		return FALSE;
+
+	SIZE size = {0, 0};
+
+	if (m_pSkinTab)
+		size = m_pSkinTab->GetSkinSize();
+
+	if (0 != m_nTabHeight)
+		size.cy = m_nTabHeight;
+	if(0 != m_nTabWidth) 
+		size.cx=m_nTabWidth;
+
+	rcItem.SetRect(m_rcWindow.left, m_rcWindow.top, m_rcWindow.left + size.cx, m_rcWindow.top + size.cy);
+
+	switch (m_nTabAlign)
+	{
+	case AlignTop:
+		rcItem.OffsetRect(nIndex * (rcItem.Width()+ m_nTabSpacing),0); 
+		break;
+	case AlignLeft:
+		rcItem.OffsetRect(0, nIndex * (rcItem.Height()+ m_nTabSpacing)); 
+		break;
+	}
+
+	return TRUE;
+}
+
+CDuiTab* CDuiTabCtrl::GetItem( int nIndex )
+{
+	if(nIndex<0 || nIndex>=GetItemCount()) return NULL;
+	return m_lstPages[nIndex];
+}
+
+void CDuiTabCtrl::DrawItem( CDCHandle dc,const CRect &rcItem,int iItem,DWORD dwState )
+{
+	if(m_pSkinTab) 
+		m_pSkinTab->Draw(dc,rcItem,IIF_STATE3(dwState,DuiWndState_Normal,DuiWndState_Hover,DuiWndState_PushDown));
+
+	if(m_pSkinIcon)
+	{
+		CRect rcIcon(m_ptIcon,m_pSkinIcon->GetSkinSize());
+		m_pSkinIcon->Draw(dc,rcIcon,iItem);
+	}
+	if(m_ptText.x==0 && m_ptText.y==0)
+	{
+		CRect rc=rcItem;
+		CGdiAlpha::DrawText(dc,GetItem(iItem)->GetTitle(),-1,&rc,DT_SINGLELINE|DT_VCENTER|DT_CENTER);
+	}else
+	{
+		CGdiAlpha::TextOut(dc,rcItem.left+m_ptText.x,rcItem.top+m_ptText.y,GetItem(iItem)->GetTitle());
+	}
+}
+
+}//namespace DuiEngine
