@@ -19,7 +19,7 @@ using namespace DuiEngine;
 
 # pragma comment(lib, "tinyxml_d.lib")
 
-	#ifdef DUIEngine_DLL
+	#ifdef DLL_DUI
 	# pragma comment(lib, "duiengine_d.lib")
 	#else
 	# pragma comment(lib, "duiengine_static_d.lib")
@@ -28,7 +28,7 @@ using namespace DuiEngine;
 
 # pragma comment(lib, "tinyxml.lib")
 
-	#ifdef DUIEngine_DLL
+	#ifdef DLL_DUI
 	# pragma comment(lib, "duiengine.lib")
 	#else
 	# pragma comment(lib, "duiengine_static.lib")

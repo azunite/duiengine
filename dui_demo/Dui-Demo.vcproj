@@ -240,7 +240,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\duiengine\include;..\tinyxml"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;DUIEngine_DLL"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;DLL_DUI"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -263,7 +263,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\$(ProjectName)_d.exe"
+				OutputFile="$(OutDir)\$(ProjectName)_Dll_d.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\lib"
 				DelayLoadDLLs=""
@@ -333,7 +333,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\duiengine\include;..\tinyxml"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;DUIEngine_DLL"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;DLL_DUI"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -355,7 +355,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)\$(ProjectName).exe"
+				OutputFile="$(OutDir)\$(ProjectName)_DLL.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\lib"
 				GenerateManifest="true"
