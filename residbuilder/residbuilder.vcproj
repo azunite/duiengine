@@ -5,10 +5,6 @@
 	Name="residbuilder"
 	ProjectGUID="{DB204FBF-D26A-4839-B126-C85159829663}"
 	RootNamespace="residbuilder"
-	SccProjectName="SAK"
-	SccAuxPath="SAK"
-	SccLocalPath="SAK"
-	SccProvider="SAK"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -66,6 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="..\tool\$(ProjectName).exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\publish\lib"
 				GenerateDebugInformation="true"
@@ -140,6 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="..\tool\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\publish\lib"
 				GenerateDebugInformation="true"
