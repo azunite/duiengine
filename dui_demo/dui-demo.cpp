@@ -6,7 +6,7 @@
 #include "DuiSystem.h"
 
 #ifdef _DEBUG
-#include "MemLeakDetect.h"
+#include "..\memleakdetect\MemLeakDetect.h"
 static CMemLeakDetect memLeakDetect;
 #endif
  
@@ -34,12 +34,12 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
     GetModuleFileNameA( NULL, szCurrentDir, sizeof(szCurrentDir) );
     LPSTR lpInsertPos = strrchr( szCurrentDir, L'\\' );
     *lpInsertPos = '\0';   
-    lstrcatA( szCurrentDir, "\\.." );
+    lstrcatA( szCurrentDir, "\\..\\dui_demo" );
 	DuiResManager::getSingleton().SetResourcePath( szCurrentDir, "layout\\idmap.xml");
 	DuiResManager::getSingleton().SetResourcePath( szCurrentDir, "layout\\def_skin_idmap.xml");
 #else
 	DuiResManager::getSingleton().SetResourceDLL(hInstance);
-#endif 
+#endif
 	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示
 	DuiName2ID::getSingleton().Init(IDR_DUI_NAME2ID);		//加载ID名称对照表
 	DuiString::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串

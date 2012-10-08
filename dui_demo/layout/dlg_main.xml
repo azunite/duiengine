@@ -21,7 +21,7 @@
             <radio id="1306" pos="110,60">radio4</radio>
           </dlg>
           <link id="1380" pos="10,250" maxwidth="100" class="cls_btn_weblink" dotted="1" href="www.yy.com">link</link>
-          <img skin="icons"/>
+          <img skin="icons" name="testimg" fun="test image remark"/>
           <button id="1360" class="normalbtn" pos="10,200,150,230">dui menu</button>
           <hotkey id="1340" pos="350,20,450,45" />
           <button id="1307" pos="200,10,300,35" class="normalbtn">IE Ctrl</button>

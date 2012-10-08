@@ -3,7 +3,7 @@
 
 namespace DuiEngine{
 
-class DuiSystem :
+class DUI_EXP DuiSystem :
 	public Singleton<DuiSystem>
 {
 public:

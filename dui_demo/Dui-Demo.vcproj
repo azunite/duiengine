@@ -77,7 +77,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\bin\$(ProjectName)_d.exe"
+				OutputFile="$(OutDir)\$(ProjectName)_d.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\lib"
 				DelayLoadDLLs=""
@@ -105,6 +105,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy  $(TargetPath) ..\bin\"
 			/>
 		</Configuration>
 		<Configuration
@@ -168,7 +169,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\bin\$(ProjectName).exe"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\lib"
 				GenerateManifest="true"
@@ -197,6 +198,193 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy  $(TargetPath) ..\bin\"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Debug_Dll|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				Description="build resouce id to winres2.rc"
+				CommandLine="..\tool\residbuilder -y -i .\layout\idmap.xml -i .\layout\def_skin_idmap.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/SkinTest.tlb"
+				HeaderFileName="SkinTest.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="SkinTest_i.c"
+				ProxyFileName="SkinTest_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\duiengine\include;..\tinyxml"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;DUIEngine_DLL"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="2"
+				BrowseInformation="1"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(DUI_PUBLISH)\duiengine\include;&quot;$(IntDir)&quot;"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName)_d.exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\lib"
+				DelayLoadDLLs=""
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy  $(TargetPath) ..\bin\"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release_Dll|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			UseOfATL="1"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				Description="build resouce id to winres2.rc"
+				CommandLine="..\tool\residbuilder -y -i .\layout\idmap.xml -i .\layout\def_skin_idmap.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="false"
+				TargetEnvironment="1"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/SkinTest.tlb"
+				HeaderFileName="SkinTest.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="SkinTest_i.c"
+				ProxyFileName="SkinTest_p.c"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="..\duiengine\include;..\tinyxml"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;DUIEngine_DLL"
+				ExceptionHandling="1"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="2"
+				BrowseInformation="1"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories="$(DUI_PUBLISH)\duiengine\include;&quot;$(IntDir)&quot;"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\lib"
+				GenerateManifest="true"
+				GenerateDebugInformation="true"
+				AssemblyDebug="1"
+				SubSystem="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy  $(TargetPath) ..\bin\"
 			/>
 		</Configuration>
 	</Configurations>
@@ -255,6 +443,14 @@
 						AdditionalIncludeDirectories="&quot;$(IntDir)&quot;"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_Dll|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories="&quot;$(IntDir)&quot;"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\duires\res.h"
@@ -283,6 +479,22 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_Dll|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_Dll|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
@@ -304,6 +516,20 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_Dll|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_Dll|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -399,7 +625,7 @@
 			Name="memleakdetect"
 			>
 			<File
-				RelativePath=".\MemLeakDetect.cpp"
+				RelativePath="..\memleakdetect\MemLeakDetect.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -417,9 +643,25 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_Dll|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_Dll|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MemLeakDetect.h"
+				RelativePath="..\memleakdetect\MemLeakDetect.h"
 				>
 			</File>
 		</Filter>

@@ -127,14 +127,40 @@ __time64_t GetLastWriteTime(LPCSTR pszFileName)
 	return tmRet;
 }
 
+void UpdateName2ID(map<string,int> *pmapName2ID,TiXmlDocument *pXmlDocName2ID,TiXmlElement *pXmlEleLayer,int & nCurID)
+{
+	const char * strName=pXmlEleLayer->Attribute("name");
+	int nID=0;
+	pXmlEleLayer->Attribute("id",&nID);
+	if(strName && nID==0 && pmapName2ID->find(strName)==pmapName2ID->end())
+	{
+		TiXmlElement pNewNamedID=TiXmlElement("name2id");
+		pNewNamedID.SetAttribute("name",strName);
+		pNewNamedID.SetAttribute("id",++nCurID);
+		const char * strRemark=pXmlEleLayer->Attribute("fun");
+		if(strRemark)
+		{
+			pNewNamedID.SetAttribute("remark",strRemark);
+		}
+		pXmlDocName2ID->InsertEndChild(pNewNamedID);
+		(*pmapName2ID)[strName]=nCurID;
+	}
+	TiXmlElement *pXmlChild=pXmlEleLayer->FirstChildElement();
+	if(pXmlChild) UpdateName2ID(pmapName2ID,pXmlDocName2ID,pXmlChild,nCurID);
+	TiXmlElement *pXmlSibling=pXmlEleLayer->NextSiblingElement();
+	if(pXmlSibling) UpdateName2ID(pmapName2ID,pXmlDocName2ID,pXmlSibling,nCurID);
+}
+
+#define ID_AUTO_START	65536
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	vector<string> vecIdMaps;
-	string strRes;
-	string strHead;
-	string strName2ID;
-	char   cYes=0;
+	string strRes;		//rc2文件名
+	string strHead;		//资源头文件,如winres.h
+	string strName2ID;	//名字-ID映射表XML
+	char   cYes=0;		//强制改写标志
+	
 	int c;
 	;
 	printf("%s\n",GetCommandLineA());
@@ -156,6 +182,58 @@ int _tmain(int argc, _TCHAR* argv[])
 		return 3;
 	}
 
+	if(strName2ID.length() && vecIdMaps.size())
+	{//自动更新name2id表
+		TiXmlDocument xmlName2ID;
+		xmlName2ID.LoadFile(strName2ID.c_str());
+		map<string,int> mapNamedID;
+		TiXmlElement *pXmlName2ID=xmlName2ID.FirstChildElement("name2id");
+		int nCurID=ID_AUTO_START;
+		while(pXmlName2ID)
+		{
+			string strName=pXmlName2ID->Attribute("name");
+			int uID=0;
+			pXmlName2ID->Attribute("id",&uID);
+			mapNamedID[strName]=uID;
+
+			if(uID>nCurID) nCurID=uID;	//获得当前的最大ID
+
+			pXmlName2ID=pXmlName2ID->NextSiblingElement("name2id");
+		}
+
+		int nCurID_backup=nCurID;
+		for(vector<string>::iterator it=vecIdMaps.begin();it!=vecIdMaps.end();it++)
+		{
+			TiXmlDocument xmlDocIdMap;
+			xmlDocIdMap.LoadFile(it->c_str());
+			TiXmlElement *pXmlIdmap=xmlDocIdMap.FirstChildElement("resid");
+			while(pXmlIdmap)
+			{
+				int layer=0;
+				pXmlIdmap->Attribute("layer",&layer);
+				if(layer && stricmp(pXmlIdmap->Attribute("type"),"xml")==0)
+				{
+					string strXmlLayer=pXmlIdmap->Attribute("file");
+					if(strXmlLayer.length())
+					{//找到一个窗口描述XML
+						TiXmlDocument xmlDocLayer;
+						xmlDocLayer.LoadFile(strXmlLayer.c_str());
+						UpdateName2ID(&mapNamedID,&xmlName2ID,xmlDocLayer.RootElement(),nCurID);
+					}
+				}
+				pXmlIdmap=pXmlIdmap->NextSiblingElement("resid");
+			}
+		}
+		if(nCurID!=nCurID_backup)
+		{//有新的命名控件加入，更新Name2ID表
+			FILE *f=fopen(strName2ID.c_str(),"w");
+			if(f)
+			{
+				xmlName2ID.Print(f);
+				fclose(f);
+			}
+		}
+	}
 	__time64_t fs1=0;
 	__time64_t fs2=0;
 	string strTimeStamp;

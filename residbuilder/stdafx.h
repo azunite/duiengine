@@ -19,6 +19,7 @@
 #include <windows.h>
 #include <string>
 #include <vector>
+#include <map>
 using namespace std;
 
 #include "XGetopt.h"

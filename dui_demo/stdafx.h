@@ -16,11 +16,24 @@
 using namespace DuiEngine;
 
 #ifdef _DEBUG
+
 # pragma comment(lib, "tinyxml_d.lib")
-# pragma comment(lib, "duiengine_static_d.lib")
+
+	#ifdef DUIEngine_DLL
+	# pragma comment(lib, "duiengine_d.lib")
+	#else
+	# pragma comment(lib, "duiengine_static_d.lib")
+	#endif
 #else
+
 # pragma comment(lib, "tinyxml.lib")
-# pragma comment(lib, "duiengine_static.lib")
+
+	#ifdef DUIEngine_DLL
+	# pragma comment(lib, "duiengine.lib")
+	#else
+	# pragma comment(lib, "duiengine_static.lib")
+	#endif
+
 #endif
 
 

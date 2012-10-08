@@ -1,8 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<name2id name="IDC_MAINFRAME" id="100"/>
-<name2id name="IDC_MAINTAB"   id="2000"/>
-<name2id name="测试" id="11601"/>
-<name2id name="IDC_RICHEDIT"  id="1140" remark="richedit"/>
-<name2id name="IDC_BTN_SYS_CLOSE" id="1" remark="关闭按钮"/>
-<name2id name="IDC_BTN_SYS_MIN" id="5" remark="最小化按钮"/>
-<name2id name="IDC_REPSEL" id="1144"/>
+<?xml version="1.0" encoding="utf-8" ?>
+<name2id name="IDC_MAINFRAME" id="100" />
+<name2id name="IDC_MAINTAB" id="2000" />
+<name2id name="测试" id="11601" />
+<name2id name="IDC_RICHEDIT" id="1140" remark="richedit" />
+<name2id name="IDC_BTN_SYS_CLOSE" id="1" remark="关闭按钮" />
+<name2id name="IDC_BTN_SYS_MIN" id="5" remark="最小化按钮" />
+<name2id name="IDC_REPSEL" id="1144" />
+<name2id name="testimg" id="65537" remark="test image remark" />
+<name2id name="mylist" id="65538" />
+<name2id name="mytree" id="65539" />

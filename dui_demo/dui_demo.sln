@@ -5,12 +5,18 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dui-Demo", "Dui-Demo.vcproj
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_Dll|Win32 = Debug_Dll|Win32
 		Debug|Win32 = Debug|Win32
+		Release_Dll|Win32 = Release_Dll|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}.Debug_Dll|Win32.ActiveCfg = Debug_Dll|Win32
+		{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}.Debug_Dll|Win32.Build.0 = Debug_Dll|Win32
 		{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}.Release_Dll|Win32.ActiveCfg = Release_Dll|Win32
+		{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}.Release_Dll|Win32.Build.0 = Release_Dll|Win32
 		{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}.Release|Win32.ActiveCfg = Release|Win32
 		{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection

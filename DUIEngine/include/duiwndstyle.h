@@ -90,7 +90,7 @@ protected:
 
 #include "DuiSingletonMap.h"
 
-class DuiStylePool :public DuiSingletonMap<DuiStylePool,DuiStyle,CStringA>
+class DUI_EXP DuiStylePool :public DuiSingletonMap<DuiStylePool,DuiStyle,CStringA>
 {
 public:
 	// Get style object from pool by class name

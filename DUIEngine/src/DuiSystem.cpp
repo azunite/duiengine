@@ -16,7 +16,7 @@
 
 namespace DuiEngine{
 
-template<> DuiSystem* Singleton<DuiSystem>::ms_Singleton	= 0;
+template<> DuiSystem* Singleton<DuiSystem>::ms_Singleton = 0;
 
 DuiSystem::DuiSystem(void)
 {
@@ -62,7 +62,6 @@ void DuiSystem::destroySingletons()
 	delete DuiSkinFactoryManager::getSingletonPtr();
 	delete DuiCSS::getSingletonPtr();
 	delete DuiImgPool::getSingletonPtr();
-	delete DuiString::getSingletonPtr();
 
 	delete DuiResManager::getSingletonPtr();
 	delete DuiThreadActiveWndManager::getSingletonPtr();

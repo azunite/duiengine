@@ -10,4 +10,7 @@
 #define	IDC_BTN_SYS_CLOSE		1		//关闭按钮
 #define	IDC_BTN_SYS_MIN		5		//最小化按钮
 #define	IDC_REPSEL		1144
+#define	testimg		65537		//test image remark
+#define	mylist		65538
+#define	mytree		65539
 /*----------------------------RES_BUILDER:end------------------------------------->*/
