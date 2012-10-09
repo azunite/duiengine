@@ -7,7 +7,7 @@
 
 #ifdef _DEBUG
 #include "..\memleakdetect\MemLeakDetect.h"
-static CMemLeakDetect memLeakDetect;
+// static CMemLeakDetect memLeakDetect;突然不好用了，不知道为什么。
 #endif
  
 #include "MainDlg.h"
@@ -56,7 +56,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		CMainDlg dlgMain;  
 		nRet = dlgMain.DoModal();  
 	}
-	_Module.Term(); 
+	_Module.Term();
 	//释放资源 
 	CMenuWndHook::UnInstallHook();
 
