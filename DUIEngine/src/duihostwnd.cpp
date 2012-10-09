@@ -575,18 +575,22 @@ LRESULT CDuiHostWnd::OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if(uMsg==WM_KEYDOWN && (wParam==VK_RETURN || wParam==VK_ESCAPE))
 	{//处理默认按钮，默认按钮的ID必须是IDOK或者IDCANCEL
-		UINT uCmdID = (wParam==VK_RETURN)?IDOK:IDCANCEL;
-		CDuiWindow *pWnd=FindChildByCmdID(uCmdID);
-		if(pWnd && (pWnd->IsClass(CDuiButton::GetClassName())||pWnd->IsClass(CDuiImageBtnWnd::GetClassName())))
+		CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_hFocus);
+		if(!pFocus || (wParam==VK_RETURN && !(pFocus->OnGetDuiCode()&DUIC_WANTRETURN)) || !(pFocus->OnGetDuiCode()&DUIC_WANTALLKEYS))
 		{
-			DUINMCOMMAND nms;
-			nms.hdr.code = DUINM_COMMAND;
-			nms.hdr.hwndFrom = NULL;
-			nms.hdr.idFrom = uCmdID;
-			nms.uItemID = uCmdID;
-			nms.szItemClass = pWnd->GetClassName();
+			UINT uCmdID = (wParam==VK_RETURN)?IDOK:IDCANCEL;
+			CDuiWindow *pWnd=FindChildByCmdID(uCmdID);
+			if(pWnd && (pWnd->IsClass(CDuiButton::GetClassName())||pWnd->IsClass(CDuiImageBtnWnd::GetClassName())))
+			{
+				DUINMCOMMAND nms;
+				nms.hdr.code = DUINM_COMMAND;
+				nms.hdr.hwndFrom = NULL;
+				nms.hdr.idFrom = uCmdID;
+				nms.uItemID = uCmdID;
+				nms.szItemClass = pWnd->GetClassName();
 
-			return OnDuiNotify((LPNMHDR)&nms);
+				return OnDuiNotify((LPNMHDR)&nms);
+			}
 		}
 	}
 	return DoFrameEvent(uMsg,wParam,lParam);
