@@ -66,7 +66,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="..\\lib\\tinyxml_d.lib"
-				OutputFile="..\lib\$(ProjectName)_d.dll"
+				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ImportLibrary="$(TargetDir)$(TargetName).lib"
@@ -91,7 +91,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy  $(TargetPath) ..\bin\"
+				CommandLine="copy  $(TargetDir)\$(TargetName).lib ..\lib\&#x0D;&#x0A;copy  $(TargetPath) ..\bin\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -143,7 +143,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="..\\lib\\tinyxml.lib"
-				OutputFile="..\lib\$(ProjectName).dll"
+				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
 				AssemblyDebug="0"
@@ -168,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy  $(TargetPath) ..\bin\"
+				CommandLine="copy  $(TargetDir)\$(TargetName).lib ..\lib\&#x0D;&#x0A;copy  $(TargetPath) ..\bin\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
