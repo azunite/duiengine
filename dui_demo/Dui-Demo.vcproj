@@ -70,7 +70,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(DUI_PUBLISH)\duiengine\include;&quot;$(IntDir)&quot;"
+				AdditionalIncludeDirectories="..\duiengine\include;&quot;$(IntDir)&quot;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -162,7 +162,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(DUI_PUBLISH)\duiengine\include;&quot;$(IntDir)&quot;"
+				AdditionalIncludeDirectories="..\duiengine\include;&quot;$(IntDir)&quot;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -256,7 +256,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(DUI_PUBLISH)\duiengine\include;&quot;$(IntDir)&quot;"
+				AdditionalIncludeDirectories="..\duiengine\include;&quot;$(IntDir)&quot;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -348,7 +348,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="$(DUI_PUBLISH)\duiengine\include;&quot;$(IntDir)&quot;"
+				AdditionalIncludeDirectories="..\duiengine\include;&quot;$(IntDir)&quot;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
