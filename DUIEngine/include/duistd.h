@@ -22,12 +22,12 @@
 #include <atlframe.h>
 #include <atlcrack.h>
 #include <atlmisc.h>
-#include <atlctrls.h>
+// #include <atlctrls.h>
 
 #include "tinyxml.h"
 #include <string>
 
-#define TOLUA_API	extern "C"
+// #define TOLUA_API	extern "C"
 
 #ifdef DLL_DUI
 # ifdef DUIENGINE_EXPORTS
