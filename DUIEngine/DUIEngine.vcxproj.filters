@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="dllmain">
+      <UniqueIdentifier>{83b38924-00e3-4c07-89ff-c35b6f1146e3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\DuiCaption.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duicolor.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiComboBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiCSS.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duifontpool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiframe.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duihostwnd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiHotKeyCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiimage.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiimgpool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiitembox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiItempanel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duilistctrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiMenu.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiname2id.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duirealwnd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiresutil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiRichEdit.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiscrollbar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiskin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiSplitWnd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duistd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duistringpool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duitheme.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiThreadActiveWndManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiTimerEx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiTipCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duitreectrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiWindowManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiwnd.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiwndcmnctrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiWndFactoryManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiwndpanel.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiwndrichtxt.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiwndstyle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiwndtabctrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gdialpha.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IECtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MemDC.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuWndHook.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>dllmain</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\DuiCaption.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duicolor.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiComboBox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiContainer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiCSS.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duictrls.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duifontpool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiframe.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duihostwnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiHotKeyCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiimage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiimgpool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiitembox.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiItempanel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duilistctrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiMenu.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duimsgcracker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duimsgfilter.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiname2id.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiobject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duirealwnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiref.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duires.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiresutil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiRichEdit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiscrollbar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DUISingleton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiSingletonMap.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiskin.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiSplitWnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duistd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duistringpool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duitheme.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiThreadActiveWndManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiTimerEx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiTipCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duitreectrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiWindowManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiwnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiwndcmnctrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiwnddlgfile.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiWndFactoryManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiwndnotify.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiwndpanel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiwndrichtxt.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiwndstyle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiwndtabctrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gdialpha.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IECtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MemDC.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MenuWndHook.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stree.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="license.txt" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>
