@@ -23,7 +23,7 @@ void CComboList::DeleteItem( int iItem )
 
 void CComboList::UpdateItems(const CRect * prcOwner)
 {
-	int nItems=m_pOwner->m_arrCbItem.GetCount();
+	int nItems=m_pOwner->m_arrCbItem.size();
 	BOOL bShowTop=FALSE;
 	if(prcOwner)
 	{
@@ -101,7 +101,7 @@ void CComboList::OnFinalMessage(HWND)
 	delete this;
 }
 
-void CComboList::OnKillFocus( CWindow wndFocus )
+void CComboList::OnKillFocus( HWND wndFocus )
 {
 	PostMessage(WM_CLOSE);
 }
@@ -172,7 +172,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 			pItem->Attribute("icon",&cbi.iIcon);
 			const char *pszData=pItem->Attribute("data");
 			if(pszData) cbi.dwData=atoi(pszData);
-			m_arrCbItem.Add(cbi);
+			m_arrCbItem.push_back(cbi);
 			pItem=pItem->NextSiblingElement("item");
 		}
 		bRet=TRUE;
@@ -200,7 +200,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 		strPos.Format("0,0,-%d,-0",szBtn.cx);
 		m_pEdit->SetAttribute("pos",strPos,TRUE);
 	}
-	if(m_iCurSel!=-1 && m_iCurSel>=m_arrCbItem.GetCount())
+	if(m_iCurSel!=-1 && m_iCurSel>=m_arrCbItem.size())
 		m_iCurSel=-1;
 	int iSel=m_iCurSel;
 	m_iCurSel=-1;
@@ -248,12 +248,12 @@ void CDuiComboBox::OnLButtonDown( UINT nFlags,CPoint pt )
 	//todo:show list window
 	CRect rc;
 	GetRect(&rc);
-	CWindow wnd(GetContainer()->GetHostHwnd());
+	CSimpleWnd wnd(GetContainer()->GetHostHwnd());
 	wnd.ClientToScreen(&rc);
 
 	m_pListBox=new CComboList(this,m_nDropHeight);
 
-	m_pListBox->Create(GetContainer()->GetHostHwnd(),NULL,WS_POPUP,WS_EX_TOOLWINDOW,0U,m_pXmlListStyle);
+	m_pListBox->Create(GetContainer()->GetHostHwnd(),NULL,WS_POPUP,WS_EX_TOOLWINDOW,0,0,0,0,m_pXmlListStyle);
  	m_pListBox->UpdateItems(&rc);
 }
 
@@ -334,7 +334,7 @@ int CDuiComboBox::SetCurSel( int iSel )
 				SetInnerText(NULL);
 		}else
 		{
-			if(iSel>=0 && iSel<m_arrCbItem.GetCount())
+			if(iSel>=0 && iSel<m_arrCbItem.size())
 			{
 				m_iCurSel=iSel;
 				if(m_pEdit)
@@ -358,7 +358,7 @@ int CDuiComboBox::GetCurSel()
 
 BOOL CDuiComboBox::GetItemInfo( int iItem,CBITEM *pCbItem )
 {
-	if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return FALSE;
+	if(iItem<0 || iItem>=m_arrCbItem.size()) return FALSE;
 	*pCbItem=m_arrCbItem[iItem];
 	return TRUE;
 }
@@ -366,8 +366,8 @@ BOOL CDuiComboBox::GetItemInfo( int iItem,CBITEM *pCbItem )
 int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,DWORD dwData )
 {
 	CBITEM cbi={pszText,iIcon,dwData};
-	if(iPos<0 || iPos>m_arrCbItem.GetCount()) iPos=m_arrCbItem.GetCount();
-	m_arrCbItem.InsertAt(iPos,cbi);
+	if(iPos<0 || iPos>m_arrCbItem.size()) iPos=m_arrCbItem.size();
+	m_arrCbItem.insert(m_arrCbItem.begin()+iPos,cbi);
 	if(m_pListBox)
 	{//update list box
 		m_pListBox->UpdateItems();
@@ -377,8 +377,8 @@ int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,DWORD dwData )
 
 BOOL CDuiComboBox::DeleteItem( int iItem )
 {
-	if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return FALSE;
-	m_arrCbItem.RemoveAt(iItem);
+	if(iItem<0 || iItem>=m_arrCbItem.size()) return FALSE;
+	m_arrCbItem.erase(m_arrCbItem.begin()+iItem);
 	if(m_pListBox)
 	{//update list box
 		m_pListBox->DeleteItem(iItem);

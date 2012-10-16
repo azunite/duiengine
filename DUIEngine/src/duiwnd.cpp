@@ -162,15 +162,6 @@ VOID CDuiWindow::TestMainThread()
 	DWORD dwCurThreadID = GetCurrentThreadId();
 
 	BOOL bOK = (m_nMainThreadId == dwCurThreadID); // 当前线程和构造对象时的线程一致
-	if ( !bOK && _pModule != NULL )
-	{
-		CAppModule* appModule = static_cast<CAppModule*>(_pModule);
-		if ( appModule != NULL )
-		{
-			// 当前线程和主线程一致
-			bOK = (appModule->m_dwMainThreadID == dwCurThreadID);
-		}
-	}
 
 	ATLASSERT(bOK);
 #endif

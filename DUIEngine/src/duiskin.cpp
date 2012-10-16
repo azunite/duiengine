@@ -501,7 +501,7 @@ DuiSkinPool::~DuiSkinPool()
 
 BOOL DuiSkinPool::Init(UINT uResID)
 {
-	CStringA strXml;
+	CMyBuffer<char> strXml;
 	BOOL bRet = DuiResManager::getSingleton().LoadResource(uResID, strXml);
 
 	if (!bRet)
@@ -569,15 +569,15 @@ int DuiSkinPool::FreeSkins( CStringA strOwnerName )
 
 	int nFreed=0;
 
-	POSITION pos=m_mapNamedObj.GetStartPosition();
-	while(pos)
+	std::map<CStringA,DuiSkinPtr>::iterator pos=m_mapNamedObj.begin();
+	while(pos!=m_mapNamedObj.end())
 	{
-		POSITION posPrev=pos;
-		CAtlMap<CStringA,DuiSkinPtr>::CPair *pPair=m_mapNamedObj.GetNext(pos);
-		if(pPair->m_value->GetOwner()==strOwnerName)
+		std::map<CStringA,DuiSkinPtr>::iterator posPrev=pos;
+		pos++;
+		if(posPrev->second->GetOwner()==strOwnerName)
 		{
-			OnKeyRemoved(pPair->m_value);
-			m_mapNamedObj.RemoveAtPos(posPrev);
+			OnKeyRemoved(posPrev->second);
+			m_mapNamedObj.erase(posPrev);
 			nFreed++;
 		}
 	}

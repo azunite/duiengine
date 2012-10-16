@@ -1,6 +1,7 @@
 #pragma once
 
 #include "DuiWindowManager.h"
+#include "DuiSingletonMap.h"
 
 namespace DuiEngine{
 
@@ -11,7 +12,7 @@ typedef struct tagTIMERINFO
 }TIMERINFO;
 
 
-class DUI_EXP CDuiTimerEx:public Singleton<CDuiTimerEx>
+class DUI_EXP CDuiTimerEx:public DuiSingletonMap<CDuiTimerEx,TIMERINFO,UINT_PTR>
 {
 public:
 	static BOOL SetTimer(HDUIWND hDuiWnd,UINT_PTR uTimerID,UINT nElapse)
@@ -34,8 +35,6 @@ protected:
 	void _KillTimer(HDUIWND hDuiWnd,UINT_PTR uTimerID);
 
 	void _KillTimer(HDUIWND hDuiWnd);
-
-	CAtlMap<UINT_PTR,TIMERINFO> m_mapId2Info;
 
 	static VOID CALLBACK _TimerProc(HWND hwnd,
 		UINT uMsg,

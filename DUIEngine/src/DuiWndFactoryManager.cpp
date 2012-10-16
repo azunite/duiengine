@@ -33,7 +33,6 @@ void DuiWindowFactoryManager::AddStandardWindowFactory()
 	AddKeyObject(CDuiIconWnd::GetClassName(),new TplDuiWindowFactory<CDuiIconWnd>);
 	AddKeyObject(CDuiTabCtrl::GetClassName(),new TplDuiWindowFactory<CDuiTabCtrl>);
 	AddKeyObject(CDuiRadioBox::GetClassName(),new TplDuiWindowFactory<CDuiRadioBox>);
-	AddKeyObject(CDuiRichText::GetClassName(),new TplDuiWindowFactory<CDuiRichText>);
 	AddKeyObject(CDuiLink::GetClassName(),new TplDuiWindowFactory<CDuiLink>);
 	AddKeyObject(CDuiDrawFileIcon::GetClassName(),new TplDuiWindowFactory<CDuiDrawFileIcon>);
 	AddKeyObject(CDuiGroup::GetClassName(),new TplDuiWindowFactory<CDuiGroup>);

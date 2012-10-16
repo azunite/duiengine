@@ -24,7 +24,7 @@ public:
 	virtual BOOL StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF)=NULL;
 	virtual BOOL TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF)=NULL;
 	virtual BOOL LoadImg(LPCTSTR pszFileName)=NULL;
-	virtual BOOL LoadImg(UINT nIDResource,LPCTSTR pszType, HINSTANCE hInst = (HINSTANCE)&__ImageBase)=NULL;
+	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType)=NULL;
 };
 
 
@@ -55,7 +55,7 @@ public:
 
 	virtual BOOL LoadImg(LPCTSTR pszFileName);
 
-	virtual BOOL LoadImg(UINT nIDResource,LPCTSTR pszType=NULL, HINSTANCE hInst = (HINSTANCE)&__ImageBase);
+	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType=NULL);
 
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 		DUIWIN_COLOR_ATTRIBUTE("mask", m_crMask, TRUE)
@@ -90,7 +90,7 @@ public:
 
 	virtual BOOL LoadImg(LPCTSTR pszFileName);
 
-	virtual BOOL LoadImg(UINT nIDResource,LPCTSTR pszType, HINSTANCE hInst = (HINSTANCE)&__ImageBase);
+	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType);
 
 
 	static void InitGdiplus();

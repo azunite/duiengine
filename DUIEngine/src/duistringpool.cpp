@@ -40,7 +40,7 @@ BOOL DuiString::BuildString(CString &strContainer)
 
 BOOL DuiString::Init(UINT uResID)
 {
-	CStringA strXml;
+	CMyBuffer<char> strXml;
 	BOOL bRet = FALSE;
 
 	bRet = DuiResManager::getSingleton().LoadResource(uResID, strXml);

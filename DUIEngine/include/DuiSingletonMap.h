@@ -1,6 +1,6 @@
 #pragma once
 #include "DUISingleton.h"
-
+#include <map>
 namespace DuiEngine{
 
 template<class TClass,class TObj,class TKey=CStringA>
@@ -12,7 +12,7 @@ public:
 
 	bool HasKey(const TKey & key)
 	{
-		return m_mapNamedObj.Lookup(key)!=NULL;
+		return m_mapNamedObj.find(key)!=m_mapNamedObj.end();
 	}
 	bool GetKeyObject(const TKey & key,TObj & obj)
 	{
@@ -41,20 +41,21 @@ public:
 		{
 			m_pFunOnKeyRemoved(m_mapNamedObj[key]);
 		}
-		return m_mapNamedObj.RemoveKey(key);
+		m_mapNamedObj.erase(key);
+		return true;
 	}
 	void RemoveAll()
 	{
 		if(m_pFunOnKeyRemoved)
 		{
-			POSITION pos=m_mapNamedObj.GetStartPosition();
-			while(pos)
-		 {
-			 CAtlMap<TKey,TObj>::CPair * pPair=m_mapNamedObj.GetNext(pos);
-			 m_pFunOnKeyRemoved(pPair->m_value);
-		 }
+			std::map<TKey,TObj>::iterator it=m_mapNamedObj.begin();
+			while(it!=m_mapNamedObj.end())
+			{
+				m_pFunOnKeyRemoved(it->second);
+				it++;
+			}
 		}
-		m_mapNamedObj.RemoveAll();
+		m_mapNamedObj.clear();
 	}
 	size_t GetCount()
 	{
@@ -63,8 +64,7 @@ public:
 protected:
 	void (*m_pFunOnKeyRemoved)(const TObj &obj);
 
-	CAtlMap<TKey,TObj> m_mapNamedObj;
-
+	std::map<TKey,TObj> m_mapNamedObj;
 };
 
 

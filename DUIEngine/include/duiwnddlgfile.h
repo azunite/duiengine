@@ -25,7 +25,7 @@ public:
 
 		if (nChildSrc == -1)
 			return FALSE;
-		CStringA	strXML;
+		CMyBuffer<char>	strXML;
 		BOOL		bRet   = DuiResManager::getSingleton().LoadResource(nChildSrc,strXML);
 		if (!bRet)	return TRUE;
 

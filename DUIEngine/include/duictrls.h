@@ -5,7 +5,6 @@
 #include "duiscrollbar.h"
 #include "duilistctrl.h"
 #include "duirealwnd.h"
-#include "duiwndrichtxt.h"
 #include "duiitembox.h"
 #include "duitreectrl.h"
 #include "DuiRichEdit.h"

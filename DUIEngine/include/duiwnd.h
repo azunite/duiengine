@@ -18,6 +18,7 @@
 #include "duiname2id.h"
 #include "gdialpha.h"
 #include "duiref.h"
+#include <OCIdl.h>
 
 namespace DuiEngine{
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "duiwnd.h"
+#include <list>
 
 namespace DuiEngine{
 

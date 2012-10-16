@@ -2,13 +2,13 @@
 
 #include "duiobject.h"
 #include "duiskin.h"
+#include "SimpleWnd.h"
+#include <vector>
 
 namespace DuiEngine{
 
 #define CX_ICON	16		//支持的图标的宽度
 #define CY_ICON	16		//支持的图标的高度
-
-typedef CWinTraits<WS_POPUP , WS_EX_NOACTIVATE> CDuiMenuODTraits;
 
 class CDuiMenuAttr:public CDuiObject
 {
@@ -54,7 +54,6 @@ struct DuiMenuItemInfo
 	int iIcon;
 	CString strText;
 };
-
 struct DuiMenuItemData
 {
 	HMENU hMenu;
@@ -62,36 +61,125 @@ struct DuiMenuItemData
 	DuiMenuItemInfo itemInfo;
 };
 
-class CDuiMenuODWnd : public CWindowImpl<CDuiMenuODWnd,ATL::CWindow,CDuiMenuODTraits>
-	,public COwnerDraw<CDuiMenuODWnd>
+typedef DuiMenuItemData * PDuiMenuItemData;
+
+template <class T>
+class CDuiOwnerDraw
+{
+public:
+	// Message map and handlers
+	BEGIN_MSG_MAP_EX(CDuiOwnerDraw< T >)
+		MESSAGE_HANDLER(WM_DRAWITEM, OnDrawItem)
+		MESSAGE_HANDLER(WM_MEASUREITEM, OnMeasureItem)
+		MESSAGE_HANDLER(WM_COMPAREITEM, OnCompareItem)
+		MESSAGE_HANDLER(WM_DELETEITEM, OnDeleteItem)
+		ALT_MSG_MAP(1)
+		MESSAGE_HANDLER(OCM_DRAWITEM, OnDrawItem)
+		MESSAGE_HANDLER(OCM_MEASUREITEM, OnMeasureItem)
+		MESSAGE_HANDLER(OCM_COMPAREITEM, OnCompareItem)
+		MESSAGE_HANDLER(OCM_DELETEITEM, OnDeleteItem)
+	END_MSG_MAP()
+
+	LRESULT OnDrawItem(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
+	{
+		T* pT = static_cast<T*>(this);
+		pT->SetMsgHandled(TRUE);
+		pT->DrawItem((LPDRAWITEMSTRUCT)lParam);
+		bHandled = pT->IsMsgHandled();
+		return (LRESULT)TRUE;
+	}
+
+	LRESULT OnMeasureItem(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
+	{
+		T* pT = static_cast<T*>(this);
+		pT->SetMsgHandled(TRUE);
+		pT->MeasureItem((LPMEASUREITEMSTRUCT)lParam);
+		bHandled = pT->IsMsgHandled();
+		return (LRESULT)TRUE;
+	}
+
+	LRESULT OnCompareItem(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
+	{
+		T* pT = static_cast<T*>(this);
+		pT->SetMsgHandled(TRUE);
+		bHandled = pT->IsMsgHandled();
+		return (LRESULT)pT->CompareItem((LPCOMPAREITEMSTRUCT)lParam);
+	}
+
+	LRESULT OnDeleteItem(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
+	{
+		T* pT = static_cast<T*>(this);
+		pT->SetMsgHandled(TRUE);
+		pT->DeleteItem((LPDELETEITEMSTRUCT)lParam);
+		bHandled = pT->IsMsgHandled();
+		return (LRESULT)TRUE;
+	}
+
+	// Overrideables
+	void DrawItem(LPDRAWITEMSTRUCT /*lpDrawItemStruct*/)
+	{
+		// must be implemented
+		ATLASSERT(FALSE);
+	}
+
+	void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)
+	{
+		if(lpMeasureItemStruct->CtlType != ODT_MENU)
+		{
+			// return default height for a system font
+			T* pT = static_cast<T*>(this);
+			HWND hWnd = pT->GetDlgItem(lpMeasureItemStruct->CtlID);
+			CClientDC dc(hWnd);
+			TEXTMETRIC tm = { 0 };
+			dc.GetTextMetrics(&tm);
+
+			lpMeasureItemStruct->itemHeight = tm.tmHeight;
+		}
+		else
+			lpMeasureItemStruct->itemHeight = ::GetSystemMetrics(SM_CYMENU);
+	}
+
+	int CompareItem(LPCOMPAREITEMSTRUCT /*lpCompareItemStruct*/)
+	{
+		// all items are equal
+		return 0;
+	}
+
+	void DeleteItem(LPDELETEITEMSTRUCT /*lpDeleteItemStruct*/)
+	{
+		// default - nothing
+	}
+};
+
+class CDuiMenuODWnd : public CSimpleWnd
+	,public CDuiOwnerDraw<CDuiMenuODWnd>
 	,public CDuiMenuAttr
 {
-	friend class COwnerDraw<CDuiMenuODWnd>;
+	friend class CDuiOwnerDraw<CDuiMenuODWnd>;
 public:
 	CDuiMenuODWnd();
 
 protected:
-	void OnInitMenu(CMenuHandle menu);
-	void OnInitMenuPopup(CMenuHandle menuPopup, UINT nIndex, BOOL bSysMenu);
+	void OnInitMenu(HMENU menu);
+	void OnInitMenuPopup(HMENU menuPopup, UINT nIndex, BOOL bSysMenu);
 
 	void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 
 	void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 
-	void OnMenuSelect(UINT nItemID, UINT nFlags, CMenuHandle menu);
+	void OnMenuSelect(UINT nItemID, UINT nFlags, HMENU menu);
 
 	BEGIN_MSG_MAP_EX(CDuiMenuODWnd)
 		MSG_WM_INITMENU(OnInitMenu)
 		MSG_WM_INITMENUPOPUP(OnInitMenuPopup)
 		MSG_WM_MENUSELECT(OnMenuSelect)
-		CHAIN_MSG_MAP(COwnerDraw<CDuiMenuODWnd>)
+		CHAIN_MSG_MAP(CDuiOwnerDraw<CDuiMenuODWnd>)
 		REFLECT_NOTIFICATIONS_EX()
 	END_MSG_MAP()
 };
 
 
 class DUI_EXP CDuiMenu
-	:public CMenuHandle
 {
 public:
 	CDuiMenu();
@@ -106,13 +194,14 @@ public:
 	void DestroyMenu();
 
 	CDuiMenu GetSubMenu(int nPos);
+
+	HMENU m_hMenu;
 protected:
 	CDuiMenu(CDuiMenu *pParent);
 
+	void BuildMenu(HMENU menuPopup,TiXmlElement *pTiXmlMenu);
 
-	void BuildMenu(CMenuHandle menuPopup,TiXmlElement *pTiXmlMenu);
-	CSimpleArray<DuiMenuItemData *>	m_arrDmmi;
-
+	std::vector<DuiMenuItemData *> m_arrDmmi;
 	CDuiMenuAttr	m_menuSkin;
 	CDuiMenu	*	m_pParent;
 };

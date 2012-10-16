@@ -27,7 +27,7 @@ const TCHAR CoolMenu_oldProc[] = _T("CoolMenu_oldProc");
 								class CMenuWndHook
 			  ------------------------------------------------
   ########################################################################*/
-CAtlMap <HWND,CMenuWndHook*> CMenuWndHook::m_WndMenuMap;
+std::map <HWND,CMenuWndHook*> CMenuWndHook::m_WndMenuMap;
 
 HHOOK CMenuWndHook::m_hMenuHook = NULL;
 CStringA CMenuWndHook::m_strSkinName = "";
@@ -46,7 +46,7 @@ CMenuWndHook::~CMenuWndHook ()
         ::SetWindowLong(m_hWnd, GWL_WNDPROC, (DWORD)(ULONG)oldWndProc);
         ::RemoveProp(m_hWnd, CoolMenu_oldProc);
     }
-    m_WndMenuMap.RemoveKey(m_hWnd);
+    m_WndMenuMap.erase(m_hWnd);
 }
 
 void CMenuWndHook::InstallHook(HINSTANCE hInst,LPCSTR pszSkinName)
@@ -61,16 +61,14 @@ void CMenuWndHook::InstallHook(HINSTANCE hInst,LPCSTR pszSkinName)
 
 void CMenuWndHook::UnInstallHook()
 {
-    POSITION pos = m_WndMenuMap.GetStartPosition();
-    while (pos != NULL)
+	std::map<HWND,CMenuWndHook*>::iterator it=m_WndMenuMap.begin();
+
+    while (it!=m_WndMenuMap.end())
     {
-        HWND hwnd;
-        CMenuWndHook* pMenuWndHook;
-        m_WndMenuMap.GetNextAssoc(pos, hwnd, pMenuWndHook);
-        delete pMenuWndHook;
-		pMenuWndHook = NULL;
+		delete it->second;
+		it++;
     }
-    m_WndMenuMap.RemoveAll();
+    m_WndMenuMap.clear();
 	
     if (m_hMenuHook != NULL)
     {
@@ -80,26 +78,20 @@ void CMenuWndHook::UnInstallHook()
 
 CMenuWndHook* CMenuWndHook::GetWndHook(HWND hwnd)
 {
-    CMenuWndHook* pWnd = NULL;
-    if (m_WndMenuMap.Lookup(hwnd, pWnd))
-    {
-        return pWnd;
-    }
-    return NULL;
+	std::map<HWND,CMenuWndHook*>::iterator it=m_WndMenuMap.find(hwnd);
+	if(it==m_WndMenuMap.end()) return NULL;
+	return it->second;
 }
 
 CMenuWndHook* CMenuWndHook::AddWndHook(HWND hwnd)
 {
-	CMenuWndHook* pWnd = NULL;
-	if (m_WndMenuMap.Lookup(hwnd, pWnd))
-	{
-	   return pWnd;
-	}
+	CMenuWndHook* pWnd = GetWndHook(hwnd);
+	if(pWnd) return pWnd;
 
 	pWnd = new CMenuWndHook(hwnd);
 	if (pWnd != NULL)
 	{
-		m_WndMenuMap.SetAt(hwnd, pWnd);
+		m_WndMenuMap[hwnd]=pWnd;
 	}
 	return pWnd;
 }
@@ -135,7 +127,6 @@ LRESULT CALLBACK CMenuWndHook::WindowHook(int code, WPARAM wParam, LPARAM lParam
         {
             break;
         }
-        ATLVERIFY(AddWndHook(pStruct->hwnd) != NULL);
 
         // 取得原来的窗口过程 ----------------------------------
         WNDPROC oldWndProc = (WNDPROC)(long)::GetWindowLong(hWnd, GWL_WNDPROC);

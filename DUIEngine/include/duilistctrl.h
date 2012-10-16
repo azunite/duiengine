@@ -8,6 +8,7 @@
 #pragma  once
 
 #include "duiitempanel.h"
+#include <vector>
 
 namespace DuiEngine{
 
@@ -91,7 +92,8 @@ protected:
 
 	void OnDestroy();
 protected:
-	CAtlArray<CDuiItemPanel *> m_arrItems;
+	std::vector<CDuiItemPanel *> m_arrItems;
+
 	int		m_nItemHei;
 	int		m_iSelItem;
 	int		m_iHoverItem;

@@ -10,6 +10,7 @@
   ########################################################################*/
 
 #pragma once
+#include <map>
 
 namespace DuiEngine{
 
@@ -18,7 +19,7 @@ namespace DuiEngine{
 							 CMenuWndHook ¿‡
 			  ------------------------------------------------
   ########################################################################*/
-class DUI_EXP CMenuWndHook
+	class DUI_EXP CMenuWndHook
 {
 // Ω®ππ ---------------------------------------------------------
 public:
@@ -48,7 +49,7 @@ public:
 protected:
 	HWND m_hWnd;
 
-	static CAtlMap<HWND, CMenuWndHook*> m_WndMenuMap;
+	static std::map<HWND, CMenuWndHook*> m_WndMenuMap;
     static HHOOK m_hMenuHook;
 	static CStringA	m_strSkinName;
 };

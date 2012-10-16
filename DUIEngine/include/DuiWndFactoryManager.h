@@ -2,6 +2,7 @@
 #include "duisingletonmap.h"
 #include "duiwnd.h"
 
+namespace DuiEngine{
 
 class CDuiWindowFactory
 {
@@ -40,7 +41,6 @@ protected:
 	CStringA m_strTypeName;
 };
 
-namespace DuiEngine{
 
 
 typedef CDuiWindowFactory* CDuiWindowFactoryPtr;
@@ -60,13 +60,9 @@ public:
 
 	CDuiWindowFactory * removeFactory(const CStringA & strWndType)
 	{
-		CDuiWindowFactory *pRet=NULL;
-		CAtlMap<CStringA,CDuiWindowFactory*>::CPair *pPair=m_mapNamedObj.Lookup(strWndType);
-		if(pPair)
-		{
-			pRet=pPair->m_value;
-			m_mapNamedObj.RemoveAtPos((POSITION)pPair);
-		}
+		if(!HasKey(strWndType)) return NULL;
+		CDuiWindowFactory *pRet=GetKeyObject(strWndType);
+		RemoveKeyObject(strWndType);
 		return pRet;
 	}
 	

@@ -11,7 +11,7 @@ template<> DuiCSS *Singleton<DuiCSS>::ms_Singleton =0;
 
 BOOL DuiCSS::Init(UINT uXmlID)
 {
-	CStringA strXml;
+	CMyBuffer<char> strXml;
 	BOOL bRet=DuiResManager::getSingleton().LoadResource(uXmlID,strXml,DUIRES_XML_TYPE);
 	if(!bRet) return FALSE;
 	TiXmlDocument *pXmlDoc=new TiXmlDocument;

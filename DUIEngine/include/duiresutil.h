@@ -1,16 +1,15 @@
 //////////////////////////////////////////////////////////////////////////
-//   File Name: bkresutil.h
-// Description: Beike Resource Helper
-//     Creator: Zhang Xiaoxuan
-//     Version: 2009.5.13 - 1.0 - Create
+//   File Name: duiresutil.h
+// Description: Resource Manager
 //////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
 #include "DuiSingletonMap.h"
+#include "mybuffer.h"
 
-#define DUIRES_XML_TYPE _T("xml")
-#define DUIRES_IMGX_TYPE _T("imgx")
+#define DUIRES_XML_TYPE "xml"
+#define DUIRES_IMGX_TYPE "imgx"
 
 #ifdef _DEBUG
 #   define DUIRES_ASSERTW(expr, format, ...) \
@@ -29,52 +28,28 @@
 #endif
 
 
-class DuiResID
-{
-public:
-	DuiResID(CStringA str="",int id=0)
-	{
-		strType=str;
-		nID=id;
-	}
+namespace DuiEngine{
 
-	CStringA strType;
-	int	 nID;
-};
-
-template<>
-class CElementTraits< DuiResID > :
-	public CElementTraitsBase< DuiResID >
-{
-public:
-	static ULONG Hash( INARGTYPE resid )
+	class DuiResID
 	{
-		ULONG_PTR uRet=0;
-		CStringA strType=resid.strType;
-		strType.MakeLower();
-		for(int i=0;i<strType.GetLength();i++)
+	public:
+		DuiResID(CStringA str="",int id=0)
 		{
-			uRet=uRet*68+strType[i];
+			strType=str;
+			nID=id;
 		}
 
-		return (ULONG)(uRet*10000+(UINT)resid.nID);
-	}
+		bool operator < ( const DuiResID & rt) const
+		{
+			int nret=_stricmp(strType,rt.strType);
+			if(nret==0) nret=nID-rt.nID;
+			return nret<0;
+		}
 
-	static bool CompareElements( INARGTYPE element1, INARGTYPE element2 )
-	{
-		return _stricmp(element1.strType,element2.strType)==0 && element1.nID==element2.nID;
-	}
+		CStringA strType;
+		int	 nID;
+	};
 
-	static int CompareElementsOrdered( INARGTYPE element1, INARGTYPE element2 )
-	{
-		int nRet=_stricmp(element1.strType,element2.strType);
-		if(nRet<0) return -1;
-		if(nRet>0) return 1;
-		return element1.nID-element2.nID;
-	}
-};
-
-namespace DuiEngine{
 
 class DUI_EXP DuiResManager : public DuiSingletonMap<DuiResManager,CStringA,DuiResID>
 {
@@ -87,7 +62,7 @@ public:
 	
 	void SetResourceDLL(HINSTANCE hInst);
 
-    BOOL LoadResource(UINT uResID, CStringA &strBuffRet, LPCTSTR lpszResType = DUIRES_XML_TYPE);
+    BOOL LoadResource(UINT uResID, CMyBuffer<char> &strBuffRet, LPCSTR lpszResType = DUIRES_XML_TYPE);
 
     BOOL LoadResource(UINT uResID, HBITMAP &hBitmap);
 
@@ -95,7 +70,7 @@ public:
 
 protected:
 
-    BOOL _LoadEmbedResource(UINT uResID, CStringA &strRet, LPCTSTR lpszResType = DUIRES_XML_TYPE);
+    BOOL _LoadEmbedResource(UINT uResID, CMyBuffer<char> &strRet, LPCSTR lpszResType = DUIRES_XML_TYPE);
 
     CStringA m_strResourcePath;
     HINSTANCE m_hInstanceRes;

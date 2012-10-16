@@ -441,12 +441,11 @@ protected:
 
 	void _ReloadIcon();
 
-	CIcon m_theIcon;
+	HICON m_theIcon;
 	UINT m_uResID;
 	UINT m_uResIDCurrent;
 	int m_nSize;
 	BOOL m_bOemIcon;
-	HICON m_hIcoAttach;
 
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 		DUIWIN_UINT_ATTRIBUTE("src", m_uResID, FALSE)
@@ -461,19 +460,6 @@ protected:
 };
 
 
-
-//////////////////////////////////////////////////////////////////////////
-// icon draw from file add by zbl
-//
-class DUI_EXP CIconCache
-{
-public:
-	static CIconCache* GetIconCachePtr();
-	HICON GetIcon(CStringA strPath);
-private:
-	CAtlMap<CStringA, HICON> m_mapIcon;
-	CIconCache();
-};
 
 class DUI_EXP CDuiDrawFileIcon : public CDuiWindow
 {

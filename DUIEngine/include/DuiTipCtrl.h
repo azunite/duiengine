@@ -1,15 +1,12 @@
 #pragma once
+#include "SimpleWnd.h"
 
-namespace DuiEngine{
+namespace DuiEngine
+{
 
-typedef CWinTraits<WS_POPUP | WS_CLIPCHILDREN , WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE> CDuiTipCtrlTraits;
-
-class CDuiTipCtrl 
-	: public ATL::CWindowImpl<CDuiTipCtrl, ATL::CWindow, CDuiTipCtrlTraits>
+class CDuiTipCtrl : public CSimpleWnd
 {
 public:
-	DECLARE_WND_CLASS_EX(_T("CDuiTipCtrl"), CS_HREDRAW | CS_VREDRAW, COLOR_WINDOW)
-	
 	CDuiTipCtrl(void);
 	~CDuiTipCtrl(void);
 

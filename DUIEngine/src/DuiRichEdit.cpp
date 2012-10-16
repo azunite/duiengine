@@ -238,7 +238,6 @@ BOOL CDuiTextHost::TxSetScrollRange( INT fnBar, LONG nMinPos, INT nMaxPos, BOOL 
 
 BOOL CDuiTextHost::TxSetScrollPos( INT fnBar, INT nPos, BOOL fRedraw )
 {
-	ATLTRACE(_T("\n!!TxSetScrollPox,nPos=%d"),nPos);
 	if(fnBar==SB_HORZ)
 		return m_pDuiRichEdit->SetScrollPos(FALSE,nPos,fRedraw);
 	else
@@ -597,7 +596,6 @@ void CDuiRichEdit::OnDuiTimerEx( UINT_PTR idEvent )
 BOOL CDuiRichEdit::OnScroll( BOOL bVertical,UINT uCode,int nPos )
 {
 	LRESULT lresult=-1;
-	ATLTRACE(_T("\n##OnScroll uCode=%d,nPos=%d"),uCode,nPos);
 	m_pTxtHost->GetTextService()->TxSendMessage(bVertical?WM_VSCROLL:WM_HSCROLL,MAKEWPARAM(uCode,nPos),0,&lresult);
 	return lresult==0;
 }
@@ -892,8 +890,7 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 	else if(strAttribName=="passwordchar")
 	{
 		CString strValueT=CA2T(strValue);
-		m_chPasswordChar=strValueT.GetBuffer()[0];
-		strValueT.ReleaseBuffer();
+		m_chPasswordChar=strValueT[0];
 	}
 	//align
 	else if(strAttribName=="align")

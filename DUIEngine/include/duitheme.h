@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <atlcoll.h>
 #include <Uxtheme.h>
 #include <tmschema.h>
 

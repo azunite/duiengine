@@ -127,28 +127,32 @@ __time64_t GetLastWriteTime(LPCSTR pszFileName)
 	return tmRet;
 }
 
-void UpdateName2ID(map<string,int> *pmapName2ID,TiXmlDocument *pXmlDocName2ID,TiXmlElement *pXmlEleLayer,int & nCurID)
+int UpdateName2ID(map<string,int> *pmapName2ID,TiXmlDocument *pXmlDocName2ID,TiXmlElement *pXmlEleLayer,int & nCurID)
 {
+	int nRet=0;
 	const char * strName=pXmlEleLayer->Attribute("name");
 	int nID=0;
 	pXmlEleLayer->Attribute("id",&nID);
-	if(strName && nID==0 && pmapName2ID->find(strName)==pmapName2ID->end())
+	if(strName && pmapName2ID->find(strName)==pmapName2ID->end())
 	{
 		TiXmlElement pNewNamedID=TiXmlElement("name2id");
 		pNewNamedID.SetAttribute("name",strName);
-		pNewNamedID.SetAttribute("id",++nCurID);
+		if(nID==0) nID=++nCurID;
+		pNewNamedID.SetAttribute("id",nID);
 		const char * strRemark=pXmlEleLayer->Attribute("fun");
 		if(strRemark)
 		{
 			pNewNamedID.SetAttribute("remark",strRemark);
 		}
 		pXmlDocName2ID->InsertEndChild(pNewNamedID);
-		(*pmapName2ID)[strName]=nCurID;
+		(*pmapName2ID)[strName]=nID;
+		nRet++;
 	}
 	TiXmlElement *pXmlChild=pXmlEleLayer->FirstChildElement();
-	if(pXmlChild) UpdateName2ID(pmapName2ID,pXmlDocName2ID,pXmlChild,nCurID);
+	if(pXmlChild) nRet+=UpdateName2ID(pmapName2ID,pXmlDocName2ID,pXmlChild,nCurID);
 	TiXmlElement *pXmlSibling=pXmlEleLayer->NextSiblingElement();
-	if(pXmlSibling) UpdateName2ID(pmapName2ID,pXmlDocName2ID,pXmlSibling,nCurID);
+	if(pXmlSibling) nRet+=UpdateName2ID(pmapName2ID,pXmlDocName2ID,pXmlSibling,nCurID);
+	return nRet;
 }
 
 #define ID_AUTO_START	65536
@@ -201,7 +205,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			pXmlName2ID=pXmlName2ID->NextSiblingElement("name2id");
 		}
 
-		int nCurID_backup=nCurID;
+		int nNewNamedID=0;
 		for(vector<string>::iterator it=vecIdMaps.begin();it!=vecIdMaps.end();it++)
 		{
 			TiXmlDocument xmlDocIdMap;
@@ -211,20 +215,20 @@ int _tmain(int argc, _TCHAR* argv[])
 			{
 				int layer=0;
 				pXmlIdmap->Attribute("layer",&layer);
-				if(layer && stricmp(pXmlIdmap->Attribute("type"),"xml")==0)
+				if(layer && _stricmp(pXmlIdmap->Attribute("type"),"xml")==0)
 				{
 					string strXmlLayer=pXmlIdmap->Attribute("file");
 					if(strXmlLayer.length())
 					{//找到一个窗口描述XML
 						TiXmlDocument xmlDocLayer;
 						xmlDocLayer.LoadFile(strXmlLayer.c_str());
-						UpdateName2ID(&mapNamedID,&xmlName2ID,xmlDocLayer.RootElement(),nCurID);
+						nNewNamedID+=UpdateName2ID(&mapNamedID,&xmlName2ID,xmlDocLayer.RootElement(),nCurID);
 					}
 				}
 				pXmlIdmap=pXmlIdmap->NextSiblingElement("resid");
 			}
 		}
-		if(nCurID!=nCurID_backup)
+		if(nNewNamedID)
 		{//有新的命名控件加入，更新Name2ID表
 			FILE *f=fopen(strName2ID.c_str(),"w");
 			if(f)

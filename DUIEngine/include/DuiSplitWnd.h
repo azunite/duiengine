@@ -1,5 +1,6 @@
 #pragma once
 #include "duiwndpanel.h"
+#include <vector>
 
 namespace DuiEngine{
 
@@ -85,7 +86,7 @@ protected:
 	DUIWIN_END_MSG_MAP()
 
 protected:
-	CSimpleArray<CDuiSplitPane *> m_arrPane;
+	std::vector<CDuiSplitPane *> m_arrPane;
 	CDuiSkinBase *m_pSkinSep;
 	int m_nSepSize;
 	BOOL m_bAdjustable;

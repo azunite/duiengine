@@ -4,7 +4,7 @@
 #include "duiwndcmnctrl.h"
 #include "duihostwnd.h"
 #include "duilistctrl.h"
-
+#include <vector>
 
 namespace DuiEngine
 {
@@ -28,7 +28,7 @@ public:
 	void UpdateItems(const CRect * prcOwner=NULL);
 protected:
 	int  OnCreate(LPCREATESTRUCT lpCreateStruct);
-	void OnKillFocus(CWindow wndFocus);
+	void OnKillFocus(HWND wndFocus);
 	void OnClose();
 
 	virtual void OnFinalMessage(HWND);
@@ -124,7 +124,7 @@ protected:
 	int  m_nDropHeight;
 	int		m_iCurSel;
 
-	CAtlArray<CBITEM> m_arrCbItem;
+	std::vector<CBITEM> m_arrCbItem;
 };
 
 }//namespace

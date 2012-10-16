@@ -13,4 +13,6 @@
 #define	testimg		65537		//test image remark
 #define	mylist		65538
 #define	mytree		65539
+#define	btn_minimize		5
+#define	°´Å¥_»Ö¸´		3
 /*----------------------------RES_BUILDER:end------------------------------------->*/

@@ -43,7 +43,6 @@ void CUIHander::OnRepEditSel()
 	pEdit->ReplaceSel(L"repsel");
 	TCHAR szBuf[100]={0};
 	pEdit->GetWindowText(szBuf,100);
-	ATLTRACE(_T("\n###gettext=%s"),szBuf);
 }
 
 LRESULT CUIHander::OnEditNotify( LPNMHDR pNHdr )
@@ -51,7 +50,6 @@ LRESULT CUIHander::OnEditNotify( LPNMHDR pNHdr )
 	LPDUIRICHEDITNOTIFY pEditNotify=(LPDUIRICHEDITNOTIFY)pNHdr;
 	if(pEditNotify->iNotify==EN_CHANGE)
 	{
-		ATLTRACE(L"\nEN_CHANGE");
 	}
 	return S_OK;
 }
@@ -68,7 +66,6 @@ LRESULT CUIHander::OnComboListSelChanged( LPNMHDR pNHdr )
 {
 	LPDUINMLBSELCHANGE pLbSelChange=(LPDUINMLBSELCHANGE)pNHdr;
 	CDuiComboBox *pCombobox=(CDuiComboBox*)m_pMainDlg->FindChildByCmdID(1310);
-	ATLTRACE(L"\nComboList Sel Changed: CurSel=%d",pLbSelChange->nNewSel);
 	return S_OK;
 }
 
@@ -99,19 +96,19 @@ void CUIHander::OnDuiMenu()
 	CPoint pt; 
 	GetCursorPos(&pt);
 	CDuiMenu subMenu=m_menu.GetSubMenu(5);
-	subMenu.CheckMenuRadioItem(51,53,52,MF_BYCOMMAND);
+	CheckMenuRadioItem(subMenu.m_hMenu,51,53,52,MF_BYCOMMAND);
 // 	CDuiMenu subMenu2; 
 // 	subMenu2.CreatePopupMenu();
 // 	subMenu2.InsertMenu(1,MF_STRING|MF_BYPOSITION,59,_T("代码插入1"),3);
 // 	subMenu2.InsertMenu(2,MF_STRING|MF_BYPOSITION|MF_GRAYED,58,_T("代码插入2"),3);
 // 	subMenu.InsertMenu(1,MF_POPUP|MF_BYPOSITION,(UINT_PTR)&subMenu2,_T("插入子菜单"),5);
 	UINT uRet=m_menu.TrackPopupMenu(0,pt.x,pt.y,m_pMainDlg->m_hWnd);
-	ATLTRACE(L"\nmenu ret=%d",uRet); 
+// 	ATLTRACE(L"\nmenu ret=%d",uRet); 
 }
 
-void CUIHander::OnCommand( UINT uNotifyCode, int nID, CWindow wndCtl )
+void CUIHander::OnCommand( UINT uNotifyCode, int nID, HWND wndCtl )
 {
-	ATLTRACE(L"\nOnCommand nID=%d",nID);  
+// 	ATLTRACE(L"\nOnCommand nID=%d",nID);  
 
 }
 

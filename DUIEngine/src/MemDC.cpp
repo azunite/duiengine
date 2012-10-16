@@ -1,5 +1,6 @@
 #include "duistd.h"
 #include "MemDC.h"
+namespace DuiEngine{
 
 CMemDC::CMemDC()
 :m_bBmpOwner(FALSE)
@@ -61,3 +62,5 @@ HBITMAP CMemDC::SelectBitmap( HBITMAP hBmp )
 		return NULL;
 	}
 }
+
+}//namespace DuiEngine

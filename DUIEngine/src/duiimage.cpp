@@ -207,7 +207,7 @@ BOOL CDuiBitmap::LoadImg(LPCTSTR pszFileName)
 	return !IsEmpty();
 }
 
-BOOL CDuiBitmap::LoadImg(UINT nIDResource,LPCTSTR pszType/*=NULL*/, HINSTANCE hInst /*= (HINSTANCE)&__ImageBase*/)
+BOOL CDuiBitmap::LoadImg(UINT nIDResource,LPCSTR pszType/*=NULL*/)
 {
 	Clear();
 	BOOL bRet = DuiResManager::getSingleton().LoadResource(nIDResource, m_hBitmap);
@@ -372,19 +372,19 @@ BOOL CDuiImgX::LoadImg(LPCTSTR pszFileName)
 	return !IsEmpty();
 }
 
-BOOL CDuiImgX::LoadImg(UINT nIDResource,LPCTSTR pszType, HINSTANCE hInst/* = (HINSTANCE)&__ImageBase*/)
+BOOL CDuiImgX::LoadImg(UINT nIDResource,LPCSTR pszType)
 {
 	Clear();
-	CStringA strResource;
+	CMyBuffer<char> strResource;
 
 	BOOL bRet = DuiResManager::getSingleton().LoadResource(nIDResource, strResource, pszType);
 	if(!bRet) return FALSE;
 
-	int len = strResource.GetLength();
+	int len = strResource.size();
 	HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, len);
 	BYTE* pMem = (BYTE*)::GlobalLock(hMem);
 
-	memcpy(pMem, (LPCSTR)strResource, len);
+	memcpy(pMem, strResource, len);
 
 	IStream* pStm = NULL;
 	::CreateStreamOnHGlobal(hMem, TRUE, &pStm);//有待确认第二个参数

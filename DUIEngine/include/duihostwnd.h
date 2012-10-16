@@ -16,6 +16,9 @@
 #include "duiframe.h"
 #include "duirealwnd.h"
 
+#include "SimpleWnd.h"
+#include <vector>
+
 #pragma warning(disable: 4996)
 ///////////////////////////////////////////////////////////////////////////////
 // Classes in this file:
@@ -27,28 +30,20 @@
 namespace DuiEngine
 {
 
-typedef CWinTraits<WS_POPUP|WS_CLIPCHILDREN, 0> CDuiHostTraits;
-
 class CDuiTipCtrl;
 
 class DUI_EXP CDuiHostWnd 
-	: public ATL::CWindowImpl<CDuiHostWnd, ATL::CWindow, CDuiHostTraits>
+	: public CSimpleWnd
 	, public CDuiFrame
 	, IDuiRealWndHandler
 {
 public:
-	typedef ATL::CWindowImpl<CDuiHostWnd, ATL::CWindow, CDuiHostTraits>  __baseClass;
-	DECLARE_WND_CLASS_EX(_T("CDuiHostWnd"), CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS, COLOR_WINDOW)
-
 	CDuiHostWnd(UINT uResID = 0);
 
 public:
 
-	HWND Create(
-		HWND hWndParent, _U_RECT rect = NULL, DWORD dwStyle = 0, 
-		DWORD dwExStyle = 0, _U_MENUorID MenuOrID = 0U, LPVOID lpCreateParam = NULL);
-
-	HWND Create(HWND hWndParent, _U_MENUorID MenuOrID);
+	HWND Create(HWND hWndParent,int x,int y,int nWidth,int nHeight);
+	HWND Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, LPVOID lpParam);
 	BOOL Load(UINT uResID);
 
 	BOOL SetXml(LPCSTR lpszXml);
@@ -96,7 +91,7 @@ protected:
 
 	BOOL _PreTranslateMessage(MSG* pMsg);
 
-	ATL::CSimpleArray<CDuiMessageFilter*> m_aMsgFilter;
+	std::vector<CDuiMessageFilter*> m_aMsgFilter;
 protected:
 	//////////////////////////////////////////////////////////////////////////
 	// Message handler
@@ -120,7 +115,7 @@ protected:
 	void OnLButtonDown(UINT nFlags, CPoint point);
 	void OnLButtonDblClk(UINT nFlags, CPoint point);
 
-	BOOL OnSetCursor(CWindow /*wnd*/, UINT nHitTest, UINT message);
+	BOOL OnSetCursor(HWND hWnd, UINT nHitTest, UINT message);
 
 	void OnTimer(UINT_PTR idEvent);
 

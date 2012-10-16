@@ -31,7 +31,7 @@ protected:
 
 	LRESULT OnComboListItemNotify(LPNMHDR pNHdr);
 
-	void OnCommand(UINT uNotifyCode, int nID, CWindow wndCtl);
+	void OnCommand(UINT uNotifyCode, int nID, HWND wndCtl);
 
 	BEGIN_MSG_MAP_EX(CUIHander)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)

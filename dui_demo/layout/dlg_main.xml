@@ -5,8 +5,8 @@
         <text pos="11,9" class="cls_txt_red">DUI-Demo ver:%str1%</text>
         <imgbtn id="1" skin="btn_sys_close"    pos="-45,0" tip="close" animate="0"/>
         <imgbtn id="2" skin="btn_sys_maximize"  pos="-83,0" animate="0" />
-        <imgbtn id="3" skin="btn_sys_restore"  pos="-83,0" show="0" animate="0" />
-        <imgbtn id="5" skin="btn_sys_minimize" pos="-121,0" animate="0" />
+        <imgbtn id="3" name="按钮_恢复" skin="btn_sys_restore"  pos="-83,0" show="0" animate="0" />
+        <imgbtn id="5" name="btn_minimize" skin="btn_sys_minimize" pos="-121,0" animate="0" />
       </caption>
 
       <tabctrl pos="5,29,-5,-5" id="2000" cursel="1" animatesteps="10">

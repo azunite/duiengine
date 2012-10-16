@@ -2,12 +2,9 @@
 
 #include "duistd.h"
 
-class CDuiEngineModule : public CAtlDllModuleT< CDuiEngineModule >
-{
-} _AtlModule;
 
 // DLL Èë¿Úµã
 extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-	return _AtlModule.DllMain(dwReason, lpReserved); 
+	return TRUE;
 }

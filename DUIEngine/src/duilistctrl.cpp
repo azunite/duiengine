@@ -38,11 +38,11 @@ CDuiListBox::~CDuiListBox()
 
 void CDuiListBox::DeleteAllItems(BOOL bUpdate/*=TRUE*/)
 {
-	for(int i=0;i<m_arrItems.GetCount();i++)
+	for(int i=0;i<GetItemCount();i++)
 	{
 		m_arrItems[i]->Release();
 	}
-	m_arrItems.RemoveAll();
+	m_arrItems.clear();
 	m_iSelItem=-1;
 	m_iHoverItem=-1;
 	m_pCapturedFrame=NULL;
@@ -54,7 +54,7 @@ void CDuiListBox::DeleteAllItems(BOOL bUpdate/*=TRUE*/)
 
 void CDuiListBox::DeleteItem(int iItem)
 {
-	if(iItem<0 || iItem>=m_arrItems.GetCount()) return;
+	if(iItem<0 || iItem>=GetItemCount()) return;
 	if(m_pCapturedFrame == m_arrItems[iItem])
 	{
 		m_pCapturedFrame=NULL;
@@ -62,7 +62,7 @@ void CDuiListBox::DeleteItem(int iItem)
 	}
 
 	m_arrItems[iItem]->Release();
-	m_arrItems.RemoveAt(iItem);
+	m_arrItems.erase(m_arrItems.begin()+iItem);
 
 	if(m_iSelItem==iItem) m_iSelItem=-1;
 	else if(m_iSelItem>iItem) m_iSelItem--;
@@ -71,16 +71,16 @@ void CDuiListBox::DeleteItem(int iItem)
 
 	CRect rcClient;
 	CDuiWindow::GetClient(&rcClient);
-	CSize szView(rcClient.Width(),m_arrItems.GetCount()*m_nItemHei);
+	CSize szView(rcClient.Width(),GetItemCount()*m_nItemHei);
 	if(szView.cy>rcClient.Height()) szView.cx-=m_nSbWid;
 	SetViewSize(szView);
 }
 
 int CDuiListBox::InsertItem(int iItem,CDuiItemPanel *pItemObj,DWORD dwData/*=0*/)
 {
-	if(iItem==-1 || iItem>=m_arrItems.GetCount())
+	if(iItem==-1 || iItem>=GetItemCount())
 	{
-		iItem=m_arrItems.GetCount();
+		iItem=GetItemCount();
 	}
 	if (m_crItemBg2 == CLR_INVALID || iItem % 2 == 0)
 	{
@@ -94,14 +94,14 @@ int CDuiListBox::InsertItem(int iItem,CDuiItemPanel *pItemObj,DWORD dwData/*=0*/
 	pItemObj->Move(CRect(0,0,m_rcClient.Width(),m_nItemHei));
 	pItemObj->SetSkin(m_pItemSkin);
 
-	m_arrItems.InsertAt(iItem,pItemObj);
+	m_arrItems.insert(m_arrItems.begin()+iItem,pItemObj);
 
 	if(m_iSelItem>=iItem) m_iSelItem++;
 	if(m_iHoverItem>=iItem) m_iHoverItem++;
 
 	CRect rcClient;
 	CDuiWindow::GetClient(&rcClient);
-	CSize szView(rcClient.Width(),m_arrItems.GetCount()*m_nItemHei);
+	CSize szView(rcClient.Width(),GetItemCount()*m_nItemHei);
 	if(szView.cy>rcClient.Height()) szView.cx-=m_nSbWid;
 	SetViewSize(szView);
 
@@ -137,7 +137,7 @@ void CDuiListBox::SetCurSel(int iItem)
 	{
 		m_arrItems[m_iSelItem]->ModifyItemState(0,DuiWndState_Check); 
 	}
-	if(iItem>=0 && iItem<m_arrItems.GetCount())
+	if(iItem>=0 && iItem<GetItemCount())
 	{
 		m_arrItems[iItem]->ModifyItemState(DuiWndState_Check,0);
 		m_iSelItem=iItem;
@@ -147,7 +147,7 @@ void CDuiListBox::SetCurSel(int iItem)
 
 void CDuiListBox::EnsureVisible( int iItem )
 {
-	if(iItem<0 || iItem>=m_arrItems.GetCount()) return;
+	if(iItem<0 || iItem>=GetItemCount()) return;
 	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
 	CRect rcClient;
 	GetClient(&rcClient);
@@ -178,7 +178,7 @@ LRESULT CDuiListBox::OnGetItemRect(UINT,WPARAM wParam,LPARAM lParam)
 	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
 	int nPageItems=(rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
 
-	for(int iItem = iFirstVisible; iItem<m_arrItems.GetCount() && iItem <iFirstVisible+nPageItems; iItem++)
+	for(int iItem = iFirstVisible; iItem<GetItemCount() && iItem <iFirstVisible+nPageItems; iItem++)
 	{
 		if(m_arrItems[iItem] == pItemObj)
 		{
@@ -207,7 +207,7 @@ int CDuiListBox::GetItemObjIndex(CDuiPanel *pItemObj)
 	int nPageItems=(m_rcWindow.Height()+m_nItemHei-1)/m_nItemHei+1;
 
 	int iItem;
-	for(iItem=iFirstVisible ; iItem<m_arrItems.GetCount() && iItem <iFirstVisible+nPageItems; iItem++)
+	for(iItem=iFirstVisible ; iItem<GetItemCount() && iItem <iFirstVisible+nPageItems; iItem++)
 	{
 		if(m_arrItems[iItem] == pItemObj) return iItem;
 	}
@@ -215,7 +215,7 @@ int CDuiListBox::GetItemObjIndex(CDuiPanel *pItemObj)
 	{
 		if(m_arrItems[iItem] == pItemObj) return iItem;
 	}
-	for(iItem=iFirstVisible+nPageItems;iItem<m_arrItems.GetCount();iItem++)
+	for(iItem=iFirstVisible+nPageItems;iItem<GetItemCount();iItem++)
 	{
 		if(m_arrItems[iItem] == pItemObj) return iItem;
 	}
@@ -225,7 +225,7 @@ int CDuiListBox::GetItemObjIndex(CDuiPanel *pItemObj)
 
 CDuiPanel * CDuiListBox::GetDuiItem(int iItem)
 {
-	if(iItem<0 || iItem>= m_arrItems.GetCount()) return NULL;
+	if(iItem<0 || iItem>= GetItemCount()) return NULL;
 	return GetDuiItem(m_arrItems[iItem]);
 }
 CDuiPanel * CDuiListBox::GetDuiItem(CDuiPanel *pItem)
@@ -235,7 +235,7 @@ CDuiPanel * CDuiListBox::GetDuiItem(CDuiPanel *pItem)
 
 DWORD CDuiListBox::GetItemData(int iItem)
 {
-	ATLASSERT(iItem>=0 || iItem< m_arrItems.GetCount());
+	ATLASSERT(iItem>=0 || iItem< GetItemCount());
 	return m_arrItems[iItem]->GetItemData();
 }
 
@@ -252,7 +252,7 @@ BOOL CDuiListBox::SetItemCount(DWORD *pData,int nItems)
 	return TRUE;
 }
 
-int CDuiListBox::GetItemCount() {return m_arrItems.GetCount();}
+int CDuiListBox::GetItemCount() {return m_arrItems.size();}
 
 void CDuiListBox::RedrawItem(int iItem)
 {
@@ -262,7 +262,7 @@ void CDuiListBox::RedrawItem(int iItem)
 	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
 	int nPageItems=(rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
 
-	if(iItem>=iFirstVisible && iItem<m_arrItems.GetCount() && iItem<iFirstVisible+nPageItems)
+	if(iItem>=iFirstVisible && iItem<GetItemCount() && iItem<iFirstVisible+nPageItems)
 	{
 		CRect rcItem(0,0,rcClient.Width(),m_nItemHei);
 		rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrgin.y);
@@ -288,7 +288,7 @@ int CDuiListBox::HitTest(CPoint &pt)
 	CPoint pt2=pt;
 	pt2.y -= rcClient.top - m_ptOrgin.y;
 	int nRet=pt2.y/m_nItemHei;
-	if(nRet >= m_arrItems.GetCount()) nRet=-1;
+	if(nRet >= GetItemCount()) nRet=-1;
 	else
 	{
 		pt.x-=rcClient.left;
@@ -313,7 +313,7 @@ void CDuiListBox::OnPaint(CDCHandle dc)
 	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
 	int nPageItems=(m_rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
 
-	for(int iItem = iFirstVisible; iItem<m_arrItems.GetCount() && iItem <iFirstVisible+nPageItems; iItem++)
+	for(int iItem = iFirstVisible; iItem<GetItemCount() && iItem <iFirstVisible+nPageItems; iItem++)
 	{
 		CRect rcItem(0,0,m_rcClient.Width(),m_nItemHei);
 		rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrgin.y);
@@ -329,7 +329,7 @@ LRESULT CDuiListBox::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
 	__super::OnNcCalcSize(bCalcValidRects,lParam);
 	CRect rcClient;
 	GetClient(&rcClient);
-	for(int i=0;i<m_arrItems.GetCount();i++)
+	for(int i=0;i<GetItemCount();i++)
 		m_arrItems[i]->Move(CRect(0,0,rcClient.Width(),m_nItemHei));
 	NotifyInvalidate();
 	return 0;
@@ -364,7 +364,7 @@ BOOL CDuiListBox::Load(TiXmlElement* pTiXmlElem)
 	if (nChildSrc == -1)
 		return TRUE;
 
-	CStringA	strXML;
+	CMyBuffer<char>	strXML;
 	BOOL		bRet   = DuiResManager::getSingleton().LoadResource(nChildSrc,strXML);
 	if (!bRet)	return TRUE;
 

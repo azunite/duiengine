@@ -1,8 +1,6 @@
 //////////////////////////////////////////////////////////////////////////
-//   File Name: bkresutil.h
-// Description: Beike Resource Helper
-//     Creator: Zhang Xiaoxuan
-//     Version: 2009.5.13 - 1.0 - Create
+//   File Name: duiresutil.cpp
+// Description: Resource Manager
 //////////////////////////////////////////////////////////////////////////
 #include "duistd.h"
 #include "duiresutil.h"
@@ -15,7 +13,8 @@ BOOL DuiResManager::SetResourcePath(LPCSTR lpszPath,LPCSTR lpszXmlIDFile)
 {
 	TiXmlDocument xmlDoc;
 	CStringA strFileName;
-	CStringA strXml;
+	CMyBuffer<char> strXml;
+
 	strFileName.Format("%s\\%s", lpszPath, lpszXmlIDFile);
 
 	HANDLE hFile = ::CreateFileA(
@@ -27,14 +26,12 @@ BOOL DuiResManager::SetResourcePath(LPCSTR lpszPath,LPCSTR lpszXmlIDFile)
 		if (0 != dwSize)
 		{
 			DWORD dwRead = 0;
-			BOOL bRet = ::ReadFile(hFile, strXml.GetBuffer(dwSize + 10), dwSize, &dwRead, NULL);
+			BOOL bRet = ::ReadFile(hFile, strXml.Allocate(dwSize + 1), dwSize, &dwRead, NULL);
 			if (!bRet || dwRead != dwSize)
 			{
-				strXml.ReleaseBuffer(dwSize);
 				return FALSE;
 			}
-
-			strXml.ReleaseBuffer(dwSize);
+			strXml[dwSize]=0;
 		}
 
 		::CloseHandle(hFile);
@@ -71,7 +68,7 @@ void DuiResManager::SetResourceDLL(HINSTANCE hInst)
 	m_hInstanceRes=hInst;
 }
 
-BOOL DuiResManager::LoadResource(UINT uResID, CStringA &strBuffRet, LPCTSTR lpszResType/* = DUIRES_TYPE*/)
+BOOL DuiResManager::LoadResource(UINT uResID, CMyBuffer<char> &strBuffRet, LPCSTR lpszResType/* = DUIRES_TYPE*/)
 {
 	if (!m_strResourcePath.IsEmpty())
 	{
@@ -80,7 +77,7 @@ BOOL DuiResManager::LoadResource(UINT uResID, CStringA &strBuffRet, LPCTSTR lpsz
 		if(!HasKey(resid)) return FALSE;
 		CStringA strName=GetKeyObject(resid);
 
-		strFilePath.Format("%s\\%s", m_strResourcePath, strName);
+		strFilePath.Format("%s\\%s", m_strResourcePath.c_str(), strName.c_str());
 
 		HANDLE hFile = ::CreateFileA(
 			strFilePath, GENERIC_READ, FILE_SHARE_READ, 
@@ -91,8 +88,7 @@ BOOL DuiResManager::LoadResource(UINT uResID, CStringA &strBuffRet, LPCTSTR lpsz
 			DWORD dwRead = 0;
 			if (0 != dwSize)
 			{
-				::ReadFile(hFile, strBuffRet.GetBuffer(dwSize + 10), dwSize, &dwRead, NULL);
-				strBuffRet.ReleaseBuffer(dwRead);
+				::ReadFile(hFile, strBuffRet.Allocate(dwSize), dwSize, &dwRead, NULL);
 			}
 
 			::CloseHandle(hFile);
@@ -121,7 +117,7 @@ BOOL DuiResManager::LoadResource(UINT uResID, HBITMAP &hBitmap)
 
 		CStringA strName=GetKeyObject(resid);
 
-		strFilePath.Format("%s\\%s", m_strResourcePath, strName);
+		strFilePath.Format("%s\\%s", m_strResourcePath.c_str(), strName.c_str());
 
 		hBitmap = (HBITMAP)::LoadImageA(NULL, strFilePath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 		DUIRES_ASSERTW(NULL != hBitmap, L"Failed loading bitmap %u", uResID);
@@ -134,11 +130,12 @@ BOOL DuiResManager::LoadResource(UINT uResID, HBITMAP &hBitmap)
 		return (NULL != hBitmap);
 	}else
 	{
-		hBitmap = ::LoadBitmap((HINSTANCE)&__ImageBase, MAKEINTRESOURCE(uResID));
+		hBitmap = ::LoadBitmap((HINSTANCE)GetModuleHandle(NULL), MAKEINTRESOURCE(uResID));
 		DUIRES_ASSERTW(NULL != hBitmap, L"Failed loading bitmap %u", uResID);
 		return NULL != hBitmap;
 	}
 }
+
 BOOL DuiResManager::LoadResource(UINT uResID, HICON &hIcon,int nSize)
 {
 	BOOL bRet = FALSE;
@@ -149,7 +146,7 @@ BOOL DuiResManager::LoadResource(UINT uResID, HICON &hIcon,int nSize)
 		DuiResID resid("ICO",uResID);
 		if(!HasKey(resid)) return FALSE;
 		CStringA strName=GetKeyObject(resid);
-		strFilePath.Format("%s\\%s", m_strResourcePath, strName);
+		strFilePath.Format("%s\\%s", m_strResourcePath.c_str(), strName.c_str());
 
 		hIcon = (HICON)::LoadImageA(NULL, strFilePath, IMAGE_ICON, nSize, nSize, LR_LOADFROMFILE);
 		DUIRES_ASSERTW(NULL != hIcon, L"Failed loading Icon %u", uResID);
@@ -162,7 +159,7 @@ BOOL DuiResManager::LoadResource(UINT uResID, HICON &hIcon,int nSize)
 		return (NULL != hIcon);
 	}else
 	{
-		hIcon = ::LoadIcon((HINSTANCE)&__ImageBase, MAKEINTRESOURCE(uResID));
+		hIcon = ::LoadIcon((HINSTANCE)GetModuleHandle(NULL), MAKEINTRESOURCE(uResID));
 
 		DUIRES_ASSERTW(NULL != hIcon, L"Failed loading Icon %u", uResID);
 
@@ -171,12 +168,12 @@ BOOL DuiResManager::LoadResource(UINT uResID, HICON &hIcon,int nSize)
 }
 
 
-BOOL DuiResManager::_LoadEmbedResource(UINT uResID, CStringA &strRet, LPCTSTR lpszResType/* = DUIRES_TYPE*/)
+BOOL DuiResManager::_LoadEmbedResource(UINT uResID, CMyBuffer<char> &strRet, LPCSTR lpszResType/* = DUIRES_TYPE*/)
 {
 	HINSTANCE hInst=m_hInstanceRes;
-	if(!hInst) hInst=(HINSTANCE)&__ImageBase;
+	if(!hInst) hInst=(HINSTANCE)GetModuleHandle(NULL);
 
-	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(uResID), lpszResType);
+	HRSRC hRsrc = ::FindResourceA(hInst, MAKEINTRESOURCEA(uResID), lpszResType);
 
 	if (NULL == hRsrc)
 		return FALSE;
@@ -193,8 +190,8 @@ BOOL DuiResManager::_LoadEmbedResource(UINT uResID, CStringA &strRet, LPCTSTR lp
 	if (NULL == pBuffer)
 		return FALSE;
 
-	memcpy(strRet.GetBuffer(dwSize + 1), pBuffer, dwSize);
-	strRet.ReleaseBuffer(dwSize);
+	strRet.Allocate(dwSize);
+	memcpy(strRet, pBuffer, dwSize);
 
 	::FreeResource(hGlobal);
 

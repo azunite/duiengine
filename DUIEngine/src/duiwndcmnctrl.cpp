@@ -808,35 +808,17 @@ void CDuiIconWnd::OnPaint(CDCHandle dc)
 	if (m_uResIDCurrent != m_uResID)
 		_ReloadIcon();
 
-	if (NULL == m_theIcon.m_hIcon)
+	CRect rcClient;
+	GetClient(&rcClient);
+	if(GetContainer()->IsTranslucent())
 	{
-		if (m_hIcoAttach)
-		{
-			if(GetContainer()->IsTranslucent())
-			{
-				Gdiplus::Bitmap * pIcon=Gdiplus::Bitmap::FromHICON(m_hIcoAttach);
-				Gdiplus::Graphics g(dc);
-				g.DrawImage(pIcon,m_rcWindow.left,m_rcWindow.top,m_rcWindow.Width(),m_rcWindow.Height());
-				delete pIcon;
-			}else
-			{
-				CIconHandle ico(m_hIcoAttach);
-				ico.DrawIconEx(dc, m_rcWindow.TopLeft(), m_rcWindow.Size());
-			}
-		}
-	}
-	else
+		Gdiplus::Bitmap * pIcon=Gdiplus::Bitmap::FromHICON(m_theIcon);
+		Gdiplus::Graphics g(dc);
+		g.DrawImage(pIcon,rcClient.left,rcClient.top,rcClient.Width(),rcClient.Height());
+		delete pIcon;
+	}else
 	{
-		if(GetContainer()->IsTranslucent())
-		{
-			Gdiplus::Bitmap * pIcon=Gdiplus::Bitmap::FromHICON(m_theIcon);
-			Gdiplus::Graphics g(dc);
-			g.DrawImage(pIcon,m_rcWindow.left,m_rcWindow.top,m_rcWindow.Width(),m_rcWindow.Height());
-			delete pIcon;
-		}else
-		{
-			m_theIcon.DrawIconEx(dc, m_rcWindow.TopLeft(), m_rcWindow.Size());
-		}
+		DrawIconEx(dc, rcClient.left,rcClient.top,m_theIcon,rcClient.Width(),rcClient.Height(),0,NULL,DI_NORMAL);
 	}
 }
 
@@ -850,55 +832,23 @@ LRESULT CDuiIconWnd::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
 
 HICON CDuiIconWnd::AttachIcon(HICON hIcon)
 {
-	HICON tmp = m_hIcoAttach; 
-	m_hIcoAttach = hIcon;
+	HICON tmp = m_theIcon; 
+	m_theIcon = hIcon;
 	return tmp; 
 }
 
 void CDuiIconWnd::LoadIconFile( LPCWSTR lpFIleName )
 {
-	if( m_theIcon.m_hIcon ) m_theIcon.DestroyIcon();
+	if( m_theIcon ) DestroyIcon(m_theIcon);
 	HICON hIcon = (HICON)LoadImage(NULL, lpFIleName, IMAGE_ICON, m_nSize, m_nSize, LR_LOADFROMFILE );
-	m_theIcon.Attach(hIcon);
-	m_hIcoAttach = hIcon;
+	m_theIcon = hIcon;
 }
 
 void CDuiIconWnd::_ReloadIcon()
 {
-	if (m_theIcon.m_hIcon)
-		m_theIcon.DestroyIcon();
-	HICON hIcon=0;
-	DuiResManager ::getSingleton().LoadResource(m_uResID,hIcon,m_nSize);
-	m_theIcon.Attach(hIcon);
+	if (m_theIcon)		DestroyIcon(m_theIcon);
+	DuiResManager ::getSingleton().LoadResource(m_uResID,m_theIcon,m_nSize);
 	m_uResIDCurrent = m_uResID;
-}
-
-CIconCache* CIconCache::GetIconCachePtr()
-{
-	static CIconCache cache;
-	return &cache;
-}
-HICON CIconCache::GetIcon(CStringA strPath)
-{
-	CAtlMap<CStringA, HICON>::CPair* ptr = m_mapIcon.Lookup(strPath);
-	if (NULL != ptr)
-		return ptr->m_value;
-
-	if (TRUE == PathFileExistsA(strPath))
-	{
-		SHFILEINFOA fileInfo = {0};
-		if (::SHGetFileInfoA(strPath, 0, &fileInfo, sizeof(fileInfo), SHGFI_ICON | SHGFI_LARGEICON |SHGFI_DISPLAYNAME) &&
-			NULL != fileInfo.hIcon)
-		{
-			m_mapIcon[strPath] = fileInfo.hIcon;
-			return fileInfo.hIcon;
-		}
-	}
-	return NULL;
-}
-
-CIconCache::CIconCache(){
-	m_mapIcon.RemoveAll();
 }
 
 CDuiDrawFileIcon::CDuiDrawFileIcon()
@@ -909,23 +859,9 @@ CDuiDrawFileIcon::CDuiDrawFileIcon()
 
 void CDuiDrawFileIcon::OnPaint(CDCHandle dc)
 {
-
-	HICON hIcon = NULL;
 	if (NULL != m_hIcon)
 	{
-		hIcon = m_hIcon;
-	}
-	else
-	{
-		if (TRUE == PathFileExistsA(m_strFilePath))
-		{
-			hIcon = CIconCache::GetIconCachePtr()->GetIcon(m_strFilePath);;
-		}
-	}
-
-	if (NULL != hIcon)
-	{
-		::DrawIconEx(dc.m_hDC, m_rcWindow.left, m_rcWindow.top, hIcon, m_rcWindow.Width(), m_rcWindow.Height(),  0, NULL, DI_NORMAL);
+		::DrawIconEx(dc.m_hDC, m_rcWindow.left, m_rcWindow.top, m_hIcon, m_rcWindow.Width(), m_rcWindow.Height(),  0, NULL, DI_NORMAL);
 	}
 
 }

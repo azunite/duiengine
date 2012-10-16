@@ -21,7 +21,7 @@ CDuiTipCtrl::~CDuiTipCtrl(void)
 
 BOOL CDuiTipCtrl::Create( HWND hOwner )
 {
-	HWND hWnd=__super::Create(hOwner);
+	HWND hWnd=__super::Create(NULL,WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_TOPMOST|WS_EX_NOACTIVATE,0,0,0,0,hOwner,NULL);
 	if(!hWnd) return FALSE;
 	
 	LOGFONTW lf;

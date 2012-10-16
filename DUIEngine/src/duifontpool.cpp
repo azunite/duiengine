@@ -21,7 +21,7 @@ DuiFontPool::DuiFontPool()
 	SetKeyObject(FontKey(DUIF_DEFAULTFONT),_CreateDefaultGUIFont());
 }
 
-HFONT DuiFontPool::GetFont(WORD uKey,CString strFaceName/*=""*/)
+HFONT DuiFontPool::GetFont(WORD uKey,CString strFaceName)
 {
 	HFONT hftRet=0;
 	FontKey key(uKey,strFaceName);

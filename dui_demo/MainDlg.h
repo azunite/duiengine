@@ -62,5 +62,3 @@ protected:
 private:
 	CUIHander *    m_pUiHandler; 
 };
-
-extern CAppModule _Module;

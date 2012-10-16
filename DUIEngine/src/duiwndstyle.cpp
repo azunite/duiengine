@@ -54,7 +54,7 @@ BOOL DuiStylePool::GetStyle(LPCSTR lpszName, DuiStyle& style)
 
 BOOL DuiStylePool::Init(UINT uResID)
 {
-	CStringA strXml;
+	CMyBuffer<char> strXml;
 	BOOL bRet = DuiResManager::getSingleton().LoadResource(uResID, strXml);
 
 	if (!bRet)

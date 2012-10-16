@@ -9,6 +9,7 @@
 
 #include "duiwndnotify.h"
 #include "duiwndcmnctrl.h"
+#include <vector>
 
 namespace DuiEngine{
 
@@ -98,7 +99,7 @@ protected:
     CPoint m_ptText;
     int m_nTabAlign;
 
-	CAtlArray<CDuiTab*> m_lstPages;
+	std::vector<CDuiTab*> m_lstPages;
 
 	CDuiTabSlide	m_tabSlide;
 
@@ -129,7 +130,7 @@ public:
 
 	int GetItemCount()
 	{ 
-		return m_lstPages.GetCount();
+		return m_lstPages.size();
 	}
 
     CDuiTab* GetItem(int nIndex);

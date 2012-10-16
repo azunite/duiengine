@@ -7,27 +7,42 @@
 #undef _ATL_MIN_CRT
 #define _CRT_SECURE_NO_WARNINGS
 #define _CRT_NON_CONFORMING_SWPRINTFS
-#define _WTL_NO_CSTRING
+// #define _WTL_NO_CSTRING
 
 # pragma warning(disable: 4661)
 
-#include <atlbase.h>
-#include <atlwin.h>
-#include <atlstr.h>
-#include <atltrace.h>
-#include <atlcoll.h>
+#include <Windows.h>
+#include <CommCtrl.h>
+#include <Shlwapi.h>
+#include <OleCtl.h>
 
+#define ATLASSERT(x)
 
-#include <atlapp.h>
-#include <atlframe.h>
-#include <atlcrack.h>
-#include <atlmisc.h>
-// #include <atlctrls.h>
+#ifndef GET_X_LPARAM
+#define GET_X_LPARAM(lParam)	((int)(short)LOWORD(lParam))
+#endif
+#ifndef GET_Y_LPARAM
+#define GET_Y_LPARAM(lParam)	((int)(short)HIWORD(lParam))
+#endif
+
+#ifndef NO_DUITYPES
+
+#define _WTYPES_NS DuiEngine
+#include "wtl.mini/duistr.h"
+#include "wtl.mini/duicrack.h"
+#include "wtl.mini/duimisc.h"
+#include "wtl.mini/duigdi.h"
+
+#endif
+
+#include "cpconv.h" //可以通过定义NO_STRCVT来屏蔽DUIEngine自带的编码转换接口
 
 #include "tinyxml.h"
 #include <string>
 
-// #define TOLUA_API	extern "C"
+#pragma comment(lib,"shlwapi.lib")
+#pragma comment(lib,"Msimg32.lib")
+#pragma comment(lib,"Comctl32.lib")
 
 #ifdef DLL_DUI
 # ifdef DUIENGINE_EXPORTS

@@ -29,7 +29,7 @@ CDuiSplitWnd::~CDuiSplitWnd(void)
 
 BOOL CDuiSplitWnd::SetPaneInfo( int iPane,int nIdealSize,int nMinSize,int nPriority )
 {
-	if(iPane>m_arrPane.GetSize()-1) return FALSE;
+	if(iPane>m_arrPane.size()-1) return FALSE;
 	if(nIdealSize!=-1) m_arrPane[iPane]->m_nSizeIdeal=nIdealSize;
 	if(nMinSize!=-1) m_arrPane[iPane]->m_nSizeMin=nMinSize;
 	if(nPriority!=-1) m_arrPane[iPane]->m_nPriority=nPriority;
@@ -39,7 +39,7 @@ BOOL CDuiSplitWnd::SetPaneInfo( int iPane,int nIdealSize,int nMinSize,int nPrior
 
 BOOL CDuiSplitWnd::GetPaneInfo( int iPane,int *pnIdealSize,int *pnMinSize,int *pnPriority )
 {
-	if(iPane>m_arrPane.GetSize()-1) return FALSE;
+	if(iPane>m_arrPane.size()-1) return FALSE;
 	if(pnIdealSize) *pnIdealSize=m_arrPane[iPane]->m_nSizeIdeal;
 	if(pnMinSize) *pnMinSize=m_arrPane[iPane]->m_nSizeMin;
 	if(pnPriority) *pnPriority=m_arrPane[iPane]->m_nPriority;
@@ -59,7 +59,7 @@ BOOL CDuiSplitWnd::LoadChildren( TiXmlElement* pTiXmlChildElem )
 		if(pPane->Load(pTiXmlPane))
 		{
 			pPane->AddRef();
-			m_arrPane.Add(pPane);
+			m_arrPane.push_back(pPane);
 		}
 		pTiXmlPane=pTiXmlPane->NextSiblingElement("pane");
 	}
@@ -76,11 +76,11 @@ BOOL CDuiSplitWnd::OnDuiSetCursor(const CPoint &pt)
 void CDuiSplitWnd::OnDestroy()
 {
 	__super::OnDestroy();
-	for(int i=0;i<m_arrPane.GetSize();i++)
+	for(int i=0;i<m_arrPane.size();i++)
 	{
 		m_arrPane[i]->Release();
 	}
-	m_arrPane.RemoveAll();
+	m_arrPane.clear();
 }
 
 void CDuiSplitWnd::OnPaint( CDCHandle dc )
@@ -98,7 +98,7 @@ void CDuiSplitWnd::OnPaint( CDCHandle dc )
 		long &RB= m_bColMode?rcSep.right:rcSep.bottom;
 		long &LT= m_bColMode?rcSep.left:rcSep.top;
 
-		for(int i=0;i<m_arrPane.GetSize()-1;i++)
+		for(int i=0;i<m_arrPane.size()-1;i++)
 		{
 			CRect rcPane;
 			m_arrPane[i]->GetRect(&rcPane);
@@ -139,7 +139,7 @@ void CDuiSplitWnd::OnLButtonDown( UINT nFlags,CPoint pt )
 	long & nRB= m_bColMode?rcBeam.right:rcBeam.bottom;
 
 	//find the clicked beam
-	for(int i=0;i<m_arrPane.GetSize();i++)
+	for(int i=0;i<m_arrPane.size();i++)
 	{
 		CRect rcPane;
 		m_arrPane[i]->GetRect(&rcPane);
@@ -232,7 +232,7 @@ void CDuiSplitWnd::OnMouseMove( UINT nFlags,CPoint pt )
 void CDuiSplitWnd::Relayout()
 {
 	int nTotalIdeal=0,nTotalMin=0;
-	for(int i=0;i<m_arrPane.GetSize();i++)
+	for(int i=0;i<m_arrPane.size();i++)
 	{
 		nTotalIdeal+=m_arrPane[i]->m_nSizeIdeal;
 		nTotalMin+=m_arrPane[i]->m_nSizeMin;
@@ -240,7 +240,7 @@ void CDuiSplitWnd::Relayout()
 
 	CRect rcClient;
 	GetClient(&rcClient);
-	int nInter=(m_arrPane.GetSize()-1)*m_nSepSize;
+	int nInter=(m_arrPane.size()-1)*m_nSepSize;
 	int nSize=m_bColMode?rcClient.Width():rcClient.Height();
 
 	CRect rcPane=rcClient;
@@ -252,7 +252,7 @@ void CDuiSplitWnd::Relayout()
 
 	if(nTotalMin+nInter > nSize)
 	{//set all pane to minimize size		
-		for(int i=0;i<m_arrPane.GetSize();i++)
+		for(int i=0;i<m_arrPane.size();i++)
 		{
 			nRB+=m_arrPane[i]->m_nSizeMin;
 			m_arrPane[i]->Move(&rcPane);
@@ -263,7 +263,7 @@ void CDuiSplitWnd::Relayout()
 	{//set all pane to nIdealSize except the lowest priority one, which will be extent to fill all space
 		int iLowest=0,nPriority=-1;
 		int i;
-		for(i=0;i<m_arrPane.GetSize();i++)
+		for(i=0;i<m_arrPane.size();i++)
 		{
 			if(m_arrPane[i]->m_nPriority>nPriority)
 			{
@@ -271,7 +271,7 @@ void CDuiSplitWnd::Relayout()
 				iLowest=i;
 			}
 		}
-		for(i=0;i<m_arrPane.GetSize();i++)
+		for(i=0;i<m_arrPane.size();i++)
 		{
 			if(i!=iLowest)
 				nRB+=m_arrPane[i]->m_nSizeIdeal;
@@ -283,26 +283,26 @@ void CDuiSplitWnd::Relayout()
 		}
 	}else
 	{//set high priority pane size to ideal size and set low pane to remain size
-		PANEORDER *pnPriority=new PANEORDER[m_arrPane.GetSize()];
-		int *pPaneSize=new int [m_arrPane.GetSize()];
+		PANEORDER *pnPriority=new PANEORDER[m_arrPane.size()];
+		int *pPaneSize=new int [m_arrPane.size()];
 
 		int i;
-		for(i=0;i<m_arrPane.GetSize();i++)
+		for(i=0;i<m_arrPane.size();i++)
 		{
 			pnPriority[i].idx=i;
 			pnPriority[i].pPane=m_arrPane[i];
 		}
-		qsort(pnPriority,m_arrPane.GetSize(),sizeof(PANEORDER),FunComp);
+		qsort(pnPriority,m_arrPane.size(),sizeof(PANEORDER),FunComp);
 
 		//为每一个格子分配空间
 		int nRemainSize=nSize-nInter;
 		BOOL bMinimize=FALSE;
-		for(i=0;i<m_arrPane.GetSize();i++)
+		for(i=0;i<m_arrPane.size();i++)
 		{
 			if(!bMinimize)
 			{
 				int nRequiredMin=0;
-				for(int j=i+1;j<m_arrPane.GetSize();j++)
+				for(int j=i+1;j<m_arrPane.size();j++)
 				{
 					nRequiredMin+=pnPriority[j].pPane->m_nSizeMin;
 				}
@@ -321,7 +321,7 @@ void CDuiSplitWnd::Relayout()
 		}
 
 		//设置格子位置
-		for(i=0;i<m_arrPane.GetSize();i++)
+		for(i=0;i<m_arrPane.size();i++)
 		{
 			nRB+=pPaneSize[i];
 			m_arrPane[i]->Move(&rcPane);

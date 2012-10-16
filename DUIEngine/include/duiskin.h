@@ -359,13 +359,9 @@ public:
 
 	CSkinFactory * UnregisterFactory(CStringA strTypeName)
 	{
-		CSkinFactory *pRet=NULL;
-		CAtlMap<CStringA,CSkinFactory*>::CPair *pPair=m_mapNamedObj.Lookup(strTypeName);
-		if(pPair)
-		{
-			pRet=pPair->m_value;
-			m_mapNamedObj.RemoveAtPos((POSITION)pPair);
-		}
+		if(!HasKey(strTypeName)) return NULL;
+		CSkinFactory *pRet=m_mapNamedObj[strTypeName];
+		RemoveKeyObject(strTypeName);
 		return pRet;
 	}
 

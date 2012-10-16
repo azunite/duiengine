@@ -1,5 +1,7 @@
 #pragma once
 
+namespace DuiEngine{
+
 class DUI_EXP CMemDC :	public CDC
 {
 public:
@@ -15,3 +17,5 @@ protected:
 	BOOL		m_bBmpOwner;
 	BOOL		m_bHasBitmap;
 };
+
+}//namespace DuiEngine

@@ -51,13 +51,6 @@ public:
 
 protected:
 
-    typedef CAtlMap<CStringA, DuiStyle> __StylePoolClass;
-
-
-    static __StylePoolClass* ms_pStylePool;
-
-    static __StylePoolClass* _GetStylePool();
-
     // Load style-pool from xml tree
     static void _LoadStylePool(TiXmlElement *pXmlStyleRootElem);
 
