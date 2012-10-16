@@ -26,24 +26,24 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RELEASE_LIB|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfAtl>Static</UseOfAtl>
+    <UseOfAtl>false</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DEBUG_LIB|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseOfAtl>Static</UseOfAtl>
+    <UseOfAtl>false</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfAtl>Static</UseOfAtl>
+    <UseOfAtl>false</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>false</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfAtl>Static</UseOfAtl>
+    <UseOfAtl>false</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -172,6 +172,7 @@ copy  $(TargetPath) ..\bin\
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\cpconv.cpp" />
     <ClCompile Include="src\DuiCaption.cpp" />
     <ClCompile Include="src\duicolor.cpp" />
     <ClCompile Include="src\DuiComboBox.cpp" />
@@ -215,18 +216,20 @@ copy  $(TargetPath) ..\bin\
     <ClCompile Include="src\duiwndstyle.cpp" />
     <ClCompile Include="src\duiwndtabctrl.cpp" />
     <ClCompile Include="src\gdialpha.cpp" />
-    <ClCompile Include="src\IECtrl.cpp" />
     <ClCompile Include="src\MemDC.cpp" />
     <ClCompile Include="src\MenuWndHook.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="src\SimpleWnd.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\cpconv.h" />
     <ClInclude Include="include\DuiCaption.h" />
     <ClInclude Include="include\duicolor.h" />
     <ClInclude Include="include\DuiComboBox.h" />
     <ClInclude Include="include\DuiContainer.h" />
     <ClInclude Include="include\DuiCSS.h" />
     <ClInclude Include="include\duictrls.h" />
+    <ClInclude Include="include\duiedit.h" />
     <ClInclude Include="include\duifontpool.h" />
     <ClInclude Include="include\duiframe.h" />
     <ClInclude Include="include\duihostwnd.h" />
@@ -270,10 +273,15 @@ copy  $(TargetPath) ..\bin\
     <ClInclude Include="include\duiwndstyle.h" />
     <ClInclude Include="include\duiwndtabctrl.h" />
     <ClInclude Include="include\gdialpha.h" />
-    <ClInclude Include="include\IECtrl.h" />
     <ClInclude Include="include\MemDC.h" />
     <ClInclude Include="include\MenuWndHook.h" />
+    <ClInclude Include="include\mybuffer.h" />
+    <ClInclude Include="include\SimpleWnd.h" />
     <ClInclude Include="include\stree.hpp" />
+    <ClInclude Include="include\wtl.mini\duicrack.h" />
+    <ClInclude Include="include\wtl.mini\duigdi.h" />
+    <ClInclude Include="include\wtl.mini\duimisc.h" />
+    <ClInclude Include="include\wtl.mini\duistr.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="license.txt" />

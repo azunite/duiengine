@@ -77,7 +77,7 @@ BOOL DuiResManager::LoadResource(UINT uResID, CMyBuffer<char> &strBuffRet, LPCST
 		if(!HasKey(resid)) return FALSE;
 		CStringA strName=GetKeyObject(resid);
 
-		strFilePath.Format("%s\\%s", m_strResourcePath.c_str(), strName.c_str());
+		strFilePath.Format("%s\\%s", (LPCSTR)m_strResourcePath, (LPCSTR)strName);
 
 		HANDLE hFile = ::CreateFileA(
 			strFilePath, GENERIC_READ, FILE_SHARE_READ, 
@@ -117,7 +117,7 @@ BOOL DuiResManager::LoadResource(UINT uResID, HBITMAP &hBitmap)
 
 		CStringA strName=GetKeyObject(resid);
 
-		strFilePath.Format("%s\\%s", m_strResourcePath.c_str(), strName.c_str());
+		strFilePath.Format("%s\\%s", (LPCSTR)m_strResourcePath, (LPCSTR)strName);
 
 		hBitmap = (HBITMAP)::LoadImageA(NULL, strFilePath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 		DUIRES_ASSERTW(NULL != hBitmap, L"Failed loading bitmap %u", uResID);
@@ -146,7 +146,7 @@ BOOL DuiResManager::LoadResource(UINT uResID, HICON &hIcon,int nSize)
 		DuiResID resid("ICO",uResID);
 		if(!HasKey(resid)) return FALSE;
 		CStringA strName=GetKeyObject(resid);
-		strFilePath.Format("%s\\%s", m_strResourcePath.c_str(), strName.c_str());
+		strFilePath.Format("%s\\%s", (LPCSTR)m_strResourcePath, (LPCSTR)strName);
 
 		hIcon = (HICON)::LoadImageA(NULL, strFilePath, IMAGE_ICON, nSize, nSize, LR_LOADFROMFILE);
 		DUIRES_ASSERTW(NULL != hIcon, L"Failed loading Icon %u", uResID);

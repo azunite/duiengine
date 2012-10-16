@@ -314,6 +314,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\cpconv.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\DuiCaption.cpp"
 				>
 			</File>
@@ -482,10 +486,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\duiwndrichtxt.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\duiwndstyle.cpp"
 				>
 			</File>
@@ -498,15 +498,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\IECtrl.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\MemDC.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\MenuWndHook.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\SimpleWnd.cpp"
 				>
 			</File>
 		</Filter>
@@ -515,6 +515,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\include\cpconv.h"
+				>
+			</File>
 			<File
 				RelativePath=".\include\DuiCaption.h"
 				>
@@ -537,6 +541,10 @@
 			</File>
 			<File
 				RelativePath=".\include\duictrls.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\duiedit.h"
 				>
 			</File>
 			<File
@@ -696,10 +704,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\duiwndrichtxt.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duiwndstyle.h"
 				>
 			</File>
@@ -712,10 +716,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\IECtrl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\MemDC.h"
 				>
 			</File>
@@ -724,9 +724,37 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\mybuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\SimpleWnd.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\stree.hpp"
 				>
 			</File>
+			<Filter
+				Name="wtl.mini"
+				>
+				<File
+					RelativePath=".\include\wtl.mini\duicrack.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\wtl.mini\duigdi.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\wtl.mini\duimisc.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\wtl.mini\duistr.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="dllmain"

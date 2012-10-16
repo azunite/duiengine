@@ -12,6 +12,9 @@
     <Filter Include="dllmain">
       <UniqueIdentifier>{83b38924-00e3-4c07-89ff-c35b6f1146e3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\wtl.mini">
+      <UniqueIdentifier>{faf14b5a-292e-4412-b3ca-4e9aed4ce2e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\DuiCaption.cpp">
@@ -128,9 +131,6 @@
     <ClCompile Include="src\gdialpha.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\IECtrl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\MemDC.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -139,6 +139,12 @@
     </ClCompile>
     <ClCompile Include="dllmain.cpp">
       <Filter>dllmain</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cpconv.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SimpleWnd.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -289,9 +295,6 @@
     <ClInclude Include="include\gdialpha.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\IECtrl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\MemDC.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -300,6 +303,30 @@
     </ClInclude>
     <ClInclude Include="include\stree.hpp">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\cpconv.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiedit.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mybuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SimpleWnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wtl.mini\duicrack.h">
+      <Filter>头文件\wtl.mini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wtl.mini\duigdi.h">
+      <Filter>头文件\wtl.mini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wtl.mini\duimisc.h">
+      <Filter>头文件\wtl.mini</Filter>
+    </ClInclude>
+    <ClInclude Include="include\wtl.mini\duistr.h">
+      <Filter>头文件\wtl.mini</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
