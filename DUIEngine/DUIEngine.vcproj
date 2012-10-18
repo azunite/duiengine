@@ -552,10 +552,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\duiedit.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duifontpool.h"
 				>
 			</File>
