@@ -402,10 +402,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\IECtrlDlg.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MainDlg.cpp"
 				>
 			</File>
@@ -418,10 +414,6 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
-			<File
-				RelativePath=".\IECtrlDlg.h"
-				>
-			</File>
 			<File
 				RelativePath=".\MainDlg.h"
 				>
@@ -556,10 +548,6 @@
 			</File>
 			<File
 				RelativePath=".\layout\def_style.xml"
-				>
-			</File>
-			<File
-				RelativePath=".\layout\dlg_iectrl.xml"
 				>
 			</File>
 			<File

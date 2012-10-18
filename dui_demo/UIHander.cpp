@@ -2,7 +2,6 @@
 #include "UIHander.h"
 
 #include "MainDlg.h"
-#include "IECtrlDlg.h"
 
 CUIHander::CUIHander(CMainDlg * pMainDlg) : m_pMainDlg(pMainDlg)
 {
@@ -86,8 +85,6 @@ LRESULT CUIHander::OnComboListItemNotify( LPNMHDR pNHdr )
 
 void CUIHander::OnIECtrl()
 {
-	CIECtrlDlg ieCtrlDlg;
-	ieCtrlDlg.DoModal(m_pMainDlg->m_hWnd);
 }
 
 

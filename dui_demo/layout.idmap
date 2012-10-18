@@ -6,6 +6,5 @@
 <resid type="XML" id_name="IDR_DUI_NAME2ID"  id="103" file="layout\\name2id.xml"  />
 <resid type="XML" id_name="IDR_DUI_OBJATTR_DEF"  id="104" file="layout\\def_objattr.xml" />
 <resid type="XML" id_name="IDR_DUI_MAIN_DIALOG"  id="105" layer="1" file="layout\\dlg_main.xml"  />
-<resid type="XML" id_name="IDR_IECTRL_DIALOG"  id="106" layer="1" file="layout\\dlg_iectrl.xml"  />
 <resid type="XML" id_name="IDR_MENU_TEST"  id="201" file="layout\\menu_test.xml"  />
 
