@@ -849,18 +849,8 @@ void CDuiIconWnd::_ReloadIcon()
 {
 	if (m_theIcon)		DestroyIcon(m_theIcon);
 	CResBase *pRes=DuiSystem::getSingleton().GetResProvider()->GetRes(DUIRES_ICON_TYPE,m_uResID);
-	if(pRes)
-	{
-		if(pRes->GetResMode()==RES_PE)
-		{
-			CResPE *pResPE=static_cast<CResPE*>(pRes);
-			m_theIcon=LoadIcon(pResPE->hInst,MAKEINTRESOURCE(pResPE->uID));
-		}else if(pRes->GetResMode()==RES_FILE)
-		{
-			CResFile *pResFile=static_cast<CResFile*>(pRes);
-			m_theIcon=(HICON)LoadImageA(NULL,pResFile->strFilePath,IMAGE_ICON,m_nSize,m_nSize,LR_DEFAULTCOLOR | LR_DEFAULTSIZE | LR_LOADFROMFILE );
-		}
-	}
+	if(pRes) m_theIcon=pRes->LoadIcon();
+	delete pRes;
 	if(m_theIcon) m_uResIDCurrent = m_uResID;
 }
 

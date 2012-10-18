@@ -65,10 +65,7 @@ size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*
 		m_nCount=0;
 	}
 
-	CResPE resPE;
-	resPE.hInst=DuiSystem::getSingleton().GetInstance();
-	resPE.uID=uXmlResID;
-	resPE.strType=pszType;
+	CResPE resPE(m_hInst,uXmlResID,pszType);
 
 	CMyBuffer<char> strXml;
 	if(resPE.GetResBuffer(strXml))
@@ -148,28 +145,8 @@ BOOL DuiSystem::GetResBuf( UINT uID,LPCSTR pszType,CMyBuffer<char> &buf )
 	if(!m_pResProvider) return FALSE;
 	CResBase *pRes=m_pResProvider->GetRes(pszType,uID);
 	if(!pRes) return FALSE;
-	BOOL bRet=FALSE;
-	if(pRes->GetResMode()==RES_PE)
-	{
-		CResPE *pResPE=static_cast<CResPE*>(pRes);
-		bRet=pResPE->GetResBuffer(buf);
-	}else if(pRes->GetResMode()==RES_FILE)
-	{
-		CResFile *pResFile=static_cast<CResFile*>(pRes);
-		FILE *f=fopen(pResFile->strFilePath,"rb");
-		if(f)
-		{
-			int len=_filelength(_fileno(f));
-			buf.Allocate(len);
-			bRet=(len==fread(buf,1,len,f));
-			fclose(f);
-		}
-	}else if(pRes->GetResMode()==RES_MEM)
-	{
-		CResMem *pResMem=static_cast<CResMem*>(pRes);
-		buf.Attach(pResMem->resBuf,pResMem->resBuf.size());
-		bRet=TRUE;
-	}
+	BOOL bRet=pRes->GetResBuffer(buf);
+	delete pRes;
 	return bRet;
 }
 

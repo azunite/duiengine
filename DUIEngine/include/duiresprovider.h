@@ -9,6 +9,7 @@
 #include "mybuffer.h"
 #include <vector>
 #include <io.h>
+#include <GdiPlus.h>
 
 #define DUIRES_XML_TYPE "xml"
 #define DUIRES_IMGX_TYPE "imgx"
@@ -56,26 +57,27 @@ namespace DuiEngine{
 		int	 nID;
 	};
 
-	typedef enum _RES_MODE{RES_NULL=0,RES_PE,RES_MEM,RES_FILE,RES_RESERVED} RES_MODE;
 	class DUI_EXP CResBase
 	{
 	public:
-		CResBase():resMode(RES_NULL){}
 		virtual ~CResBase(){}
-		const RES_MODE GetResMode()const
-		{
-			return resMode;
-		}
-	protected:
-		RES_MODE resMode;
+
+		virtual HBITMAP	LoadBitmap()=NULL;
+		virtual HICON   LoadIcon()=NULL;
+		virtual Gdiplus::Image * LoadImage()=NULL;
+		virtual BOOL GetResBuffer(CMyBuffer<char> & buf)=NULL;
 	};
 
 	class DUI_EXP CResPE:public CResBase
 	{
 	public:
-		CResPE(){resMode=RES_PE;}
-		
+		CResPE(HINSTANCE _hInst,UINT _uID,const CStringA & _strType);
+
+		HBITMAP	LoadBitmap();
+		HICON   LoadIcon();
+		Gdiplus::Image * LoadImage();
 		BOOL GetResBuffer(CMyBuffer<char> & buf);
+	protected:
 		HINSTANCE hInst;
 		CStringA strType;
 		UINT uID;
@@ -84,16 +86,16 @@ namespace DuiEngine{
 	class DUI_EXP CResFile:public CResBase
 	{
 	public:
-		CResFile(){resMode=RES_FILE;}
+		CResFile(const CStringA & strFile);
+
+		HBITMAP	LoadBitmap();
+		HICON   LoadIcon();
+		Gdiplus::Image * LoadImage();
+		BOOL GetResBuffer(CMyBuffer<char> & buf);
+	protected:
 		CStringA	strFilePath;//ÎÄ¼þÂ·¾¶
 	};
 
-	class DUI_EXP CResMem: public CResBase
-	{
-	public:
-		CResMem(){resMode=RES_MEM;}
-		CMyBuffer<char> resBuf;
-	};
 
 	class DUI_EXP DuiResProviderBase
 	{
@@ -107,7 +109,6 @@ namespace DuiEngine{
 	public:
 		DuiResProviderPE(HINSTANCE hInst):m_hResInst(hInst)
 		{
-
 		}
 
 		CResBase * GetRes(LPCSTR strType,UINT uID);
