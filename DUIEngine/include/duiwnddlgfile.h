@@ -1,6 +1,7 @@
 #pragma once
 
 #include "duiwndpanel.h"
+#include "DuiSystem.h"
 
 namespace DuiEngine{
 
@@ -26,7 +27,7 @@ public:
 		if (nChildSrc == -1)
 			return FALSE;
 		CMyBuffer<char>	strXML;
-		BOOL		bRet   = DuiResManager::getSingleton().LoadResource(nChildSrc,strXML);
+		BOOL		bRet   = DuiSystem::getSingleton().GetResBuf(nChildSrc,DUIRES_XML_TYPE,strXML);
 		if (!bRet)	return TRUE;
 
 		TiXmlDocument xmlDoc;

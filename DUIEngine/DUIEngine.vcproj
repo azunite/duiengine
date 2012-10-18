@@ -334,6 +334,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\duiDefaultLogger.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\duifontpool.cpp"
 				>
 			</File>
@@ -370,11 +374,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\DuiMenu.cpp"
+				RelativePath=".\src\DuiLogger.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\duiname2id.cpp"
+				RelativePath=".\src\DuiMenu.cpp"
 				>
 			</File>
 			<File
@@ -382,7 +386,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\duiresutil.cpp"
+				RelativePath=".\src\duiresprovider.cpp"
 				>
 			</File>
 			<File
@@ -544,6 +548,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\DuiDefaultLogger.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\duiedit.h"
 				>
 			</File>
@@ -584,6 +592,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\DuiLogger.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\DuiMenu.h"
 				>
 			</File>
@@ -593,10 +605,6 @@
 			</File>
 			<File
 				RelativePath=".\include\duimsgfilter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duiname2id.h"
 				>
 			</File>
 			<File
@@ -616,7 +624,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\duiresutil.h"
+				RelativePath=".\include\duiresprovider.h"
 				>
 			</File>
 			<File

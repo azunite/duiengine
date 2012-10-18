@@ -8,6 +8,7 @@
 #pragma  once
 #include "duistd.h"
 #include "duilistctrl.h"
+#include "DuiSystem.h"
 
 #pragma warning(disable:4018)
 #pragma warning(disable:4267)
@@ -365,7 +366,7 @@ BOOL CDuiListBox::Load(TiXmlElement* pTiXmlElem)
 		return TRUE;
 
 	CMyBuffer<char>	strXML;
-	BOOL		bRet   = DuiResManager::getSingleton().LoadResource(nChildSrc,strXML);
+	BOOL		bRet   = DuiSystem::getSingleton().GetResBuf(nChildSrc,DUIRES_XML_TYPE,strXML);
 	if (!bRet)	return TRUE;
 
 	TiXmlDocument xmlDoc;

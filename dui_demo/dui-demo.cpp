@@ -4,10 +4,11 @@
 #include "stdafx.h"
 #include "menuwndhook.h"
 #include "DuiSystem.h"
+#include "DuiDefaultLogger.h"
 
 #ifdef _DEBUG
 #include "..\memleakdetect\MemLeakDetect.h"
-static CMemLeakDetect memLeakDetect;
+// static CMemLeakDetect memLeakDetect;
 #endif
  
 #include "MainDlg.h"
@@ -18,24 +19,33 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	HRESULT hRes = CoInitialize(NULL);
 	ATLASSERT(SUCCEEDED(hRes));
  
+	char szCurrentDir[MAX_PATH]; memset( szCurrentDir, 0, sizeof(szCurrentDir) );
+	GetModuleFileNameA( NULL, szCurrentDir, sizeof(szCurrentDir) );
+	LPSTR lpInsertPos = strrchr( szCurrentDir, L'\\' );
+	*lpInsertPos = '\0';   
+
 	DuiSystem duiSystem(hInstance);
-     
+	DefaultLogger *pLoger=new DefaultLogger;
+	pLoger->setLogFilename(CStringA(szCurrentDir)+"\\dui-demo.log");
+	duiSystem.SetLogger(pLoger);
+
+
+	duiSystem.logEvent("demo started");
+	duiSystem.InitName2ID(IDR_DUI_NAME2ID);//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 #ifdef __DUIFILE_RC 
     char szCurrentDir[MAX_PATH]; memset( szCurrentDir, 0, sizeof(szCurrentDir) );
     GetModuleFileNameA( NULL, szCurrentDir, sizeof(szCurrentDir) );
     LPSTR lpInsertPos = strrchr( szCurrentDir, L'\\' );
     *lpInsertPos = '\0';   
     lstrcatA( szCurrentDir, "\\..\\dui_demo" );
-	DuiResManager::getSingleton().SetResourcePath( szCurrentDir, "layout\\idmap.xml");
-	DuiResManager::getSingleton().SetResourcePath( szCurrentDir, "layout\\def_skin_idmap.xml");
+	duiSystem.SetResProvider(new DuiResProviderFiles(szCurrentDir));
+
 #else
-	DuiResManager::getSingleton().SetResourceDLL(hInstance);
+	duiSystem.SetResProvider(new DuiResProviderPE(hInstance));
 #endif
-	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示
-	DuiName2ID::getSingleton().Init(IDR_DUI_NAME2ID);		//加载ID名称对照表
+	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义
 	DuiString::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
 	DuiFontPool::getSingleton().SetDefaultFont(DuiString::getSingleton().Get(IDS_APP_FONT), -12); // 设置字体
- 
 	DuiSkinPool::getSingleton().Init(IDR_DUI_SKIN_DEF); // 加载皮肤
 	DuiStylePool::getSingleton().Init(IDR_DUI_STYLE_DEF); // 加载风格
 	DuiCSS::getSingleton().Init(IDR_DUI_OBJATTR_DEF);//加载类默认属性
@@ -47,6 +57,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		CMainDlg dlgMain;  
 		nRet = dlgMain.DoModal();  
 	}
+
+	duiSystem.logEvent("demo end");
+
+	delete duiSystem.GetResProvider();
+	delete duiSystem.GetLogger();
 	//释放资源 
 	CMenuWndHook::UnInstallHook();
 

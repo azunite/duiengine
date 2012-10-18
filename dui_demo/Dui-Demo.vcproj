@@ -27,7 +27,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="build resouce id to winres2.rc"
-				CommandLine="..\tool\residbuilder -y -i .\layout\idmap.xml -i .\layout\def_skin_idmap.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+				CommandLine="..\tool\residbuilder -y -i skin.idmap -i layout.idmap -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -121,7 +121,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="build resouce id to winres2.rc"
-				CommandLine="..\tool\residbuilder -y -i .\layout\idmap.xml -i .\layout\def_skin_idmap.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+				CommandLine="..\tool\residbuilder -y -i skin.idmap -i layout.idmap -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -214,7 +214,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="build resouce id to winres2.rc"
-				CommandLine="..\tool\residbuilder -y -i .\layout\idmap.xml -i .\layout\def_skin_idmap.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+				CommandLine="..\tool\residbuilder -y -i skin.idmap -i layout.idmap -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -249,6 +249,7 @@
 				BrowseInformation="1"
 				WarningLevel="3"
 				DebugInformationFormat="4"
+				ShowIncludes="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -307,7 +308,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="build resouce id to winres2.rc"
-				CommandLine="..\tool\residbuilder -y -i .\layout\idmap.xml -i .\layout\def_skin_idmap.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+				CommandLine="..\tool\residbuilder -y -i skin.idmap -i layout.idmap -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -550,10 +551,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\layout\def_skin_idmap.xml"
-				>
-			</File>
-			<File
 				RelativePath=".\layout\def_string.xml"
 				>
 			</File>
@@ -570,7 +567,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\layout\idmap.xml"
+				RelativePath=".\layout.idmap"
 				>
 			</File>
 			<File
@@ -579,6 +576,10 @@
 			</File>
 			<File
 				RelativePath=".\layout\name2id.xml"
+				>
+			</File>
+			<File
+				RelativePath=".\skin.idmap"
 				>
 			</File>
 		</Filter>

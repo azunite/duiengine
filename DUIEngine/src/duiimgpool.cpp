@@ -9,6 +9,7 @@
 #include "duistd.h"
 #include "duiobject.h"
 #include "duiimgpool.h"
+#include "duiresprovider.h"
 
 namespace DuiEngine{
 
@@ -36,7 +37,7 @@ CDuiImgBase * DuiImgPool::GetImage(UINT uResID)
 	}else
 	{
 		CDuiImgBase *pImg=new CDuiBitmap;
-		pImg->LoadImg(uResID,NULL);
+		pImg->LoadImg(uResID,DUIRES_IMGX_TYPE);
 		if(pImg->IsEmpty())
 		{
 			delete pImg;

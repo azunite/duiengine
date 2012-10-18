@@ -6,7 +6,6 @@
 #pragma once
 
 #include <GdiPlus.h>
-extern "C" IMAGE_DOS_HEADER __ImageBase;
 
 namespace DuiEngine{
 
@@ -55,7 +54,7 @@ public:
 
 	virtual BOOL LoadImg(LPCTSTR pszFileName);
 
-	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType=NULL);
+	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType);
 
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 		DUIWIN_COLOR_ATTRIBUTE("mask", m_crMask, TRUE)

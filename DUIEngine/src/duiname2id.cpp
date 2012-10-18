@@ -1,13 +1,13 @@
 #include "duistd.h"
 #include "duiname2id.h"
-#include "duiresutil.h"
+#include "DuiSystem.h"
 #include <search.h>
 
 namespace DuiEngine{
 
 template<> DuiName2ID* Singleton<DuiName2ID>::ms_Singleton=0;
 
-size_t DuiName2ID::Init( UINT uXmlResID )
+size_t DuiName2ID::Init( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/)
 {
 	if(m_nCount)
 	{
@@ -16,8 +16,14 @@ size_t DuiName2ID::Init( UINT uXmlResID )
 		m_pBuf=NULL;
 		m_nCount=0;
 	}
+
+	CResPE resPE;
+	resPE.hInst=DuiSystem::getSingleton().GetInstance();
+	resPE.uID=uXmlResID;
+	resPE.strType=pszType;
+
 	CMyBuffer<char> strXml;
- 	if(DuiResManager::getSingleton().LoadResource(uXmlResID,strXml))
+ 	if(resPE.GetResBuffer(strXml))
 	{
 		TiXmlDocument xmlDoc;
 		xmlDoc.Parse(strXml);

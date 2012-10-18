@@ -34,7 +34,6 @@ void DuiWindowFactoryManager::AddStandardWindowFactory()
 	AddKeyObject(CDuiTabCtrl::GetClassName(),new TplDuiWindowFactory<CDuiTabCtrl>);
 	AddKeyObject(CDuiRadioBox::GetClassName(),new TplDuiWindowFactory<CDuiRadioBox>);
 	AddKeyObject(CDuiLink::GetClassName(),new TplDuiWindowFactory<CDuiLink>);
-	AddKeyObject(CDuiDrawFileIcon::GetClassName(),new TplDuiWindowFactory<CDuiDrawFileIcon>);
 	AddKeyObject(CDuiGroup::GetClassName(),new TplDuiWindowFactory<CDuiGroup>);
 	AddKeyObject(CDuiAnimateImgWnd::GetClassName(),new TplDuiWindowFactory<CDuiAnimateImgWnd>);
 	AddKeyObject(CDuiScrollBar::GetClassName(),new TplDuiWindowFactory<CDuiScrollBar>);

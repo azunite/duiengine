@@ -98,6 +98,7 @@ CDuiTabCtrl::CDuiTabCtrl() : m_nCurrentPage(0)
 , m_nHoverTabItem(-1)
 , m_nTabAlign(AlignTop)
 , m_nAnimateSteps(0)
+, m_ptText(-1,-1)
 {
 
 }
@@ -473,18 +474,31 @@ void CDuiTabCtrl::DrawItem( CDCHandle dc,const CRect &rcItem,int iItem,DWORD dwS
 	if(m_pSkinTab) 
 		m_pSkinTab->Draw(dc,rcItem,IIF_STATE3(dwState,DuiWndState_Normal,DuiWndState_Hover,DuiWndState_PushDown));
 
+	CRect rcIcon(m_ptIcon+rcItem.TopLeft(),CSize(0,0));
 	if(m_pSkinIcon)
 	{
-		CRect rcIcon(m_ptIcon,m_pSkinIcon->GetSkinSize());
+		rcIcon.right=rcIcon.left+m_pSkinIcon->GetSkinSize().cx;
+		rcIcon.bottom=rcIcon.top+m_pSkinIcon->GetSkinSize().cy;
 		m_pSkinIcon->Draw(dc,rcIcon,iItem);
 	}
-	if(m_ptText.x==0 && m_ptText.y==0)
-	{
-		CRect rc=rcItem;
-		CGdiAlpha::DrawText(dc,GetItem(iItem)->GetTitle(),-1,&rc,DT_SINGLELINE|DT_VCENTER|DT_CENTER);
-	}else
+
+	if(m_ptText.x!=-1 && m_ptText.y!=-1)
 	{
 		CGdiAlpha::TextOut(dc,rcItem.left+m_ptText.x,rcItem.top+m_ptText.y,GetItem(iItem)->GetTitle());
+	}else
+	{
+		CRect rcText=rcItem;
+		UINT align=DT_VCENTER|DT_SINGLELINE|DT_CENTER;
+		if(m_ptText.x==-1 && m_ptText.y!=-1)
+		{
+			rcText.top+=m_ptText.y;
+			align=DT_SINGLELINE|DT_CENTER;
+		}else if(m_ptText.x!=-1 && m_ptText.y==-1)
+		{
+			rcText.left+=m_ptText.x;
+			align=DT_VCENTER|DT_SINGLELINE;
+		}
+		CGdiAlpha::DrawText(dc,GetItem(iItem)->GetTitle(),-1,&rcText,align);
 	}
 }
 

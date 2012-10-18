@@ -9,7 +9,7 @@
 #include "duistd.h"
 #include "duiwnd.h"
 #include "duiwndfactorymanager.h"
-
+#include "DuiSystem.h"
 
 namespace DuiEngine{
 
@@ -1336,7 +1336,7 @@ HRESULT CDuiWindow::OnAttributeName(CStringA& strValue, BOOL bLoading)
 {
 	if(m_uCmdID==0)
 	{
-		m_uCmdID=DuiName2ID::getSingleton().Name2ID(strValue);
+		m_uCmdID=DuiSystem::getSingleton().Name2ID(strValue);
 	}
 	return S_FALSE;
 }

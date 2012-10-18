@@ -13,6 +13,7 @@
 #include "duiimage.h"
 #include "duiimgpool.h"
 #include "gdialpha.h"
+#include "DuiSystem.h"
 
 namespace DuiEngine{
 
@@ -502,7 +503,7 @@ DuiSkinPool::~DuiSkinPool()
 BOOL DuiSkinPool::Init(UINT uResID)
 {
 	CMyBuffer<char> strXml;
-	BOOL bRet = DuiResManager::getSingleton().LoadResource(uResID, strXml);
+	BOOL bRet = DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE, strXml);
 
 	if (!bRet)
 		return FALSE;

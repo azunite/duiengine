@@ -5,7 +5,7 @@
 #include "duistd.h"
 #include "duiobject.h"
 #include "duiimage.h"
-#include "duiresutil.h"
+#include "DuiSystem.h"
 
 
 #pragma comment(lib, "gdiplus.lib")
@@ -210,9 +210,20 @@ BOOL CDuiBitmap::LoadImg(LPCTSTR pszFileName)
 BOOL CDuiBitmap::LoadImg(UINT nIDResource,LPCSTR pszType/*=NULL*/)
 {
 	Clear();
-	BOOL bRet = DuiResManager::getSingleton().LoadResource(nIDResource, m_hBitmap);
-	if(!bRet) return FALSE;
-	ATLASSERT(m_hBitmap);
+	CResBase *pRes=DuiSystem::getSingleton().GetResProvider()->GetRes(pszType,nIDResource);
+	if(!pRes) return FALSE;
+
+	if(RES_FILE==pRes->GetResMode())
+	{
+		CResFile *pResFile=static_cast<CResFile*>(pRes);
+		m_hBitmap = (HBITMAP)::LoadImageA(NULL, pResFile->strFilePath, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	}else if(RES_PE==pRes->GetResMode())
+	{
+		CResPE *pResPE=static_cast<CResPE*>(pRes);
+		m_hBitmap = LoadBitmap(pResPE->hInst,MAKEINTRESOURCE(pResPE->uID));
+	}
+	delete pRes;
+	if(!m_hBitmap) return FALSE;
 	m_bManaged=TRUE;
 	return TRUE;
 }
@@ -372,29 +383,43 @@ BOOL CDuiImgX::LoadImg(LPCTSTR pszFileName)
 	return !IsEmpty();
 }
 
+
 BOOL CDuiImgX::LoadImg(UINT nIDResource,LPCSTR pszType)
 {
 	Clear();
-	CMyBuffer<char> strResource;
 
-	BOOL bRet = DuiResManager::getSingleton().LoadResource(nIDResource, strResource, pszType);
-	if(!bRet) return FALSE;
+	CResBase *pRes=DuiSystem::getSingleton().GetResProvider()->GetRes(pszType,nIDResource);
+	if(!pRes) return FALSE;
 
-	int len = strResource.size();
-	HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, len);
-	BYTE* pMem = (BYTE*)::GlobalLock(hMem);
+	if(RES_FILE==pRes->GetResMode())
+	{
+		CResFile *pResFile=static_cast<CResFile*>(pRes);
+		CStringW strFilePath=CA2W(pResFile->strFilePath);
+		m_pImg=new Gdiplus::Image(strFilePath);
+	}else if(RES_PE==pRes->GetResMode())
+	{
+		CResPE *pResPE=static_cast<CResPE*>(pRes);
+		CMyBuffer<char> imgBuf;
+		if(pResPE->GetResBuffer(imgBuf))
+		{
+			int len = imgBuf.size();
+			HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, len);
+			BYTE* pMem = (BYTE*)::GlobalLock(hMem);
 
-	memcpy(pMem, strResource, len);
+			memcpy(pMem, imgBuf, len);
 
-	IStream* pStm = NULL;
-	::CreateStreamOnHGlobal(hMem, TRUE, &pStm);//有待确认第二个参数
+			IStream* pStm = NULL;
+			::CreateStreamOnHGlobal(hMem, TRUE, &pStm);
 
-	m_pImg = Gdiplus::Image::FromStream(pStm);
+			m_pImg = Gdiplus::Image::FromStream(pStm);
 
-	::GlobalUnlock(hMem);
-	pStm->Release();
+			::GlobalUnlock(hMem);
+			pStm->Release();
+		}
+	}
+	delete pRes;
 
-	if(m_pImg->GetLastStatus() != 0)
+	if(m_pImg && m_pImg->GetLastStatus() != 0)
 	{
 		delete m_pImg;
 		m_pImg=NULL;

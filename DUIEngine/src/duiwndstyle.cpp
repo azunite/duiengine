@@ -7,6 +7,7 @@
 
 #include "duistd.h"
 #include "duiwndstyle.h"
+#include "DuiSystem.h"
 
 namespace DuiEngine{
 
@@ -55,7 +56,7 @@ BOOL DuiStylePool::GetStyle(LPCSTR lpszName, DuiStyle& style)
 BOOL DuiStylePool::Init(UINT uResID)
 {
 	CMyBuffer<char> strXml;
-	BOOL bRet = DuiResManager::getSingleton().LoadResource(uResID, strXml);
+	BOOL bRet = DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE, strXml);
 
 	if (!bRet)
 		return FALSE;

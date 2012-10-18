@@ -6,7 +6,7 @@ template<typename T, int t_nFixedBytes = 128>
 class CMyBuffer
 {
 public:
-	CMyBuffer() : m_p(NULL),m_nSize(0)
+	CMyBuffer() : m_p(NULL),m_nSize(0),m_bExternalBuf(FALSE)
 	{
 	}
 
@@ -43,6 +43,14 @@ public:
 		return m_p[i];
 	}
 
+	void Attach(T *pBuf,size_t size)
+	{
+		Free();
+		m_p=pBuf;
+		m_nSize=size;
+		m_bExternalBuf=TRUE;
+	}
+
 	T* Allocate(size_t nElements)
 	{
 		ATLASSERT(nElements <= (SIZE_MAX / sizeof(T))-1);
@@ -57,7 +65,9 @@ public:
 		else
 			m_p = reinterpret_cast<T*>(m_abFixedBuffer);
 		m_nSize=nBytes/sizeof(T);
+		memset(m_p,0,sizeof(T));//自动在第一个元素填0
 		memset(m_p+m_nSize,0,sizeof(T));//自动在最后增加一个0的位置
+		m_bExternalBuf=FALSE;
 		return m_p;
 	}
 
@@ -65,15 +75,17 @@ public:
 
 	void Free()
 	{
-		if(m_p != reinterpret_cast<T*>(m_abFixedBuffer))
+		if(!m_bExternalBuf && m_p != reinterpret_cast<T*>(m_abFixedBuffer))
 			free(m_p);
 		m_p=NULL;
 		m_nSize=0;
+		m_bExternalBuf=FALSE;
 	}
 private:
 	T* m_p;
 	BYTE m_abFixedBuffer[t_nFixedBytes];
 	size_t m_nSize;
+	BOOL	m_bExternalBuf;
 };
 
 }//namespace DuiEngine

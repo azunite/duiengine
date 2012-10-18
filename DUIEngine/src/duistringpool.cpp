@@ -7,7 +7,7 @@
 
 #include "duistd.h"
 #include "duistringpool.h"
-#include "duiresutil.h"
+#include "DuiSystem.h"
 
 namespace DuiEngine{
 
@@ -43,7 +43,7 @@ BOOL DuiString::Init(UINT uResID)
 	CMyBuffer<char> strXml;
 	BOOL bRet = FALSE;
 
-	bRet = DuiResManager::getSingleton().LoadResource(uResID, strXml);
+	bRet = DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE, strXml);
 	if (!bRet)
 		return FALSE;
 

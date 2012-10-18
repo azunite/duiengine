@@ -1,6 +1,6 @@
 #include "duistd.h"
 #include "DuiMenu.h"
-#include "duiresutil.h"
+#include "DuiSystem.h"
 #include "gdialpha.h"
 
 namespace DuiEngine{
@@ -185,7 +185,7 @@ BOOL CDuiMenu::LoadMenu( UINT uResID )
 	if(::IsMenu(m_hMenu)) return FALSE;
 
 	CMyBuffer<char> strMenu;
-	if(!DuiResManager::getSingleton().LoadResource(uResID,strMenu)) return FALSE;
+	if(!DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE,strMenu)) return FALSE;
 
 	TiXmlDocument xmlDoc;
 

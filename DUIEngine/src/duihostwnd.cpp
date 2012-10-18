@@ -3,8 +3,8 @@
 #include "duihostwnd.h"
 #include "DuiTipCtrl.h"
 #include "duiwndcmnctrl.h"
+#include "DuiSystem.h"
 
-// #include "IECtrl.h"
 
 
 namespace DuiEngine{
@@ -75,7 +75,7 @@ BOOL CDuiHostWnd::Load(UINT uResID)
 {
 	CMyBuffer<char> strXml;
 
-	BOOL bRet = DuiResManager::getSingleton().LoadResource(uResID, strXml);
+	BOOL bRet = DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE, strXml);
 
 	if (!bRet)
 		return FALSE;

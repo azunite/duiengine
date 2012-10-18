@@ -15,7 +15,6 @@
 #include "duiwndstyle.h"
 #include "duistringpool.h"
 #include "duiwndnotify.h"
-#include "duiname2id.h"
 #include "gdialpha.h"
 #include "duiref.h"
 #include <OCIdl.h>

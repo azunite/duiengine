@@ -1,7 +1,6 @@
 #include "duistd.h"
 #include "DuiCSS.h"
-#include "duiresutil.h"
-
+#include "DuiSystem.h"
 
 namespace DuiEngine
 {
@@ -12,7 +11,7 @@ template<> DuiCSS *Singleton<DuiCSS>::ms_Singleton =0;
 BOOL DuiCSS::Init(UINT uXmlID)
 {
 	CMyBuffer<char> strXml;
-	BOOL bRet=DuiResManager::getSingleton().LoadResource(uXmlID,strXml,DUIRES_XML_TYPE);
+	BOOL bRet=DuiSystem::getSingleton().GetResBuf(uXmlID,DUIRES_XML_TYPE,strXml);
 	if(!bRet) return FALSE;
 	TiXmlDocument *pXmlDoc=new TiXmlDocument;
 	if(!pXmlDoc) return FALSE;

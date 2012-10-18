@@ -459,37 +459,6 @@ protected:
 	DUIWIN_END_MSG_MAP()
 };
 
-
-
-class DUI_EXP CDuiDrawFileIcon : public CDuiWindow
-{
-	DUIOBJ_DECLARE_CLASS_NAME(CDuiDrawFileIcon, "iconfrommodule")
-	CDuiDrawFileIcon();
-public:
-
-	// Do nothing
-	void OnPaint(CDCHandle dc);
-
-
-	HRESULT OnIconFile(CStringA& strValue, BOOL bLoading);
-
-	HRESULT OnMemIcon(CStringA& strValue, BOOL bLoading);
-
-protected:
-	DUIWIN_BEGIN_MSG_MAP()
-		MSG_WM_PAINT(OnPaint)
-	DUIWIN_END_MSG_MAP()
-
-	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-		DUIWIN_CUSTOM_ATTRIBUTE("srcfile",   OnIconFile)
-		DUIWIN_CUSTOM_ATTRIBUTE("iconhandle",   OnMemIcon)
-	DUIWIN_DECLARE_ATTRIBUTES_END()
-
-protected:
-	CStringA	   m_strFilePath;
-	HICON		   m_hIcon;
-};
-
 //////////////////////////////////////////////////////////////////////////
 // Radio Box
 //

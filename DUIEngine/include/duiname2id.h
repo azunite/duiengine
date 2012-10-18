@@ -8,6 +8,7 @@
 #pragma once
 
 #include "DUISingleton.h"
+#include "duiresprovider.h"
 
 namespace DuiEngine{
 
@@ -21,7 +22,7 @@ class DUI_EXP DuiName2ID : public Singleton<DuiName2ID>
 		{
 
 		}
-		
+
 		static int Compare( __in const void * id1, __in const void * id2 )
 		{
 			CNamedID *pid1=(CNamedID*)id1;
@@ -42,7 +43,7 @@ public:
 
 	UINT Name2ID(CStringA strName);
 
-    size_t Init(UINT uXmlResID);
+    size_t Init(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 	
 protected:
 	CNamedID *m_pBuf;

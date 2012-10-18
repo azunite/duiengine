@@ -11,6 +11,7 @@
 #include "duiimage.h"
 #include "duitheme.h"
 #include "duiwndnotify.h"
+#include "duisystem.h"
 
 namespace DuiEngine{
 
@@ -847,45 +848,21 @@ void CDuiIconWnd::LoadIconFile( LPCWSTR lpFIleName )
 void CDuiIconWnd::_ReloadIcon()
 {
 	if (m_theIcon)		DestroyIcon(m_theIcon);
-	DuiResManager ::getSingleton().LoadResource(m_uResID,m_theIcon,m_nSize);
-	m_uResIDCurrent = m_uResID;
-}
-
-CDuiDrawFileIcon::CDuiDrawFileIcon()
-{
-	m_strFilePath.Empty();
-	m_hIcon = NULL;
-}
-
-void CDuiDrawFileIcon::OnPaint(CDCHandle dc)
-{
-	if (NULL != m_hIcon)
+	CResBase *pRes=DuiSystem::getSingleton().GetResProvider()->GetRes(DUIRES_ICON_TYPE,m_uResID);
+	if(pRes)
 	{
-		::DrawIconEx(dc.m_hDC, m_rcWindow.left, m_rcWindow.top, m_hIcon, m_rcWindow.Width(), m_rcWindow.Height(),  0, NULL, DI_NORMAL);
+		if(pRes->GetResMode()==RES_PE)
+		{
+			CResPE *pResPE=static_cast<CResPE*>(pRes);
+			m_theIcon=LoadIcon(pResPE->hInst,MAKEINTRESOURCE(pResPE->uID));
+		}else if(pRes->GetResMode()==RES_FILE)
+		{
+			CResFile *pResFile=static_cast<CResFile*>(pRes);
+			m_theIcon=(HICON)LoadImageA(NULL,pResFile->strFilePath,IMAGE_ICON,m_nSize,m_nSize,LR_DEFAULTCOLOR | LR_DEFAULTSIZE | LR_LOADFROMFILE );
+		}
 	}
-
+	if(m_theIcon) m_uResIDCurrent = m_uResID;
 }
-
-
-HRESULT CDuiDrawFileIcon::OnIconFile(CStringA& strValue, BOOL bLoading)
-{
-	if (FALSE == strValue.IsEmpty())
-		m_strFilePath = strValue;
-	return S_OK;
-}
-
-HRESULT CDuiDrawFileIcon::OnMemIcon(CStringA& strValue, BOOL bLoading)
-{
-	if (FALSE == strValue.IsEmpty())
-	{
-		DWORD dwValue = StrToIntA(strValue);
-		m_hIcon = (HICON)UlongToPtr(dwValue);
-	}
-
-	return S_OK;
-
-}
-
 
 //////////////////////////////////////////////////////////////////////////
 // Radio Box

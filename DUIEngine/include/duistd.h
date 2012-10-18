@@ -46,6 +46,7 @@
 
 #ifdef DLL_DUI
 # ifdef DUIENGINE_EXPORTS
+# pragma message("dll export")
 #  define DUI_EXP __declspec(dllexport)
 # else
 #  define DUI_EXP __declspec(dllimport)
