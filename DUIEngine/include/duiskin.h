@@ -189,12 +189,6 @@ public:
     DUIWIN_DECLARE_ATTRIBUTES_END()
 };
 
-class DUI_EXP CDuiSkinImgHorzExtend : public CDuiSkinImgFrame
-{
-public:
-    DUIOBJ_DECLARE_CLASS_NAME(CDuiSkinImgHorzExtend, "imghorzex")
-};
-
 class DUI_EXP CDuiSkinButton : public CDuiSkinBase
 {
     DUIOBJ_DECLARE_CLASS_NAME(CDuiSkinButton, "button")
