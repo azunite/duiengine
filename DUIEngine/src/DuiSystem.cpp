@@ -65,10 +65,10 @@ size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*
 		m_nCount=0;
 	}
 
-	CResPE resPE(m_hInst,uXmlResID,pszType);
+	DuiResProviderPE resProvider(m_hInst);
 
 	CMyBuffer<char> strXml;
-	if(resPE.GetResBuffer(strXml))
+	if(resProvider.GetResBuffer(pszType,uXmlResID,strXml))
 	{
 		TiXmlDocument xmlDoc;
 		xmlDoc.Parse(strXml);
@@ -143,11 +143,7 @@ void DuiSystem::destroySingletons()
 BOOL DuiSystem::GetResBuf( UINT uID,LPCSTR pszType,CMyBuffer<char> &buf )
 {
 	if(!m_pResProvider) return FALSE;
-	CResBase *pRes=m_pResProvider->GetRes(pszType,uID);
-	if(!pRes) return FALSE;
-	BOOL bRet=pRes->GetResBuffer(buf);
-	delete pRes;
-	return bRet;
+	return m_pResProvider->GetResBuffer(pszType,uID,buf);
 }
 
 void DuiSystem::logEvent( const CStringA & message, LoggingLevel level /*= Standard*/ )

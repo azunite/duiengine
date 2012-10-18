@@ -210,10 +210,7 @@ BOOL CDuiBitmap::LoadImg(LPCTSTR pszFileName)
 BOOL CDuiBitmap::LoadImg(UINT nIDResource,LPCSTR pszType/*=NULL*/)
 {
 	Clear();
-	CResBase *pRes=DuiSystem::getSingleton().GetResProvider()->GetRes(pszType,nIDResource);
-	if(!pRes) return FALSE;
-	m_hBitmap=pRes->LoadBitmap();
-	delete pRes;
+	m_hBitmap=DuiSystem::getSingleton().GetResProvider()->LoadBitmap(pszType,nIDResource);
 	if(!m_hBitmap) return FALSE;
 	m_bManaged=TRUE;
 	return TRUE;
@@ -378,11 +375,7 @@ BOOL CDuiImgX::LoadImg(LPCTSTR pszFileName)
 BOOL CDuiImgX::LoadImg(UINT nIDResource,LPCSTR pszType)
 {
 	Clear();
-
-	CResBase *pRes=DuiSystem::getSingleton().GetResProvider()->GetRes(pszType,nIDResource);
-	if(!pRes) return FALSE;
-	m_pImg=pRes->LoadImage();
-	delete pRes;
+	m_pImg=DuiSystem::getSingleton().GetResProvider()->LoadImage(pszType,nIDResource);
 	return !IsEmpty();
 }
 

@@ -57,51 +57,14 @@ namespace DuiEngine{
 		int	 nID;
 	};
 
-	class DUI_EXP CResBase
-	{
-	public:
-		virtual ~CResBase(){}
-
-		virtual HBITMAP	LoadBitmap()=NULL;
-		virtual HICON   LoadIcon()=NULL;
-		virtual Gdiplus::Image * LoadImage()=NULL;
-		virtual BOOL GetResBuffer(CMyBuffer<char> & buf)=NULL;
-	};
-
-	class DUI_EXP CResPE:public CResBase
-	{
-	public:
-		CResPE(HINSTANCE _hInst,UINT _uID,const CStringA & _strType);
-
-		HBITMAP	LoadBitmap();
-		HICON   LoadIcon();
-		Gdiplus::Image * LoadImage();
-		BOOL GetResBuffer(CMyBuffer<char> & buf);
-	protected:
-		HINSTANCE hInst;
-		CStringA strType;
-		UINT uID;
-	};
-
-	class DUI_EXP CResFile:public CResBase
-	{
-	public:
-		CResFile(const CStringA & strFile);
-
-		HBITMAP	LoadBitmap();
-		HICON   LoadIcon();
-		Gdiplus::Image * LoadImage();
-		BOOL GetResBuffer(CMyBuffer<char> & buf);
-	protected:
-		CStringA	strFilePath;//ÎÄ¼þÂ·¾¶
-	};
-
-
 	class DUI_EXP DuiResProviderBase
 	{
 	public:
 		virtual ~DuiResProviderBase(){}
-		virtual CResBase * GetRes(LPCSTR strResType,UINT uResID)=NULL;		
+		virtual HBITMAP	LoadBitmap(LPCSTR strType,UINT uID)=NULL;
+		virtual HICON   LoadIcon(LPCSTR strType,UINT uID)=NULL;
+		virtual Gdiplus::Image * LoadImage(LPCSTR strType,UINT uID)=NULL;
+		virtual BOOL GetResBuffer(LPCSTR strType,UINT uID,CMyBuffer<char> & buf)=NULL;
 	};
 
 	class DUI_EXP DuiResProviderPE:public DuiResProviderBase
@@ -110,8 +73,11 @@ namespace DuiEngine{
 		DuiResProviderPE(HINSTANCE hInst):m_hResInst(hInst)
 		{
 		}
+		HBITMAP	LoadBitmap(LPCSTR strType,UINT uID);
+		HICON   LoadIcon(LPCSTR strType,UINT uID);
+		Gdiplus::Image * LoadImage(LPCSTR strType,UINT uID);
+		BOOL GetResBuffer(LPCSTR strType,UINT uID,CMyBuffer<char> & buf);
 
-		CResBase * GetRes(LPCSTR strType,UINT uID);
 	protected:
 		HINSTANCE m_hResInst;
 	};
@@ -122,9 +88,14 @@ namespace DuiEngine{
 
 		DuiResProviderFiles(const CStringA & strPath);
 
-		CResBase * GetRes(LPCSTR strType,UINT uID);
+		HBITMAP	LoadBitmap(LPCSTR strType,UINT uID);
+		HICON   LoadIcon(LPCSTR strType,UINT uID);
+		Gdiplus::Image * LoadImage(LPCSTR strType,UINT uID);
+		BOOL GetResBuffer(LPCSTR strType,UINT uID,CMyBuffer<char> & buf);
 
 	protected:
+		CStringA GetRes( LPCSTR strType,UINT uID );
+
 		BOOL AddIdMap(const CStringA & strIdmapFile);
 		CStringA m_strPath;
 		std::map<DuiResID,CStringA> m_mapFiles;

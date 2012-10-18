@@ -7,50 +7,21 @@
 
 namespace DuiEngine{
 
-
-	BOOL CResPE::GetResBuffer( CMyBuffer<char> & buf )
+	HBITMAP DuiResProviderPE::LoadBitmap( LPCSTR strType,UINT uID )
 	{
-		HRSRC hRsrc = ::FindResourceA(hInst, MAKEINTRESOURCEA(uID), strType);
-
-		if (NULL == hRsrc)
-			return FALSE;
-
-		DWORD dwSize = ::SizeofResource(hInst, hRsrc); 
-		if (0 == dwSize)
-			return FALSE;
-
-		HGLOBAL hGlobal = ::LoadResource(hInst, hRsrc); 
-		if (NULL == hGlobal)
-			return FALSE;
-
-		LPVOID pBuffer = ::LockResource(hGlobal); 
-		if (NULL == pBuffer)
-			return FALSE;
-
-		buf.AllocateBytes(dwSize);
-		memcpy(buf,pBuffer,dwSize);
-		// 			buf.Attach((char*)pBuffer,dwSize);
-
-		::FreeResource(hGlobal);
-
-		return TRUE;
+		return ::LoadBitmap(m_hResInst,MAKEINTRESOURCE(uID));
 	}
 
-	HBITMAP CResPE::LoadBitmap( )
+	HICON DuiResProviderPE::LoadIcon( LPCSTR strType,UINT uID )
 	{
-		return ::LoadBitmap(hInst,MAKEINTRESOURCE(uID));
+		return ::LoadIcon(m_hResInst,MAKEINTRESOURCE(uID));
 	}
 
-	HICON CResPE::LoadIcon()
-	{
-		return ::LoadIcon(hInst,MAKEINTRESOURCE(uID));
-	}
-
-	Gdiplus::Image * CResPE::LoadImage()
+	Gdiplus::Image * DuiResProviderPE::LoadImage( LPCSTR strType,UINT uID )
 	{
 		Gdiplus::Image *pImage=NULL;
 		CMyBuffer<char> imgBuf;
-		if(GetResBuffer(imgBuf))
+		if(GetResBuffer(strType,uID,imgBuf))
 		{
 			int len = imgBuf.size();
 			HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, len);
@@ -66,21 +37,35 @@ namespace DuiEngine{
 			::GlobalUnlock(hMem);
 			pStm->Release();
 		}
-		return pImage;
-	}
+		return pImage;	}
 
-	CResPE::CResPE( HINSTANCE _hInst,UINT _uID,const CStringA & _strType )
-		:hInst(_hInst),uID(_uID),strType(_strType)
+	BOOL DuiResProviderPE::GetResBuffer( LPCSTR strType,UINT uID,CMyBuffer<char> & buf )
 	{
+		HRSRC hRsrc = ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
 
-	}
-	CResBase * DuiResProviderPE::GetRes( LPCSTR strType,UINT uID )
-	{
-		if(!m_hResInst) return NULL;
-		if(!FindResourceA(m_hResInst,MAKEINTRESOURCEA(uID),strType)) return NULL;
-		return new CResPE(m_hResInst,uID,strType);
-	}
+		if (NULL == hRsrc)
+			return FALSE;
 
+		DWORD dwSize = ::SizeofResource(m_hResInst, hRsrc); 
+		if (0 == dwSize)
+			return FALSE;
+
+		HGLOBAL hGlobal = ::LoadResource(m_hResInst, hRsrc); 
+		if (NULL == hGlobal)
+			return FALSE;
+
+		LPVOID pBuffer = ::LockResource(hGlobal); 
+		if (NULL == pBuffer)
+			return FALSE;
+
+		buf.AllocateBytes(dwSize);
+		memcpy(buf,pBuffer,dwSize);
+		// 			buf.Attach((char*)pBuffer,dwSize);
+
+		::FreeResource(hGlobal);
+
+		return TRUE;
+	}
 	DuiResProviderFiles::DuiResProviderFiles( const CStringA & strPath ) :m_strPath(strPath)
 	{
 		WIN32_FIND_DATAA wfd;
@@ -96,12 +81,12 @@ namespace DuiEngine{
 		}
 	}
 
-	CResBase * DuiResProviderFiles::GetRes( LPCSTR strType,UINT uID )
+	CStringA DuiResProviderFiles::GetRes( LPCSTR strType,UINT uID )
 	{
 		DuiResID resID(strType,uID);
 		std::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
-		if(it==m_mapFiles.end()) return NULL;
-		return new CResFile(it->second);
+		if(it==m_mapFiles.end()) return "";
+		return it->second;
 	}
 
 	BOOL DuiResProviderFiles::AddIdMap( const CStringA & strIdmapFile )
@@ -148,24 +133,25 @@ namespace DuiEngine{
 		return TRUE;
 	}
 
-	CResFile::CResFile( const CStringA & strFile )
+	HBITMAP DuiResProviderFiles::LoadBitmap( LPCSTR strType,UINT uID )
 	{
-		strFilePath=strFile;
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return NULL;
+		return (HBITMAP)::LoadImageA(NULL, strPath, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 	}
 
-	HBITMAP CResFile::LoadBitmap()
+	HICON DuiResProviderFiles::LoadIcon( LPCSTR strType,UINT uID )
 	{
-		return (HBITMAP)::LoadImageA(NULL, (LPCSTR)strFilePath, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return NULL;
+		return (HICON)::LoadImageA(NULL, strPath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
 	}
 
-	HICON CResFile::LoadIcon()
+	Gdiplus::Image * DuiResProviderFiles::LoadImage( LPCSTR strType,UINT uID )
 	{
-		return (HICON)::LoadImageA(NULL, (LPCSTR)strFilePath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
-	}
-
-	Gdiplus::Image * CResFile::LoadImage()
-	{
-		CStringW strPathW=CA2W(strFilePath);
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return NULL;
+		CStringW strPathW=CA2W(strPath);
 		Gdiplus::Image *pImg=new Gdiplus::Image(strPathW);
 		if(pImg->GetLastStatus() != 0)
 		{
@@ -175,9 +161,11 @@ namespace DuiEngine{
 		return pImg;
 	}
 
-	BOOL CResFile::GetResBuffer( CMyBuffer<char> & buf )
+	BOOL DuiResProviderFiles::GetResBuffer( LPCSTR strType,UINT uID,CMyBuffer<char> & buf )
 	{
-		FILE *f=fopen(strFilePath,"rb");
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return FALSE;
+		FILE *f=fopen(strPath,"rb");
 		if(!f) return FALSE;
 		int len=_filelength(_fileno(f));
 		buf.AllocateBytes(len);
@@ -187,5 +175,6 @@ namespace DuiEngine{
 		fclose(f);
 		return bRet;
 	}
+
 
 }//namespace DuiEngine

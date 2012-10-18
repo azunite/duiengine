@@ -848,9 +848,7 @@ void CDuiIconWnd::LoadIconFile( LPCWSTR lpFIleName )
 void CDuiIconWnd::_ReloadIcon()
 {
 	if (m_theIcon)		DestroyIcon(m_theIcon);
-	CResBase *pRes=DuiSystem::getSingleton().GetResProvider()->GetRes(DUIRES_ICON_TYPE,m_uResID);
-	if(pRes) m_theIcon=pRes->LoadIcon();
-	delete pRes;
+	m_theIcon=DuiSystem::getSingleton().GetResProvider()->LoadIcon(DUIRES_ICON_TYPE,m_uResID);
 	if(m_theIcon) m_uResIDCurrent = m_uResID;
 }
 
