@@ -33,6 +33,8 @@ protected:
 
 	void OnCommand(UINT uNotifyCode, int nID, HWND wndCtl);
 
+	LRESULT OnListBtnClick(LPNMHDR pNHdr);
+
 	BEGIN_MSG_MAP_EX(CUIHander)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
 		MSG_WM_INITDIALOG(OnInitDialog)
@@ -52,6 +54,7 @@ protected:
 		DUI_NOTIFY_ID_COMMAND(1201, OnWebkit_GoForward)
 		DUI_NOTIFY_ID_COMMAND(1202, OnWebkit_Refresh)
 		DUI_NOTIFY_ID_COMMAND(1204, OnWebkit_Go)
+		DUI_NOTIFY_HANDLER(mylist,DUINM_LBITEMNOTIFY,OnListBtnClick)
 	DUI_NOTIFY_MAP_END()	
 private:
 	CMainDlg * m_pMainDlg; 

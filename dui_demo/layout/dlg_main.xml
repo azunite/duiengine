@@ -70,7 +70,7 @@
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3"  tip="list item tip2">button</button>
+                <button class="normalbtn" id="21" pos="300,3,-10,-3"  tip="list item tip2">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>

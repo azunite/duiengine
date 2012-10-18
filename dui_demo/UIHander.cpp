@@ -137,3 +137,11 @@ void CUIHander::OnWebkit_Go()
 // 	CStringA strURI=CW2A(szURI,CP_UTF8);
 // 	pWebkitCtrl->SetURI(strURI);
 }
+
+//演示列表中的按钮控件的响应
+LRESULT CUIHander::OnListBtnClick( LPNMHDR pNHdr )
+{
+	DUINMITEMNOTIFY *pNHdrEx=(DUINMITEMNOTIFY*)pNHdr;
+
+	return S_OK;
+}
