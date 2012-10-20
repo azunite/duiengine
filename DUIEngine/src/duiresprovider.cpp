@@ -113,6 +113,8 @@ namespace DuiEngine{
 				DuiResID id(pXmlElem->Attribute("type"));
 				pXmlElem->Attribute("id",&(int)id.nID);
 				CStringA strFile = pXmlElem->Attribute("file");
+				CStringW strFileW=CA2W(strFile,CP_UTF8);
+				strFile=CW2A(strFileW);
 				if(!m_strPath.IsEmpty()) strFile.Format("%s\\%s",(LPCSTR)m_strPath,(LPCSTR)strFile);
 				m_mapFiles[id]=strFile;
 			}
