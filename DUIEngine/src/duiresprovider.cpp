@@ -68,17 +68,7 @@ namespace DuiEngine{
 	}
 	DuiResProviderFiles::DuiResProviderFiles( const CStringA & strPath ) :m_strPath(strPath)
 	{
-		WIN32_FIND_DATAA wfd;
-		CStringA strFilter;
-		strFilter.Format("%s\\*.%s",(LPCSTR)m_strPath,EXT_IDMAP);
-		HANDLE hFnd=FindFirstFileA(strFilter,&wfd);
-		if(hFnd)
-		{
-			do{
-				CStringA strIdmap=strPath+"\\"+wfd.cFileName;
-				AddIdMap(strIdmap);
-			}while(FindNextFileA(hFnd,&wfd));
-		}
+		AddIdMap(CStringA(strPath)+"\\"+INDEX_XML);
 	}
 
 	CStringA DuiResProviderFiles::GetRes( LPCSTR strType,UINT uID )
@@ -120,8 +110,7 @@ namespace DuiEngine{
 			CStringA strValue = pXmlElem->Value();
 			if(strValue=="resid")
 			{
-				DuiResID id;
-				id.strType=pXmlElem->Attribute("type");
+				DuiResID id(pXmlElem->Attribute("type"));
 				pXmlElem->Attribute("id",&(int)id.nID);
 				CStringA strFile = pXmlElem->Attribute("file");
 				if(!m_strPath.IsEmpty()) strFile.Format("%s\\%s",(LPCSTR)m_strPath,(LPCSTR)strFile);

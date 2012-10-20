@@ -11,12 +11,13 @@
 #include <io.h>
 #include <GdiPlus.h>
 
-#define DUIRES_XML_TYPE "xml"
-#define DUIRES_IMGX_TYPE "imgx"
-#define DUIRES_BMP_TYPE "bitmap"
-#define DUIRES_ICON_TYPE "icon"
+#define DUIRES_XML_TYPE "XML"
+#define DUIRES_IMGX_TYPE "IMGX"
+#define DUIRES_BMP_TYPE "BMP"
+#define DUIRES_ICON_TYPE "ICO"
 
-#define EXT_IDMAP	"idmap"		//文件夹资源的文件映射表扩展名
+#define INDEX_XML	"index.xml"		//文件夹资源的文件映射表索引表文件名
+#define MAX_TYPE		10
 
 #ifdef _DEBUG
 #   define DUIRES_ASSERTW(expr, format, ...) \
@@ -40,20 +41,21 @@ namespace DuiEngine{
 	class DuiResID
 	{
 	public:
-		DuiResID(CStringA str="",UINT id=0)
+		DuiResID(LPCSTR pszType,UINT id=0)
 		{
-			strType=str;
+			ATLASSERT(pszType);
+			strcpy(szType,pszType);
 			nID=(int)id;
 		}
 
 		bool operator < ( const DuiResID & rt) const
 		{
-			int nret=_stricmp(strType,rt.strType);
+			int nret=_stricmp(szType,rt.szType);
 			if(nret==0) nret=(int)(nID-rt.nID);
 			return nret<0;
 		}
 
-		CStringA strType;
+		char szType[MAX_TYPE];
 		int	 nID;
 	};
 

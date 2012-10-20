@@ -1,8 +1,6 @@
 <skins>
   <imgframe name="dlg_frame" owner="DUI-DEMO"   src="1" left="5" right="5" top="40" bottom="40"/>
   
-	<imglst name="ico_logo"          src="500"/>
-
 	<imglst name="btncheckbox"         src="51" subwidth="15"  />
 	<imglst name="btnRadio"            src="52" subwidth="15"  />
   <imglst name="focuscheckbox" src="53"/>
