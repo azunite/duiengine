@@ -480,7 +480,6 @@ void DuiSkinFactoryManager::AddStandardSkin()
 	AddKeyObject(CDuiImageList::GetClassName(),new TplSkinFactory<CDuiImageList>());
 	AddKeyObject(CDuiSkinImgFrame::GetClassName(),new TplSkinFactory<CDuiSkinImgFrame>());
 	AddKeyObject(CDuiSkinButton::GetClassName(),new TplSkinFactory<CDuiSkinButton>());
-	AddKeyObject(CDuiSkinImgHorzExtend::GetClassName(),new TplSkinFactory<CDuiSkinImgHorzExtend>());
 	AddKeyObject(CDuiSkinGradation::GetClassName(),new TplSkinFactory<CDuiSkinGradation>());
 	AddKeyObject(CDuiScrollbarSkin::GetClassName(),new TplSkinFactory<CDuiScrollbarSkin>());
 	AddKeyObject(CDuiMenuBorderSkin::GetClassName(),new TplSkinFactory<CDuiMenuBorderSkin>());
@@ -507,7 +506,7 @@ BOOL DuiSkinPool::Init(UINT uResID)
 
 	if (!bRet)
 		return FALSE;
-
+	return FALSE;
 	return Init(strXml);
 }
 
@@ -525,6 +524,7 @@ BOOL DuiSkinPool::Init(LPCSTR lpszXml)
 
 int DuiSkinPool::LoadSkins(CStringA strOwnerName)
 {
+	return 0;
 	int nLoaded=0;
 	CStringA strSkinName, strTypeName;
 
