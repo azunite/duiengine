@@ -36,13 +36,13 @@ CDuiImgBase * DuiImgPool::GetImage(UINT uResID)
 		return GetKeyObject(uResID);
 	}else
 	{
-		CDuiImgBase *pImg=new CDuiBitmap;
+		CDuiImgBase *pImg=new CDuiImgX;
 		pImg->LoadImg(uResID,DUIRES_IMGX_TYPE);
 		if(pImg->IsEmpty())
 		{
 			delete pImg;
-			pImg=new CDuiImgX;
-			pImg->LoadImg(uResID,DUIRES_IMGX_TYPE);
+			pImg=new CDuiBitmap;
+			pImg->LoadImg(uResID,DUIRES_BMP_TYPE);
 			if(pImg->IsEmpty())
 			{
 				delete pImg;
