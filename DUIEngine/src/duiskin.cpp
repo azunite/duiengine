@@ -506,7 +506,6 @@ BOOL DuiSkinPool::Init(UINT uResID)
 
 	if (!bRet)
 		return FALSE;
-	return FALSE;
 	return Init(strXml);
 }
 
