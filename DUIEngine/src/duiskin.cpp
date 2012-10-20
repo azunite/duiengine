@@ -523,7 +523,6 @@ BOOL DuiSkinPool::Init(LPCSTR lpszXml)
 
 int DuiSkinPool::LoadSkins(CStringA strOwnerName)
 {
-	return 0;
 	int nLoaded=0;
 	CStringA strSkinName, strTypeName;
 
