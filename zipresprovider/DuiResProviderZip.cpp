@@ -74,7 +74,16 @@ HICON DuiResProviderZip::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/
 	CZipFile zf;
 	if(!m_zipFile.GetFile(strPath,zf)) return NULL;
 
-	return CreateIconFromResourceEx(zf.GetData(),zf.GetSize(),TRUE,0,cx,cy,LR_DEFAULTCOLOR|LR_DEFAULTSIZE);
+	TCHAR szTmp[MAX_PATH+1];
+	GetTempPath(MAX_PATH,szTmp);
+	GetTempFileName(szTmp,_T("ICO"),0,szTmp);
+	FILE *f=_tfopen(szTmp,_T("wb"));
+	if(!f) return NULL;
+	fwrite(zf.GetData(),1,zf.GetSize(),f);
+	fclose(f);
+	HICON hIcon=(HICON)::LoadImage(NULL,szTmp,IMAGE_ICON,cx,cy,LR_DEFAULTSIZE|LR_DEFAULTCOLOR|LR_LOADFROMFILE);
+	DeleteFile(szTmp);
+	return hIcon;
 }
 
 Gdiplus::Image * DuiResProviderZip::LoadImage( LPCSTR strType,UINT uID )

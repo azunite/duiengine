@@ -789,7 +789,6 @@ void CDuiCheckBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 CDuiIconWnd::CDuiIconWnd()
 : m_uResID(-1)
 , m_nSize(16)
-, m_bOemIcon(FALSE)
 {
 
 }
@@ -848,7 +847,7 @@ void CDuiIconWnd::LoadIconFile( LPCWSTR lpFIleName )
 void CDuiIconWnd::_ReloadIcon()
 {
 	if (m_theIcon)		DestroyIcon(m_theIcon);
-	m_theIcon=DuiSystem::getSingleton().GetResProvider()->LoadIcon(DUIRES_ICON_TYPE,m_uResID);
+	m_theIcon=DuiSystem::getSingleton().GetResProvider()->LoadIcon(DUIRES_ICON_TYPE,m_uResID,m_nSize,m_nSize);
 	if(m_theIcon) m_uResIDCurrent = m_uResID;
 }
 

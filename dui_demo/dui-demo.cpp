@@ -50,7 +50,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
     lstrcatA( szCurrentDir, "\\..\\dui_demo" );
 // 	duiSystem.SetResProvider(new DuiResProviderFiles(szCurrentDir));
 
-#else
+#else 
 // 	duiSystem.SetResProvider(new DuiResProviderPE(hInstance));
 #endif 
 	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义

@@ -421,7 +421,7 @@ protected:
 // Icon Control
 // Use src attribute specify a resource id
 // 
-// Usage: <icon src=xx oem="0" size="16"/>
+// Usage: <icon src=xx size="16"/>
 //
 class DUI_EXP CDuiIconWnd : public CDuiWindow
 {
@@ -445,11 +445,9 @@ protected:
 	UINT m_uResID;
 	UINT m_uResIDCurrent;
 	int m_nSize;
-	BOOL m_bOemIcon;
 
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 		DUIWIN_UINT_ATTRIBUTE("src", m_uResID, FALSE)
-		DUIWIN_UINT_ATTRIBUTE("oem", m_bOemIcon, FALSE)
 		DUIWIN_INT_ATTRIBUTE("size", m_nSize, FALSE)
 	DUIWIN_DECLARE_ATTRIBUTES_END()
 
