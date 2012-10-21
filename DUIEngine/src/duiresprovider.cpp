@@ -4,6 +4,7 @@
 //////////////////////////////////////////////////////////////////////////
 #include "duistd.h"
 #include "duiresprovider.h"
+#include <io.h>
 
 namespace DuiEngine{
 
@@ -12,9 +13,9 @@ namespace DuiEngine{
 		return ::LoadBitmap(m_hResInst,MAKEINTRESOURCE(uID));
 	}
 
-	HICON DuiResProviderPE::LoadIcon( LPCSTR strType,UINT uID )
+	HICON DuiResProviderPE::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
 	{
-		return ::LoadIcon(m_hResInst,MAKEINTRESOURCE(uID));
+		return (HICON)::LoadImage(m_hResInst,MAKEINTRESOURCE(uID),IMAGE_ICON,cx,cy,LR_DEFAULTCOLOR|LR_DEFAULTSIZE);
 	}
 
 	Gdiplus::Image * DuiResProviderPE::LoadImage( LPCSTR strType,UINT uID )
@@ -60,7 +61,7 @@ namespace DuiEngine{
 
 		buf.AllocateBytes(dwSize);
 		memcpy(buf,pBuffer,dwSize);
-		// 			buf.Attach((char*)pBuffer,dwSize);
+// 		buf.Attach((char*)pBuffer,dwSize);
 
 		::FreeResource(hGlobal);
 
@@ -131,11 +132,11 @@ namespace DuiEngine{
 		return (HBITMAP)::LoadImageA(NULL, strPath, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 	}
 
-	HICON DuiResProviderFiles::LoadIcon( LPCSTR strType,UINT uID )
+	HICON DuiResProviderFiles::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
 	{
 		CStringA strPath=GetRes(strType,uID);
 		if(strPath.IsEmpty()) return NULL;
-		return (HICON)::LoadImageA(NULL, strPath, IMAGE_ICON, 0, 0, LR_LOADFROMFILE);
+		return (HICON)::LoadImageA(NULL, strPath, IMAGE_ICON, cx, cy, LR_LOADFROMFILE);
 	}
 
 	Gdiplus::Image * DuiResProviderFiles::LoadImage( LPCSTR strType,UINT uID )

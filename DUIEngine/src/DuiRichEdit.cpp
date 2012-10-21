@@ -889,7 +889,7 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 	//password char
 	else if(strAttribName=="passwordchar")
 	{
-		CString strValueT=CA2T(strValue);
+		CString strValueT=CA2T(strValue,CP_UTF8);
 		m_chPasswordChar=strValueT[0];
 	}
 	//align

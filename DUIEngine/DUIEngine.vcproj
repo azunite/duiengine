@@ -624,6 +624,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\duiresproviderbase.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\DuiRichEdit.h"
 				>
 			</File>
