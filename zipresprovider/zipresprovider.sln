@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zipresprovider", "zipresprovider.vcproj", "{CDCD4ACF-06AD-40EB-9393-BF804B811123}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CDCD4ACF-06AD-40EB-9393-BF804B811123}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CDCD4ACF-06AD-40EB-9393-BF804B811123}.Debug|Win32.Build.0 = Debug|Win32
+		{CDCD4ACF-06AD-40EB-9393-BF804B811123}.Release|Win32.ActiveCfg = Release|Win32
+		{CDCD4ACF-06AD-40EB-9393-BF804B811123}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

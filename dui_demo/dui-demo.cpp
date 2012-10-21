@@ -6,6 +6,16 @@
 #include "DuiSystem.h"
 #include "DuiDefaultLogger.h"
 
+//从ZIP文件加载皮肤模块
+#include "../zipresprovider/DuiResProviderZip.h"
+#ifdef DEBUG
+#pragma comment(lib,"zlib_d.lib")
+#pragma comment(lib,"zipresprovider_d.lib")
+#else
+#pragma comment(lib,"zlib.lib")
+#pragma comment(lib,"zipresprovider.lib")
+#endif
+
 #ifdef _DEBUG
 #include "..\memleakdetect\MemLeakDetect.h"
 // static CMemLeakDetect memLeakDetect;
@@ -25,20 +35,24 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	*lpInsertPos = '\0';   
 
 	DuiSystem duiSystem(hInstance);
-	DefaultLogger *pLoger=new DefaultLogger;
-	pLoger->setLogFilename(CStringA(szCurrentDir)+"\\dui-demo.log");
-	duiSystem.SetLogger(pLoger);
+	DefaultLogger loger;
+	loger.setLogFilename(CStringA(szCurrentDir)+"\\dui-demo.log");
+	duiSystem.SetLogger(&loger);
 
+	//从ZIP文件加载皮肤
+	DuiResProviderZip *zipSkin=new DuiResProviderZip;
+	zipSkin->OpenZip(CA2T(CStringA(szCurrentDir)+"\\def_skin.zip"));
+	duiSystem.SetResProvider(zipSkin);
 
 	duiSystem.logEvent("demo started");
 	duiSystem.InitName2ID(IDR_DUI_NAME2ID);//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 #ifdef __DUIFILE_RC 
     lstrcatA( szCurrentDir, "\\..\\dui_demo" );
-	duiSystem.SetResProvider(new DuiResProviderFiles(szCurrentDir));
+// 	duiSystem.SetResProvider(new DuiResProviderFiles(szCurrentDir));
 
 #else
-	duiSystem.SetResProvider(new DuiResProviderPE(hInstance));
-#endif
+// 	duiSystem.SetResProvider(new DuiResProviderPE(hInstance));
+#endif 
 	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义
 	DuiString::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
 	DuiFontPool::getSingleton().SetDefaultFont(DuiString::getSingleton().Get(IDS_APP_FONT), -12); // 设置字体
@@ -57,7 +71,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	duiSystem.logEvent("demo end");
 
 	delete duiSystem.GetResProvider();
-	delete duiSystem.GetLogger();
 	//释放资源 
 	CMenuWndHook::UnInstallHook();
 
