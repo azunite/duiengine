@@ -2,6 +2,7 @@
 
 #include "duiwndpanel.h"
 #include "DuiSystem.h"
+#include "mybuffer.h"
 
 namespace DuiEngine{
 
@@ -26,13 +27,20 @@ public:
 
 		if (nChildSrc == -1)
 			return FALSE;
-		CMyBuffer<char>	strXML;
-		BOOL		bRet   = DuiSystem::getSingleton().GetResBuf(nChildSrc,DUIRES_XML_TYPE,strXML);
-		if (!bRet)	return TRUE;
+
+		DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
+		if(!pRes) return FALSE;
+
+		DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,nChildSrc);
+		if(dwSize==0) return FALSE;
+
+		CMyBuffer<char> strXml;
+		strXml.Allocate(dwSize);
+		pRes->GetRawBuffer(DUIRES_XML_TYPE,nChildSrc,strXml,dwSize);
 
 		TiXmlDocument xmlDoc;
 		{
-			xmlDoc.Parse(strXML, NULL, TIXML_ENCODING_UTF8);
+			xmlDoc.Parse(strXml, NULL, TIXML_ENCODING_UTF8);
 		}
 		if (xmlDoc.Error())
 		{

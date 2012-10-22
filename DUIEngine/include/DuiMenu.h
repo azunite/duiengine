@@ -1,7 +1,7 @@
 #pragma once
 
 #include "duiobject.h"
-#include "duiskin.h"
+#include "duiskinpool.h"
 #include "SimpleWnd.h"
 #include <vector>
 

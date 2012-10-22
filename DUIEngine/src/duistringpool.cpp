@@ -8,6 +8,7 @@
 #include "duistd.h"
 #include "duistringpool.h"
 #include "DuiSystem.h"
+#include "mybuffer.h"
 
 namespace DuiEngine{
 
@@ -40,12 +41,15 @@ BOOL DuiString::BuildString(CString &strContainer)
 
 BOOL DuiString::Init(UINT uResID)
 {
-	CMyBuffer<char> strXml;
-	BOOL bRet = FALSE;
+	DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
+	if(!pRes) return FALSE;
 
-	bRet = DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE, strXml);
-	if (!bRet)
-		return FALSE;
+	DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
+	if(dwSize==0) return FALSE;
+
+	CMyBuffer<char> strXml;
+	strXml.Allocate(dwSize);
+	pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
 
 	TiXmlDocument xmlDoc;
 

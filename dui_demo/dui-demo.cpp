@@ -41,7 +41,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 	//从ZIP文件加载皮肤
 	DuiResProviderZip *zipSkin=new DuiResProviderZip;
-	zipSkin->OpenZip(CA2T(CStringA(szCurrentDir)+"\\def_skin.zip"));
+	CString strZip=CA2T(szCurrentDir)+_T("\\def_skin.zip");
+	zipSkin->OpenZip(strZip);
 	duiSystem.SetResProvider(zipSkin);
 
 	duiSystem.logEvent("demo started");

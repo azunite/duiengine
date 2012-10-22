@@ -17,7 +17,7 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
+			Name="Debug_Dll|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\include;..\tinyxml"
+				AdditionalIncludeDirectories=".\include;.\dependencies"
 				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;DUIENGINE_EXPORTS;DLL_DUI"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -65,8 +65,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\\lib\\tinyxml_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
+				AdditionalLibraryDirectories="dependencies\lib"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
 				ImportLibrary="$(TargetDir)$(TargetName).lib"
@@ -95,7 +95,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|Win32"
+			Name="Release_Dll|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
@@ -121,7 +121,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\include;..\tinyxml"
+				AdditionalIncludeDirectories=".\include;.\dependencies"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS;DLL_DUI"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -142,9 +142,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\\lib\\tinyxml.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="dependencies\lib"
 				GenerateDebugInformation="false"
 				AssemblyDebug="0"
 			/>
@@ -172,7 +172,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="DEBUG_LIB|Win32"
+			Name="DEBUG|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
@@ -197,7 +197,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\include;..\tinyxml"
+				AdditionalIncludeDirectories=".\include;.\dependencies"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -221,6 +221,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile="..\lib\$(ProjectName)_static_d.lib"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -239,7 +240,7 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="RELEASE_LIB|Win32"
+			Name="RELEASE|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
@@ -265,7 +266,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				AdditionalIncludeDirectories=".\include;..\tinyxml"
+				AdditionalIncludeDirectories=".\include;.\dependencies"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
@@ -287,6 +288,7 @@
 			<Tool
 				Name="VCLibrarianTool"
 				OutputFile="..\lib\$(ProjectName)_static.lib"
+				AdditionalLibraryDirectories=""
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -313,10 +315,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\src\cpconv.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\src\DuiCaption.cpp"
 				>
@@ -402,6 +400,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiSkinBase.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\DuiSkinPool.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\DuiSplitWnd.cpp"
 				>
 			</File>
@@ -409,7 +415,7 @@
 				RelativePath=".\src\duistd.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="Debug_Dll|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -417,7 +423,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release|Win32"
+					Name="Release_Dll|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -425,7 +431,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="DEBUG_LIB|Win32"
+					Name="DEBUG|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -433,7 +439,7 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="RELEASE_LIB|Win32"
+					Name="RELEASE|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -502,6 +508,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\GradientFillHelper.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\MemDC.cpp"
 				>
 			</File>
@@ -519,10 +529,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\include\cpconv.h"
-				>
-			</File>
 			<File
 				RelativePath=".\include\DuiCaption.h"
 				>
@@ -648,6 +654,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\DuiSkinBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiSkinPool.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\DuiSplitWnd.h"
 				>
 			</File>
@@ -724,6 +738,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\GradientFillHelper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\MemDC.h"
 				>
 			</File>
@@ -756,10 +774,6 @@
 				</File>
 				<File
 					RelativePath=".\include\wtl.mini\duimisc.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\wtl.mini\duistr.h"
 					>
 				</File>
 			</Filter>

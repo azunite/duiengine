@@ -1,18 +1,15 @@
 #pragma once
 
-#ifdef DUI_DLL
-#define DUI_EXP _cdecl(dllimport)
-#else
 #ifndef DUI_EXP
 #define DUI_EXP
 #endif
-#endif
 
-#include "../DUIEngine/include/wtl.mini/duistr.h"
+#include "../DUIEngine/dependencies/strcvt/cpconv.h"
 #include "../DUIEngine/include/duiresproviderbase.h"
 
 #include "ZipArchive.h"
 #include <map>
+
 
 namespace DuiEngine{
 
@@ -27,7 +24,8 @@ public:
 	HBITMAP	LoadBitmap(LPCSTR strType,UINT uID);
 	HICON   LoadIcon(LPCSTR strType,UINT uID,int cx=0,int cy=0);
 	Gdiplus::Image * LoadImage(LPCSTR strType,UINT uID);
-	BOOL GetResBuffer(LPCSTR strType,UINT uID,CMyBuffer<char> & buf);
+	size_t GetRawBufferSize(LPCSTR strType,UINT uID);
+	BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size);
 
 	BOOL OpenZip(LPCTSTR pszZipFile);
 protected:

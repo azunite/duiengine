@@ -15,14 +15,12 @@ namespace DuiEngine{
 	class DUI_EXP DuiResProviderPE:public DuiResProviderBase
 	{
 	public:
-		DuiResProviderPE(HINSTANCE hInst):m_hResInst(hInst)
-		{
-		}
+		DuiResProviderPE(HINSTANCE hInst);
 		HBITMAP	LoadBitmap(LPCSTR strType,UINT uID);
 		HICON   LoadIcon(LPCSTR strType,UINT uID,int cx=0,int cy=0);
 		Gdiplus::Image * LoadImage(LPCSTR strType,UINT uID);
-		BOOL GetResBuffer(LPCSTR strType,UINT uID,CMyBuffer<char> & buf);
-
+		size_t GetRawBufferSize(LPCSTR strType,UINT uID);
+		BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size);
 	protected:
 		HINSTANCE m_hResInst;
 	};
@@ -36,7 +34,8 @@ namespace DuiEngine{
 		HBITMAP	LoadBitmap(LPCSTR strType,UINT uID);
 		HICON   LoadIcon(LPCSTR strType,UINT uID,int cx=0,int cy=0);
 		Gdiplus::Image * LoadImage(LPCSTR strType,UINT uID);
-		BOOL GetResBuffer(LPCSTR strType,UINT uID,CMyBuffer<char> & buf);
+		size_t GetRawBufferSize(LPCSTR strType,UINT uID);
+		BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size);
 
 	protected:
 		CStringA GetRes( LPCSTR strType,UINT uID );

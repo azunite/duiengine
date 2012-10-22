@@ -15,8 +15,21 @@
 #include <CommCtrl.h>
 #include <Shlwapi.h>
 #include <OleCtl.h>
+#include <assert.h>
 
-#define ATLASSERT(x)
+#define ATLASSERT(x) assert(x)
+
+#include "strcvt\cpconv.h"
+#include "tinyxml\tinyxml.h"
+
+#ifdef DEBUG
+#pragma comment(lib,"strcvt_d.lib")
+#pragma comment(lib,"tinyxml_d.lib")
+#else
+#pragma comment(lib,"strcvt.lib")
+#pragma comment(lib,"tinyxml.lib")
+#endif//DEBUG
+
 
 #ifndef GET_X_LPARAM
 #define GET_X_LPARAM(lParam)	((int)(short)LOWORD(lParam))
@@ -24,25 +37,6 @@
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lParam)	((int)(short)HIWORD(lParam))
 #endif
-
-#ifndef NO_DUITYPES
-
-#define _WTYPES_NS DuiEngine
-#include "wtl.mini/duistr.h"
-#include "wtl.mini/duicrack.h"
-#include "wtl.mini/duimisc.h"
-#include "wtl.mini/duigdi.h"
-
-#endif
-
-#include "cpconv.h" //可以通过定义NO_STRCVT来屏蔽DUIEngine自带的编码转换接口
-
-#include "tinyxml.h"
-#include <string>
-
-#pragma comment(lib,"shlwapi.lib")
-#pragma comment(lib,"Msimg32.lib")
-#pragma comment(lib,"Comctl32.lib")
 
 #ifdef DLL_DUI
 # ifdef DUIENGINE_EXPORTS
@@ -54,6 +48,23 @@
 #else
 #define DUI_EXP
 #endif
+
+#ifndef NO_DUITYPES
+
+#define _WTYPES_NS DuiEngine
+#include "wtl.mini/duicrack.h"
+#include "wtl.mini/duimisc.h"
+#include "wtl.mini/duigdi.h"
+
+#endif
+
+#include <string>
+
+#pragma comment(lib,"shlwapi.lib")
+#pragma comment(lib,"Msimg32.lib")
+#pragma comment(lib,"Comctl32.lib")
+
+
 
 #pragma warning(disable:4251)
 #pragma warning(disable:4275)

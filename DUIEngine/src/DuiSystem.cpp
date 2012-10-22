@@ -1,75 +1,80 @@
 #include "duistd.h"
 #include "DuiSystem.h"
+#include "mybuffer.h"
 #include "SimpleWnd.h"
 #include <search.h>
 
 
 namespace DuiEngine{
 
-template<> DuiSystem* Singleton<DuiSystem>::ms_Singleton = 0;
+	template<> DuiSystem* Singleton<DuiSystem>::ms_Singleton = 0;
 
-DuiSystem::DuiSystem(HINSTANCE hInst,LPCTSTR pszHostClassName/*=_T("DuiHostWnd")*/)
-:m_hInst(hInst)
-,m_atomWnd(0)
-,m_p(NULL)
-,m_pResProvider(NULL)
-,m_pLogger(NULL)
-,m_pBuf(NULL),m_nCount(0)
-{
-	InitializeCriticalSection(&m_cs);
-	m_atomWnd=CSimpleWnd::RegisterSimpleWnd(hInst,pszHostClassName);
-
-	createSingletons();
-}
-
-DuiSystem::~DuiSystem(void)
-{
-	destroySingletons();
-	
-	UnregisterClass((LPCTSTR)m_atomWnd,m_hInst);
-	DeleteCriticalSection(&m_cs);
-
-	//name id map
-	if(m_pBuf && m_nCount) delete []m_pBuf;
-	m_nCount=0;
-	m_pBuf=NULL;
-
-}
-
-void DuiSystem::LockSharePtr( void * pObj )
-{
-	EnterCriticalSection(&m_cs);
-	m_p=pObj;
-}
-
-void * DuiSystem::GetSharePtr()
-{
-	return m_p;
-}
-
-void * DuiSystem::ReleaseSharePtr()
-{
-	void *pRet=m_p;
-	LeaveCriticalSection(&m_cs);
-	return pRet;
-}
-
-
-size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/)
-{
-	if(m_nCount)
+	DuiSystem::DuiSystem(HINSTANCE hInst,LPCTSTR pszHostClassName/*=_T("DuiHostWnd")*/)
+		:m_hInst(hInst)
+		,m_atomWnd(0)
+		,m_p(NULL)
+		,m_pResProvider(NULL)
+		,m_pLogger(NULL)
+		,m_pBuf(NULL),m_nCount(0)
 	{
-		ATLASSERT(m_pBuf);
-		delete []m_pBuf;
-		m_pBuf=NULL;
-		m_nCount=0;
+		InitializeCriticalSection(&m_cs);
+		m_atomWnd=CSimpleWnd::RegisterSimpleWnd(hInst,pszHostClassName);
+
+		createSingletons();
 	}
 
-	DuiResProviderPE resProvider(m_hInst);
-
-	CMyBuffer<char> strXml;
-	if(resProvider.GetResBuffer(pszType,uXmlResID,strXml))
+	DuiSystem::~DuiSystem(void)
 	{
+		destroySingletons();
+
+		UnregisterClass((LPCTSTR)m_atomWnd,m_hInst);
+		DeleteCriticalSection(&m_cs);
+
+		//name id map
+		if(m_pBuf && m_nCount) delete []m_pBuf;
+		m_nCount=0;
+		m_pBuf=NULL;
+
+	}
+
+	void DuiSystem::LockSharePtr( void * pObj )
+	{
+		EnterCriticalSection(&m_cs);
+		m_p=pObj;
+	}
+
+	void * DuiSystem::GetSharePtr()
+	{
+		return m_p;
+	}
+
+	void * DuiSystem::ReleaseSharePtr()
+	{
+		void *pRet=m_p;
+		LeaveCriticalSection(&m_cs);
+		return pRet;
+	}
+
+
+	size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/)
+	{
+		if(m_nCount)
+		{
+			ATLASSERT(m_pBuf);
+			delete []m_pBuf;
+			m_pBuf=NULL;
+			m_nCount=0;
+		}
+
+		DuiResProviderPE resProvider(m_hInst);
+
+		DWORD dwSize=resProvider.GetRawBufferSize(pszType,uXmlResID);
+		if(dwSize==0) return 0;
+
+		CMyBuffer<char> strXml;
+		strXml.Allocate(dwSize);
+		resProvider.GetRawBuffer(pszType,uXmlResID,strXml,dwSize);
+
 		TiXmlDocument xmlDoc;
 		xmlDoc.Parse(strXml);
 		if(!xmlDoc.Error())
@@ -93,73 +98,66 @@ size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*
 			}
 			qsort(m_pBuf,m_nCount,sizeof(CNamedID),CNamedID::Compare);
 		}
+		return m_nCount;
 	}
-	return m_nCount;
-}
 
-UINT DuiSystem::Name2ID( CStringA strName )
-{
-	if(m_nCount==0) return 0;
-	CNamedID *pFind=(CNamedID*)bsearch(&CNamedID(strName,0),m_pBuf,m_nCount,sizeof(CNamedID),CNamedID::Compare);
-	if(pFind) return pFind->uID;
-	else return 0;
-}
+	UINT DuiSystem::Name2ID( CStringA strName )
+	{
+		if(m_nCount==0) return 0;
+		CNamedID *pFind=(CNamedID*)bsearch(&CNamedID(strName,0),m_pBuf,m_nCount,sizeof(CNamedID),CNamedID::Compare);
+		if(pFind) return pFind->uID;
+		else return 0;
+	}
 
-void DuiSystem::createSingletons()
-{
-	new DuiThreadActiveWndManager();
-	new DuiSkinFactoryManager();
-	new DuiSkinPool();
-	new DuiWindowFactoryManager();
-	new DuiWindowManager();
-	new CDuiTimerEx();
+	void DuiSystem::createSingletons()
+	{
+		new DuiThreadActiveWndManager();
+		new DuiSkinFactoryManager();
+		new DuiSkinPool();
+		new DuiWindowFactoryManager();
+		new DuiWindowManager();
+		new CDuiTimerEx();
 
-	new DuiString();
-	new DuiCSS();
-	new DuiFontPool();
- 	new DuiStylePool();
-	new DuiImgPool();
+		new DuiString();
+		new DuiCSS();
+		new DuiFontPool();
+		new DuiStylePool();
+		new DuiImgPool();
 
-}
+	}
 
-void DuiSystem::destroySingletons()
-{
-	delete DuiFontPool::getSingletonPtr();
- 	delete DuiStylePool::getSingletonPtr();
-	delete DuiString::getSingletonPtr();
+	void DuiSystem::destroySingletons()
+	{
+		delete DuiFontPool::getSingletonPtr();
+		delete DuiStylePool::getSingletonPtr();
+		delete DuiString::getSingletonPtr();
 
-	delete CDuiTimerEx::getSingletonPtr();
-	delete DuiWindowManager::getSingletonPtr();
-	delete DuiWindowFactoryManager::getSingletonPtr();
+		delete CDuiTimerEx::getSingletonPtr();
+		delete DuiWindowManager::getSingletonPtr();
+		delete DuiWindowFactoryManager::getSingletonPtr();
 
-	delete DuiSkinPool::getSingletonPtr();
-	delete DuiSkinFactoryManager::getSingletonPtr();
-	delete DuiCSS::getSingletonPtr();
-	delete DuiImgPool::getSingletonPtr();
+		delete DuiSkinPool::getSingletonPtr();
+		delete DuiSkinFactoryManager::getSingletonPtr();
+		delete DuiCSS::getSingletonPtr();
+		delete DuiImgPool::getSingletonPtr();
 
-	delete DuiThreadActiveWndManager::getSingletonPtr();
-}
+		delete DuiThreadActiveWndManager::getSingletonPtr();
+	}
 
-BOOL DuiSystem::GetResBuf( UINT uID,LPCSTR pszType,CMyBuffer<char> &buf )
-{
-	if(!m_pResProvider) return FALSE;
-	return m_pResProvider->GetResBuffer(pszType,uID,buf);
-}
+	void DuiSystem::logEvent( const CStringA & message, LoggingLevel level /*= Standard*/ )
+	{
+		if(m_pLogger) m_pLogger->logEvent(message,level);
+	}
 
-void DuiSystem::logEvent( const CStringA & message, LoggingLevel level /*= Standard*/ )
-{
-	if(m_pLogger) m_pLogger->logEvent(message,level);
-}
-
-void DuiSystem::logEvent(LoggingLevel level , LPCSTR pszFormat, ...)
-{
-	if(!m_pLogger) return;
-	char szBuffer[1025] = { 0 };
-	va_list argList;
-	va_start(argList, pszFormat);
-	::wvsprintfA((char*)szBuffer, pszFormat, argList);
-	va_end(argList);
-	m_pLogger->logEvent(szBuffer,level);
-}
+	void DuiSystem::logEvent(LoggingLevel level , LPCSTR pszFormat, ...)
+	{
+		if(!m_pLogger) return;
+		char szBuffer[1025] = { 0 };
+		va_list argList;
+		va_start(argList, pszFormat);
+		::wvsprintfA((char*)szBuffer, pszFormat, argList);
+		va_end(argList);
+		m_pLogger->logEvent(szBuffer,level);
+	}
 
 }//namespace DuiEngine

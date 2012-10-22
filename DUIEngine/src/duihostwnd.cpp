@@ -4,7 +4,7 @@
 #include "DuiTipCtrl.h"
 #include "duiwndcmnctrl.h"
 #include "DuiSystem.h"
-
+#include "mybuffer.h"
 
 
 namespace DuiEngine{
@@ -73,12 +73,15 @@ HWND CDuiHostWnd::Create(HWND hWndParent,int x,int y,int nWidth,int nHeight)
 
 BOOL CDuiHostWnd::Load(UINT uResID)
 {
+	DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
+	if(!pRes) return FALSE;
+
+	DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
+	if(dwSize==0) return FALSE;
+
 	CMyBuffer<char> strXml;
-
-	BOOL bRet = DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE, strXml);
-
-	if (!bRet)
-		return FALSE;
+	strXml.Allocate(dwSize);
+	pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
 
 	return SetXml(strXml);
 }

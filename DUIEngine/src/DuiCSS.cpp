@@ -1,6 +1,7 @@
 #include "duistd.h"
 #include "DuiCSS.h"
 #include "DuiSystem.h"
+#include "mybuffer.h"
 
 namespace DuiEngine
 {
@@ -10,9 +11,15 @@ template<> DuiCSS *Singleton<DuiCSS>::ms_Singleton =0;
 
 BOOL DuiCSS::Init(UINT uXmlID)
 {
+	DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
+	if(!pRes) return FALSE;
+	DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uXmlID);
+	if(dwSize==0) return FALSE;
+
 	CMyBuffer<char> strXml;
-	BOOL bRet=DuiSystem::getSingleton().GetResBuf(uXmlID,DUIRES_XML_TYPE,strXml);
-	if(!bRet) return FALSE;
+	strXml.Allocate(dwSize);
+	pRes->GetRawBuffer(DUIRES_XML_TYPE,uXmlID,strXml,dwSize);
+	
 	TiXmlDocument *pXmlDoc=new TiXmlDocument;
 	if(!pXmlDoc) return FALSE;
 	pXmlDoc->Parse(strXml);

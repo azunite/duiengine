@@ -2,7 +2,6 @@
 #define _DUIRESPROVIDERBASE_
 #pragma once
 
-#include "mybuffer.h"
 #include <GdiPlus.h>
 
 #define DUIRES_XML_TYPE "XML"
@@ -60,7 +59,8 @@ namespace DuiEngine{
 		virtual HBITMAP	LoadBitmap(LPCSTR strType,UINT uID)=NULL;
 		virtual HICON   LoadIcon(LPCSTR strType,UINT uID,int cx=0,int cy=0)=NULL;
 		virtual Gdiplus::Image * LoadImage(LPCSTR strType,UINT uID)=NULL;
-		virtual BOOL GetResBuffer(LPCSTR strType,UINT uID,CMyBuffer<char> & buf)=NULL;
+		virtual size_t GetRawBufferSize(LPCSTR strType,UINT uID)=NULL;
+		virtual BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size)=NULL;
 	};
 }//namespace DuiEngine
 #endif//_DUIRESPROVIDERBASE_

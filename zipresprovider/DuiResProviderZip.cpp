@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "DuiResProviderZip.h"
-#include "../tinyxml/tinyxml.h"
-#include "../DUIEngine/include/cpconv.h"
+#include "../duiengine/dependencies/tinyxml/tinyxml.h"
 #pragma comment(lib, "gdiplus.lib")
 
 namespace DuiEngine{
@@ -110,18 +109,6 @@ Gdiplus::Image * DuiResProviderZip::LoadImage( LPCSTR strType,UINT uID )
 	return pImage;	
 }
 
-BOOL DuiResProviderZip::GetResBuffer( LPCSTR strType,UINT uID,CMyBuffer<char> & buf )
-{
-	CString strPath=GetFilePath(uID,strType);
-	if(strPath.IsEmpty()) return FALSE;
-	CZipFile zf;
-	if(!m_zipFile.GetFile(strPath,zf)) return NULL;
-	buf.Allocate(zf.GetSize());
-	memcpy(buf,zf.GetData(),zf.GetSize());
-	buf[zf.GetSize()]=0;
-	return TRUE;
-}
-
 BOOL DuiResProviderZip::OpenZip( LPCTSTR pszZipFile )
 {
 	if(!m_zipFile.Open(pszZipFile)) return FALSE;
@@ -162,4 +149,31 @@ CString DuiResProviderZip::GetFilePath( UINT uID,LPCSTR pszType )
 	if(it==m_mapFiles.end()) return _T("");
 	return it->second;
 }
+
+size_t DuiResProviderZip::GetRawBufferSize( LPCSTR strType,UINT uID )
+{
+	CString strPath=GetFilePath(uID,strType);
+	if(strPath.IsEmpty()) return FALSE;
+	ZIP_FIND_DATA zfd;
+	HANDLE hf=m_zipFile.FindFirstFile(strPath,&zfd);
+	if(!hf) return 0;
+	m_zipFile.FindClose(hf);
+	return zfd.nFileSizeUncompressed;
+}
+
+BOOL DuiResProviderZip::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
+{
+	CString strPath=GetFilePath(uID,strType);
+	if(strPath.IsEmpty()) return FALSE;
+	CZipFile zf;
+	if(!m_zipFile.GetFile(strPath,zf)) return NULL;
+	if(size<zf.GetSize())
+	{
+		SetLastError(ERROR_INSUFFICIENT_BUFFER);
+		return FALSE;
+	}
+	memcpy(pBuf,zf.GetData(),zf.GetSize());
+	return TRUE;
+}
+
 }//namespace DuiEngine

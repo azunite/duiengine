@@ -12,6 +12,7 @@
 
 #include "duistd.h"
 #include "MenuWndHook.h"
+#include "duiskinpool.h"
 #include "duiskin.h"
 
 namespace DuiEngine{

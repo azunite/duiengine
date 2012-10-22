@@ -4,10 +4,15 @@
 //////////////////////////////////////////////////////////////////////////
 #include "duistd.h"
 #include "duiresprovider.h"
+#include "mybuffer.h"
 #include <io.h>
 
 namespace DuiEngine{
 
+	DuiResProviderPE::DuiResProviderPE( HINSTANCE hInst ) :m_hResInst(hInst)
+	{
+
+	}
 	HBITMAP DuiResProviderPE::LoadBitmap( LPCSTR strType,UINT uID )
 	{
 		return ::LoadBitmap(m_hResInst,MAKEINTRESOURCE(uID));
@@ -21,36 +26,51 @@ namespace DuiEngine{
 	Gdiplus::Image * DuiResProviderPE::LoadImage( LPCSTR strType,UINT uID )
 	{
 		Gdiplus::Image *pImage=NULL;
-		CMyBuffer<char> imgBuf;
-		if(GetResBuffer(strType,uID,imgBuf))
-		{
-			int len = imgBuf.size();
-			HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, len);
-			BYTE* pMem = (BYTE*)::GlobalLock(hMem);
+		DWORD dwSize=GetRawBufferSize(strType,uID);
+		if(dwSize==0) return NULL;
 
-			memcpy(pMem, imgBuf, len);
+		HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, dwSize);
+		BYTE* pMem = (BYTE*)::GlobalLock(hMem);
+		GetRawBuffer(strType,uID,pMem,dwSize);
 
-			IStream* pStm = NULL;
-			::CreateStreamOnHGlobal(hMem, TRUE, &pStm);
+		IStream* pStm = NULL;
+		::CreateStreamOnHGlobal(hMem, TRUE, &pStm);
 
-			pImage = Gdiplus::Image::FromStream(pStm);
+		pImage = Gdiplus::Image::FromStream(pStm);
 
-			::GlobalUnlock(hMem);
-			pStm->Release();
-		}
-		return pImage;	}
+		pStm->Release();
+		::GlobalUnlock(hMem);
+		GlobalFree(hMem);
 
-	BOOL DuiResProviderPE::GetResBuffer( LPCSTR strType,UINT uID,CMyBuffer<char> & buf )
+		return pImage;	
+	}
+
+	size_t DuiResProviderPE::GetRawBufferSize( LPCSTR strType,UINT uID )
+	{
+		HRSRC hRsrc = ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
+
+		if (NULL == hRsrc)
+			return 0;
+
+		return ::SizeofResource(m_hResInst, hRsrc); 
+	}
+
+	BOOL DuiResProviderPE::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
 	{
 		HRSRC hRsrc = ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
 
 		if (NULL == hRsrc)
 			return FALSE;
 
-		DWORD dwSize = ::SizeofResource(m_hResInst, hRsrc); 
+		size_t dwSize = ::SizeofResource(m_hResInst, hRsrc); 
 		if (0 == dwSize)
 			return FALSE;
 
+		if(size < dwSize)
+		{
+			SetLastError(ERROR_INSUFFICIENT_BUFFER);
+			return FALSE;
+		}
 		HGLOBAL hGlobal = ::LoadResource(m_hResInst, hRsrc); 
 		if (NULL == hGlobal)
 			return FALSE;
@@ -59,14 +79,14 @@ namespace DuiEngine{
 		if (NULL == pBuffer)
 			return FALSE;
 
-		buf.AllocateBytes(dwSize);
-		memcpy(buf,pBuffer,dwSize);
-// 		buf.Attach((char*)pBuffer,dwSize);
+		memcpy(pBuf,pBuffer,dwSize);
 
 		::FreeResource(hGlobal);
 
 		return TRUE;
 	}
+
+
 	DuiResProviderFiles::DuiResProviderFiles( const CStringA & strPath ) :m_strPath(strPath)
 	{
 		AddIdMap(CStringA(strPath)+"\\"+INDEX_XML);
@@ -153,20 +173,33 @@ namespace DuiEngine{
 		return pImg;
 	}
 
-	BOOL DuiResProviderFiles::GetResBuffer( LPCSTR strType,UINT uID,CMyBuffer<char> & buf )
+	size_t DuiResProviderFiles::GetRawBufferSize( LPCSTR strType,UINT uID )
+	{
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return 0;
+		WIN32_FIND_DATAA wfd;
+		HANDLE hf=FindFirstFileA(strPath,&wfd);
+		if(!hf) return 0;
+		FindClose(hf);
+		return wfd.nFileSizeLow;
+	}
+
+	BOOL DuiResProviderFiles::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
 	{
 		CStringA strPath=GetRes(strType,uID);
 		if(strPath.IsEmpty()) return FALSE;
 		FILE *f=fopen(strPath,"rb");
 		if(!f) return FALSE;
-		int len=_filelength(_fileno(f));
-		buf.AllocateBytes(len);
+		size_t len=_filelength(_fileno(f));
+		if(len>size)
+		{
+			SetLastError(ERROR_INSUFFICIENT_BUFFER);
+			fclose(f);
+			return FALSE;
+		}
+		BOOL bRet=(len==fread(pBuf,1,len,f));
 
-		BOOL bRet=(len==fread(buf,1,len,f));
-		if(!bRet) buf.Free();
 		fclose(f);
 		return bRet;
 	}
-
-
 }//namespace DuiEngine

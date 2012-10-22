@@ -1,7 +1,5 @@
 #pragma once
 
-namespace DuiEngine{
-
 template<typename T, int t_nFixedBytes = 128>
 class CMyBuffer
 {
@@ -83,9 +81,7 @@ public:
 	}
 private:
 	T* m_p;
-	BYTE m_abFixedBuffer[t_nFixedBytes];
+	unsigned char m_abFixedBuffer[t_nFixedBytes];
 	size_t m_nSize;
 	BOOL	m_bExternalBuf;
 };
-
-}//namespace DuiEngine

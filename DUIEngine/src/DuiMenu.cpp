@@ -2,6 +2,7 @@
 #include "DuiMenu.h"
 #include "DuiSystem.h"
 #include "gdialpha.h"
+#include "mybuffer.h"
 
 namespace DuiEngine{
 
@@ -184,12 +185,18 @@ BOOL CDuiMenu::LoadMenu( UINT uResID )
 {
 	if(::IsMenu(m_hMenu)) return FALSE;
 
-	CMyBuffer<char> strMenu;
-	if(!DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE,strMenu)) return FALSE;
+	DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
+	if(!pRes) return FALSE;
+	DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
+	if(dwSize==0) return FALSE;
+
+	CMyBuffer<char> strXml;
+	strXml.Allocate(dwSize);
+	pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
 
 	TiXmlDocument xmlDoc;
 
-	xmlDoc.Parse(strMenu);
+	xmlDoc.Parse(strXml);
 	if(xmlDoc.Error())
 	{
 		return FALSE;
@@ -271,7 +278,7 @@ UINT CDuiMenu::TrackPopupMenu(
 					LPCRECT prcRect
 					)
 {
-	ATLASSERT(IsMenu());
+	ATLASSERT(IsMenu(m_hMenu));
 
 	CDuiMenuODWnd menuOwner;
 	*(static_cast<CDuiMenuAttr*>(&menuOwner))=m_menuSkin;

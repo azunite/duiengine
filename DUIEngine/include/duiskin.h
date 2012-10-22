@@ -7,11 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "DuiSingletonMap.h"
-
-#include "duiobject.h"
-#include "duiimage.h"
-#include "duiimgpool.h"
+#include "duiskinbase.h"
 
 namespace DuiEngine{
 
@@ -33,94 +29,6 @@ enum {
 
 #define IIF_STATE4(the_state, normal_value, hover_value, pushdown_value, disable_value) \
     (((the_state) & DuiWndState_Disable) ? (disable_value) : IIF_STATE3(the_state, normal_value, hover_value, pushdown_value))
-
-class DUI_EXP CDuiSkinBase : public CDuiObject
-{
-public:
-	CDuiSkinBase():m_pDuiImg(NULL),m_strOwner("")
-	{
-	}
-	
-    void SetOwner(CStringA strOwner)
-	{
-		m_strOwner=strOwner;
-	}
-
-	CStringA GetOwner() { return m_strOwner;}
-
-	virtual ~CDuiSkinBase()
-	{
-	}
-
-	CDuiImgBase * GetImage(){return m_pDuiImg;}
-    virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha=0xFF) = NULL;
-
-    virtual SIZE GetSkinSize()
-    {
-        SIZE ret = {0, 0};
-
-        return ret;
-    }
-
-    virtual BOOL IgnoreState()
-    {
-        return TRUE;
-    }
-	
-	virtual void SetWidth(LONG width)
-	{
-	}
-
-	virtual int GetStates()
-	{
-		return 1;
-	}
-
-    enum {
-        Frame_Part_All        = 0x0000002FUL, 
-        Frame_Part_Top        = 0x00000001UL, 
-        Frame_Part_Middle     = 0x00000002UL, 
-        Frame_Part_Bottom     = 0x00000004UL, 
-        Frame_Part_Left       = 0x00000008UL, 
-        Frame_Part_Center     = 0x00000010UL, 
-        Frame_Part_Right      = 0x00000020UL, 
-    };
-
-	static BOOL ExtentBlt(CDuiImgBase *pImgDraw,BOOL bTile,HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
-    static void FrameDraw(CDCHandle &dc, CDuiImgBase *pImgDraw, const CRect &rcSour,const  CRect &rcDraw,const  CRect &rcMargin, COLORREF crBg, UINT uDrawPart ,BOOL bTile,BYTE byAlpha=0xFF);
-
-    typedef struct _FRG_PARAM 
-    {
-        LONG lOffset;
-        COLORREF crColor;
-    } FRG_PARAM;
-
-    static BOOL WINAPI GradientFill2(HDC hDC, PTRIVERTEX pVertices, DWORD nVertices, PVOID pMeshElements, ULONG nMeshElements, ULONG dwMode);
-
-    static void GradientFillRectV(HDC hdc, CRect &rcFill, FRG_PARAM params[], int nCount);
-    static void GradientFillRectH(HDC hdc, CRect &rcFill, FRG_PARAM params[], int nCount);
-
-    static void GradientFillRectV(HDC hdc, CRect &rcFill, COLORREF crTop, COLORREF crBottom);
-
-    static void GradientFillRectH(HDC hdc, CRect &rcFill, COLORREF crLeft, COLORREF crRight);
-protected:
-
-	virtual void OnAttributeFinish(TiXmlElement* pXmlElem)
-	{
-		TiXmlElement *pXmlImgParam=pXmlElem->FirstChildElement("imgparam");
-		if(pXmlImgParam && m_pDuiImg)
-		{//加载图片文件参数，它保存在皮肤的imgparam子节点中
-			m_pDuiImg->Load(pXmlImgParam);
-		}
-	}
-	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-		DUIWIN_IMAGE_ATTRIBUTE("src", m_pDuiImg, TRUE)
-	DUIWIN_DECLARE_ATTRIBUTES_END()
-
-	CDuiImgBase *m_pDuiImg;
-	CStringA	m_strOwner;
-};
-
 
 class DUI_EXP CDuiImageList: public CDuiSkinBase
 {
@@ -188,6 +96,7 @@ public:
         DUIWIN_ENUM_END(m_uDrawPart)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 };
+
 
 class DUI_EXP CDuiSkinButton : public CDuiSkinBase
 {
@@ -297,101 +206,6 @@ protected:
 	BYTE		m_byAlpha;
 };
 
-class CSkinFactory
-{
-public:
-	virtual CDuiSkinBase * NewSkin()=NULL;
-	virtual void DeleteSkin(CDuiSkinBase *)=NULL;
-	virtual const CStringA & GetTypeName()=NULL;
-};
 
-template<typename T>
-class TplSkinFactory :public CSkinFactory
-{
-public:
-	TplSkinFactory()
-	{
-		m_strTypeName=T::GetClassName();
-	}
-
-	virtual CDuiSkinBase * NewSkin()
-	{
-		return new T;
-	}
-
-	virtual void DeleteSkin(CDuiSkinBase * pSkin)
-	{
-		delete pSkin;
-	}
-
-	virtual const CStringA & GetTypeName(){return m_strTypeName;}
-protected:
-	CStringA m_strTypeName;
-};
-
-typedef CSkinFactory * CSkinFactoryPtr;
-class DUI_EXP DuiSkinFactoryManager: public DuiSingletonMap<DuiSkinFactoryManager,CSkinFactoryPtr,CStringA>
-{
-public:
-	DuiSkinFactoryManager()
-	{
-		m_pFunOnKeyRemoved=OnKeyRemoved;
-		AddStandardSkin();
-	}
-
-	template<typename T>
-	bool RegisterFactory()
-	{
-		CSkinFactory *pSkinFactory=new T;
-		if(HasKey(pSkinFactory->GetTypeName()))
-		{
-			delete pSkinFactory;
-			return false;
-		}
-		return AddKeyObject(pSkinFactory->GetTypeName(),pSkinFactory);
-	}
-
-	CSkinFactory * UnregisterFactory(CStringA strTypeName)
-	{
-		if(!HasKey(strTypeName)) return NULL;
-		CSkinFactory *pRet=m_mapNamedObj[strTypeName];
-		RemoveKeyObject(strTypeName);
-		return pRet;
-	}
-
-protected:
-	static void OnKeyRemoved(const CSkinFactoryPtr & obj)
-	{
-		delete obj;
-	}
-	void AddStandardSkin();
-};
-
-typedef CDuiSkinBase * DuiSkinPtr;
-class DUI_EXP DuiSkinPool :public DuiSingletonMap<DuiSkinPool,DuiSkinPtr,CStringA>
-{
-public:
-    DuiSkinPool();
-
-    virtual ~DuiSkinPool();
-
-    BOOL Init(UINT uResID);
-
-    BOOL Init(LPCSTR lpszXml);
-
-    CDuiSkinBase* GetSkin(CStringA strSkinName);
-	
-	int LoadSkins(CStringA  pszOwnerName);
-	
-	int FreeSkins(CStringA  pszOwnerName);
-
-
-protected:
-	static void OnKeyRemoved(const DuiSkinPtr & obj);
-
-	BOOL _InitSkins(TiXmlElement *pXmlSkinRootElem);
-
-	TiXmlElement * m_pXmlSkinDesc;
-};
 
 }//namespace DuiEngine

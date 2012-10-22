@@ -8,6 +8,7 @@
 #include "duistd.h"
 #include "duiwndstyle.h"
 #include "DuiSystem.h"
+#include "mybuffer.h"
 
 namespace DuiEngine{
 
@@ -55,11 +56,14 @@ BOOL DuiStylePool::GetStyle(LPCSTR lpszName, DuiStyle& style)
 
 BOOL DuiStylePool::Init(UINT uResID)
 {
-	CMyBuffer<char> strXml;
-	BOOL bRet = DuiSystem::getSingleton().GetResBuf(uResID,DUIRES_XML_TYPE, strXml);
+	DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
+	if(!pRes) return FALSE;
+	DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
+	if(dwSize==0) return FALSE;
 
-	if (!bRet)
-		return FALSE;
+	CMyBuffer<char> strXml;
+	strXml.Allocate(dwSize);
+	pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
 
 	return Init(strXml);
 }

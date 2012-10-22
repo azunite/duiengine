@@ -58,8 +58,6 @@ public:
 	}
 	DuiResProviderBase * GetResProvider(){return m_pResProvider;}
 
-	BOOL GetResBuf(UINT uID,LPCSTR pszType,CMyBuffer<char> &buf);
-
 	Logger *SetLogger(Logger *pLogger)
 	{
 		Logger *pRet=m_pLogger;

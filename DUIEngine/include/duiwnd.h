@@ -14,6 +14,7 @@
 
 #include "duiwndstyle.h"
 #include "duistringpool.h"
+#include "DuiSkinPool.h"
 #include "duiwndnotify.h"
 #include "gdialpha.h"
 #include "duiref.h"
