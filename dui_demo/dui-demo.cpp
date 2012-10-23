@@ -52,7 +52,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	duiSystem.logEvent("demo started");
 	duiSystem.InitName2ID(IDR_DUI_NAME2ID);//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 #ifdef __DUIFILE_RC 
-    lstrcatA( szCurrentDir, "\\..\\dui_demo" );
+//     lstrcatA( szCurrentDir, "\\..\\dui_demo" );
 // 	DuiResProviderFiles *pResFiles=new DuiResProviderFiles;
 // 	if(!pResFiles->Init(szCurrentDir))
 // 	{

@@ -4,6 +4,8 @@
 
 #pragma message("include winres.rc2")
 
+
+
 /*<---------------------------RES_BUILDER:begin-----------------------------------*/
 DEFINE_XML(IDR_DUI_SKIN_DEF,	100,	"layout\\def_skin.xml")
 DEFINE_XML(IDR_DUI_STYLE_DEF,	101,	"layout\\def_style.xml")

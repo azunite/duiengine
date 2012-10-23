@@ -127,6 +127,38 @@ __time64_t GetLastWriteTime(LPCSTR pszFileName)
 	return tmRet;
 }
 
+//将单反斜扛转换成双反斜扛
+wstring BuildPath(LPCWSTR pszPath)
+{
+	LPCWSTR p=pszPath;
+	WCHAR szBuf[MAX_PATH*2]={0};
+	WCHAR *p2=szBuf;
+	while(*p)
+	{
+		if(*p==L'\\')
+		{
+			if(*(p+1)!=L'\\')
+			{//单斜扛
+				p2[0]=p2[1]=L'\\';
+				p++;
+				p2+=2;
+			}else
+			{//已经是双斜扛
+				p2[0]=p2[1]=L'\\';
+				p+=2;
+				p2+=2;
+			}
+		}else
+		{
+			*p2=*p;
+			p++;
+			p2++;
+		}
+	}
+	*p2=0;
+	return wstring(szBuf);
+}
+
 int UpdateName2ID(map<string,int> *pmapName2ID,TiXmlDocument *pXmlDocName2ID,TiXmlElement *pXmlEleLayer,int & nCurID)
 {
 	int nRet=0;
@@ -166,7 +198,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	char   cYes=0;		//强制改写标志
 	
 	int c;
-	;
+
 	printf("%s\n",GetCommandLineA());
 	while ((c = getopt(argc, argv, _T("i:r:h:n:y:"))) != EOF)
 	{
@@ -330,7 +362,8 @@ int _tmain(int argc, _TCHAR* argv[])
 			while(it2!=vecIdMapRecord.end())
 			{
 				WCHAR szRec[2000];
-				swprintf(szRec,L"DEFINE_%s(%s,\t%d,\t\"%s\")\n",it2->szType,it2->szID,it2->nID,it2->szPath);
+				wstring strFile=BuildPath(it2->szPath);
+				swprintf(szRec,L"DEFINE_%s(%s,\t%d,\t\"%s\")\n",it2->szType,it2->szID,it2->nID,strFile.c_str());
 				strOut+=szRec;
 				it2++;
 			}
