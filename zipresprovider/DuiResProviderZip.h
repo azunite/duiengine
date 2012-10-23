@@ -27,10 +27,9 @@ public:
 	size_t GetRawBufferSize(LPCSTR strType,UINT uID);
 	BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size);
 
-	BOOL OpenZip(LPCTSTR pszZipFile);
+	BOOL Init(LPCTSTR pszZipFile);
 protected:
 	CString GetFilePath(UINT uID,LPCSTR pszType);
-	BOOL AddIdMap(const CZipFile & zipFile);
 	std::map<DuiResID,CString> m_mapFiles;
 
 	CZipArchive m_zipFile;

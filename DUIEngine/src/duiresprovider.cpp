@@ -40,7 +40,7 @@ namespace DuiEngine{
 
 		pStm->Release();
 		::GlobalUnlock(hMem);
-		GlobalFree(hMem);
+// 		GlobalFree(hMem);
 
 		return pImage;	
 	}
@@ -87,9 +87,8 @@ namespace DuiEngine{
 	}
 
 
-	DuiResProviderFiles::DuiResProviderFiles( const CStringA & strPath ) :m_strPath(strPath)
+	DuiResProviderFiles::DuiResProviderFiles()
 	{
-		AddIdMap(CStringA(strPath)+"\\"+INDEX_XML);
 	}
 
 	CStringA DuiResProviderFiles::GetRes( LPCSTR strType,UINT uID )
@@ -97,14 +96,75 @@ namespace DuiEngine{
 		DuiResID resID(strType,uID);
 		std::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
 		if(it==m_mapFiles.end()) return "";
-		return it->second;
+		CStringA strRet=m_strPath+"\\"+it->second;
+		return strRet;
 	}
 
-	BOOL DuiResProviderFiles::AddIdMap( const CStringA & strIdmapFile )
+	HBITMAP DuiResProviderFiles::LoadBitmap( LPCSTR strType,UINT uID )
+	{
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return NULL;
+		return (HBITMAP)::LoadImageA(NULL, strPath, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+	}
+
+	HICON DuiResProviderFiles::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
+	{
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return NULL;
+		return (HICON)::LoadImageA(NULL, strPath, IMAGE_ICON, cx, cy, LR_LOADFROMFILE);
+	}
+
+	Gdiplus::Image * DuiResProviderFiles::LoadImage( LPCSTR strType,UINT uID )
+	{
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return NULL;
+		CStringW strPathW=CA2W(strPath);
+		Gdiplus::Image *pImg=new Gdiplus::Image(strPathW);
+		if(pImg->GetLastStatus() != 0)
+		{
+			delete pImg;
+			pImg=NULL;
+		}
+		return pImg;
+	}
+
+	size_t DuiResProviderFiles::GetRawBufferSize( LPCSTR strType,UINT uID )
+	{
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return 0;
+		WIN32_FIND_DATAA wfd;
+		HANDLE hf=FindFirstFileA(strPath,&wfd);
+		if(INVALID_HANDLE_VALUE==hf) return 0;
+		FindClose(hf);
+		return wfd.nFileSizeLow;
+	}
+
+	BOOL DuiResProviderFiles::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
+	{
+		CStringA strPath=GetRes(strType,uID);
+		if(strPath.IsEmpty()) return FALSE;
+		FILE *f=fopen(strPath,"rb");
+		if(!f) return FALSE;
+		size_t len=_filelength(_fileno(f));
+		if(len>size)
+		{
+			SetLastError(ERROR_INSUFFICIENT_BUFFER);
+			fclose(f);
+			return FALSE;
+		}
+		BOOL bRet=(len==fread(pBuf,1,len,f));
+
+		fclose(f);
+		return bRet;
+	}
+
+	BOOL DuiResProviderFiles::Init( LPCSTR pszPath )
 	{
 		CMyBuffer<char>  xmlBuf;
-
-		FILE *f=fopen(strIdmapFile,"rb");
+		CStringA strPathIndex=pszPath;
+		strPathIndex+="\\";
+		strPathIndex+=INDEX_XML;
+		FILE *f=fopen(strPathIndex,"rb");
 		if(!f) return(FALSE);
 		int nLen=_filelength(_fileno(f));
 		if(nLen>100*1024)
@@ -142,64 +202,7 @@ namespace DuiEngine{
 			pXmlElem=pXmlElem->NextSiblingElement();
 		}
 
-		return TRUE;
-	}
-
-	HBITMAP DuiResProviderFiles::LoadBitmap( LPCSTR strType,UINT uID )
-	{
-		CStringA strPath=GetRes(strType,uID);
-		if(strPath.IsEmpty()) return NULL;
-		return (HBITMAP)::LoadImageA(NULL, strPath, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-	}
-
-	HICON DuiResProviderFiles::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
-	{
-		CStringA strPath=GetRes(strType,uID);
-		if(strPath.IsEmpty()) return NULL;
-		return (HICON)::LoadImageA(NULL, strPath, IMAGE_ICON, cx, cy, LR_LOADFROMFILE);
-	}
-
-	Gdiplus::Image * DuiResProviderFiles::LoadImage( LPCSTR strType,UINT uID )
-	{
-		CStringA strPath=GetRes(strType,uID);
-		if(strPath.IsEmpty()) return NULL;
-		CStringW strPathW=CA2W(strPath);
-		Gdiplus::Image *pImg=new Gdiplus::Image(strPathW);
-		if(pImg->GetLastStatus() != 0)
-		{
-			delete pImg;
-			pImg=NULL;
-		}
-		return pImg;
-	}
-
-	size_t DuiResProviderFiles::GetRawBufferSize( LPCSTR strType,UINT uID )
-	{
-		CStringA strPath=GetRes(strType,uID);
-		if(strPath.IsEmpty()) return 0;
-		WIN32_FIND_DATAA wfd;
-		HANDLE hf=FindFirstFileA(strPath,&wfd);
-		if(!hf) return 0;
-		FindClose(hf);
-		return wfd.nFileSizeLow;
-	}
-
-	BOOL DuiResProviderFiles::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
-	{
-		CStringA strPath=GetRes(strType,uID);
-		if(strPath.IsEmpty()) return FALSE;
-		FILE *f=fopen(strPath,"rb");
-		if(!f) return FALSE;
-		size_t len=_filelength(_fileno(f));
-		if(len>size)
-		{
-			SetLastError(ERROR_INSUFFICIENT_BUFFER);
-			fclose(f);
-			return FALSE;
-		}
-		BOOL bRet=(len==fread(pBuf,1,len,f));
-
-		fclose(f);
-		return bRet;
+		m_strPath=pszPath;
+		return TRUE;		
 	}
 }//namespace DuiEngine

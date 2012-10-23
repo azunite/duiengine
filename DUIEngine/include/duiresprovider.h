@@ -29,7 +29,7 @@ namespace DuiEngine{
 	{
 	public:
 
-		DuiResProviderFiles(const CStringA & strPath);
+		DuiResProviderFiles();
 
 		HBITMAP	LoadBitmap(LPCSTR strType,UINT uID);
 		HICON   LoadIcon(LPCSTR strType,UINT uID,int cx=0,int cy=0);
@@ -37,10 +37,10 @@ namespace DuiEngine{
 		size_t GetRawBufferSize(LPCSTR strType,UINT uID);
 		BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size);
 
+		BOOL Init(LPCSTR pszPath);
 	protected:
 		CStringA GetRes( LPCSTR strType,UINT uID );
 
-		BOOL AddIdMap(const CStringA & strIdmapFile);
 		CStringA m_strPath;
 		std::map<DuiResID,CStringA> m_mapFiles;
 	};

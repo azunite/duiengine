@@ -15,46 +15,24 @@ DuiResProviderZip::~DuiResProviderZip(void)
 
 HBITMAP LoadBmpFromBuffer(char *pBuffer, int nLength)
 {
-	HBITMAP hBitmap;
 	HDC hDC = GetDC(NULL);
-	BITMAPFILEHEADER bfhHeader; 
 	//读取位图头
-	memcpy(&bfhHeader, pBuffer, sizeof(BITMAPFILEHEADER));
+	BITMAPFILEHEADER *pBmpFileHeader=(BITMAPFILEHEADER *)pBuffer; 
 	//检测位图头
-	if (bfhHeader.bfType != ((WORD) ('M'<<8)|'B')) 
+	if (pBmpFileHeader->bfType != ((WORD) ('M'<<8)|'B')) 
 	{
 		return NULL; 
 	} 
 	//判断位图长度
-	if (bfhHeader.bfSize != nLength) 
+	if (pBmpFileHeader->bfSize > (UINT)nLength) 
 	{ 
 		return NULL; 
 	} 
-	UINT uBmpInfoLen=(UINT) bfhHeader.bfOffBits-sizeof(BITMAPFILEHEADER); 
-	LPBITMAPINFO lpBitmap=(LPBITMAPINFO) new BYTE[uBmpInfoLen]; 
-	memcpy(lpBitmap, pBuffer + sizeof(BITMAPFILEHEADER), uBmpInfoLen);
-	//检测格式是否正确
-	if ((*(LPDWORD)(lpBitmap)) != sizeof(BITMAPINFOHEADER)) 
-	{ 
-		return NULL; 
-	} 
-	DWORD dwBitlen=bfhHeader.bfSize - bfhHeader.bfOffBits; 
-	LPVOID lpBits=new BYTE[dwBitlen]; 
-	memcpy(lpBits, pBuffer + sizeof(BITMAPFILEHEADER) + uBmpInfoLen,dwBitlen);
-	LPVOID lpBitsT;
-	hBitmap=::CreateDIBSection(hDC,lpBitmap,DIB_RGB_COLORS, 
-		&lpBitsT,NULL,0); 
-	if (hBitmap == NULL)
-	{//创建失败
-		return NULL;
-	}
-	//复制位图
-	BITMAP bmp; 
-	GetObject(hBitmap, sizeof(BITMAP), &bmp);
-	DWORD dwCount = (DWORD) bmp.bmWidthBytes * bmp.bmHeight; 
-	memcpy(bmp.bmBits,lpBits,dwCount); 
+	LPBITMAPINFO lpBitmap=(LPBITMAPINFO)(pBmpFileHeader+1); 
+	LPVOID lpBits=pBuffer+pBmpFileHeader->bfOffBits;
+	HBITMAP hBmp= CreateDIBitmap(hDC,&lpBitmap->bmiHeader,CBM_INIT,lpBits,lpBitmap,DIB_RGB_COLORS);//lpBitmap->bmiHeader.biBitCount<24?DIB_PAL_COLORS:DIB_RGB_COLORS);
 	ReleaseDC(NULL,hDC);
-	return hBitmap;
+	return hBmp;
 }
 
 HBITMAP DuiResProviderZip::LoadBitmap( LPCSTR strType,UINT uID )
@@ -104,25 +82,22 @@ Gdiplus::Image * DuiResProviderZip::LoadImage( LPCSTR strType,UINT uID )
 
 	pImage = Gdiplus::Image::FromStream(pStm);
 
-	::GlobalUnlock(hMem);
 	pStm->Release();
+	::GlobalUnlock(hMem);
+// 	GlobalFree(hMem);
 	return pImage;	
 }
 
-BOOL DuiResProviderZip::OpenZip( LPCTSTR pszZipFile )
+BOOL DuiResProviderZip::Init( LPCTSTR pszZipFile )
 {
 	if(!m_zipFile.Open(pszZipFile)) return FALSE;
 	CZipFile zf;
 	BOOL bIdx=m_zipFile.GetFile(_T("index.xml"),zf);
 	if(!bIdx) return FALSE;
-	return AddIdMap(zf);
-}
 
-BOOL DuiResProviderZip::AddIdMap( const CZipFile & zipFile )
-{
 	TiXmlDocument xmlDoc;
 	CStringA strFileName;
-	CStringA xmlBuf((char*)zipFile.GetData(),zipFile.GetSize());
+	CStringA xmlBuf((char*)zf.GetData(),zf.GetSize());
 	xmlDoc.Parse(xmlBuf);
 	if(xmlDoc.Error()) return FALSE;
 	TiXmlElement *pXmlElem = xmlDoc.RootElement();
@@ -140,7 +115,7 @@ BOOL DuiResProviderZip::AddIdMap( const CZipFile & zipFile )
 		pXmlElem=pXmlElem->NextSiblingElement();
 	}
 	return TRUE;
-}	
+}
 
 CString DuiResProviderZip::GetFilePath( UINT uID,LPCSTR pszType )
 {
@@ -156,7 +131,7 @@ size_t DuiResProviderZip::GetRawBufferSize( LPCSTR strType,UINT uID )
 	if(strPath.IsEmpty()) return FALSE;
 	ZIP_FIND_DATA zfd;
 	HANDLE hf=m_zipFile.FindFirstFile(strPath,&zfd);
-	if(!hf) return 0;
+	if(INVALID_HANDLE_VALUE==hf) return 0;
 	m_zipFile.FindClose(hf);
 	return zfd.nFileSizeUncompressed;
 }
