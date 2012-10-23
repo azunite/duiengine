@@ -635,7 +635,7 @@ BOOL CDuiRichEdit::DuiWndProc( UINT uMsg,WPARAM wParam,LPARAM lParam,LRESULT & l
 HRESULT CDuiRichEdit::InitDefaultCharFormat( CHARFORMAT2W* pcf ,HFONT hFont)
 {
 	CDCHandle dc=GetDuiDC(NULL,OLEDC_NODRAW);
-	ATLASSERT(dc);
+	DUIASSERT(dc);
 	BeforePaintEx(dc);
 
 	LOGFONT lf;

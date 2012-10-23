@@ -14,8 +14,8 @@ namespace DuiEngine{
 	{
 		CRect rcClient = rcDraw;
 
-		ATLASSERT(dc.m_hDC);
-		ATLASSERT(!pImgDraw->IsEmpty());
+		DUIASSERT(dc.m_hDC);
+		DUIASSERT(!pImgDraw->IsEmpty());
 		rcClient.DeflateRect(
 			(uDrawPart & Frame_Part_Left)   ? rcMargin.left  : 0, 
 			(uDrawPart & Frame_Part_Top)    ? rcMargin.top   : 0, 

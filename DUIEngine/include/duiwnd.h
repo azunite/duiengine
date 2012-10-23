@@ -48,7 +48,7 @@ public:
 
 	CDuiTimerID(HDUIWND hWnd,char id)
 	{
-		ATLASSERT(hWnd<0x00FFFFFF && id>=0);
+		DUIASSERT(hWnd<0x00FFFFFF && id>=0);
 		bDuiTimer=1;
 		hDuiWnd=hWnd;
 		uTimerID=id;

@@ -50,7 +50,7 @@ BOOL CDuiSplitWnd::LoadChildren( TiXmlElement* pTiXmlChildElem )
 {
 	if(!pTiXmlChildElem) return FALSE;
 	TiXmlElement *pTiXmlParent=pTiXmlChildElem->Parent()->ToElement();
-	ATLASSERT(pTiXmlParent);
+	DUIASSERT(pTiXmlParent);
 	TiXmlElement *pTiXmlPane=pTiXmlParent->FirstChildElement("pane");
 	while(pTiXmlPane)
 	{

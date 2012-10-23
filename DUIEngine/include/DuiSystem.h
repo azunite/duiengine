@@ -74,10 +74,13 @@ public:
 
 	size_t InitName2ID(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 
+	HANDLE GetExecutableHeap(){return m_hHeapExecutable;}
 protected:
 	void createSingletons();
 	void destroySingletons();
 	void * m_p;
+	HANDLE m_hHeapExecutable;
+
 	CRITICAL_SECTION m_cs;
 
 	ATOM			m_atomWnd;

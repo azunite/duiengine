@@ -147,7 +147,7 @@ BOOL CDuiPanelEx::HasScrollBar(BOOL bVertical)
 
 CRect CDuiPanelEx::GetSbPartRect(BOOL bVertical,UINT uSBCode)
 {
-	ATLASSERT(m_pSkinSb);
+	DUIASSERT(m_pSkinSb);
 	CRect rcSb=GetScrollBarRect(bVertical);
 	if(rcSb.IsRectEmpty()) return rcSb;
 
@@ -254,7 +254,7 @@ int CDuiPanelEx::OnCreate(LPVOID)
 	int nRet=__super::OnCreate(NULL);
 
 	if(nRet!=0) return nRet;
-	ATLASSERT(m_pSkinSb);
+	DUIASSERT(m_pSkinSb);
 	SIZE szSbSkin=m_pSkinSb->GetSkinSize();
 	if(m_nSbWid==-1) m_nSbWid=szSbSkin.cx/9;
 	if(m_nSbArrowSize==-1) m_nSbArrowSize=szSbSkin.cx/9;

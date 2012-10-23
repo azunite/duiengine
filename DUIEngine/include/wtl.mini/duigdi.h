@@ -76,7 +76,7 @@ public:
 // Create methods
 	HPEN CreatePen(int nPenStyle, int nWidth, COLORREF crColor)
 	{
-		ATLASSERT(m_hPen == NULL);
+		DUIASSERT(m_hPen == NULL);
 		m_hPen = ::CreatePen(nPenStyle, nWidth, crColor);
 		return m_hPen;
 	}
@@ -84,7 +84,7 @@ public:
 #ifndef _WIN32_WCE
 	HPEN CreatePen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL)
 	{
-		ATLASSERT(m_hPen == NULL);
+		DUIASSERT(m_hPen == NULL);
 		m_hPen = ::ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
 		return m_hPen;
 	}
@@ -92,14 +92,14 @@ public:
 
 	HPEN CreatePenIndirect(LPLOGPEN lpLogPen)
 	{
-		ATLASSERT(m_hPen == NULL);
+		DUIASSERT(m_hPen == NULL);
 		m_hPen = ::CreatePenIndirect(lpLogPen);
 		return m_hPen;
 	}
 
 	BOOL DeleteObject()
 	{
-		ATLASSERT(m_hPen != NULL);
+		DUIASSERT(m_hPen != NULL);
 		BOOL bRet = ::DeleteObject(m_hPen);
 		if(bRet)
 			m_hPen = NULL;
@@ -109,26 +109,26 @@ public:
 // Attributes
 	int GetLogPen(LOGPEN* pLogPen) const
 	{
-		ATLASSERT(m_hPen != NULL);
+		DUIASSERT(m_hPen != NULL);
 		return ::GetObject(m_hPen, sizeof(LOGPEN), pLogPen);
 	}
 
 	bool GetLogPen(LOGPEN& LogPen) const
 	{
-		ATLASSERT(m_hPen != NULL);
+		DUIASSERT(m_hPen != NULL);
 		return (::GetObject(m_hPen, sizeof(LOGPEN), &LogPen) == sizeof(LOGPEN));
 	}
 
 #ifndef _WIN32_WCE
 	int GetExtLogPen(EXTLOGPEN* pLogPen) const
 	{
-		ATLASSERT(m_hPen != NULL);
+		DUIASSERT(m_hPen != NULL);
 		return ::GetObject(m_hPen, sizeof(EXTLOGPEN), pLogPen);
 	}
 
 	bool GetExtLogPen(EXTLOGPEN& ExtLogPen) const
 	{
-		ATLASSERT(m_hPen != NULL);
+		DUIASSERT(m_hPen != NULL);
 		return (::GetObject(m_hPen, sizeof(EXTLOGPEN), &ExtLogPen) == sizeof(EXTLOGPEN));
 	}
 #endif // !_WIN32_WCE
@@ -185,7 +185,7 @@ public:
 // Create methods
 	HBRUSH CreateSolidBrush(COLORREF crColor)
 	{
-		ATLASSERT(m_hBrush == NULL);
+		DUIASSERT(m_hBrush == NULL);
 		m_hBrush = ::CreateSolidBrush(crColor);
 		return m_hBrush;
 	}
@@ -193,7 +193,7 @@ public:
 #ifndef _WIN32_WCE
 	HBRUSH CreateHatchBrush(int nIndex, COLORREF crColor)
 	{
-		ATLASSERT(m_hBrush == NULL);
+		DUIASSERT(m_hBrush == NULL);
 		m_hBrush = ::CreateHatchBrush(nIndex, crColor);
 		return m_hBrush;
 	}
@@ -202,7 +202,7 @@ public:
 #if !defined(_WIN32_WCE) || (_ATL_VER >= 0x0800)
 	HBRUSH CreateBrushIndirect(const LOGBRUSH* lpLogBrush)
 	{
-		ATLASSERT(m_hBrush == NULL);
+		DUIASSERT(m_hBrush == NULL);
 #ifndef _WIN32_WCE
 		m_hBrush = ::CreateBrushIndirect(lpLogBrush);
 #else // CE specific
@@ -214,16 +214,16 @@ public:
 
 	HBRUSH CreatePatternBrush(HBITMAP hBitmap)
 	{
-		ATLASSERT(m_hBrush == NULL);
+		DUIASSERT(m_hBrush == NULL);
 		m_hBrush = ::CreatePatternBrush(hBitmap);
 		return m_hBrush;
 	}
 
 	HBRUSH CreateDIBPatternBrush(HGLOBAL hPackedDIB, UINT nUsage)
 	{
-		ATLASSERT(hPackedDIB != NULL);
+		DUIASSERT(hPackedDIB != NULL);
 		const void* lpPackedDIB = GlobalLock(hPackedDIB);
-		ATLASSERT(lpPackedDIB != NULL);
+		DUIASSERT(lpPackedDIB != NULL);
 		m_hBrush = ::CreateDIBPatternBrushPt(lpPackedDIB, nUsage);
 		GlobalUnlock(hPackedDIB);
 		return m_hBrush;
@@ -231,21 +231,21 @@ public:
 
 	HBRUSH CreateDIBPatternBrush(const void* lpPackedDIB, UINT nUsage)
 	{
-		ATLASSERT(m_hBrush == NULL);
+		DUIASSERT(m_hBrush == NULL);
 		m_hBrush = ::CreateDIBPatternBrushPt(lpPackedDIB, nUsage);
 		return m_hBrush;
 	}
 
 	HBRUSH CreateSysColorBrush(int nIndex)
 	{
-		ATLASSERT(m_hBrush == NULL);
+		DUIASSERT(m_hBrush == NULL);
 		m_hBrush = ::GetSysColorBrush(nIndex);
 		return m_hBrush;
 	}
 
 	BOOL DeleteObject()
 	{
-		ATLASSERT(m_hBrush != NULL);
+		DUIASSERT(m_hBrush != NULL);
 		BOOL bRet = ::DeleteObject(m_hBrush);
 		if(bRet)
 			m_hBrush = NULL;
@@ -255,13 +255,13 @@ public:
 // Attributes
 	int GetLogBrush(LOGBRUSH* pLogBrush) const
 	{
-		ATLASSERT(m_hBrush != NULL);
+		DUIASSERT(m_hBrush != NULL);
 		return ::GetObject(m_hBrush, sizeof(LOGBRUSH), pLogBrush);
 	}
 
 	bool GetLogBrush(LOGBRUSH& LogBrush) const
 	{
-		ATLASSERT(m_hBrush != NULL);
+		DUIASSERT(m_hBrush != NULL);
 		return (::GetObject(m_hBrush, sizeof(LOGBRUSH), &LogBrush) == sizeof(LOGBRUSH));
 	}
 };
@@ -288,7 +288,7 @@ public:
 
 	CLogFont(HFONT hFont)
 	{
-		ATLASSERT(::GetObjectType(hFont) == OBJ_FONT);
+		DUIASSERT(::GetObjectType(hFont) == OBJ_FONT);
 		::GetObject(hFont, sizeof(LOGFONT), (LOGFONT*)this);
 	}
 
@@ -380,7 +380,7 @@ public:
 
 	void Copy(const LOGFONT* pLogFont)
 	{
-		ATLASSERT(pLogFont != NULL);
+		DUIASSERT(pLogFont != NULL);
 		*(LOGFONT*)this = *pLogFont;
 	}
 
@@ -398,7 +398,7 @@ public:
 
 	CLogFont& operator =(HFONT hFont)
 	{
-		ATLASSERT(::GetObjectType(hFont) == OBJ_FONT);
+		DUIASSERT(::GetObjectType(hFont) == OBJ_FONT);
 		::GetObject(hFont, sizeof(LOGFONT), (LOGFONT*)this);
 		return *this;
 	}
@@ -467,7 +467,7 @@ public:
 // Create methods
 	HFONT CreateFontIndirect(const LOGFONT* lpLogFont)
 	{
-		ATLASSERT(m_hFont == NULL);
+		DUIASSERT(m_hFont == NULL);
 		m_hFont = ::CreateFontIndirect(lpLogFont);
 		return m_hFont;
 	}
@@ -475,7 +475,7 @@ public:
 #if !defined(_WIN32_WCE) && (_WIN32_WINNT >= 0x0500)
 	HFONT CreateFontIndirectEx(CONST ENUMLOGFONTEXDV* penumlfex)
 	{
-		ATLASSERT(m_hFont == NULL);
+		DUIASSERT(m_hFont == NULL);
 		m_hFont = ::CreateFontIndirectEx(penumlfex);
 		return m_hFont;
 	}
@@ -488,7 +488,7 @@ public:
 			BYTE nClipPrecision, BYTE nQuality, BYTE nPitchAndFamily,
 			LPCTSTR lpszFacename)
 	{
-		ATLASSERT(m_hFont == NULL);
+		DUIASSERT(m_hFont == NULL);
 #ifndef _WIN32_WCE
 		m_hFont = ::CreateFont(nHeight, nWidth, nEscapement,
 			nOrientation, nWeight, bItalic, bUnderline, cStrikeOut,
@@ -545,7 +545,7 @@ public:
 
 	BOOL DeleteObject()
 	{
-		ATLASSERT(m_hFont != NULL);
+		DUIASSERT(m_hFont != NULL);
 		BOOL bRet = ::DeleteObject(m_hFont);
 		if(bRet)
 			m_hFont = NULL;
@@ -555,13 +555,13 @@ public:
 // Attributes
 	int GetLogFont(LOGFONT* pLogFont) const
 	{
-		ATLASSERT(m_hFont != NULL);
+		DUIASSERT(m_hFont != NULL);
 		return ::GetObject(m_hFont, sizeof(LOGFONT), pLogFont);
 	}
 
 	bool GetLogFont(LOGFONT& LogFont) const
 	{
-		ATLASSERT(m_hFont != NULL);
+		DUIASSERT(m_hFont != NULL);
 		return (::GetObject(m_hFont, sizeof(LOGFONT), &LogFont) == sizeof(LOGFONT));
 	}
 };
@@ -617,14 +617,14 @@ public:
 
 	HBITMAP LoadOEMBitmap(UINT nIDBitmap) // for OBM_/OCR_/OIC_
 	{
-		ATLASSERT(m_hBitmap == NULL);
+		DUIASSERT(m_hBitmap == NULL);
 		m_hBitmap = ::LoadBitmap(NULL, MAKEINTRESOURCE(nIDBitmap));
 		return m_hBitmap;
 	}
 
 	HBITMAP CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, const void* lpBits)
 	{
-		ATLASSERT(m_hBitmap == NULL);
+		DUIASSERT(m_hBitmap == NULL);
 		m_hBitmap = ::CreateBitmap(nWidth, nHeight, nPlanes, nBitsPerPixel, lpBits);
 		return m_hBitmap;
 	}
@@ -632,7 +632,7 @@ public:
 #ifndef _WIN32_WCE
 	HBITMAP CreateBitmapIndirect(LPBITMAP lpBitmap)
 	{
-		ATLASSERT(m_hBitmap == NULL);
+		DUIASSERT(m_hBitmap == NULL);
 		m_hBitmap = ::CreateBitmapIndirect(lpBitmap);
 		return m_hBitmap;
 	}
@@ -640,7 +640,7 @@ public:
 
 	HBITMAP CreateCompatibleBitmap(HDC hDC, int nWidth, int nHeight)
 	{
-		ATLASSERT(m_hBitmap == NULL);
+		DUIASSERT(m_hBitmap == NULL);
 		m_hBitmap = ::CreateCompatibleBitmap(hDC, nWidth, nHeight);
 		return m_hBitmap;
 	}
@@ -648,7 +648,7 @@ public:
 #ifndef _WIN32_WCE
 	HBITMAP CreateDiscardableBitmap(HDC hDC, int nWidth, int nHeight)
 	{
-		ATLASSERT(m_hBitmap == NULL);
+		DUIASSERT(m_hBitmap == NULL);
 		m_hBitmap = ::CreateDiscardableBitmap(hDC, nWidth, nHeight);
 		return m_hBitmap;
 	}
@@ -656,7 +656,7 @@ public:
 
 	BOOL DeleteObject()
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		BOOL bRet = ::DeleteObject(m_hBitmap);
 		if(bRet)
 			m_hBitmap = NULL;
@@ -666,19 +666,19 @@ public:
 // Attributes
 	int GetBitmap(BITMAP* pBitMap) const
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		return ::GetObject(m_hBitmap, sizeof(BITMAP), pBitMap);
 	}
 
 	bool GetBitmap(BITMAP& bm) const
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		return (::GetObject(m_hBitmap, sizeof(BITMAP), &bm) == sizeof(BITMAP));
 	}
 
 	bool GetSize(SIZE& size) const
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		BITMAP bm = { 0 };
 		if(!GetBitmap(&bm))
 			return false;
@@ -690,7 +690,7 @@ public:
 #ifndef _WIN32_WCE
 	DWORD GetBitmapBits(DWORD dwCount, LPVOID lpBits) const
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		return ::GetBitmapBits(m_hBitmap, dwCount, lpBits);
 	}
 #endif // !_WIN32_WCE
@@ -698,7 +698,7 @@ public:
 #if !defined(_WIN32_WCE) || (_WIN32_WCE >= 410)
 	DWORD SetBitmapBits(DWORD dwCount, const void* lpBits)
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		return ::SetBitmapBits(m_hBitmap, dwCount, lpBits);
 	}
 #endif // !defined(_WIN32_WCE) || (_WIN32_WCE >= 410)
@@ -706,20 +706,20 @@ public:
 #ifndef _WIN32_WCE
 	BOOL GetBitmapDimension(LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		return ::GetBitmapDimensionEx(m_hBitmap, lpSize);
 	}
 
 	BOOL SetBitmapDimension(int nWidth, int nHeight, LPSIZE lpSize = NULL)
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		return ::SetBitmapDimensionEx(m_hBitmap, nWidth, nHeight, lpSize);
 	}
 
 // DIB support
 	HBITMAP CreateDIBitmap(HDC hDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 	{
-		ATLASSERT(m_hBitmap == NULL);
+		DUIASSERT(m_hBitmap == NULL);
 		m_hBitmap = ::CreateDIBitmap(hDC, lpbmih, dwInit, lpbInit, lpbmi, uColorUse);
 		return m_hBitmap;
 	}
@@ -727,7 +727,7 @@ public:
 
 	HBITMAP CreateDIBSection(HDC hDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
 	{
-		ATLASSERT(m_hBitmap == NULL);
+		DUIASSERT(m_hBitmap == NULL);
 		m_hBitmap = ::CreateDIBSection(hDC, lpbmi, uColorUse, ppvBits, hSection, dwOffset);
 		return m_hBitmap;
 	}
@@ -735,13 +735,13 @@ public:
 #ifndef _WIN32_WCE
 	int GetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		return ::GetDIBits(hDC, m_hBitmap, uStartScan, cScanLines,  lpvBits, lpbmi, uColorUse);
 	}
 
 	int SetDIBits(HDC hDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 	{
-		ATLASSERT(m_hBitmap != NULL);
+		DUIASSERT(m_hBitmap != NULL);
 		return ::SetDIBits(hDC, m_hBitmap, uStartScan, cScanLines, lpvBits, lpbmi, uColorUse);
 	}
 #endif // !_WIN32_WCE
@@ -798,7 +798,7 @@ public:
 // Create methods
 	HPALETTE CreatePalette(LPLOGPALETTE lpLogPalette)
 	{
-		ATLASSERT(m_hPalette == NULL);
+		DUIASSERT(m_hPalette == NULL);
 		m_hPalette = ::CreatePalette(lpLogPalette);
 		return m_hPalette;
 	}
@@ -806,8 +806,8 @@ public:
 #ifndef _WIN32_WCE
 	HPALETTE CreateHalftonePalette(HDC hDC)
 	{
-		ATLASSERT(m_hPalette == NULL);
-		ATLASSERT(hDC != NULL);
+		DUIASSERT(m_hPalette == NULL);
+		DUIASSERT(hDC != NULL);
 		m_hPalette = ::CreateHalftonePalette(hDC);
 		return m_hPalette;
 	}
@@ -815,7 +815,7 @@ public:
 
 	BOOL DeleteObject()
 	{
-		ATLASSERT(m_hPalette != NULL);
+		DUIASSERT(m_hPalette != NULL);
 		BOOL bRet = ::DeleteObject(m_hPalette);
 		if(bRet)
 			m_hPalette = NULL;
@@ -825,7 +825,7 @@ public:
 // Attributes
 	int GetEntryCount() const
 	{
-		ATLASSERT(m_hPalette != NULL);
+		DUIASSERT(m_hPalette != NULL);
 		WORD nEntries = 0;
 		::GetObject(m_hPalette, sizeof(WORD), &nEntries);
 		return (int)nEntries;
@@ -833,13 +833,13 @@ public:
 
 	UINT GetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
 	{
-		ATLASSERT(m_hPalette != NULL);
+		DUIASSERT(m_hPalette != NULL);
 		return ::GetPaletteEntries(m_hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
 	UINT SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
 	{
-		ATLASSERT(m_hPalette != NULL);
+		DUIASSERT(m_hPalette != NULL);
 		return ::SetPaletteEntries(m_hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
@@ -847,20 +847,20 @@ public:
 #ifndef _WIN32_WCE
 	void AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
 	{
-		ATLASSERT(m_hPalette != NULL);
+		DUIASSERT(m_hPalette != NULL);
 		::AnimatePalette(m_hPalette, nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
 	BOOL ResizePalette(UINT nNumEntries)
 	{
-		ATLASSERT(m_hPalette != NULL);
+		DUIASSERT(m_hPalette != NULL);
 		return ::ResizePalette(m_hPalette, nNumEntries);
 	}
 #endif // !_WIN32_WCE
 
 	UINT GetNearestPaletteIndex(COLORREF crColor) const
 	{
-		ATLASSERT(m_hPalette != NULL);
+		DUIASSERT(m_hPalette != NULL);
 		return ::GetNearestPaletteIndex(m_hPalette, crColor);
 	}
 };
@@ -916,14 +916,14 @@ public:
 // Create methods
 	HRGN CreateRectRgn(int x1, int y1, int x2, int y2)
 	{
-		ATLASSERT(m_hRgn == NULL);
+		DUIASSERT(m_hRgn == NULL);
 		m_hRgn = ::CreateRectRgn(x1, y1, x2, y2);
 		return m_hRgn;
 	}
 
 	HRGN CreateRectRgnIndirect(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hRgn == NULL);
+		DUIASSERT(m_hRgn == NULL);
 		m_hRgn = ::CreateRectRgnIndirect(lpRect);
 		return m_hRgn;
 	}
@@ -931,50 +931,50 @@ public:
 #ifndef _WIN32_WCE
 	HRGN CreateEllipticRgn(int x1, int y1, int x2, int y2)
 	{
-		ATLASSERT(m_hRgn == NULL);
+		DUIASSERT(m_hRgn == NULL);
 		m_hRgn = ::CreateEllipticRgn(x1, y1, x2, y2);
 		return m_hRgn;
 	}
 
 	HRGN CreateEllipticRgnIndirect(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hRgn == NULL);
+		DUIASSERT(m_hRgn == NULL);
 		m_hRgn = ::CreateEllipticRgnIndirect(lpRect);
 		return m_hRgn;
 	}
 
 	HRGN CreatePolygonRgn(LPPOINT lpPoints, int nCount, int nMode)
 	{
-		ATLASSERT(m_hRgn == NULL);
+		DUIASSERT(m_hRgn == NULL);
 		m_hRgn = ::CreatePolygonRgn(lpPoints, nCount, nMode);
 		return m_hRgn;
 	}
 
 	HRGN CreatePolyPolygonRgn(LPPOINT lpPoints, LPINT lpPolyCounts, int nCount, int nPolyFillMode)
 	{
-		ATLASSERT(m_hRgn == NULL);
+		DUIASSERT(m_hRgn == NULL);
 		m_hRgn = ::CreatePolyPolygonRgn(lpPoints, lpPolyCounts, nCount, nPolyFillMode);
 		return m_hRgn;
 	}
 
 	HRGN CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3)
 	{
-		ATLASSERT(m_hRgn == NULL);
+		DUIASSERT(m_hRgn == NULL);
 		m_hRgn = ::CreateRoundRectRgn(x1, y1, x2, y2, x3, y3);
 		return m_hRgn;
 	}
 
 	HRGN CreateFromPath(HDC hDC)
 	{
-		ATLASSERT(m_hRgn == NULL);
-		ATLASSERT(hDC != NULL);
+		DUIASSERT(m_hRgn == NULL);
+		DUIASSERT(hDC != NULL);
 		m_hRgn = ::PathToRegion(hDC);
 		return m_hRgn;
 	}
 
 	HRGN CreateFromData(const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData)
 	{
-		ATLASSERT(m_hRgn == NULL);
+		DUIASSERT(m_hRgn == NULL);
 		m_hRgn = ::ExtCreateRegion(lpXForm, nCount, pRgnData);
 		return m_hRgn;
 	}
@@ -982,7 +982,7 @@ public:
 
 	BOOL DeleteObject()
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		BOOL bRet = ::DeleteObject(m_hRgn);
 		if(bRet)
 			m_hRgn = NULL;
@@ -992,79 +992,79 @@ public:
 // Operations
 	void SetRectRgn(int x1, int y1, int x2, int y2)
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		::SetRectRgn(m_hRgn, x1, y1, x2, y2);
 	}
 
 	void SetRectRgn(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		::SetRectRgn(m_hRgn, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
 	}
 
 	int CombineRgn(HRGN hRgnSrc1, HRGN hRgnSrc2, int nCombineMode)
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::CombineRgn(m_hRgn, hRgnSrc1, hRgnSrc2, nCombineMode);
 	}
 
 	int CombineRgn(HRGN hRgnSrc, int nCombineMode)
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::CombineRgn(m_hRgn, m_hRgn, hRgnSrc, nCombineMode);
 	}
 
 	int CopyRgn(HRGN hRgnSrc)
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::CombineRgn(m_hRgn, hRgnSrc, NULL, RGN_COPY);
 	}
 
 	BOOL EqualRgn(HRGN hRgn) const
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::EqualRgn(m_hRgn, hRgn);
 	}
 
 	int OffsetRgn(int x, int y)
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::OffsetRgn(m_hRgn, x, y);
 	}
 
 	int OffsetRgn(POINT point)
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::OffsetRgn(m_hRgn, point.x, point.y);
 	}
 
 	int GetRgnBox(LPRECT lpRect) const
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::GetRgnBox(m_hRgn, lpRect);
 	}
 
 	BOOL PtInRegion(int x, int y) const
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::PtInRegion(m_hRgn, x, y);
 	}
 
 	BOOL PtInRegion(POINT point) const
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::PtInRegion(m_hRgn, point.x, point.y);
 	}
 
 	BOOL RectInRegion(LPCRECT lpRect) const
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return ::RectInRegion(m_hRgn, lpRect);
 	}
 
 	int GetRegionData(LPRGNDATA lpRgnData, int nDataSize) const
 	{
-		ATLASSERT(m_hRgn != NULL);
+		DUIASSERT(m_hRgn != NULL);
 		return (int)::GetRegionData(m_hRgn, nDataSize, lpRgnData);
 	}
 };
@@ -1122,51 +1122,51 @@ public:
 #ifndef _WIN32_WCE
 	HWND WindowFromDC() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::WindowFromDC(m_hDC);
 	}
 #endif // !_WIN32_WCE
 
 	CPenHandle GetCurrentPen() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return CPenHandle((HPEN)::GetCurrentObject(m_hDC, OBJ_PEN));
 	}
 
 	CBrushHandle GetCurrentBrush() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return CBrushHandle((HBRUSH)::GetCurrentObject(m_hDC, OBJ_BRUSH));
 	}
 
 	CPaletteHandle GetCurrentPalette() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return CPaletteHandle((HPALETTE)::GetCurrentObject(m_hDC, OBJ_PAL));
 	}
 
 	CFontHandle GetCurrentFont() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return CFontHandle((HFONT)::GetCurrentObject(m_hDC, OBJ_FONT));
 	}
 
 	CBitmapHandle GetCurrentBitmap() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return CBitmapHandle((HBITMAP)::GetCurrentObject(m_hDC, OBJ_BITMAP));
 	}
 
 	HDC CreateDC(LPCTSTR lpszDriverName, LPCTSTR lpszDeviceName, LPCTSTR lpszOutput, const DEVMODE* lpInitData)
 	{
-		ATLASSERT(m_hDC == NULL);
+		DUIASSERT(m_hDC == NULL);
 		m_hDC = ::CreateDC(lpszDriverName, lpszDeviceName, lpszOutput, lpInitData);
 		return m_hDC;
 	}
 
 	HDC CreateCompatibleDC(HDC hDC = NULL)
 	{
-		ATLASSERT(m_hDC == NULL);
+		DUIASSERT(m_hDC == NULL);
 		m_hDC = ::CreateCompatibleDC(hDC);
 		return m_hDC;
 	}
@@ -1184,65 +1184,65 @@ public:
 // Device-Context Functions
 	int SaveDC()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SaveDC(m_hDC);
 	}
 
 	BOOL RestoreDC(int nSavedDC)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::RestoreDC(m_hDC, nSavedDC);
 	}
 
 	int GetDeviceCaps(int nIndex) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetDeviceCaps(m_hDC, nIndex);
 	}
 
 #ifndef _WIN32_WCE
 	UINT SetBoundsRect(LPCRECT lpRectBounds, UINT flags)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetBoundsRect(m_hDC, lpRectBounds, flags);
 	}
 
 	UINT GetBoundsRect(LPRECT lpRectBounds, UINT flags) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetBoundsRect(m_hDC, lpRectBounds, flags);
 	}
 
 	BOOL ResetDC(const DEVMODE* lpDevMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ResetDC(m_hDC, lpDevMode) != NULL;
 	}
 
 // Drawing-Tool Functions
 	BOOL GetBrushOrg(LPPOINT lpPoint) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetBrushOrgEx(m_hDC, lpPoint);
 	}
 #endif // !_WIN32_WCE
 
 	BOOL SetBrushOrg(int x, int y, LPPOINT lpPoint = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetBrushOrgEx(m_hDC, x, y, lpPoint);
 	}
 
 	BOOL SetBrushOrg(POINT point, LPPOINT lpPointRet = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetBrushOrgEx(m_hDC, point.x, point.y, lpPointRet);
 	}
 
 #ifndef _WIN32_WCE
 	int EnumObjects(int nObjectType, int (CALLBACK* lpfn)(LPVOID, LPARAM), LPARAM lpData)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 #ifdef STRICT
 		return ::EnumObjects(m_hDC, nObjectType, (GOBJENUMPROC)lpfn, lpData);
 #else
@@ -1254,51 +1254,51 @@ public:
 // Type-safe selection helpers
 	HPEN SelectPen(HPEN hPen)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 #ifndef _WIN32_WCE
-		ATLASSERT(hPen == NULL || ::GetObjectType(hPen) == OBJ_PEN || ::GetObjectType(hPen) == OBJ_EXTPEN);
+		DUIASSERT(hPen == NULL || ::GetObjectType(hPen) == OBJ_PEN || ::GetObjectType(hPen) == OBJ_EXTPEN);
 #else // CE specific
-		ATLASSERT(hPen == NULL || ::GetObjectType(hPen) == OBJ_PEN);
+		DUIASSERT(hPen == NULL || ::GetObjectType(hPen) == OBJ_PEN);
 #endif // _WIN32_WCE
 		return (HPEN)::SelectObject(m_hDC, hPen);
 	}
 
 	HBRUSH SelectBrush(HBRUSH hBrush)
 	{
-		ATLASSERT(m_hDC != NULL);
-		ATLASSERT(hBrush == NULL || ::GetObjectType(hBrush) == OBJ_BRUSH);
+		DUIASSERT(m_hDC != NULL);
+		DUIASSERT(hBrush == NULL || ::GetObjectType(hBrush) == OBJ_BRUSH);
 		return (HBRUSH)::SelectObject(m_hDC, hBrush);
 	}
 
 	HFONT SelectFont(HFONT hFont)
 	{
-		ATLASSERT(m_hDC != NULL);
-		ATLASSERT(hFont == NULL || ::GetObjectType(hFont) == OBJ_FONT);
+		DUIASSERT(m_hDC != NULL);
+		DUIASSERT(hFont == NULL || ::GetObjectType(hFont) == OBJ_FONT);
 		return (HFONT)::SelectObject(m_hDC, hFont);
 	}
 
 	HBITMAP SelectBitmap(HBITMAP hBitmap)
 	{
-		ATLASSERT(m_hDC != NULL);
-		ATLASSERT(hBitmap == NULL || ::GetObjectType(hBitmap) == OBJ_BITMAP);
+		DUIASSERT(m_hDC != NULL);
+		DUIASSERT(hBitmap == NULL || ::GetObjectType(hBitmap) == OBJ_BITMAP);
 		return (HBITMAP)::SelectObject(m_hDC, hBitmap);
 	}
 
 	int SelectRgn(HRGN hRgn)       // special return for regions
 	{
-		ATLASSERT(m_hDC != NULL);
-		ATLASSERT(hRgn == NULL || ::GetObjectType(hRgn) == OBJ_REGION);
+		DUIASSERT(m_hDC != NULL);
+		DUIASSERT(hRgn == NULL || ::GetObjectType(hRgn) == OBJ_REGION);
 		return PtrToInt(::SelectObject(m_hDC, hRgn));
 	}
 
 // Type-safe selection helpers for stock objects
 	HPEN SelectStockPen(int nPen)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 #if (_WIN32_WINNT >= 0x0500)
-		ATLASSERT(nPen == WHITE_PEN || nPen == BLACK_PEN || nPen == NULL_PEN || nPen == DC_PEN);
+		DUIASSERT(nPen == WHITE_PEN || nPen == BLACK_PEN || nPen == NULL_PEN || nPen == DC_PEN);
 #else
-		ATLASSERT(nPen == WHITE_PEN || nPen == BLACK_PEN || nPen == NULL_PEN);
+		DUIASSERT(nPen == WHITE_PEN || nPen == BLACK_PEN || nPen == NULL_PEN);
 #endif // !(_WIN32_WINNT >= 0x0500)
 		return SelectPen((HPEN)::GetStockObject(nPen));
 	}
@@ -1306,9 +1306,9 @@ public:
 	HBRUSH SelectStockBrush(int nBrush)
 	{
 #if (_WIN32_WINNT >= 0x0500)
-		ATLASSERT((nBrush >= WHITE_BRUSH && nBrush <= HOLLOW_BRUSH) || nBrush == DC_BRUSH);
+		DUIASSERT((nBrush >= WHITE_BRUSH && nBrush <= HOLLOW_BRUSH) || nBrush == DC_BRUSH);
 #else
-		ATLASSERT(nBrush >= WHITE_BRUSH && nBrush <= HOLLOW_BRUSH);
+		DUIASSERT(nBrush >= WHITE_BRUSH && nBrush <= HOLLOW_BRUSH);
 #endif // !(_WIN32_WINNT >= 0x0500)
 		return SelectBrush((HBRUSH)::GetStockObject(nBrush));
 	}
@@ -1316,43 +1316,43 @@ public:
 	HFONT SelectStockFont(int nFont)
 	{
 #ifndef _WIN32_WCE
-		ATLASSERT((nFont >= OEM_FIXED_FONT && nFont <= SYSTEM_FIXED_FONT) || nFont == DEFAULT_GUI_FONT);
+		DUIASSERT((nFont >= OEM_FIXED_FONT && nFont <= SYSTEM_FIXED_FONT) || nFont == DEFAULT_GUI_FONT);
 #else // CE specific
-		ATLASSERT(nFont == SYSTEM_FONT);
+		DUIASSERT(nFont == SYSTEM_FONT);
 #endif // _WIN32_WCE
 		return SelectFont((HFONT)::GetStockObject(nFont));
 	}
 
 	HPALETTE SelectStockPalette(int nPalette, BOOL bForceBackground)
 	{
-		ATLASSERT(nPalette == DEFAULT_PALETTE); // the only one supported
+		DUIASSERT(nPalette == DEFAULT_PALETTE); // the only one supported
 		return SelectPalette((HPALETTE)::GetStockObject(nPalette), bForceBackground);
 	}
 
 // Color and Color Palette Functions
 	COLORREF GetNearestColor(COLORREF crColor) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetNearestColor(m_hDC, crColor);
 	}
 
 	HPALETTE SelectPalette(HPALETTE hPalette, BOOL bForceBackground)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 
 		return ::SelectPalette(m_hDC, hPalette, bForceBackground);
 	}
 
 	UINT RealizePalette()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::RealizePalette(m_hDC);
 	}
 
 #ifndef _WIN32_WCE
 	void UpdateColors()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		::UpdateColors(m_hDC);
 	}
 #endif // !_WIN32_WCE
@@ -1360,111 +1360,111 @@ public:
 // Drawing-Attribute Functions
 	COLORREF GetBkColor() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetBkColor(m_hDC);
 	}
 
 	int GetBkMode() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetBkMode(m_hDC);
 	}
 
 #ifndef _WIN32_WCE
 	int GetPolyFillMode() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetPolyFillMode(m_hDC);
 	}
 
 	int GetROP2() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetROP2(m_hDC);
 	}
 
 	int GetStretchBltMode() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetStretchBltMode(m_hDC);
 	}
 #endif // !_WIN32_WCE
 
 	COLORREF GetTextColor() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextColor(m_hDC);
 	}
 
 	COLORREF SetBkColor(COLORREF crColor)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetBkColor(m_hDC, crColor);
 	}
 
 	int SetBkMode(int nBkMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetBkMode(m_hDC, nBkMode);
 	}
 
 #ifndef _WIN32_WCE
 	int SetPolyFillMode(int nPolyFillMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetPolyFillMode(m_hDC, nPolyFillMode);
 	}
 #endif // !_WIN32_WCE
 
 	int SetROP2(int nDrawMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetROP2(m_hDC, nDrawMode);
 	}
 
 #ifndef _WIN32_WCE
 	int SetStretchBltMode(int nStretchMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetStretchBltMode(m_hDC, nStretchMode);
 	}
 #endif // !_WIN32_WCE
 
 	COLORREF SetTextColor(COLORREF crColor)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetTextColor(m_hDC, crColor);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL GetColorAdjustment(LPCOLORADJUSTMENT lpColorAdjust) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetColorAdjustment(m_hDC, lpColorAdjust);
 	}
 
 	BOOL SetColorAdjustment(const COLORADJUSTMENT* lpColorAdjust)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetColorAdjustment(m_hDC, lpColorAdjust);
 	}
 
 // Mapping Functions
 	int GetMapMode() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetMapMode(m_hDC);
 	}
 
 	BOOL GetViewportOrg(LPPOINT lpPoint) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetViewportOrgEx(m_hDC, lpPoint);
 	}
 
 	int SetMapMode(int nMapMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetMapMode(m_hDC, nMapMode);
 	}
 #endif // !_WIN32_WCE
@@ -1472,45 +1472,45 @@ public:
 	// Viewport Origin
 	BOOL SetViewportOrg(int x, int y, LPPOINT lpPoint = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetViewportOrgEx(m_hDC, x, y, lpPoint);
 	}
 
 	BOOL SetViewportOrg(POINT point, LPPOINT lpPointRet = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return SetViewportOrg(point.x, point.y, lpPointRet);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL OffsetViewportOrg(int nWidth, int nHeight, LPPOINT lpPoint = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::OffsetViewportOrgEx(m_hDC, nWidth, nHeight, lpPoint);
 	}
 
 	// Viewport Extent
 	BOOL GetViewportExt(LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetViewportExtEx(m_hDC, lpSize);
 	}
 
 	BOOL SetViewportExt(int x, int y, LPSIZE lpSize = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetViewportExtEx(m_hDC, x, y, lpSize);
 	}
 
 	BOOL SetViewportExt(SIZE size, LPSIZE lpSizeRet = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return SetViewportExt(size.cx, size.cy, lpSizeRet);
 	}
 
 	BOOL ScaleViewportExt(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ScaleViewportExtEx(m_hDC, xNum, xDenom, yNum, yDenom, lpSize);
 	}
 #endif // !_WIN32_WCE
@@ -1519,63 +1519,63 @@ public:
 #ifndef _WIN32_WCE
 	BOOL GetWindowOrg(LPPOINT lpPoint) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetWindowOrgEx(m_hDC, lpPoint);
 	}
 
 	BOOL SetWindowOrg(int x, int y, LPPOINT lpPoint = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetWindowOrgEx(m_hDC, x, y, lpPoint);
 	}
 
 	BOOL SetWindowOrg(POINT point, LPPOINT lpPointRet = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return SetWindowOrg(point.x, point.y, lpPointRet);
 	}
 
 	BOOL OffsetWindowOrg(int nWidth, int nHeight, LPPOINT lpPoint = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::OffsetWindowOrgEx(m_hDC, nWidth, nHeight, lpPoint);
 	}
 
 	// Window extent
 	BOOL GetWindowExt(LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetWindowExtEx(m_hDC, lpSize);
 	}
 
 	BOOL SetWindowExt(int x, int y, LPSIZE lpSize = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetWindowExtEx(m_hDC, x, y, lpSize);
 	}
 
 	BOOL SetWindowExt(SIZE size, LPSIZE lpSizeRet = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return SetWindowExt(size.cx, size.cy, lpSizeRet);
 	}
 
 	BOOL ScaleWindowExt(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ScaleWindowExtEx(m_hDC, xNum, xDenom, yNum, yDenom, lpSize);
 	}
 
 // Coordinate Functions
 	BOOL DPtoLP(LPPOINT lpPoints, int nCount = 1) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DPtoLP(m_hDC, lpPoints, nCount);
 	}
 
 	BOOL DPtoLP(LPRECT lpRect) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DPtoLP(m_hDC, (LPPOINT)lpRect, 2);
 	}
 
@@ -1594,13 +1594,13 @@ public:
 
 	BOOL LPtoDP(LPPOINT lpPoints, int nCount = 1) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::LPtoDP(m_hDC, lpPoints, nCount);
 	}
 
 	BOOL LPtoDP(LPRECT lpRect) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::LPtoDP(m_hDC, (LPPOINT)lpRect, 2);
 	}
 
@@ -1622,7 +1622,7 @@ public:
 
 	void DPtoHIMETRIC(LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		int nMapMode;
 		if((nMapMode = GetMapMode()) < MM_ISOTROPIC && nMapMode != MM_TEXT)
 		{
@@ -1636,7 +1636,7 @@ public:
 			// map against logical inch for non-constrained mapping modes
 			int cxPerInch = GetDeviceCaps(LOGPIXELSX);
 			int cyPerInch = GetDeviceCaps(LOGPIXELSY);
-			ATLASSERT(cxPerInch != 0 && cyPerInch != 0);
+			DUIASSERT(cxPerInch != 0 && cyPerInch != 0);
 			lpSize->cx = ::MulDiv(lpSize->cx, HIMETRIC_INCH, cxPerInch);
 			lpSize->cy = ::MulDiv(lpSize->cy, HIMETRIC_INCH, cyPerInch);
 		}
@@ -1644,7 +1644,7 @@ public:
 
 	void HIMETRICtoDP(LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		int nMapMode;
 		if((nMapMode = GetMapMode()) < MM_ISOTROPIC && nMapMode != MM_TEXT)
 		{
@@ -1658,7 +1658,7 @@ public:
 			// map against logical inch for non-constrained mapping modes
 			int cxPerInch = GetDeviceCaps(LOGPIXELSX);
 			int cyPerInch = GetDeviceCaps(LOGPIXELSY);
-			ATLASSERT(cxPerInch != 0 && cyPerInch != 0);
+			DUIASSERT(cxPerInch != 0 && cyPerInch != 0);
 			lpSize->cx = ::MulDiv(lpSize->cx, cxPerInch, HIMETRIC_INCH);
 			lpSize->cy = ::MulDiv(lpSize->cy, cyPerInch, HIMETRIC_INCH);
 		}
@@ -1680,26 +1680,26 @@ public:
 // Region Functions
 	BOOL FillRgn(HRGN hRgn, HBRUSH hBrush)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::FillRgn(m_hDC, hRgn, hBrush);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL FrameRgn(HRGN hRgn, HBRUSH hBrush, int nWidth, int nHeight)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::FrameRgn(m_hDC, hRgn, hBrush, nWidth, nHeight);
 	}
 
 	BOOL InvertRgn(HRGN hRgn)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::InvertRgn(m_hDC, hRgn);
 	}
 
 	BOOL PaintRgn(HRGN hRgn)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PaintRgn(m_hDC, hRgn);
 	}
 #endif // !_WIN32_WCE
@@ -1707,13 +1707,13 @@ public:
 // Clipping Functions
 	int GetClipBox(LPRECT lpRect) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetClipBox(m_hDC, lpRect);
 	}
 
 	int GetClipRgn(CRgn& region) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		if(region.IsNull())
 			region.CreateRectRgn(0, 0, 0, 0);
 
@@ -1727,77 +1727,77 @@ public:
 #ifndef _WIN32_WCE
 	BOOL PtVisible(int x, int y) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PtVisible(m_hDC, x, y);
 	}
 
 	BOOL PtVisible(POINT point) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PtVisible(m_hDC, point.x, point.y);
 	}
 #endif // !_WIN32_WCE
 
 	BOOL RectVisible(LPCRECT lpRect) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::RectVisible(m_hDC, lpRect);
 	}
 
 	int SelectClipRgn(HRGN hRgn)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SelectClipRgn(m_hDC, (HRGN)hRgn);
 	}
 
 	int ExcludeClipRect(int x1, int y1, int x2, int y2)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ExcludeClipRect(m_hDC, x1, y1, x2, y2);
 	}
 
 	int ExcludeClipRect(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ExcludeClipRect(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
 	}
 
 #ifndef _WIN32_WCE
 	int ExcludeUpdateRgn(HWND hWnd)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ExcludeUpdateRgn(m_hDC, hWnd);
 	}
 #endif // !_WIN32_WCE
 
 	int IntersectClipRect(int x1, int y1, int x2, int y2)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::IntersectClipRect(m_hDC, x1, y1, x2, y2);
 	}
 
 	int IntersectClipRect(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::IntersectClipRect(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
 	}
 
 #ifndef _WIN32_WCE
 	int OffsetClipRgn(int x, int y)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::OffsetClipRgn(m_hDC, x, y);
 	}
 
 	int OffsetClipRgn(SIZE size)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::OffsetClipRgn(m_hDC, size.cx, size.cy);
 	}
 
 	int SelectClipRgn(HRGN hRgn, int nMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ExtSelectClipRgn(m_hDC, hRgn, nMode);
 	}
 #endif // !_WIN32_WCE
@@ -1806,31 +1806,31 @@ public:
 #if !defined(_WIN32_WCE) || (_WIN32_WCE >= 400)
 	BOOL GetCurrentPosition(LPPOINT lpPoint) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetCurrentPositionEx(m_hDC, lpPoint);
 	}
 
 	BOOL MoveTo(int x, int y, LPPOINT lpPoint = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::MoveToEx(m_hDC, x, y, lpPoint);
 	}
 
 	BOOL MoveTo(POINT point, LPPOINT lpPointRet = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return MoveTo(point.x, point.y, lpPointRet);
 	}
 
 	BOOL LineTo(int x, int y)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::LineTo(m_hDC, x, y);
 	}
 
 	BOOL LineTo(POINT point)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return LineTo(point.x, point.y);
 	}
 #endif // !defined(_WIN32_WCE) || (_WIN32_WCE >= 400)
@@ -1838,13 +1838,13 @@ public:
 #ifndef _WIN32_WCE
 	BOOL Arc(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Arc(m_hDC, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
 	BOOL Arc(LPCRECT lpRect, POINT ptStart, POINT ptEnd)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Arc(m_hDC, lpRect->left, lpRect->top,
 			lpRect->right, lpRect->bottom, ptStart.x, ptStart.y,
 			ptEnd.x, ptEnd.y);
@@ -1853,70 +1853,70 @@ public:
 
 	BOOL Polyline(LPPOINT lpPoints, int nCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Polyline(m_hDC, lpPoints, nCount);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL AngleArc(int x, int y, int nRadius, float fStartAngle, float fSweepAngle)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::AngleArc(m_hDC, x, y, nRadius, fStartAngle, fSweepAngle);
 	}
 
 	BOOL ArcTo(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ArcTo(m_hDC, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
 	BOOL ArcTo(LPCRECT lpRect, POINT ptStart, POINT ptEnd)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ArcTo(lpRect->left, lpRect->top, lpRect->right,
 		lpRect->bottom, ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
 	}
 
 	int GetArcDirection() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetArcDirection(m_hDC);
 	}
 
 	int SetArcDirection(int nArcDirection)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetArcDirection(m_hDC, nArcDirection);
 	}
 
 	BOOL PolyDraw(const POINT* lpPoints, const BYTE* lpTypes, int nCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PolyDraw(m_hDC, lpPoints, lpTypes, nCount);
 	}
 
 	BOOL PolylineTo(const POINT* lpPoints, int nCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PolylineTo(m_hDC, lpPoints, nCount);
 	}
 
 	BOOL PolyPolyline(const POINT* lpPoints,
 		const DWORD* lpPolyPoints, int nCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PolyPolyline(m_hDC, lpPoints, lpPolyPoints, nCount);
 	}
 
 	BOOL PolyBezier(const POINT* lpPoints, int nCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PolyBezier(m_hDC, lpPoints, nCount);
 	}
 
 	BOOL PolyBezierTo(const POINT* lpPoints, int nCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PolyBezierTo(m_hDC, lpPoints, nCount);
 	}
 #endif // !_WIN32_WCE
@@ -1924,13 +1924,13 @@ public:
 // Simple Drawing Functions
 	BOOL FillRect(LPCRECT lpRect, HBRUSH hBrush)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::FillRect(m_hDC, lpRect, hBrush);
 	}
 
 	BOOL FillRect(LPCRECT lpRect, int nColorIndex)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 #ifndef _WIN32_WCE
 		return ::FillRect(m_hDC, lpRect, (HBRUSH)LongToPtr(nColorIndex + 1));
 #else // CE specific
@@ -1941,7 +1941,7 @@ public:
 #ifndef _WIN32_WCE
 	BOOL FrameRect(LPCRECT lpRect, HBRUSH hBrush)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::FrameRect(m_hDC, lpRect, hBrush);
 	}
 #endif // !_WIN32_WCE
@@ -1949,14 +1949,14 @@ public:
 #if !defined(_WIN32_WCE) || (_WIN32_WCE >= 420)
 	BOOL InvertRect(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::InvertRect(m_hDC, lpRect);
 	}
 #endif // !defined(_WIN32_WCE) || (_WIN32_WCE >= 420)
 
 	BOOL DrawIcon(int x, int y, HICON hIcon)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 #ifndef _WIN32_WCE
 		return ::DrawIcon(m_hDC, x, y, hIcon);
 #else // CE specific
@@ -1966,7 +1966,7 @@ public:
 
 	BOOL DrawIcon(POINT point, HICON hIcon)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 #ifndef _WIN32_WCE
 		return ::DrawIcon(m_hDC, point.x, point.y, hIcon);
 #else // CE specific
@@ -1976,38 +1976,38 @@ public:
 
 	BOOL DrawIconEx(int x, int y, HICON hIcon, int cxWidth, int cyWidth, UINT uStepIfAniCur = 0, HBRUSH hbrFlickerFreeDraw = NULL, UINT uFlags = DI_NORMAL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawIconEx(m_hDC, x, y, hIcon, cxWidth, cyWidth, uStepIfAniCur, hbrFlickerFreeDraw, uFlags);
 	}
 
 	BOOL DrawIconEx(POINT point, HICON hIcon, SIZE size, UINT uStepIfAniCur = 0, HBRUSH hbrFlickerFreeDraw = NULL, UINT uFlags = DI_NORMAL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawIconEx(m_hDC, point.x, point.y, hIcon, size.cx, size.cy, uStepIfAniCur, hbrFlickerFreeDraw, uFlags);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL DrawState(POINT pt, SIZE size, HBITMAP hBitmap, UINT nFlags, HBRUSH hBrush = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawState(m_hDC, hBrush, NULL, (LPARAM)hBitmap, 0, pt.x, pt.y, size.cx, size.cy, nFlags | DST_BITMAP);
 	}
 
 	BOOL DrawState(POINT pt, SIZE size, HICON hIcon, UINT nFlags, HBRUSH hBrush = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawState(m_hDC, hBrush, NULL, (LPARAM)hIcon, 0, pt.x, pt.y, size.cx, size.cy, nFlags | DST_ICON);
 	}
 
 	BOOL DrawState(POINT pt, SIZE size, LPCTSTR lpszText, UINT nFlags, BOOL bPrefixText = TRUE, int nTextLen = 0, HBRUSH hBrush = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawState(m_hDC, hBrush, NULL, (LPARAM)lpszText, (WPARAM)nTextLen, pt.x, pt.y, size.cx, size.cy, nFlags | (bPrefixText ? DST_PREFIXTEXT : DST_TEXT));
 	}
 
 	BOOL DrawState(POINT pt, SIZE size, DRAWSTATEPROC lpDrawProc, LPARAM lData, UINT nFlags, HBRUSH hBrush = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawState(m_hDC, hBrush, lpDrawProc, lData, 0, pt.x, pt.y, size.cx, size.cy, nFlags | DST_COMPLEX);
 	}
 #endif // !_WIN32_WCE
@@ -2016,167 +2016,167 @@ public:
 #ifndef _WIN32_WCE
 	BOOL Chord(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Chord(m_hDC, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
 	BOOL Chord(LPCRECT lpRect, POINT ptStart, POINT ptEnd)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Chord(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom, ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
 	}
 #endif // !_WIN32_WCE
 
 	void DrawFocusRect(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		::DrawFocusRect(m_hDC, lpRect);
 	}
 
 	BOOL Ellipse(int x1, int y1, int x2, int y2)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Ellipse(m_hDC, x1, y1, x2, y2);
 	}
 
 	BOOL Ellipse(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Ellipse(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL Pie(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Pie(m_hDC, x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
 	BOOL Pie(LPCRECT lpRect, POINT ptStart, POINT ptEnd)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Pie(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom, ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
 	}
 #endif // !_WIN32_WCE
 
 	BOOL Polygon(LPPOINT lpPoints, int nCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Polygon(m_hDC, lpPoints, nCount);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL PolyPolygon(LPPOINT lpPoints, LPINT lpPolyCounts, int nCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PolyPolygon(m_hDC, lpPoints, lpPolyCounts, nCount);
 	}
 #endif // !_WIN32_WCE
 
 	BOOL Rectangle(int x1, int y1, int x2, int y2)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Rectangle(m_hDC, x1, y1, x2, y2);
 	}
 
 	BOOL Rectangle(LPCRECT lpRect)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Rectangle(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom);
 	}
 
 	BOOL RoundRect(int x1, int y1, int x2, int y2, int x3, int y3)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::RoundRect(m_hDC, x1, y1, x2, y2, x3, y3);
 	}
 
 	BOOL RoundRect(LPCRECT lpRect, POINT point)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::RoundRect(m_hDC, lpRect->left, lpRect->top, lpRect->right, lpRect->bottom, point.x, point.y);
 	}
 
 // Bitmap Functions
 	BOOL PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PatBlt(m_hDC, x, y, nWidth, nHeight, dwRop);
 	}
 
 	BOOL BitBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC,
 		int xSrc, int ySrc, DWORD dwRop)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::BitBlt(m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, dwRop);
 	}
 
 	BOOL StretchBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::StretchBlt(m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, dwRop);
 	}
 
 	COLORREF GetPixel(int x, int y) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetPixel(m_hDC, x, y);
 	}
 
 	COLORREF GetPixel(POINT point) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetPixel(m_hDC, point.x, point.y);
 	}
 
 	COLORREF SetPixel(int x, int y, COLORREF crColor)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetPixel(m_hDC, x, y, crColor);
 	}
 
 	COLORREF SetPixel(POINT point, COLORREF crColor)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetPixel(m_hDC, point.x, point.y, crColor);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL FloodFill(int x, int y, COLORREF crColor)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::FloodFill(m_hDC, x, y, crColor);
 	}
 
 	BOOL ExtFloodFill(int x, int y, COLORREF crColor, UINT nFillType)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ExtFloodFill(m_hDC, x, y, crColor, nFillType);
 	}
 #endif // !_WIN32_WCE
 
 	BOOL MaskBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, HBITMAP hMaskBitmap, int xMask, int yMask, DWORD dwRop)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::MaskBlt(m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, hMaskBitmap, xMask, yMask, dwRop);
 	}
 
 #ifndef _WIN32_WCE
 	BOOL PlgBlt(LPPOINT lpPoint, HDC hSrcDC, int xSrc, int ySrc, int nWidth, int nHeight, HBITMAP hMaskBitmap, int xMask, int yMask)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PlgBlt(m_hDC, lpPoint, hSrcDC, xSrc, ySrc, nWidth, nHeight, hMaskBitmap, xMask, yMask);
 	}
 
 	BOOL SetPixelV(int x, int y, COLORREF crColor)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetPixelV(m_hDC, x, y, crColor);
 	}
 
 	BOOL SetPixelV(POINT point, COLORREF crColor)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetPixelV(m_hDC, point.x, point.y, crColor);
 	}
 #endif // !_WIN32_WCE
@@ -2185,13 +2185,13 @@ public:
 #ifndef _WIN32_WCE
 	BOOL TransparentBlt(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, UINT crTransparent)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::TransparentBlt(m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, crTransparent);
 	}
 #else // CE specific
 	BOOL TransparentImage(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, UINT crTransparent)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::TransparentImage(m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, crTransparent);
 	}
 #endif // _WIN32_WCE
@@ -2199,13 +2199,13 @@ public:
 #if (!defined(_WIN32_WCE) || (_WIN32_WCE >= 420))
 	BOOL GradientFill(const PTRIVERTEX pVertices, DWORD nVertices, void* pMeshElements, DWORD nMeshElements, DWORD dwMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GradientFill(m_hDC, pVertices, nVertices, pMeshElements, nMeshElements, dwMode);
 	}
 
 	BOOL GradientFillRect(RECT& rect, COLORREF clr1, COLORREF clr2, bool bHorizontal)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 
 		TRIVERTEX arrTvx[2] = { { 0 }, { 0 } };
 
@@ -2232,7 +2232,7 @@ public:
 #if !defined(_WIN32_WCE) || (_WIN32_WCE > 0x500)
 	BOOL AlphaBlend(int x, int y, int nWidth, int nHeight, HDC hSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, BLENDFUNCTION bf)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::AlphaBlend(m_hDC, x, y, nWidth, nHeight, hSrcDC, xSrc, ySrc, nSrcWidth, nSrcHeight, bf);
 	}
 #endif // !defined(_WIN32_WCE) || (_WIN32_WCE > 0x500)
@@ -2247,18 +2247,18 @@ public:
 			HBRUSH hBrush3DEffect = ::GetSysColorBrush(COLOR_3DHILIGHT),
 			HBRUSH hBrushDisabledImage = ::GetSysColorBrush(COLOR_3DSHADOW))
 	{
-		ATLASSERT(m_hDC != NULL || hBitmap != NULL);
-		ATLASSERT(nWidth > 0 && nHeight > 0);
+		DUIASSERT(m_hDC != NULL || hBitmap != NULL);
+		DUIASSERT(nWidth > 0 && nHeight > 0);
 		
 		// Create a generic DC for all BitBlts
 		CDCHandle dc = (hSrcDC != NULL) ? hSrcDC : ::CreateCompatibleDC(m_hDC);
-		ATLASSERT(dc.m_hDC != NULL);
+		DUIASSERT(dc.m_hDC != NULL);
 		if(dc.m_hDC == NULL)
 			return FALSE;
 		
 		// Create a DC for the monochrome DIB section
 		CDC dcBW = ::CreateCompatibleDC(m_hDC);
-		ATLASSERT(dcBW.m_hDC != NULL);
+		DUIASSERT(dcBW.m_hDC != NULL);
 		if(dcBW.m_hDC == NULL)
 		{
 			if(hSrcDC == NULL)
@@ -2281,7 +2281,7 @@ public:
 
 		VOID* pbitsBW;
 		CBitmap bmpBW = ::CreateDIBSection(dcBW, (LPBITMAPINFO)&rgbBWBitmapInfo, DIB_RGB_COLORS, &pbitsBW, NULL, 0);
-		ATLASSERT(bmpBW.m_hBitmap != NULL);
+		DUIASSERT(bmpBW.m_hBitmap != NULL);
 		if(bmpBW.m_hBitmap == NULL)
 		{
 			if(hSrcDC == NULL)
@@ -2354,7 +2354,7 @@ public:
 #ifndef _WIN32_WCE
 	BOOL TextOut(int x, int y, LPCTSTR lpszString, int nCount = -1)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		if(nCount == -1)
 			nCount = lstrlen(lpszString);
 		return ::TextOut(m_hDC, x, y, lpszString, nCount);
@@ -2363,7 +2363,7 @@ public:
 
 	BOOL ExtTextOut(int x, int y, UINT nOptions, LPCRECT lpRect, LPCTSTR lpszString, UINT nCount = -1, LPINT lpDxWidths = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		if(nCount == -1)
 			nCount = lstrlen(lpszString);
 		return ::ExtTextOut(m_hDC, x, y, nOptions, lpRect, lpszString, nCount, lpDxWidths);
@@ -2372,7 +2372,7 @@ public:
 #ifndef _WIN32_WCE
 	SIZE TabbedTextOut(int x, int y, LPCTSTR lpszString, int nCount = -1, int nTabPositions = 0, LPINT lpnTabStopPositions = NULL, int nTabOrigin = 0)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		if(nCount == -1)
 			nCount = lstrlen(lpszString);
 		LONG lRes = ::TabbedTextOut(m_hDC, x, y, lpszString, nCount, nTabPositions, lpnTabStopPositions, nTabOrigin);
@@ -2383,23 +2383,23 @@ public:
 
 	int DrawText(LPCTSTR lpstrText, int cchText, LPRECT lpRect, UINT uFormat)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 #ifndef _WIN32_WCE
-		ATLASSERT((uFormat & DT_MODIFYSTRING) == 0);
+		DUIASSERT((uFormat & DT_MODIFYSTRING) == 0);
 #endif // !_WIN32_WCE
 		return ::DrawText(m_hDC, lpstrText, cchText, lpRect, uFormat);
 	}
 
 	int DrawText(LPTSTR lpstrText, int cchText, LPRECT lpRect, UINT uFormat)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawText(m_hDC, lpstrText, cchText, lpRect, uFormat);
 	}
 
 #ifndef _WIN32_WCE
 	int DrawTextEx(LPTSTR lpstrText, int cchText, LPRECT lpRect, UINT uFormat, LPDRAWTEXTPARAMS lpDTParams = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawTextEx(m_hDC, lpstrText, cchText, lpRect, uFormat, lpDTParams);
 	}
 #endif // !_WIN32_WCE
@@ -2407,18 +2407,18 @@ public:
 #if (_WIN32_WINNT >= 0x0501)
 	int DrawShadowText(LPCWSTR lpstrText, int cchText, LPRECT lpRect, DWORD dwFlags, COLORREF clrText, COLORREF clrShadow, int xOffset, int yOffset)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		// This function is present only if comctl32.dll version 6 is loaded;
 		// we use LoadLibrary/GetProcAddress to allow apps compiled with
 		// _WIN32_WINNT >= 0x0501 to run on older Windows/CommCtrl
 		int nRet = 0;
 		HMODULE hCommCtrlDLL = ::LoadLibrary(_T("comctl32.dll"));
-		ATLASSERT(hCommCtrlDLL != NULL);
+		DUIASSERT(hCommCtrlDLL != NULL);
 		if(hCommCtrlDLL != NULL)
 		{
 			typedef int (WINAPI *PFN_DrawShadowText)(HDC hDC, LPCWSTR lpstrText, UINT cchText, LPRECT lpRect, DWORD dwFlags, COLORREF clrText, COLORREF clrShadow, int xOffset, int yOffset);
 			PFN_DrawShadowText pfnDrawShadowText = (PFN_DrawShadowText)::GetProcAddress(hCommCtrlDLL, "DrawShadowText");
-			ATLASSERT(pfnDrawShadowText != NULL);   // this function requires CommCtrl6
+			DUIASSERT(pfnDrawShadowText != NULL);   // this function requires CommCtrl6
 			if(pfnDrawShadowText != NULL)
 				nRet = pfnDrawShadowText(m_hDC, lpstrText, cchText, lpRect, dwFlags, clrText, clrShadow, xOffset, yOffset);
 			::FreeLibrary(hCommCtrlDLL);
@@ -2429,7 +2429,7 @@ public:
 
 	BOOL GetTextExtent(LPCTSTR lpszString, int nCount, LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		if(nCount == -1)
 			nCount = lstrlen(lpszString);
 		return ::GetTextExtentPoint32(m_hDC, lpszString, nCount, lpSize);
@@ -2437,14 +2437,14 @@ public:
 
 	BOOL GetTextExtentExPoint(LPCTSTR lpszString, int cchString, LPSIZE lpSize, int nMaxExtent, LPINT lpnFit = NULL, LPINT alpDx = NULL)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextExtentExPoint(m_hDC, lpszString, cchString, nMaxExtent, lpnFit, alpDx, lpSize);
 	}
 
 #ifndef _WIN32_WCE
 	DWORD GetTabbedTextExtent(LPCTSTR lpszString, int nCount = -1, int nTabPositions = 0, LPINT lpnTabStopPositions = NULL) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		if(nCount == -1)
 			nCount = lstrlen(lpszString);
 		return ::GetTabbedTextExtent(m_hDC, lpszString, nCount, nTabPositions, lpnTabStopPositions);
@@ -2452,7 +2452,7 @@ public:
 
 	BOOL GrayString(HBRUSH hBrush, BOOL (CALLBACK* lpfnOutput)(HDC, LPARAM, int), LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GrayString(m_hDC, hBrush, (GRAYSTRINGPROC)lpfnOutput, lpData, nCount, x, y, nWidth, nHeight);
 	}
 #endif // !_WIN32_WCE
@@ -2460,52 +2460,52 @@ public:
 #if !defined(_WIN32_WCE) || (_WIN32_WCE >= 400)
 	UINT GetTextAlign() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextAlign(m_hDC);
 	}
 
 	UINT SetTextAlign(UINT nFlags)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetTextAlign(m_hDC, nFlags);
 	}
 #endif // !defined(_WIN32_WCE) || (_WIN32_WCE >= 400)
 
 	int GetTextFace(LPTSTR lpszFacename, int nCount) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextFace(m_hDC, nCount, lpszFacename);
 	}
 
 	int GetTextFaceLen() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextFace(m_hDC, 0, NULL);
 	}
 
 
 	BOOL GetTextMetrics(LPTEXTMETRIC lpMetrics) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextMetrics(m_hDC, lpMetrics);
 	}
 
 #ifndef _WIN32_WCE
 	int SetTextJustification(int nBreakExtra, int nBreakCount)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetTextJustification(m_hDC, nBreakExtra, nBreakCount);
 	}
 
 	int GetTextCharacterExtra() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextCharacterExtra(m_hDC);
 	}
 
 	int SetTextCharacterExtra(int nCharExtra)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetTextCharacterExtra(m_hDC, nCharExtra);
 	}
 #endif // !_WIN32_WCE
@@ -2513,20 +2513,20 @@ public:
 // Advanced Drawing
 	BOOL DrawEdge(LPRECT lpRect, UINT nEdge, UINT nFlags)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawEdge(m_hDC, lpRect, nEdge, nFlags);
 	}
 
 	BOOL DrawFrameControl(LPRECT lpRect, UINT nType, UINT nState)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawFrameControl(m_hDC, lpRect, nType, nState);
 	}
 
 // Scrolling Functions
 	BOOL ScrollDC(int dx, int dy, LPCRECT lpRectScroll, LPCRECT lpRectClip, HRGN hRgnUpdate, LPRECT lpRectUpdate)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ScrollDC(m_hDC, dx, dy, lpRectScroll, lpRectClip, hRgnUpdate, lpRectUpdate);
 	}
 
@@ -2534,68 +2534,68 @@ public:
 #ifndef _WIN32_WCE
 	BOOL GetCharWidth(UINT nFirstChar, UINT nLastChar, LPINT lpBuffer) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetCharWidth(m_hDC, nFirstChar, nLastChar, lpBuffer);
 	}
 
 	// GetCharWidth32 is not supported under Win9x
 	BOOL GetCharWidth32(UINT nFirstChar, UINT nLastChar, LPINT lpBuffer) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetCharWidth32(m_hDC, nFirstChar, nLastChar, lpBuffer);
 	}
 
 	DWORD SetMapperFlags(DWORD dwFlag)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetMapperFlags(m_hDC, dwFlag);
 	}
 
 	BOOL GetAspectRatioFilter(LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetAspectRatioFilterEx(m_hDC, lpSize);
 	}
 
 	BOOL GetCharABCWidths(UINT nFirstChar, UINT nLastChar, LPABC lpabc) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetCharABCWidths(m_hDC, nFirstChar, nLastChar, lpabc);
 	}
 
 	DWORD GetFontData(DWORD dwTable, DWORD dwOffset, LPVOID lpData, DWORD cbData) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetFontData(m_hDC, dwTable, dwOffset, lpData, cbData);
 	}
 
 	int GetKerningPairs(int nPairs, LPKERNINGPAIR lpkrnpair) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetKerningPairs(m_hDC, nPairs, lpkrnpair);
 	}
 
 	UINT GetOutlineTextMetrics(UINT cbData, LPOUTLINETEXTMETRIC lpotm) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetOutlineTextMetrics(m_hDC, cbData, lpotm);
 	}
 
 	DWORD GetGlyphOutline(UINT nChar, UINT nFormat, LPGLYPHMETRICS lpgm, DWORD cbBuffer, LPVOID lpBuffer, const MAT2* lpmat2) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetGlyphOutline(m_hDC, nChar, nFormat, lpgm, cbBuffer, lpBuffer, lpmat2);
 	}
 
 	BOOL GetCharABCWidths(UINT nFirstChar, UINT nLastChar, LPABCFLOAT lpABCF) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetCharABCWidthsFloat(m_hDC, nFirstChar, nLastChar, lpABCF);
 	}
 
 	BOOL GetCharWidth(UINT nFirstChar, UINT nLastChar, float* lpFloatBuffer) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetCharWidthFloat(m_hDC, nFirstChar, nLastChar, lpFloatBuffer);
 	}
 #endif // !_WIN32_WCE
@@ -2604,7 +2604,7 @@ public:
 #ifndef _WIN32_WCE
 	int Escape(int nEscape, int nCount, LPCSTR lpszInData, LPVOID lpOutData)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::Escape(m_hDC, nEscape, nCount, lpszInData, lpOutData);
 	}
 #endif // !_WIN32_WCE
@@ -2612,14 +2612,14 @@ public:
 	int Escape(int nEscape, int nInputSize, LPCSTR lpszInputData,
 		int nOutputSize, LPSTR lpszOutputData)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ExtEscape(m_hDC, nEscape, nInputSize, lpszInputData, nOutputSize, lpszOutputData);
 	}
 
 #ifndef _WIN32_WCE
 	int DrawEscape(int nEscape, int nInputSize, LPCSTR lpszInputData)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::DrawEscape(m_hDC, nEscape, nInputSize, lpszInputData);
 	}
 #endif // !_WIN32_WCE
@@ -2636,37 +2636,37 @@ public:
 
 	int StartDoc(LPDOCINFO lpDocInfo)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::StartDoc(m_hDC, lpDocInfo);
 	}
 
 	int StartPage()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::StartPage(m_hDC);
 	}
 
 	int EndPage()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::EndPage(m_hDC);
 	}
 
 	int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int))
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetAbortProc(m_hDC, (ABORTPROC)lpfn);
 	}
 
 	int AbortDoc()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::AbortDoc(m_hDC);
 	}
 
 	int EndDoc()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::EndDoc(m_hDC);
 	}
 #endif // !defined(_WIN32_WCE) || ((_WIN32_WCE >= 200) && defined(StartDoc))
@@ -2675,7 +2675,7 @@ public:
 #ifndef _WIN32_WCE
 	BOOL PlayMetaFile(HMETAFILE hMF)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		if(::GetDeviceCaps(m_hDC, TECHNOLOGY) == DT_METAFILE)
 		{
 			// playing metafile in metafile, just use core windows API
@@ -2688,13 +2688,13 @@ public:
 
 	BOOL PlayMetaFile(HENHMETAFILE hEnhMetaFile, LPCRECT lpBounds)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::PlayEnhMetaFile(m_hDC, hEnhMetaFile, lpBounds);
 	}
 
 	BOOL AddMetaFileComment(UINT nDataSize, const BYTE* pCommentData) // can be used for enhanced metafiles only
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GdiComment(m_hDC, nDataSize, pCommentData);
 	}
 
@@ -2791,79 +2791,79 @@ public:
 #ifndef _WIN32_WCE
 	BOOL AbortPath()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::AbortPath(m_hDC);
 	}
 
 	BOOL BeginPath()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::BeginPath(m_hDC);
 	}
 
 	BOOL CloseFigure()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::CloseFigure(m_hDC);
 	}
 
 	BOOL EndPath()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::EndPath(m_hDC);
 	}
 
 	BOOL FillPath()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::FillPath(m_hDC);
 	}
 
 	BOOL FlattenPath()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::FlattenPath(m_hDC);
 	}
 
 	BOOL StrokeAndFillPath()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::StrokeAndFillPath(m_hDC);
 	}
 
 	BOOL StrokePath()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::StrokePath(m_hDC);
 	}
 
 	BOOL WidenPath()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::WidenPath(m_hDC);
 	}
 
 	BOOL GetMiterLimit(PFLOAT pfMiterLimit) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetMiterLimit(m_hDC, pfMiterLimit);
 	}
 
 	BOOL SetMiterLimit(float fMiterLimit)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetMiterLimit(m_hDC, fMiterLimit, NULL);
 	}
 
 	int GetPath(LPPOINT lpPoints, LPBYTE lpTypes, int nCount) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetPath(m_hDC, lpPoints, lpTypes, nCount);
 	}
 
 	BOOL SelectClipPath(int nMode)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SelectClipPath(m_hDC, nMode);
 	}
 #endif // !_WIN32_WCE
@@ -2950,10 +2950,10 @@ public:
 
 	void FillSolidRect(LPCRECT lpRect, COLORREF clr)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 
 		COLORREF clrOld = ::SetBkColor(m_hDC, clr);
-		ATLASSERT(clrOld != CLR_INVALID);
+		DUIASSERT(clrOld != CLR_INVALID);
 		if(clrOld != CLR_INVALID)
 		{
 			::ExtTextOut(m_hDC, 0, 0, ETO_OPAQUE, lpRect, NULL, 0, NULL);
@@ -2963,7 +2963,7 @@ public:
 
 	void FillSolidRect(int x, int y, int cx, int cy, COLORREF clr)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 
 		RECT rect = { x, y, x + cx, y + cy };
 		FillSolidRect(&rect, clr);
@@ -2987,7 +2987,7 @@ public:
 #if !defined(_WIN32_WCE) || (_WIN32_WCE >= 410)
 	int SetDIBitsToDevice(int x, int y, DWORD dwWidth, DWORD dwHeight, int xSrc, int ySrc, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetDIBitsToDevice(m_hDC, x, y, dwWidth, dwHeight, xSrc, ySrc, uStartScan, cScanLines, lpvBits, lpbmi, uColorUse);
 	}
 #endif // !defined(_WIN32_WCE) || (_WIN32_WCE >= 410)
@@ -2995,19 +2995,19 @@ public:
 #if !defined(_WIN32_WCE) || (_WIN32_WCE >= 400)
 	int StretchDIBits(int x, int y, int nWidth, int nHeight, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse, DWORD dwRop)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::StretchDIBits(m_hDC, x, y, nWidth, nHeight, xSrc, ySrc, nSrcWidth, nSrcHeight, lpvBits, lpbmi, uColorUse, dwRop);
 	}
 
 	UINT GetDIBColorTable(UINT uStartIndex, UINT cEntries, RGBQUAD* pColors) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetDIBColorTable(m_hDC, uStartIndex, cEntries, pColors);
 	}
 
 	UINT SetDIBColorTable(UINT uStartIndex, UINT cEntries, CONST RGBQUAD* pColors)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetDIBColorTable(m_hDC, uStartIndex, cEntries, pColors);
 	}
 #endif // !defined(_WIN32_WCE) || (_WIN32_WCE >= 400)
@@ -3017,63 +3017,63 @@ public:
 #if (_WIN32_WINNT >= 0x0500)
 	COLORREF GetDCPenColor() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetDCPenColor(m_hDC);
 	}
 
 	COLORREF SetDCPenColor(COLORREF clr)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetDCPenColor(m_hDC, clr);
 	}
 
 	COLORREF GetDCBrushColor() const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetDCBrushColor(m_hDC);
 	}
 
 	COLORREF SetDCBrushColor(COLORREF clr)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::SetDCBrushColor(m_hDC, clr);
 	}
 
 #ifndef _WIN32_WCE
 	DWORD GetFontUnicodeRanges(LPGLYPHSET lpgs) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetFontUnicodeRanges(m_hDC, lpgs);
 	}
 #endif // !_WIN32_WCE
 
 	DWORD GetGlyphIndices(LPCTSTR lpstr, int cch, LPWORD pgi, DWORD dwFlags) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetGlyphIndices(m_hDC, lpstr, cch, pgi, dwFlags);
 	}
 
 	BOOL GetTextExtentPointI(LPWORD pgiIn, int cgi, LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextExtentPointI(m_hDC, pgiIn, cgi, lpSize);
 	}
 
 	BOOL GetTextExtentExPointI(LPWORD pgiIn, int cgi, int nMaxExtent, LPINT lpnFit, LPINT alpDx, LPSIZE lpSize) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetTextExtentExPointI(m_hDC, pgiIn, cgi, nMaxExtent, lpnFit, alpDx, lpSize);
 	}
 
 	BOOL GetCharWidthI(UINT giFirst, UINT cgi, LPWORD pgi, LPINT lpBuffer) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetCharWidthI(m_hDC, giFirst, cgi, pgi, lpBuffer);
 	}
 
 	BOOL GetCharABCWidthsI(UINT giFirst, UINT cgi, LPWORD pgi, LPABC lpabc) const
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::GetCharABCWidthsI(m_hDC, giFirst, cgi, pgi, lpabc);
 	}
 #endif // (_WIN32_WINNT >= 0x0500)
@@ -3082,7 +3082,7 @@ public:
 #if (WINVER >= 0x0500) && !defined(_WIN32_WCE)
 	BOOL ColorCorrectPalette(HPALETTE hPalette, DWORD dwFirstEntry, DWORD dwNumOfEntries)
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		return ::ColorCorrectPalette(m_hDC, hPalette, dwFirstEntry, dwNumOfEntries);
 	}
 #endif // (WINVER >= 0x0500) && !defined(_WIN32_WCE)
@@ -3105,15 +3105,15 @@ public:
 // Constructor/destructor
 	CPaintDC(HWND hWnd)
 	{
-		ATLASSERT(::IsWindow(hWnd));
+		DUIASSERT(::IsWindow(hWnd));
 		m_hWnd = hWnd;
 		m_hDC = ::BeginPaint(hWnd, &m_ps);
 	}
 
 	~CPaintDC()
 	{
-		ATLASSERT(m_hDC != NULL);
-		ATLASSERT(::IsWindow(m_hWnd));
+		DUIASSERT(m_hDC != NULL);
+		DUIASSERT(::IsWindow(m_hWnd));
 		::EndPaint(m_hWnd, &m_ps);
 		Detach();
 	}
@@ -3128,14 +3128,14 @@ public:
 // Constructor/destructor
 	CClientDC(HWND hWnd)
 	{
-		ATLASSERT(hWnd == NULL || ::IsWindow(hWnd));
+		DUIASSERT(hWnd == NULL || ::IsWindow(hWnd));
 		m_hWnd = hWnd;
 		m_hDC = ::GetDC(hWnd);
 	}
 
 	~CClientDC()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		::ReleaseDC(m_hWnd, Detach());
 	}
 };
@@ -3149,14 +3149,14 @@ public:
 // Constructor/destructor
 	CWindowDC(HWND hWnd)
 	{
-		ATLASSERT(hWnd == NULL || ::IsWindow(hWnd));
+		DUIASSERT(hWnd == NULL || ::IsWindow(hWnd));
 		m_hWnd = hWnd;
 		m_hDC = ::GetWindowDC(hWnd);
 	}
 
 	~CWindowDC()
 	{
-		ATLASSERT(m_hDC != NULL);
+		DUIASSERT(m_hDC != NULL);
 		::ReleaseDC(m_hWnd, Detach());
 	}
 };

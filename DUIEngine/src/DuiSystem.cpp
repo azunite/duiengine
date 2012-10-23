@@ -19,7 +19,7 @@ namespace DuiEngine{
 	{
 		InitializeCriticalSection(&m_cs);
 		m_atomWnd=CSimpleWnd::RegisterSimpleWnd(hInst,pszHostClassName);
-
+		m_hHeapExecutable=HeapCreate(HEAP_CREATE_ENABLE_EXECUTE,0,0);
 		createSingletons();
 	}
 
@@ -34,7 +34,7 @@ namespace DuiEngine{
 		if(m_pBuf && m_nCount) delete []m_pBuf;
 		m_nCount=0;
 		m_pBuf=NULL;
-
+		HeapDestroy(m_hHeapExecutable);
 	}
 
 	void DuiSystem::LockSharePtr( void * pObj )
@@ -60,7 +60,7 @@ namespace DuiEngine{
 	{
 		if(m_nCount)
 		{
-			ATLASSERT(m_pBuf);
+			DUIASSERT(m_pBuf);
 			delete []m_pBuf;
 			m_pBuf=NULL;
 			m_nCount=0;
@@ -82,7 +82,7 @@ namespace DuiEngine{
 			TiXmlElement *pItem=xmlDoc.RootElement();
 			while(pItem)
 			{
-				ATLASSERT(strcmp(pItem->Value(),"name2id")==0);
+				DUIASSERT(strcmp(pItem->Value(),"name2id")==0);
 				pItem=pItem->NextSiblingElement();
 				m_nCount++;
 			}
@@ -92,7 +92,7 @@ namespace DuiEngine{
 			int iItem=0;
 			while(pItem)
 			{
-				ATLASSERT(strcmp(pItem->Value(),"name2id")==0);
+				DUIASSERT(strcmp(pItem->Value(),"name2id")==0);
 				m_pBuf[iItem++]=CNamedID(pItem->Attribute("name"),atoi(pItem->Attribute("id")));
 				pItem=pItem->NextSiblingElement();
 			}

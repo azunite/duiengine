@@ -78,7 +78,7 @@ int CDuiScrollBar::GetPos(){return m_si.nPos;}
 // Generated message map functions
 CRect CDuiScrollBar::GetPartRect(UINT uSBCode)
 {
-	ATLASSERT(m_pSkin);
+	DUIASSERT(m_pSkin);
 	int nTrackPos=m_si.nTrackPos;
 	int nMax=m_si.nMax;
 	if(nMax<m_si.nMin+(int)m_si.nPage-1) nMax=m_si.nMin+m_si.nPage-1;
@@ -131,7 +131,7 @@ end:
 
 void CDuiScrollBar::OnAttributeFinish(TiXmlElement* pXmlElem)
 {
-	ATLASSERT(m_pSkin);
+	DUIASSERT(m_pSkin);
 	if(m_uAllowSize==-1)
 	{
 		m_uAllowSize=m_pSkin->GetSkinSize().cx/9;
@@ -279,7 +279,7 @@ void CDuiScrollBar::OnTimer(char nIDEvent)
 	// TODO: Add your message handler code here and/or call default
 	if(nIDEvent==TIMERID_NOTIFY1)
 	{
-		ATLASSERT(m_uClicked!=-1 && m_uClicked!=SB_THUMBTRACK);
+		DUIASSERT(m_uClicked!=-1 && m_uClicked!=SB_THUMBTRACK);
 
 		switch(m_uClicked)
 		{
@@ -312,7 +312,7 @@ void CDuiScrollBar::OnTimer(char nIDEvent)
 			}
 			break;
 		default:
-			ATLASSERT(FALSE);
+			DUIASSERT(FALSE);
 			break;
 		}
 	}

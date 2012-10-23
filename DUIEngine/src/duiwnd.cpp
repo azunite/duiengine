@@ -90,7 +90,7 @@ void CDuiWindow::SetBkColor(COLORREF cr){	m_style.m_crBg=cr;}
 // Get DuiWindow rect(position in container)
 void CDuiWindow::GetRect(LPRECT prect)
 {
-	ATLASSERT(prect);
+	DUIASSERT(prect);
 	prect->left     = m_rcWindow.left;
 	prect->right    = m_rcWindow.right;
 	prect->top      = m_rcWindow.top;
@@ -99,7 +99,7 @@ void CDuiWindow::GetRect(LPRECT prect)
 
 void CDuiWindow::GetClient(LPRECT pRect)
 {
-	ATLASSERT(pRect);
+	DUIASSERT(pRect);
 	*pRect=m_rcWindow;
 	pRect->left+=m_style.m_nMarginX;
 	pRect->right-=m_style.m_nMarginX;
@@ -163,7 +163,7 @@ VOID CDuiWindow::TestMainThread()
 
 	BOOL bOK = (m_nMainThreadId == dwCurThreadID); // 当前线程和构造对象时的线程一致
 
-	ATLASSERT(bOK);
+	DUIASSERT(bOK);
 #endif
 }
 
@@ -204,7 +204,7 @@ LRESULT CDuiWindow::DuiSendMessage(UINT Msg, WPARAM wParam /*= 0*/, LPARAM lPara
 //
 void CDuiWindow::Move(LPRECT prect)
 {
-	ATLASSERT(prect);
+	DUIASSERT(prect);
 	TestMainThread();
 
 	if(m_rcWindow.EqualRect(prect)) return;
@@ -402,10 +402,10 @@ void CDuiWindow::InsertChild(CDuiWindow *pNewChild,CDuiWindow *pInsertAfter/*=IC
 		m_pFirstChild=pNewChild;
 	}else
 	{//insert window at middle
-		ATLASSERT(pInsertAfter->m_pParent == this);
-		ATLASSERT(m_pFirstChild && m_pLastChild);
+		DUIASSERT(pInsertAfter->m_pParent == this);
+		DUIASSERT(m_pFirstChild && m_pLastChild);
 		CDuiWindow *pNext=pInsertAfter->m_pNextSibling;
-		ATLASSERT(pNext);
+		DUIASSERT(pNext);
 		pInsertAfter->m_pNextSibling=pNewChild;
 		pNewChild->m_pPrevSibling=pInsertAfter;
 		pNewChild->m_pNextSibling=pNext;
@@ -561,7 +561,7 @@ BOOL CDuiWindow::LoadChildren(TiXmlElement* pTiXmlChildElem)
 // Create DuiWindow from xml element
 BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
 {
-	ATLASSERT(m_pContainer);
+	DUIASSERT(m_pContainer);
 	if (!pTiXmlElem)
 	{
 		if(m_pParent)	m_pParent->DestroyChild(this);
@@ -1657,7 +1657,7 @@ void CDuiWindow::PaintForeground( HDC hdc,LPRECT pRc )
 
 void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pStart,BOOL &bInRange)
 {
-	ATLASSERT(pStart->IsVisible(TRUE));
+	DUIASSERT(pStart->IsVisible(TRUE));
 
 	if(!pCurWnd->IsVisible(TRUE) || ((*pRc)&pCurWnd->m_rcWindow).IsRectEmpty()) 
 		return ;

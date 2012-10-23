@@ -44,7 +44,7 @@ public:
 		}
 		if (xmlDoc.Error())
 		{
-			ATLASSERT(FALSE);
+			DUIASSERT(FALSE);
 			return FALSE;
 		}
 

@@ -305,7 +305,7 @@ BOOL CDuiImgX::StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySr
 	{
 		delete pImgAttr;
 	}
-	ATLASSERT(bRet);
+	DUIASSERT(bRet);
 	return bRet;
 }
 BOOL CDuiImgX::TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha/*=0xFF*/)

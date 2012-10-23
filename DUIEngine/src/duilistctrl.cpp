@@ -237,7 +237,7 @@ CDuiPanel * CDuiListBox::GetDuiItem(CDuiPanel *pItem)
 
 DWORD CDuiListBox::GetItemData(int iItem)
 {
-	ATLASSERT(iItem>=0 || iItem< GetItemCount());
+	DUIASSERT(iItem>=0 || iItem< GetItemCount());
 	return m_arrItems[iItem]->GetItemData();
 }
 
@@ -382,7 +382,7 @@ BOOL CDuiListBox::Load(TiXmlElement* pTiXmlElem)
 	}
 	if (xmlDoc.Error())
 	{
-		ATLASSERT(FALSE);
+		DUIASSERT(FALSE);
 		return FALSE;
 	}
 

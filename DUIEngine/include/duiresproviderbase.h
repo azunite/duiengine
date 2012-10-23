@@ -36,7 +36,7 @@ namespace DuiEngine{
 	public:
 		DuiResID(LPCSTR pszType,UINT id=0)
 		{
-			ATLASSERT(pszType);
+			DUIASSERT(pszType);
 			strcpy_s(szType,MAX_TYPE,pszType);
 			nID=(int)id;
 		}

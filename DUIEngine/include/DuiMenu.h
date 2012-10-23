@@ -119,7 +119,7 @@ public:
 	void DrawItem(LPDRAWITEMSTRUCT /*lpDrawItemStruct*/)
 	{
 		// must be implemented
-		ATLASSERT(FALSE);
+		DUIASSERT(FALSE);
 	}
 
 	void MeasureItem(LPMEASUREITEMSTRUCT lpMeasureItemStruct)

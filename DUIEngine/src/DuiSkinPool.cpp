@@ -76,7 +76,7 @@ namespace DuiEngine{
 				if (strSkinName.IsEmpty() || strTypeName.IsEmpty())
 					continue;
 
-				ATLASSERT(!HasKey(strSkinName));
+				DUIASSERT(!HasKey(strSkinName));
 				if(DuiSkinFactoryManager::getSingleton().HasKey(strTypeName)) 
 				{
 					CSkinFactory *pSkinFactory=DuiSkinFactoryManager::getSingleton().GetKeyObject(strTypeName);

@@ -955,7 +955,7 @@ void CDuiRadioBox::OnLButtonUp(UINT nFlags, CPoint point)
 		pParent->CheckRadioButton(this);
 	}else
 	{
-		ATLASSERT(FALSE);
+		DUIASSERT(FALSE);
 	}
 }
 
@@ -981,7 +981,7 @@ void CDuiRadioBox::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 			}
 		}else
 		{
-			ATLASSERT(FALSE);
+			DUIASSERT(FALSE);
 		}
 
 	}
@@ -1004,7 +1004,7 @@ BOOL CDuiToggle::GetToggle(){return m_bToggled;}
 
 void CDuiToggle::OnPaint(CDCHandle dc)
 {
-	ATLASSERT(m_pBgSkin);
+	DUIASSERT(m_pBgSkin);
 	DWORD nState=0;
 	if(GetState()&DuiWndState_Hover) nState=2;
 	else if(GetState()&DuiWndState_Check) nState=3;

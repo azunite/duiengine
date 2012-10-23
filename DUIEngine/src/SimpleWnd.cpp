@@ -2,16 +2,22 @@
 #include "SimpleWnd.h"
 #include "DuiSystem.h"
 
+
 namespace DuiEngine{
 
-
 //////////////////////////////////////////////////////////////////////////
-CSimpleWnd::CSimpleWnd(HWND hWnd):m_bDestoryed(FALSE),m_pCurrentMsg(NULL),m_hWnd(hWnd)
+CSimpleWnd::CSimpleWnd(HWND hWnd)
+:m_bDestoryed(FALSE)
+,m_pCurrentMsg(NULL)
+,m_hWnd(hWnd)
+,m_pfnSuperWindowProc(::DefWindowProc)
 {
+	m_pThunk=(tagThunk*)HeapAlloc(DuiSystem::getSingleton().GetExecutableHeap(),HEAP_ZERO_MEMORY,sizeof(tagThunk));
 }
 
 CSimpleWnd::~CSimpleWnd(void)
 {
+	if(m_pThunk) HeapFree(DuiSystem::getSingleton().GetExecutableHeap(),0,m_pThunk);
 }
 
 ATOM CSimpleWnd::RegisterSimpleWnd( HINSTANCE hInst,LPCTSTR pszSimpleWndName )
@@ -38,8 +44,7 @@ HWND CSimpleWnd::Create( LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, in
 
 LRESULT CALLBACK CSimpleWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	CSimpleWnd* pThis= (CSimpleWnd*)::GetWindowLongPtr(hWnd,GWL_USERDATA);
-//	CSimpleWnd* pThis = (CSimpleWnd*)hWnd; // 强转为对象指针
+	CSimpleWnd* pThis = (CSimpleWnd*)hWnd; // 强转为对象指针
 	MSG msg={pThis->m_hWnd, uMsg, wParam, lParam};
 	const MSG* pOldMsg = pThis->m_pCurrentMsg;
 	pThis->m_pCurrentMsg = &msg;
@@ -47,7 +52,7 @@ LRESULT CALLBACK CSimpleWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	LRESULT lRes;
 	BOOL bRet = pThis->ProcessWindowMessage(pThis->m_hWnd, uMsg, wParam, lParam, lRes, 0);
 	// restore saved value for the current message
-	ATLASSERT(pThis->m_pCurrentMsg == &msg);
+	DUIASSERT(pThis->m_pCurrentMsg == &msg);
 
 	// do the default processing if message was not handled
 	if(!bRet)
@@ -56,7 +61,12 @@ LRESULT CALLBACK CSimpleWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			lRes = pThis->DefWindowProc(uMsg, wParam, lParam);
 		else
 		{
+			// unsubclass, if needed
+			LONG_PTR pfnWndProc = ::GetWindowLongPtr(pThis->m_hWnd, GWLP_WNDPROC);
 			lRes = pThis->DefWindowProc(uMsg, wParam, lParam);
+			if(pThis->m_pfnSuperWindowProc != ::DefWindowProc && ::GetWindowLongPtr(pThis->m_hWnd, GWLP_WNDPROC) == pfnWndProc)
+				::SetWindowLongPtr(pThis->m_hWnd, GWLP_WNDPROC, (LONG_PTR)pThis->m_pfnSuperWindowProc);
+			// mark window as destryed
 			pThis->m_bDestoryed=TRUE;
 		}
 
@@ -81,23 +91,58 @@ LRESULT CALLBACK CSimpleWnd::StartWindowProc( HWND hWnd, UINT uMsg, WPARAM wPara
 	CSimpleWnd* pThis=(CSimpleWnd*)DuiSystem::getSingleton().GetSharePtr();
 
 	pThis->m_hWnd=hWnd;
-	::SetWindowLongPtr(hWnd,GWL_USERDATA,(LONG_PTR)pThis);
-	::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)WindowProc);
-	return WindowProc(hWnd,uMsg,wParam,lParam);
-
-	WNDPROC pProc;
-	pThis->m_hWnd=hWnd;
 	// 初始化Thunk，做了两件事:1、mov指令替换hWnd为对象指针，2、jump指令跳转到WindowProc
-	pThis->m_Thunk.Init((DWORD)WindowProc, pThis);
+	pThis->m_pThunk->Init((DWORD)WindowProc, pThis);
 
 	// 得到Thunk指针
-	pProc = (WNDPROC)pThis->m_Thunk.GetCodeAddress();
+	WNDPROC pProc = (WNDPROC)pThis->m_pThunk->GetCodeAddress();
 	// 调用下面的语句后，以后消息来了，都由pProc处理
 	::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)pProc);
 
 	return pProc(hWnd, uMsg, wParam, lParam);
 }
 
+BOOL CSimpleWnd::SubclassWindow( HWND hWnd )
+{
+	BOOL result;
+	DUIASSERT(::IsWindow(hWnd));
+
+	// Allocate the thunk structure here, where we can fail gracefully.
+
+	result = m_pThunk->Init((DWORD)WindowProc, this);
+	if (result == FALSE) 
+	{
+		return FALSE;
+	}
+	WNDPROC pProc = (WNDPROC)m_pThunk->GetCodeAddress();
+	WNDPROC pfnWndProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)pProc);
+	if(pfnWndProc == NULL)
+		return FALSE;
+	m_pfnSuperWindowProc = pfnWndProc;
+	m_hWnd = hWnd;
+	return TRUE;
+}
+
+
+HWND CSimpleWnd::UnsubclassWindow( BOOL bForce /*= FALSE*/ )
+{
+	DUIASSERT(m_hWnd != NULL);
+
+	WNDPROC pOurProc = (WNDPROC)m_pThunk->GetCodeAddress();
+	WNDPROC pActiveProc = (WNDPROC)::GetWindowLongPtr(m_hWnd, GWLP_WNDPROC);
+
+	HWND hWnd = NULL;
+	if (bForce || pOurProc == pActiveProc)
+	{
+		if(!::SetWindowLongPtr(m_hWnd, GWLP_WNDPROC, (LONG_PTR)m_pfnSuperWindowProc))
+			return NULL;
+
+		m_pfnSuperWindowProc = ::DefWindowProc;
+		hWnd = m_hWnd;
+		m_hWnd = NULL;
+	}
+	return hWnd;
+}
 
 LRESULT CSimpleWnd::ForwardNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
@@ -198,7 +243,7 @@ LRESULT CSimpleWnd::ReflectNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam
 		return 1;
 	}
 
-	ATLASSERT(::IsWindow(hWndChild));
+	DUIASSERT(::IsWindow(hWndChild));
 	return ::SendMessage(hWndChild, OCM__BASE + uMsg, wParam, lParam);
 }
 
@@ -230,6 +275,11 @@ BOOL CSimpleWnd::DefaultReflectionHandler(HWND hWnd, UINT uMsg, WPARAM wParam, L
 		break;
 	}
 	return FALSE;
+}
+
+LRESULT CSimpleWnd::DefWindowProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
+{
+	return ::CallWindowProc(m_pfnSuperWindowProc,m_hWnd, uMsg, wParam, lParam);
 }
 
 }//namespace DuiEngine

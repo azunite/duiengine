@@ -13,7 +13,7 @@ CMemDC::CMemDC( HDC hdc, const CRect & rc )
 ,m_bHasBitmap(TRUE)
 {
 	CreateCompatibleDC(hdc);
-	ATLASSERT(m_hDC != NULL);
+	DUIASSERT(m_hDC != NULL);
 	HBITMAP hBmp=CreateCompatibleBitmap(hdc,rc.Width(),rc.Height());
 	m_hOldBmp=SelectBitmap(hBmp);
 	SetViewportOrg(-rc.left, -rc.top);
@@ -24,7 +24,7 @@ CMemDC::CMemDC( HDC hdc,HBITMAP hBmp)
 ,m_bHasBitmap(TRUE)
 {
 	CreateCompatibleDC(hdc);
-	ATLASSERT(m_hDC != NULL);
+	DUIASSERT(m_hDC != NULL);
 	if(hBmp)
 		m_hOldBmp=__super::SelectBitmap(hBmp);
 	else

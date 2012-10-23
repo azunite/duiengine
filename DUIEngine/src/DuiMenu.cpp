@@ -24,7 +24,7 @@ CDuiMenuAttr::CDuiMenuAttr()
 
 void CDuiMenuAttr::OnAttributeFinish( TiXmlElement* pXmlElem )
 {
-	ATLASSERT(m_pItemSkin);
+	DUIASSERT(m_pItemSkin);
 	if(m_nItemHei==0) m_nItemHei=m_pItemSkin->GetSkinSize().cy;
 	if(!m_hFont) m_hFont=DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT);
 }
@@ -209,7 +209,7 @@ BOOL CDuiMenu::LoadMenu( UINT uResID )
 	if(!CreatePopupMenu()) return FALSE;
 
 	m_menuSkin.Load(pRoot);
-	ATLASSERT(m_menuSkin.m_pItemSkin);
+	DUIASSERT(m_menuSkin.m_pItemSkin);
 
 	BuildMenu(m_hMenu,pRoot);
 
@@ -241,7 +241,7 @@ BOOL CDuiMenu::InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,CStri
 	if(nFlags&MF_POPUP)
 	{//²åÈë×Ó²Ëµ¥£¬
 		CDuiMenu *pSubMenu=(CDuiMenu*)(LPVOID)nIDNewItem;
-		ATLASSERT(pSubMenu->m_pParent==NULL);
+		DUIASSERT(pSubMenu->m_pParent==NULL);
 		pMenuData->nID=(UINT_PTR)pSubMenu->m_hMenu;
 	}else
 	{
@@ -278,7 +278,7 @@ UINT CDuiMenu::TrackPopupMenu(
 					LPCRECT prcRect
 					)
 {
-	ATLASSERT(IsMenu(m_hMenu));
+	DUIASSERT(IsMenu(m_hMenu));
 
 	CDuiMenuODWnd menuOwner;
 	*(static_cast<CDuiMenuAttr*>(&menuOwner))=m_menuSkin;

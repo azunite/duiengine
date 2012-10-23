@@ -37,7 +37,7 @@ HFONT DuiFontPool::GetFont(WORD uKey,CString strFaceName)
 
 		AddKeyObject(key,hftRet);
 	}
-	ATLASSERT(GetObjectType(hftRet)==OBJ_FONT);
+	DUIASSERT(GetObjectType(hftRet)==OBJ_FONT);
 	return hftRet;
 }
 

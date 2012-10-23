@@ -166,7 +166,7 @@ void CDuiItemBox::PageDown()
 void CDuiItemBox::EnsureVisible(CDuiWindow *pItem)
 {
 	if(!HasScrollBar(TRUE)) return;
-	ATLASSERT(pItem);
+	DUIASSERT(pItem);
 	CRect rcItem;
 	pItem->GetRect(&rcItem);
 	int yOffset=0;

@@ -17,7 +17,7 @@
 #include <OleCtl.h>
 #include <assert.h>
 
-#define ATLASSERT(x) assert(x)
+#define DUIASSERT(x) assert(x)
 
 #include "strcvt\cpconv.h"
 #include "tinyxml\tinyxml.h"

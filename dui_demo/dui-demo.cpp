@@ -27,7 +27,7 @@
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
 	HRESULT hRes = CoInitialize(NULL);
-	ATLASSERT(SUCCEEDED(hRes));
+	DUIASSERT(SUCCEEDED(hRes));
  
 	char szCurrentDir[MAX_PATH]; memset( szCurrentDir, 0, sizeof(szCurrentDir) );
 	GetModuleFileNameA( NULL, szCurrentDir, sizeof(szCurrentDir) );
@@ -44,7 +44,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	CString strZip=CA2T(szCurrentDir)+_T("\\def_skin.zip");
 	if(!zipSkin->Init(strZip))
 	{
-		ATLASSERT(0); 
+		DUIASSERT(0);
 		return 1;
 	}
 	duiSystem.SetResProvider(zipSkin); 
@@ -56,7 +56,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 // 	DuiResProviderFiles *pResFiles=new DuiResProviderFiles;
 // 	if(!pResFiles->Init(szCurrentDir))
 // 	{
-// 		ATLASSERT(0);
+// 		DUIASSERT(0);
 // 		return 1;
 // 	}
 // 	duiSystem.SetResProvider(pResFiles);

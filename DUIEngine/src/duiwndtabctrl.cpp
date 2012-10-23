@@ -5,7 +5,7 @@ namespace DuiEngine{
 
 void CDuiTabSlide::SetPage1( CDuiWindow *pPage1 )
 {
-	ATLASSERT(!m_hMemDC && !m_hBmp);
+	DUIASSERT(!m_hMemDC && !m_hBmp);
 
 	CRect rcPage=m_rcWindow;
 	CDCHandle dcPage=pPage1->GetDuiDC(&rcPage,OLEDC_NODRAW);
@@ -26,7 +26,7 @@ void CDuiTabSlide::SetPage1( CDuiWindow *pPage1 )
 
 void CDuiTabSlide::SetPage2( CDuiWindow *pPage2 )
 {
-	ATLASSERT(m_hMemDC && m_hBmp);
+	DUIASSERT(m_hMemDC && m_hBmp);
 	CRect rcPage=m_rcWindow;
 	CDCHandle dcPage=pPage2->GetDuiDC(&rcPage,OLEDC_NODRAW);
 

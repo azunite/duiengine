@@ -59,7 +59,7 @@ public: \
 #define END_MSG_MAP() \
 	break; \
 		default: \
-		ATLASSERT(FALSE); \
+		DUIASSERT(FALSE); \
 		break; \
 		} \
 		return FALSE; \

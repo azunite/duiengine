@@ -18,7 +18,7 @@ namespace DuiEngine{
 
 CDuiItemPanel::CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml):m_pFrmHost(pFrameHost),m_dwData(0),m_crBk(CLR_INVALID),m_crSelBk(RGB(0,0,128))
 {
-	ATLASSERT(m_pFrmHost);
+	DUIASSERT(m_pFrmHost);
 	SetContainer(this);
 	Load(pXml);
 }

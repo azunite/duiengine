@@ -523,7 +523,7 @@ void CDuiHostWnd::OnDuiTimer( char cTimerID )
 
 BOOL CDuiHostWnd::DrawCaret(CPoint pt,BOOL bUpdate/*=FALSE*/)
 {
-	ATLASSERT(m_bTranslucent);
+	DUIASSERT(m_bTranslucent);
 	BITMAP bm;
 	GetObject(m_hBmpCaret,sizeof(bm),&bm);
 

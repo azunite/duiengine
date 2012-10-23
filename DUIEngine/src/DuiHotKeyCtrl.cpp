@@ -28,7 +28,7 @@ int CDuiHotKeyCtrl::OnCreate( LPVOID )
 	int nRet=__super::OnCreate(NULL);
 	if(nRet!=0) return nRet;
 	CDCHandle dc=GetDuiDC(NULL,OLEDC_NODRAW);
-	ATLASSERT(dc);
+	DUIASSERT(dc);
 	DuiDCPaint duidc;
 	BeforePaint(dc,duidc);
 

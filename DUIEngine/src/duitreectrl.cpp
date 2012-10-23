@@ -123,7 +123,7 @@ BOOL CDuiTreeCtrl::RemoveItem(HSTREEITEM hItem)
 		CDuiTreeItem *pParent=GetItem(hParent);
 		pParent->m_bCollapsed=FALSE;
 		CDuiWindow *pToggle=pParent->GetChild(IDC_SWITCH);
-		ATLASSERT(pToggle);
+		DUIASSERT(pToggle);
 		pParent->DestroyChild(pToggle);
 		if(pParent->m_bVisible) NotifyInvalidateRect(pParent->GetItemRect());
 	}
@@ -223,7 +223,7 @@ BOOL CDuiTreeCtrl::Expand(HSTREEITEM hItem , UINT nCode)
 			if(m_pTiXmlSwitch)
 			{
 				CDuiToggle *pSwitch=(CDuiToggle*)pItem->GetChild(IDC_SWITCH);
-				ATLASSERT(pSwitch);
+				DUIASSERT(pSwitch);
 				pSwitch->SetToggle(pItem->m_bCollapsed,FALSE);
 			}
 			CSize szView(m_rcWindow.Width(),m_nVisibleItems*m_nItemHei);

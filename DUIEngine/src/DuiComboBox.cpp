@@ -80,7 +80,7 @@ int CComboList::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	m_pListBox->SetCmdID(IDC_LIST);
 
 	TiXmlElement *pXmlTemplate=(TiXmlElement *)lpCreateStruct->lpCreateParams;
-	ATLASSERT(pXmlTemplate);
+	DUIASSERT(pXmlTemplate);
 	pXmlTemplate->Attribute("id_text",&m_nTextID);
 	pXmlTemplate->Attribute("id_icon",&m_nIconID);
 
@@ -159,7 +159,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 {
 	BOOL bRet=FALSE;
 	TiXmlNode *pTiXmlParent=pTiXmlChildElem->Parent();
-	ATLASSERT(pTiXmlParent);
+	DUIASSERT(pTiXmlParent);
 	//初始化列表数据
 	TiXmlElement *pTiXmlItems=pTiXmlParent->FirstChildElement("items");
 	if(pTiXmlItems)
@@ -184,7 +184,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 		m_pXmlListStyle=pTiListStyle->Clone()->ToElement();
 	}
 
-	ATLASSERT(m_pSkinBtn);
+	DUIASSERT(m_pSkinBtn);
 	//创建edit对象
 	if(!m_bDropdown)
 	{
@@ -401,7 +401,7 @@ int CDuiComboBox::GetWindowText( LPTSTR lpString, int nMaxCount )
 		}
 	}else
 	{
-		ATLASSERT(m_pEdit);
+		DUIASSERT(m_pEdit);
 		return m_pEdit->GetWindowText(lpString,nMaxCount);
 	}
 }

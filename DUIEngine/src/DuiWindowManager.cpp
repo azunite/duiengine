@@ -34,7 +34,7 @@ CDuiWindow* DuiWindowManager::GetWindow(HDUIWND hDuiWnd)
 // Specify a handle to a DuiWindow
 HDUIWND DuiWindowManager::NewWindow(CDuiWindow *pDuiWnd)
 {
-	ATLASSERT(pDuiWnd);
+	DUIASSERT(pDuiWnd);
 	::EnterCriticalSection(&getSingleton().m_lockWndMap);
 
 	HDUIWND hDuiWndNext = ++ getSingleton().m_hNextWnd;
