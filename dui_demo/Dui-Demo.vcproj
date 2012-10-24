@@ -651,6 +651,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="imageole"
+			>
+			<File
+				RelativePath=".\gif\ImageOle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\gif\ImageOle.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

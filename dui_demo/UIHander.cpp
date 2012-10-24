@@ -20,7 +20,6 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 	CDuiRichEdit *pEdit=(CDuiRichEdit*)m_pMainDlg->FindChildByCmdID(1140);
 	pEdit->DuiSendMessage(EM_SETEVENTMASK,0,ENM_CHANGE);
 
-	m_menu.LoadMenu(IDR_MENU_TEST); //load menu
 
 // 	CDuiWebkit *pwebkit=(CDuiWebkit*)m_pMainDlg->FindChildByCmdID(1205);
 // 	pwebkit->SetCookieUsage(L"e:\\testcookie.txt",100*1024,1024,100);
@@ -32,16 +31,34 @@ void CUIHander::OnAttrReposition()
 	m_pMainDlg->FindChildByCmdID(测试)->SetAttribute("pos","|-100,|-15,|100,|15");
 }
 
+#include "gif/ImageOle.h"
+
+// #define  PATH_GIF _T("E:\\dui.work\\RichEditDemo\\RichEditDemo\\Face\\1.gif")
 
 void CUIHander::OnRepEditSel()
 {
 	CDuiRichEdit *pEdit=(CDuiRichEdit *)m_pMainDlg->FindChildByCmdID(1140);
-	//pEdit->SetDefaultTextColor(RGB(0,128,128));
+	if(pEdit)
+	{
+		for(int i=0;i<5;i++)
+		{
+			CDuiSkinBase *pSkinGif=DuiSkinPool::getSingleton().GetSkin("face0");
+// 			RichEdit_InsertImage(pEdit,PATH_GIF);//从文件加载 
+			RichEdit_InsertSkin(pEdit,pSkinGif);
+			CDuiSkinBase *pSkin=DuiSkinPool::getSingleton().GetSkin("bmpmask");
+			RichEdit_InsertSkin(pEdit,pSkin);
+			RichEdit_InsertSkin(pEdit,pSkin);
+			RichEdit_InsertSkin(pEdit,pSkin);
+		}
+	}
+//	pEdit->SetDefaultTextColor(RGB(0,128,128));
 // 	pEdit->SetAttribute("crtext","00CCCC");
-	pEdit->SetSel(MAKELONG(5,5));
-	pEdit->ReplaceSel(L"repsel");
-	TCHAR szBuf[100]={0};
-	pEdit->GetWindowText(szBuf,100);
+// 	pEdit->SetSel(MAKELONG(5,5));
+// 	pEdit->ReplaceSel(L"repsel");
+// 	TCHAR szBuf[100]={0};
+// 	pEdit->GetWindowText(szBuf,100);
+
+
 }
 
 LRESULT CUIHander::OnEditNotify( LPNMHDR pNHdr )
@@ -92,14 +109,16 @@ void CUIHander::OnDuiMenu()
 {
 	CPoint pt; 
 	GetCursorPos(&pt);
-	CDuiMenu subMenu=m_menu.GetSubMenu(5);
+	CDuiMenu menu;  
+	menu.LoadMenu(IDR_MENU_TEST); //load menu
+	CDuiMenu subMenu=menu.GetSubMenu(5);
 	CheckMenuRadioItem(subMenu.m_hMenu,51,53,52,MF_BYCOMMAND);
 // 	CDuiMenu subMenu2; 
 // 	subMenu2.CreatePopupMenu();
 // 	subMenu2.InsertMenu(1,MF_STRING|MF_BYPOSITION,59,_T("代码插入1"),3);
 // 	subMenu2.InsertMenu(2,MF_STRING|MF_BYPOSITION|MF_GRAYED,58,_T("代码插入2"),3);
 // 	subMenu.InsertMenu(1,MF_POPUP|MF_BYPOSITION,(UINT_PTR)&subMenu2,_T("插入子菜单"),5);
-	UINT uRet=m_menu.TrackPopupMenu(0,pt.x,pt.y,m_pMainDlg->m_hWnd);
+	UINT uRet=menu.TrackPopupMenu(0,pt.x,pt.y,m_pMainDlg->m_hWnd);
 // 	ATLTRACE(L"\nmenu ret=%d",uRet); 
 }
 

@@ -41,4 +41,5 @@ DEFINE_IMGX(IDP_WEBBTN_BACK,	210,	"skins\\webbtn_back.png")
 DEFINE_IMGX(IDP_WEBBTN_FORWARD,	211,	"skins\\webbtn_forward.png")
 DEFINE_IMGX(IDP_WEBBTN_REFRESH,	212,	"skins\\webbtn_refresh.png")
 DEFINE_BMP(IDP_BMPMASK,	300,	"skins\\solve.bmp")
+DEFINE_IMGX(IDP_GIF_FACE0,	400,	"skins\\face0.gif")
 /*----------------------------RES_BUILDER:end------------------------------------->*/

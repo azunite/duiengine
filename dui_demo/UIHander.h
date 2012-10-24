@@ -58,7 +58,4 @@ protected:
 	DUI_NOTIFY_MAP_END()	
 private:
 	CMainDlg * m_pMainDlg; 
-
-	CDuiMenu m_menu; 
-
 };

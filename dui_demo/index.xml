@@ -43,3 +43,5 @@
 <resid type="IMGX" id_name="IDP_WEBBTN_REFRESH"  id="212"  file="skins\webbtn_refresh.png" />
 
 <resid type="BMP" id_name="IDP_BMPMASK"  id="300"  file="skins\solve.bmp" />
+
+<resid type="IMGX" id_name="IDP_GIF_FACE0"  id="400"  file="skins\face0.gif" />

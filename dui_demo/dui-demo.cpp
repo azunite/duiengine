@@ -14,7 +14,7 @@
 #else
 #pragma comment(lib,"zlib.lib")
 #pragma comment(lib,"zipresprovider.lib")
-#endif
+#endif 
 
 #ifdef _DEBUG
 #include "..\memleakdetect\MemLeakDetect.h"
@@ -40,28 +40,28 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	duiSystem.SetLogger(&loger);
 
 	//从ZIP文件加载皮肤
-	DuiResProviderZip *zipSkin=new DuiResProviderZip;
-	CString strZip=CA2T(szCurrentDir)+_T("\\def_skin.zip");
-	if(!zipSkin->Init(strZip))
-	{
-		DUIASSERT(0);
-		return 1;
-	}
-	duiSystem.SetResProvider(zipSkin); 
+// 	DuiResProviderZip *zipSkin=new DuiResProviderZip;
+// 	CString strZip=CA2T(szCurrentDir)+_T("\\def_skin.zip");
+// 	if(!zipSkin->Init(strZip))
+// 	{ 
+// 		DUIASSERT(0);
+// 		return 1;
+// 	}
+// 	duiSystem.SetResProvider(zipSkin); 
 
 	duiSystem.logEvent("demo started");
 	duiSystem.InitName2ID(IDR_DUI_NAME2ID);//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 #ifdef __DUIFILE_RC 
-//     lstrcatA( szCurrentDir, "\\..\\dui_demo" );
-// 	DuiResProviderFiles *pResFiles=new DuiResProviderFiles;
-// 	if(!pResFiles->Init(szCurrentDir))
-// 	{
-// 		DUIASSERT(0);
-// 		return 1;
-// 	}
-// 	duiSystem.SetResProvider(pResFiles);
+    lstrcatA( szCurrentDir, "\\..\\dui_demo" );
+	DuiResProviderFiles *pResFiles=new DuiResProviderFiles;
+	if(!pResFiles->Init(szCurrentDir))
+	{
+		DUIASSERT(0);
+		return 1;
+	}
+	duiSystem.SetResProvider(pResFiles);
 #else 
-// 	duiSystem.SetResProvider(new DuiResProviderPE(hInstance));
+	duiSystem.SetResProvider(new DuiResProviderPE(hInstance));
 #endif 
 	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义
 	DuiString::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串

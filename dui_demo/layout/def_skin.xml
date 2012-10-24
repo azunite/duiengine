@@ -36,4 +36,5 @@
   <imglst name="bmpmask" src="300">
     <imgparam mask="FF00FF"/>
   </imglst>
+  <gif name="face0" src="400"/>
 </skins>
