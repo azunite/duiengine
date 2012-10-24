@@ -91,6 +91,7 @@ public:
 
 	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType);
 
+	Gdiplus::Image * GetImage() const {return m_pImg;}
 
 	static void InitGdiplus();
 	static void UninitGdiplus();

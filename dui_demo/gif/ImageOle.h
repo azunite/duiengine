@@ -71,21 +71,7 @@ public:
 	// IViewObject2½Ó¿Ú
 	virtual HRESULT WINAPI GetExtent(DWORD dwDrawAspect, LONG lindex, DVTARGETDEVICE *ptd, LPSIZEL lpsizel);
 
-	void SetFaceId(int nFaceId);
-	int GetFaceId();
-
-	void SetDuiSkinObj(CDuiSkinBase *pSkin)
-	{
-		if(m_pSkin)
-		{
-			m_pSkin->Release();
-		}
-		m_pSkin=pSkin;
-		if(m_pSkin)
-		{
-			m_pSkin->AddRef();
-		}
-	}
+	void SetDuiSkinObj(CDuiSkinBase *pSkin);
 
 	void OnTimer(UINT_PTR idEvent);
 
@@ -96,8 +82,8 @@ protected:
 	IOleClientSite *m_pOleClientSite;
 	IAdviseSink *m_pAdvSink;
 
-	int m_nFaceId;
 	DuiEngine::CDuiSkinBase *m_pSkin;
+	int		m_iFrame;
 
 	static CTimerHostWnd ms_TimerHostWnd;
 };

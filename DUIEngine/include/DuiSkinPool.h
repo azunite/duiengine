@@ -28,7 +28,7 @@ namespace DuiEngine{
 
 		virtual void DeleteSkin(CDuiSkinBase * pSkin)
 		{
-			delete pSkin;
+			pSkin->Release();
 		}
 
 		virtual const CStringA & GetTypeName(){return m_strTypeName;}

@@ -3,14 +3,24 @@
 #include "duiobject.h"
 #include "duiimage.h"
 #include "duiimgpool.h"
+#include "duiref.h"
 
 namespace DuiEngine{
 
-	class DUI_EXP CDuiSkinBase : public CDuiObject
+	class DUI_EXP CDuiSkinBase : public CDuiObject,public CDuiRef
 	{
 	public:
-		CDuiSkinBase():m_pDuiImg(NULL),m_strOwner("")
+		CDuiSkinBase():m_pDuiImg(NULL),m_strOwner(""),m_bManaged(FALSE)
 		{
+		}
+		virtual ~CDuiSkinBase()
+		{
+			if(m_bManaged && m_pDuiImg) delete m_pDuiImg;
+		}
+
+		void OnFinalRelease()
+		{
+			delete this;
 		}
 
 		void SetOwner(CStringA strOwner)
@@ -20,11 +30,24 @@ namespace DuiEngine{
 
 		CStringA GetOwner() { return m_strOwner;}
 
-		virtual ~CDuiSkinBase()
+		virtual CDuiImgBase * SetImage(UINT uID)
 		{
+			if(m_bManaged && m_pDuiImg) delete m_pDuiImg;
+			CDuiImgBase * pRet=m_pDuiImg;
+			m_pDuiImg=DuiImgPool::getSingleton().GetImage(uID);
+			m_bManaged=FALSE;
+			return pRet;
 		}
-
+		virtual CDuiImgBase * SetImage(CDuiImgBase *pImg)
+		{
+			if(m_bManaged && m_pDuiImg) delete m_pDuiImg;
+			CDuiImgBase * pRet=m_pDuiImg;
+			m_pDuiImg=pImg;
+			m_bManaged=TRUE;
+			return pRet;
+		}
 		CDuiImgBase * GetImage(){return m_pDuiImg;}
+
 		virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha=0xFF) = NULL;
 
 		virtual SIZE GetSkinSize()
@@ -61,6 +84,9 @@ namespace DuiEngine{
 		static BOOL ExtentBlt(CDuiImgBase *pImgDraw,BOOL bTile,HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
 		static void FrameDraw(CDCHandle &dc, CDuiImgBase *pImgDraw, const CRect &rcSour,const  CRect &rcDraw,const  CRect &rcMargin, COLORREF crBg, UINT uDrawPart ,BOOL bTile,BYTE byAlpha=0xFF);
 
+		DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
+			DUIWIN_IMAGE_ATTRIBUTE("src", m_pDuiImg, TRUE)
+		DUIWIN_DECLARE_ATTRIBUTES_END()
 	protected:
 
 		virtual void OnAttributeFinish(TiXmlElement* pXmlElem)
@@ -71,12 +97,10 @@ namespace DuiEngine{
 				m_pDuiImg->Load(pXmlImgParam);
 			}
 		}
-		DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-			DUIWIN_IMAGE_ATTRIBUTE("src", m_pDuiImg, TRUE)
-		DUIWIN_DECLARE_ATTRIBUTES_END()
 
 		CDuiImgBase *m_pDuiImg;
 		CStringA	m_strOwner;
+		BOOL		m_bManaged;
 	};
 
 

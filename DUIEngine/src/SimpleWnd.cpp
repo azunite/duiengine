@@ -12,12 +12,10 @@ CSimpleWnd::CSimpleWnd(HWND hWnd)
 ,m_hWnd(hWnd)
 ,m_pfnSuperWindowProc(::DefWindowProc)
 {
-	m_pThunk=(tagThunk*)HeapAlloc(DuiSystem::getSingleton().GetExecutableHeap(),HEAP_ZERO_MEMORY,sizeof(tagThunk));
 }
 
 CSimpleWnd::~CSimpleWnd(void)
 {
-	if(m_pThunk) HeapFree(DuiSystem::getSingleton().GetExecutableHeap(),0,m_pThunk);
 }
 
 ATOM CSimpleWnd::RegisterSimpleWnd( HINSTANCE hInst,LPCTSTR pszSimpleWndName )
@@ -36,10 +34,26 @@ ATOM CSimpleWnd::RegisterSimpleWnd( HINSTANCE hInst,LPCTSTR pszSimpleWndName )
 HWND CSimpleWnd::Create( LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam )
 {
 	DuiSystem::getSingleton().LockSharePtr(this);
+	m_pThunk=(tagThunk*)HeapAlloc(DuiSystem::getSingleton().GetExecutableHeap(),HEAP_ZERO_MEMORY,sizeof(tagThunk));
 	// 在::CreateWindow返回之前会去调StarWindowProc函数
 	HWND hWnd= ::CreateWindowEx(dwExStyle,(LPCTSTR)DuiSystem::getSingleton().GetHostWndAtom(), lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, 0, DuiSystem::getSingleton().GetInstance(), lpParam);
 	DuiSystem::getSingleton().ReleaseSharePtr();
+	if(!hWnd)
+	{
+		HeapFree(DuiSystem::getSingleton().GetExecutableHeap(),0,m_pThunk);
+		m_pThunk=NULL;
+	}
 	return hWnd;
+}
+
+
+void CSimpleWnd::OnFinalMessage( HWND hWnd )
+{
+	if(m_pThunk)
+	{
+		HeapFree(DuiSystem::getSingleton().GetExecutableHeap(),0,m_pThunk);
+		m_pThunk=NULL;
+	}
 }
 
 LRESULT CALLBACK CSimpleWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )

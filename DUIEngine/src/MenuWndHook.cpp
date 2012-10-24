@@ -234,7 +234,7 @@ void CMenuWndHook::OnWindowPosChanging(WINDOWPOS *pWindowPos)
 	if(m_strSkinName.IsEmpty()) return;
 	CDuiSkinBase *pSkin=DuiSkinPool::getSingleton().GetSkin(m_strSkinName);
 	if(!pSkin) return;
-	CDuiMenuBorderSkin *pBorderSkin=static_cast<CDuiMenuBorderSkin*>(pSkin);
+	CDuiSkinMenuBorder *pBorderSkin=static_cast<CDuiSkinMenuBorder*>(pSkin);
 	if(!pBorderSkin) return;
 	pWindowPos->cx += pBorderSkin->GetMarginRect().left+pBorderSkin->GetMarginRect().right-SM_CXMENUBORDER*2;
 	pWindowPos->cy -= pBorderSkin->GetMarginRect().top+pBorderSkin->GetMarginRect().bottom-SM_CXMENUBORDER*2;
@@ -245,7 +245,7 @@ void CMenuWndHook::OnNcCalcsize(BOOL bValidCalc,NCCALCSIZE_PARAMS* lpncsp)
 	if(m_strSkinName.IsEmpty()) return;
 	CDuiSkinBase *pSkin=DuiSkinPool::getSingleton().GetSkin(m_strSkinName);
 	if(!pSkin) return;
-	CDuiMenuBorderSkin *pBorderSkin=static_cast<CDuiMenuBorderSkin*>(pSkin);
+	CDuiSkinMenuBorder *pBorderSkin=static_cast<CDuiSkinMenuBorder*>(pSkin);
 	if(!pBorderSkin) return;
 	
 	lpncsp->rgrc[0].left=lpncsp->lppos->x+pBorderSkin->GetMarginRect().left;
@@ -266,7 +266,7 @@ void CMenuWndHook::OnPrint(CDCHandle dc)
 	if(m_strSkinName.IsEmpty()) return;
 	CDuiSkinBase *pSkin=DuiSkinPool::getSingleton().GetSkin(m_strSkinName);
 	if(!pSkin) return;
-	CDuiMenuBorderSkin *pBorderSkin=static_cast<CDuiMenuBorderSkin*>(pSkin);
+	CDuiSkinMenuBorder *pBorderSkin=static_cast<CDuiSkinMenuBorder*>(pSkin);
 	if(!pBorderSkin) return;
 
 	CRect rcClient;

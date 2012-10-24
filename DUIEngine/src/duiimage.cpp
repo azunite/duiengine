@@ -361,12 +361,32 @@ BOOL CDuiImgX::LoadImg(LPCTSTR pszFileName)
 	{
 		delete pImg;
 		m_pImg=NULL;
+		return FALSE;
 	}
-	m_pImg=new Gdiplus::Bitmap(pImg->GetWidth(),pImg->GetHeight());
-	Gdiplus::Graphics *g=new Gdiplus::Graphics(m_pImg);
-	g->DrawImage(pImg,0,0,pImg->GetWidth(),pImg->GetHeight());
-	delete g;
-	delete pImg;
+	//获得图片帧数
+	UINT nCount = 0;
+	nCount = pImg->GetFrameDimensionsCount();
+	DUIASSERT(nCount>0);
+
+	int nFrames=1;
+	GUID* pDimensionIDs = new GUID[nCount];
+	if (pDimensionIDs != NULL)
+	{
+		pImg->GetFrameDimensionsList(pDimensionIDs, nCount);
+		nFrames = pImg->GetFrameCount(&pDimensionIDs[0]);
+		delete pDimensionIDs;
+	}
+	if(nFrames==1)
+	{//只有一帧的图，直接缓存，防止图片文件占用。
+		m_pImg=new Gdiplus::Bitmap(pImg->GetWidth(),pImg->GetHeight());
+		Gdiplus::Graphics *g=new Gdiplus::Graphics(m_pImg);
+		g->DrawImage(pImg,0,0,pImg->GetWidth(),pImg->GetHeight());
+		delete g;
+		delete pImg;
+	}else
+	{
+		m_pImg=pImg;
+	}
 
 	return !IsEmpty();
 }

@@ -470,7 +470,7 @@ public:
 protected:
 	LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	virtual void OnFinalMessage(HWND hWnd){}
+	virtual void OnFinalMessage(HWND hWnd);
 
 	const MSG * m_pCurrentMsg;
 	BOOL m_bDestoryed;

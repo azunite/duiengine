@@ -37,12 +37,6 @@ class DUI_EXP CDuiImageList: public CDuiSkinBase
 public:
 	CDuiImageList();
 
-	void SetImageID(UINT uID);
-
-	void SetImageSkin(CDuiImgBase *pImg);
-
-	CDuiImgBase * GetImage();
-
 	void SetPropTile(BOOL bTile);
     virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha);
 
@@ -180,32 +174,69 @@ protected:
 	int			m_nThumbLeft;
 };
 
-class DUI_EXP CDuiMenuBorderSkin : public CDuiSkinImgFrame
+class DUI_EXP CDuiSkinMenuBorder : public CDuiSkinImgFrame
 {
-	DUIOBJ_DECLARE_CLASS_NAME(CDuiMenuBorderSkin, "border")
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiSkinMenuBorder, "border")
 
 public:
 
-	CDuiMenuBorderSkin():m_crKey(-1),m_rcBorder(1,1,1,1),m_byAlpha(0xFF)
+	CDuiSkinMenuBorder():m_rcBorder(1,1,1,1)
 	{
 
 	}
 
 	CRect GetMarginRect(){return m_rcBorder;}
-	COLORREF GetColorKey(){return m_crKey;}
-	BYTE	GetAlpha(){return m_byAlpha;}
 public:
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 		DUIWIN_RECT_ATTRIBUTE("border",m_rcBorder,FALSE)
-		DUIWIN_COLOR_ATTRIBUTE("key",m_crKey,FALSE)
-		DUIWIN_UINT_ATTRIBUTE("alpha",m_byAlpha,FALSE)
 	DUIWIN_DECLARE_ATTRIBUTES_END()
 protected:
 	CRect		m_rcBorder;
-	COLORREF	m_crKey;
-	BYTE		m_byAlpha;
 };
 
+class DUI_EXP CDuiSkinGif : public CDuiSkinBase
+{
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiSkinGif, "gif")
+public:
+	CDuiSkinGif():m_nFrames(0),m_iFrame(0),m_pFrameDelay(NULL)
+	{
 
+	}
+	virtual ~CDuiSkinGif()
+	{
+		if(m_pFrameDelay) delete [] m_pFrameDelay;
+	}
+	virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha=0xFF);
+
+	virtual int GetStates(){return m_nFrames;}
+	virtual void OnAttributeChanged(CStringA strAttrName,BOOL bLoading,HRESULT hRet);
+	virtual SIZE GetSkinSize()
+	{
+		SIZE sz={0};
+		if(m_pDuiImg)
+		{
+			m_pDuiImg->GetImageSize(sz);
+		}
+		return sz;
+	}
+
+	virtual CDuiImgBase * SetImage(CDuiImgBase *pImg)
+	{
+		CDuiImgBase *pRet=__super::SetImage(pImg);
+		OnSetImage();
+		return pRet;
+	}
+
+	long GetFrameDelay(int iFrame=-1);
+	void ActiveNextFrame();
+	void SelectActiveFrame(int iFrame);
+protected:
+	void OnSetImage();
+	int m_nFrames;
+	int m_iFrame;
+	long *m_pFrameDelay;
+	static GUID ms_Guid;
+
+};
 
 }//namespace DuiEngine

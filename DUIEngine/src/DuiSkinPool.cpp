@@ -15,7 +15,8 @@ namespace DuiEngine{
 		AddKeyObject(CDuiSkinButton::GetClassName(),new TplSkinFactory<CDuiSkinButton>());
 		AddKeyObject(CDuiSkinGradation::GetClassName(),new TplSkinFactory<CDuiSkinGradation>());
 		AddKeyObject(CDuiScrollbarSkin::GetClassName(),new TplSkinFactory<CDuiScrollbarSkin>());
-		AddKeyObject(CDuiMenuBorderSkin::GetClassName(),new TplSkinFactory<CDuiMenuBorderSkin>());
+		AddKeyObject(CDuiSkinMenuBorder::GetClassName(),new TplSkinFactory<CDuiSkinMenuBorder>());
+		AddKeyObject(CDuiSkinGif::GetClassName(),new TplSkinFactory<CDuiSkinGif>());
 	}
 
 	//////////////////////////////////////////////////////////////////////////

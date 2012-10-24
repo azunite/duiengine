@@ -289,7 +289,7 @@ BOOL CDuiImageWnd::SetImage(LPCTSTR pszFileName,BOOL bBitmap,LPRECT pRcMargin/*=
 	}
 
 	m_pSkin=new CDuiSkinImgFrame;
-	((CDuiSkinImgFrame*)m_pSkin)->SetImageSkin(pImg);
+	((CDuiSkinImgFrame*)m_pSkin)->SetImage(pImg);
 	((CDuiSkinImgFrame*)m_pSkin)->SetPropTile(bTile);
 	if(pRcMargin) ((CDuiSkinImgFrame*)m_pSkin)->SetMargin(pRcMargin->left,pRcMargin->top,pRcMargin->right,pRcMargin->bottom);
 	else ((CDuiSkinImgFrame*)m_pSkin)->SetMargin(0,0,0,0);
@@ -320,7 +320,7 @@ BOOL CDuiImageWnd::SetImage(HBITMAP hBitmap, LPRECT pRcMargin/*=NULL*/, BOOL bTi
 	}
 
 	m_pSkin=new CDuiSkinImgFrame;
-	((CDuiSkinImgFrame*)m_pSkin)->SetImageSkin(pImg);
+	((CDuiSkinImgFrame*)m_pSkin)->SetImage(pImg);
 	((CDuiSkinImgFrame*)m_pSkin)->SetPropTile(bTile);
 	if(pRcMargin) ((CDuiSkinImgFrame*)m_pSkin)->SetMargin(pRcMargin->left,pRcMargin->top,pRcMargin->right,pRcMargin->bottom);
 	else ((CDuiSkinImgFrame*)m_pSkin)->SetMargin(0,0,0,0);

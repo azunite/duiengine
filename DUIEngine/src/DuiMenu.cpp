@@ -206,7 +206,8 @@ BOOL CDuiMenu::LoadMenu( UINT uResID )
 	{
 		return FALSE;
 	}
-	if(!CreatePopupMenu()) return FALSE;
+	m_hMenu=CreatePopupMenu();
+	if(!m_hMenu) return FALSE;
 
 	m_menuSkin.Load(pRoot);
 	DUIASSERT(m_menuSkin.m_pItemSkin);

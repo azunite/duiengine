@@ -38,6 +38,7 @@ CImageOle::CImageOle()
 ,m_pOleClientSite(NULL)
 ,m_pAdvSink(NULL)
 ,m_pSkin(NULL)
+,m_iFrame(0)
 {
 	ms_TimerHostWnd.AddRef();
 }
@@ -112,7 +113,6 @@ HRESULT WINAPI CImageOle::Close(DWORD dwSaveOption)
 		m_pSkin->Release();
 		m_pSkin=NULL;
 	}
-	m_nFaceId = 0;
 
 	ms_TimerHostWnd.KillTimer((UINT_PTR)this);
 	return S_OK;
@@ -226,7 +226,7 @@ HRESULT WINAPI CImageOle::Draw(DWORD dwDrawAspect, LONG lindex, void *pvAspect,
 		if(m_pSkin->IsClass(CDuiSkinGif::GetClassName()))
 		{
 			CDuiSkinGif *pSkinGif=static_cast<CDuiSkinGif*>(m_pSkin);
-			pSkinGif->Draw(hdcDraw,rcItem,-1);
+			pSkinGif->Draw(hdcDraw,rcItem,m_iFrame);
 		}else
 		{
 			m_pSkin->Draw(hdcDraw,rcItem,0);
@@ -289,21 +289,9 @@ HRESULT WINAPI CImageOle::GetExtent(DWORD dwDrawAspect, LONG lindex, DVTARGETDEV
 	return S_OK;
 }
 
-void CImageOle::SetFaceId(int nFaceId)
-{
-	m_nFaceId = nFaceId;
-}
-
-int CImageOle::GetFaceId()
-{
-	return m_nFaceId;
-}
 
 void CImageOle::OnTimer(UINT_PTR idEvent)
 {
-	if (idEvent != (UINT_PTR)this)
-		return;
-
 	ms_TimerHostWnd.KillTimer(idEvent);
 
 	if (m_pAdvSink != NULL)
@@ -311,8 +299,11 @@ void CImageOle::OnTimer(UINT_PTR idEvent)
 
 	CDuiSkinGif *pSkinGif=static_cast<CDuiSkinGif*>(m_pSkin);
 	DUIASSERT(pSkinGif);
-	ms_TimerHostWnd.SetTimer((UINT_PTR)this, 
-		pSkinGif->GetFrameDelay(), CImageOle::TimerProc);
+	m_iFrame++;
+	if(m_iFrame==pSkinGif->GetStates())
+		m_iFrame=0;
+	long nDelay=pSkinGif->GetFrameDelay();
+	ms_TimerHostWnd.SetTimer((UINT_PTR)this, nDelay, CImageOle::TimerProc);
 }
 
 VOID CALLBACK CImageOle::TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
@@ -320,6 +311,19 @@ VOID CALLBACK CImageOle::TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD
 	CImageOle *pImageOle = (CImageOle *)idEvent;
 	if (pImageOle != NULL)
 		pImageOle->OnTimer(idEvent);
+}
+
+void CImageOle::SetDuiSkinObj( CDuiSkinBase *pSkin )
+{
+	if(m_pSkin)
+	{
+		m_pSkin->Release();
+	}
+	m_pSkin=pSkin;
+	if(m_pSkin)
+	{
+		m_pSkin->AddRef();
+	}
 }
 
 BOOL RichEdit_InsertSkin(CDuiRichEdit *pRicheditCtrl, CDuiSkinBase *pSkin)

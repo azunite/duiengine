@@ -47,8 +47,8 @@ void CUIHander::OnRepEditSel()
 			RichEdit_InsertSkin(pEdit,pSkinGif);
 			CDuiSkinBase *pSkin=DuiSkinPool::getSingleton().GetSkin("bmpmask");
 			RichEdit_InsertSkin(pEdit,pSkin);
-			RichEdit_InsertSkin(pEdit,pSkin);
-			RichEdit_InsertSkin(pEdit,pSkin);
+// 			RichEdit_InsertSkin(pEdit,pSkin);
+// 			RichEdit_InsertSkin(pEdit,pSkin);
 		}
 	}
 //	pEdit->SetDefaultTextColor(RGB(0,128,128));
