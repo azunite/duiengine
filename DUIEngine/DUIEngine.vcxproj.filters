@@ -9,11 +9,11 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="dllmain">
-      <UniqueIdentifier>{83b38924-00e3-4c07-89ff-c35b6f1146e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\wtl.mini">
-      <UniqueIdentifier>{faf14b5a-292e-4412-b3ca-4e9aed4ce2e2}</UniqueIdentifier>
+      <UniqueIdentifier>{916d97e9-5c50-4028-82bf-ba626eb2d61e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dllmain">
+      <UniqueIdentifier>{00276b69-3218-4f1f-9e57-a3fd8e9eee12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -27,6 +27,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\DuiCSS.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\duiDefaultLogger.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\duifontpool.cpp">
@@ -56,16 +59,16 @@
     <ClCompile Include="src\duilistctrl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\DuiMenu.cpp">
+    <ClCompile Include="src\DuiLogger.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\duiname2id.cpp">
+    <ClCompile Include="src\DuiMenu.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\duirealwnd.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\duiresutil.cpp">
+    <ClCompile Include="src\duiresprovider.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\DuiRichEdit.cpp">
@@ -75,6 +78,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\duiskin.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiSkinBase.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DuiSkinPool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\DuiSplitWnd.cpp">
@@ -119,9 +128,6 @@
     <ClCompile Include="src\duiwndpanel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\duiwndrichtxt.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\duiwndstyle.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -131,20 +137,20 @@
     <ClCompile Include="src\gdialpha.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="src\GradientFillHelper.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="src\MemDC.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\MenuWndHook.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>dllmain</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cpconv.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\SimpleWnd.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>dllmain</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,6 +170,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\duictrls.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiDefaultLogger.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\duifontpool.h">
@@ -193,6 +202,9 @@
     <ClInclude Include="include\duilistctrl.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\DuiLogger.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="include\DuiMenu.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -200,9 +212,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\duimsgfilter.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\duiname2id.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\duiobject.h">
@@ -217,7 +226,10 @@
     <ClInclude Include="include\duires.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\duiresutil.h">
+    <ClInclude Include="include\duiresprovider.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\duiresproviderbase.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\DuiRichEdit.h">
@@ -233,6 +245,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\duiskin.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiSkinBase.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DuiSkinPool.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\DuiSplitWnd.h">
@@ -283,9 +301,6 @@
     <ClInclude Include="include\duiwndpanel.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\duiwndrichtxt.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\duiwndstyle.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -295,25 +310,22 @@
     <ClInclude Include="include\gdialpha.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="include\GradientFillHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="include\MemDC.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\MenuWndHook.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="include\stree.hpp">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\cpconv.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="include\duiedit.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="include\mybuffer.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\SimpleWnd.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\stree.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="include\wtl.mini\duicrack.h">
@@ -323,9 +335,6 @@
       <Filter>头文件\wtl.mini</Filter>
     </ClInclude>
     <ClInclude Include="include\wtl.mini\duimisc.h">
-      <Filter>头文件\wtl.mini</Filter>
-    </ClInclude>
-    <ClInclude Include="include\wtl.mini\duistr.h">
       <Filter>头文件\wtl.mini</Filter>
     </ClInclude>
   </ItemGroup>
