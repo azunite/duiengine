@@ -11,7 +11,8 @@
 #include <duiwndnotify.h>
 #include <DuiCSS.h>
 
-#include "duires/res.h"
+#include "resource.h"	//APP资源
+#include "duires/res.h" //包含DUI资源定义
 
 using namespace DuiEngine;
 

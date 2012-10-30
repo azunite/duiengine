@@ -41,6 +41,8 @@ public:
 			FindChildByCmdID(2)->SetVisible(TRUE);
 		}
 	}
+
+	int OnCreate(LPCREATESTRUCT lpCreateStruct);
 protected:
 
 	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
@@ -51,6 +53,7 @@ protected:
 	DUI_NOTIFY_MAP_END()	
 
 	BEGIN_MSG_MAP_EX(CMainDlg)
+		MSG_WM_CREATE(OnCreate)
 		MSG_WM_CLOSE(OnClose)
 		MSG_WM_WINDOWPOSCHANGED(OnWindowPosChanged)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)

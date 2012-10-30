@@ -27,7 +27,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="build resouce id to winres2.rc"
-				CommandLine="..\tool\residbuilder -y -i index.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+				CommandLine="..\tool\residbuilder -y -i index.xml -r .\duires\winres.rc2 -n .\duires\name2id.xml -h .\duires\winres.h "
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -70,7 +70,7 @@
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"
-				AdditionalIncludeDirectories="..\duiengine\include;&quot;$(IntDir)&quot;"
+				AdditionalIncludeDirectories="..\DUIEngine\include;&quot;$(IntDir)&quot;"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
@@ -121,7 +121,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="build resouce id to winres2.rc"
-				CommandLine="..\tool\residbuilder -y -i index.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+				CommandLine="..\tool\residbuilder -y -i index.xml -r .\duires\winres.rc2 -n .\duires\name2id.xml -h .\duires\winres.h "
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -214,7 +214,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="build resouce id to winres2.rc"
-				CommandLine="..\tool\residbuilder -y -i index.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+				CommandLine="..\tool\residbuilder -y -i index.xml -r .\duires\winres.rc2 -n .\duires\name2id.xml -h .\duires\winres.h "
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -308,7 +308,7 @@
 			<Tool
 				Name="VCPreBuildEventTool"
 				Description="build resouce id to winres2.rc"
-				CommandLine="..\tool\residbuilder -y -i index.xml -r .\duires\winres.rc2 -n .\layout\name2id.xml -h .\duires\winres.h "
+				CommandLine="..\tool\residbuilder -y -i index.xml -r .\duires\winres.rc2 -n .\duires\name2id.xml -h .\duires\winres.h "
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
@@ -406,55 +406,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UIHander.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc"
-			>
-			<File
-				RelativePath=".\MainDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UIHander.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="duires"
-			>
-			<File
-				RelativePath=".\duires\dui-demo.rc"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="&quot;$(IntDir)&quot;"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_Dll|Win32"
-					>
-					<Tool
-						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="&quot;$(IntDir)&quot;"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\duires\res.h"
-				>
-			</File>
-			<File
-				RelativePath=".\duires\resource.h"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -491,7 +442,32 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\UIHander.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc"
+			>
+			<File
+				RelativePath=".\MainDlg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UIHander.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="duires"
+			>
+			<File
+				RelativePath=".\duires\res.h"
 				>
 			</File>
 			<File
@@ -562,104 +538,40 @@
 				RelativePath=".\layout\menu_test.xml"
 				>
 			</File>
-			<File
-				RelativePath=".\layout\name2id.xml"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="resource files"
 			>
 			<File
-				RelativePath=".\skins\btn_sys_close.png"
-				>
-			</File>
-			<File
-				RelativePath=".\skins\btn_sys_minimize.png"
-				>
-			</File>
-			<File
-				RelativePath=".\skins\btn_wnd_checkbox.png"
-				>
-			</File>
-			<File
-				RelativePath=".\skins\btn_wnd_radio.png"
-				>
-			</File>
-			<File
-				RelativePath=".\skins\dlg_bg_frame.png"
-				>
-			</File>
-			<File
-				RelativePath=".\skins\img_logo.ico"
-				>
-			</File>
-			<File
-				RelativePath=".\skins\main_dlg_body.png"
-				>
-			</File>
-			<File
-				RelativePath=".\skins\scrollbar.bmp"
-				>
-			</File>
-			<File
-				RelativePath=".\skins\tab_common.png"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="memleakdetect"
-			>
-			<File
-				RelativePath="..\memleakdetect\MemLeakDetect.cpp"
+				RelativePath=".\dui-demo.rc"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
 					>
 					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_Dll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_Dll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="0"
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories="..\DUIEngine\include;&quot;$(IntDir)&quot;"
 					/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\memleakdetect\MemLeakDetect.h"
+				RelativePath=".\duires\name2id.xml"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="imageole"
+			Name="skinole"
 			>
 			<File
-				RelativePath=".\gif\ImageOle.cpp"
+				RelativePath=".\skinole\ImageOle.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\gif\ImageOle.h"
+				RelativePath=".\skinole\ImageOle.h"
 				>
 			</File>
 		</Filter>

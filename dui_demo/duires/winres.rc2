@@ -4,13 +4,10 @@
 
 #pragma message("include winres.rc2")
 
-
-
 /*<---------------------------RES_BUILDER:begin-----------------------------------*/
 DEFINE_XML(IDR_DUI_SKIN_DEF,	100,	"layout\\def_skin.xml")
 DEFINE_XML(IDR_DUI_STYLE_DEF,	101,	"layout\\def_style.xml")
 DEFINE_XML(IDR_DUI_STRING_DEF,	102,	"layout\\def_string.xml")
-DEFINE_XML(IDR_DUI_NAME2ID,	103,	"layout\\name2id.xml")
 DEFINE_XML(IDR_DUI_OBJATTR_DEF,	104,	"layout\\def_objattr.xml")
 DEFINE_XML(IDR_DUI_MAIN_DIALOG,	105,	"layout\\dlg_main.xml")
 DEFINE_XML(IDR_MENU_TEST,	201,	"layout\\menu_test.xml")

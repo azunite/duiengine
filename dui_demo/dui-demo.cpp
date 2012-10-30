@@ -3,9 +3,9 @@
 
 #include "stdafx.h"
 #include "menuwndhook.h"
-#include "DuiSystem.h"
+#include "DuiSystem.h" 
 #include "DuiDefaultLogger.h"
-
+ 
 //从ZIP文件加载皮肤模块
 #include "../zipresprovider/DuiResProviderZip.h"
 #ifdef DEBUG
@@ -17,8 +17,7 @@
 #endif 
 
 #ifdef _DEBUG
-#include "..\memleakdetect\MemLeakDetect.h"
-// static CMemLeakDetect memLeakDetect;
+#include <vld.h>//使用Vitural Leaker Detector来检测内存泄漏，可以从http://vld.codeplex.com/ 下载
 #endif
  
 #include "MainDlg.h"
@@ -50,7 +49,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 // 	duiSystem.SetResProvider(zipSkin); 
 
 	duiSystem.logEvent("demo started");
-	duiSystem.InitName2ID(IDR_DUI_NAME2ID);//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
+	duiSystem.InitName2ID(IDR_NAME2ID,"XML2");//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 #ifdef __DUIFILE_RC 
     lstrcatA( szCurrentDir, "\\..\\dui_demo" );
 	DuiResProviderFiles *pResFiles=new DuiResProviderFiles;

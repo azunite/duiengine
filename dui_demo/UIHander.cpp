@@ -2,6 +2,7 @@
 #include "UIHander.h"
 
 #include "MainDlg.h"
+#include "skinole/ImageOle.h"
 
 CUIHander::CUIHander(CMainDlg * pMainDlg) : m_pMainDlg(pMainDlg)
 {
@@ -31,7 +32,6 @@ void CUIHander::OnAttrReposition()
 	m_pMainDlg->FindChildByCmdID(²âÊÔ)->SetAttribute("pos","|-100,|-15,|100,|15");
 }
 
-#include "gif/ImageOle.h"
 
 // #define  PATH_GIF _T("E:\\dui.work\\RichEditDemo\\RichEditDemo\\Face\\1.gif")
 

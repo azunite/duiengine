@@ -6,8 +6,8 @@
 <name2id name="IDC_BTN_SYS_CLOSE" id="1" remark="关闭按钮" />
 <name2id name="IDC_BTN_SYS_MIN" id="5" remark="最小化按钮" />
 <name2id name="IDC_REPSEL" id="1144" />
+<name2id name="btn_minimize" id="5" />
+<name2id name="按钮_恢复" id="3" />
 <name2id name="testimg" id="65537" remark="test image remark" />
 <name2id name="mylist" id="65538" />
 <name2id name="mytree" id="65539" />
-<name2id name="btn_minimize" id="5" />
-<name2id name="按钮_恢复" id="3" />
