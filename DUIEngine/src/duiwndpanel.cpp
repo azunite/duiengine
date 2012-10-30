@@ -32,7 +32,7 @@ CDuiPanelEx::CDuiPanelEx()
 {
 	memset(&m_siHoz,0,sizeof(SCROLLINFO));
 	memset(&m_siVer,0,sizeof(SCROLLINFO));
-	m_HitInfo.uSbCode=-1;
+ 	m_HitInfo.uSbCode=-1;
 	m_siHoz.nTrackPos=-1;
 	m_siVer.nTrackPos=-1;
 }
@@ -384,6 +384,7 @@ void CDuiPanelEx::OnNcMouseMove(UINT nFlags, CPoint point)
 {
 	if(m_bDragSb)
 	{
+		if(m_HitInfo.uSbCode!=SB_THUMBTRACK) return;
 		CRect rcSb=GetScrollBarRect(m_HitInfo.bVertical);
 		CRect rcRail=rcSb;
 		if(m_HitInfo.bVertical) rcRail.DeflateRect(0,m_nSbArrowSize);
