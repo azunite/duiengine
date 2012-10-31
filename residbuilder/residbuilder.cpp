@@ -191,6 +191,7 @@ int UpdateName2ID(map<string,int> *pmapName2ID,TiXmlDocument *pXmlDocName2ID,TiX
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	string strSkinPath;	//皮肤路径,相对于程序的.rc文件
 	vector<string> vecIdMaps;
 	string strRes;		//rc2文件名
 	string strHead;		//资源头文件,如winres.h
@@ -200,7 +201,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	int c;
 
 	printf("%s\n",GetCommandLineA());
-	while ((c = getopt(argc, argv, _T("i:r:h:n:y:"))) != EOF)
+	while ((c = getopt(argc, argv, _T("i:r:h:n:y:p:"))) != EOF)
 	{
 		switch (c)
 		{
@@ -209,6 +210,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		case _T('h'):strHead=optarg;break;
 		case _T('n'):strName2ID=optarg;break;
 		case _T('y'):cYes=1;optind--;break;
+		case _T('p'):strSkinPath=optarg;break;
 		}
 	}
 
@@ -250,6 +252,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				if(layer && _stricmp(pXmlIdmap->Attribute("type"),"xml")==0)
 				{
 					string strXmlLayer=pXmlIdmap->Attribute("file");
+					if(!strSkinPath.empty()) strXmlLayer=strSkinPath+"\\"+strXmlLayer;
 					if(strXmlLayer.length())
 					{//找到一个窗口描述XML
 						TiXmlDocument xmlDocLayer;
@@ -339,7 +342,13 @@ int _tmain(int argc, _TCHAR* argv[])
 							pszValue=xmlEle->Attribute("id_name");
 							if(pszValue) MultiByteToWideChar(CP_UTF8,0,pszValue,-1,rec.szID,200);
 							pszValue=xmlEle->Attribute("file");
-							if(pszValue) MultiByteToWideChar(CP_UTF8,0,pszValue,-1,rec.szPath,MAX_PATH);
+							if(pszValue)
+							{
+								string str;
+								if(!strSkinPath.empty()){ str=strSkinPath+"\\"+pszValue;}
+								else str=pszValue;
+								MultiByteToWideChar(CP_UTF8,0,str.c_str(),str.length(),rec.szPath,MAX_PATH);
+							}
 
 							if(rec.szType[0] && rec.nID && rec.szPath[0])
 							{

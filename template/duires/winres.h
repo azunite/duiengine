@@ -1,6 +1,5 @@
 #pragma once
 
-
 /*<---------------------------RES_BUILDER:begin-----------------------------------*/
 #define	maindlg		65537
 #define	close		1

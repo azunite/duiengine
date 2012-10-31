@@ -7,8 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "afxres.h"
-
+#include "afxres.h"
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -34,7 +33,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\0"
+    "#include ""afxres.h""\0"
 END
 
 3 TEXTINCLUDE 
@@ -43,7 +42,7 @@ BEGIN
     "LANGUAGE 4, 2\r\n"
     "#pragma code_page(936)\r\n"
     "#include ""duires\\winres.rc2"" //DUI资源\r\n"
-    "#endi\0"
+    "#endif\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -93,6 +92,15 @@ END
 //
 
 IDR_NAME2ID             XML2                    "duires\\name2id.xml"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_DUIDEMO             ICON                    "duires\\dui-demo.ico"
 #endif    // 中文(中华人民共和国) resources
 /////////////////////////////////////////////////////////////////////////////
 
