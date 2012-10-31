@@ -1,0 +1,14 @@
+﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="1" translucent="0"  nomaxsize="0">
+	<body>
+    <dlg name="maindlg" pos="0,0,-0,-0" class="cls_dlg_frame">
+      <caption pos="0,0,-0,29">
+        <text pos="11,9" class="cls_txt_red">DUI-Demo ver:%str1%</text>
+        <imgbtn id="1" name="close" skin="btn_sys_close" pos="-45,0" tip="close" animate="0"/>
+      </caption>
+    </dlg>
+	</body>
+</layer>
+
+
+
+

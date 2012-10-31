@@ -64,3 +64,5 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #pragma comment(lib,"shlwapi.lib")
 #pragma comment(lib,"Msimg32.lib")
 #pragma comment(lib,"Comctl32.lib")
+
+#pragma warning(disable:4251)
