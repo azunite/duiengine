@@ -16,9 +16,16 @@
 namespace DuiEngine{
 
 
-CDuiItemPanel::CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml):m_pFrmHost(pFrameHost),m_dwData(0),m_crBk(CLR_INVALID),m_crSelBk(RGB(0,0,128))
+CDuiItemPanel::CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml,CDuiItemContainer *pItemContainer)
+:m_pFrmHost(pFrameHost)
+,m_pItemContainer(pItemContainer)
+,m_dwData(0)
+,m_crBk(CLR_INVALID)
+,m_crSelBk(RGB(0,0,128))
 {
 	DUIASSERT(m_pFrmHost);
+	if(!m_pItemContainer) m_pItemContainer=dynamic_cast<CDuiItemContainer*>(m_pFrmHost);
+	DUIASSERT(m_pItemContainer);
 	SetContainer(this);
 	Load(pXml);
 }
@@ -69,19 +76,16 @@ HDC CDuiItemPanel::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
 	CRect rcItem=GetItemRect();
 	CRect rcInvalid=rc;
 	rcInvalid.OffsetRect(rcItem.TopLeft());
-	CDCHandle dc=m_pFrmHost->GetContainer()->OnGetDuiDC(rcInvalid,gdcFlags);
-	dc.OffsetViewportOrg(rcItem.left,rcItem.top);
-	return dc;
+	HDC hdc=m_pFrmHost->GetDuiDC(rcInvalid,gdcFlags);
+	OffsetViewportOrgEx(hdc,rcItem.left,rcItem.top,NULL);
+	return hdc;
 }
 
 void CDuiItemPanel::OnReleaseDuiDC(HDC hdc,CRect &rc,DWORD gdcFlags)
 {
 	CRect rcItem=GetItemRect();
-	CDCHandle dc(hdc);
-	dc.OffsetViewportOrg(-rcItem.left,-rcItem.top);
-	CRect rcNew=rc;
-	rcNew.OffsetRect(rcItem.TopLeft());
-	m_pFrmHost->GetContainer()->OnReleaseDuiDC(hdc,rcNew,gdcFlags);
+	OffsetViewportOrgEx(hdc,-rcItem.left,-rcItem.top,NULL);
+	m_pFrmHost->ReleaseDuiDC(hdc);
 }
 
 void CDuiItemPanel::OnRedraw(const CRect &rc)
@@ -91,31 +95,26 @@ void CDuiItemPanel::OnRedraw(const CRect &rc)
 	CRect rcItem=GetItemRect();
 	if(!rcItem.IsRectNull() && m_pFrmHost->IsVisible(TRUE))
 	{
-		CRect rcInvalid=rc;
-		rcInvalid.OffsetRect(rcItem.TopLeft());
-		HDC hdc=m_pFrmHost->GetDuiDC(&rcInvalid);
-		m_pFrmHost->DuiSendMessage(WM_ERASEBKGND,(WPARAM)hdc);
-		CDCHandle dc(hdc);
-		dc.OffsetViewportOrg(rcItem.left,rcItem.top);
+		CDCHandle dc=GetDuiDC((const LPRECT)&rc,OLEDC_PAINTBKGND);
 		CRgn rgn;
 		rgn.CreateRectRgnIndirect(&rc);
 		RedrawRegion(dc,rgn);
-		rgn.DeleteObject();
-		dc.OffsetViewportOrg(-rcItem.left,-rcItem.top);
-		m_pFrmHost->ReleaseDuiDC(hdc);
+		ReleaseDuiDC(dc);
 	}
 }
 
 BOOL CDuiItemPanel::OnReleaseDuiCapture()
 {
 	if(!__super::OnReleaseDuiCapture()) return FALSE;
-	m_pFrmHost->DuiSendMessage(UM_ONITEMSETCAPTURE,0);
+	m_pItemContainer->OnItemSetCapture(this,FALSE);
+// 	m_pFrmHost->DuiSendMessage(UM_ONITEMSETCAPTURE,0);
 	return TRUE;
 }
 
 HDUIWND CDuiItemPanel::OnSetDuiCapture(HDUIWND hDuiWNd)
 {
-	m_pFrmHost->DuiSendMessage(UM_ONITEMSETCAPTURE,(WPARAM)this);
+	m_pItemContainer->OnItemSetCapture(this,TRUE);
+// 	m_pFrmHost->DuiSendMessage(UM_ONITEMSETCAPTURE,(WPARAM)this);
 	return __super::OnSetDuiCapture(hDuiWNd);
 }
 
@@ -182,14 +181,15 @@ BOOL CDuiItemPanel::NeedRedrawWhenStateChange(){return TRUE;}
 
 CRect CDuiItemPanel::GetItemRect()
 {
-	CRect rcRet;
-	m_pFrmHost->DuiSendMessage(UM_ONITEMGETRECT,(WPARAM)this,(LPARAM)&rcRet);
-	return rcRet;
+	CRect rcItem;
+	m_pItemContainer->OnItemGetRect(this,rcItem);
+	return rcItem;
 }
 void CDuiItemPanel::SetItemCapture(BOOL bCapture)
 {
-	m_pFrmHost->DuiSendMessage(UM_ONITEMSETCAPTURE,0,(LPARAM)(bCapture?this:NULL));
+	m_pItemContainer->OnItemSetCapture(this,bCapture);
 }
+
 void CDuiItemPanel::SetItemData(DWORD dwData){m_dwData=dwData;}
 DWORD CDuiItemPanel::GetItemData(){return m_dwData;}
 

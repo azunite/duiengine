@@ -43,6 +43,8 @@ CDuiWindow::CDuiWindow()
 , m_pCurMsg(NULL)
 , m_pBgSkin(NULL)
 , m_pNcSkin(NULL)
+, m_nSaveDC(0)
+, m_gdcFlags(-1)
 {
 }
 
@@ -1393,14 +1395,26 @@ void CDuiWindow::OnKillDuiFocus()
 
 HDC CDuiWindow::GetDuiDC(const LPRECT pRc/*=NULL*/,DWORD gdcFlags/*=0*/)
 {
+	DUIASSERT(m_gdcFlags==-1);
 	m_rcGetDC=m_rcWindow;
 	m_gdcFlags=gdcFlags;
+	BOOL bClip=FALSE;
 	if(pRc)
 	{
 		m_rcGetDC.IntersectRect(pRc,&m_rcWindow);
+		bClip=!m_rcGetDC.EqualRect(pRc);
 	}
 	HDC hdc=GetContainer()->OnGetDuiDC(m_rcGetDC,gdcFlags);
-
+	if(bClip)
+	{
+		m_nSaveDC=SaveDC(hdc);
+		CRgn rgn;
+		rgn.CreateRectRgnIndirect(&m_rcGetDC);
+		SelectClipRgn(hdc,rgn);
+	}else
+	{
+		m_nSaveDC=0;
+	}
 	if(gdcFlags&OLEDC_PAINTBKGND) 
 		PaintBackground(hdc,&m_rcGetDC);
 
@@ -1411,7 +1425,10 @@ void CDuiWindow::ReleaseDuiDC(HDC hdc)
 {
 	if(m_gdcFlags & OLEDC_PAINTBKGND) //画了背景，自动画前景
 		PaintForeground(hdc,&m_rcGetDC);
+	if(m_nSaveDC!=0) RestoreDC(hdc,m_nSaveDC);
 	GetContainer()->OnReleaseDuiDC(hdc,m_rcGetDC,m_gdcFlags);
+	m_nSaveDC=0;
+	m_gdcFlags=-1;
 }
 
 HDUIWND CDuiWindow::GetDuiCapture()

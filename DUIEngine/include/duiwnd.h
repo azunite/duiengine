@@ -446,7 +446,7 @@ public:
 protected:
 	CRect		m_rcGetDC;
 	DWORD		m_gdcFlags;
-
+	int			m_nSaveDC;
 public:
 	HDUIWND GetDuiCapture();
 	HDUIWND SetDuiCapture();

@@ -11,14 +11,19 @@
 
 namespace DuiEngine{
 
-#define UM_ONITEMSETCAPTURE	(WM_USER+100)
-#define UM_ONITEMGETRECT	(WM_USER+101)
+	class CDuiItemPanel;
 
+	class DUI_EXP CDuiItemContainer
+	{
+	public:
+		virtual void OnItemSetCapture(CDuiItemPanel *pItem,BOOL bCapture)=NULL;
+		virtual BOOL OnItemGetRect(CDuiItemPanel *pItem,CRect &rcItem)=NULL;
+	};
 
 class DUI_EXP CDuiItemPanel : public CDuiFrame
 {
 public:
-	CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml);
+	CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml,CDuiItemContainer *pItemContainer=NULL);
 
 	virtual void OnFinalRelease();
 
@@ -67,6 +72,7 @@ public:
 
 protected:
 	CDuiWindow * m_pFrmHost;
+	CDuiItemContainer * m_pItemContainer;
 	COLORREF m_crBk, m_crSelBk;
 	DWORD		m_dwData;
 };

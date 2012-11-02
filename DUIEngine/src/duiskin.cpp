@@ -179,15 +179,11 @@ CDuiSkinGradation::CDuiSkinGradation()
 void CDuiSkinGradation::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha)
 {
 	CRect rcGradation = rcDraw;
-	CRgn rgnDraw;
 
-	rgnDraw.CreateRectRgn(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
+	ALPHAINFO ai;
+	CGdiAlpha::AlphaBackup(dc,&rcDraw,ai);
 
-	CGdiAlpha::FillSolidRect(dc,&rcDraw, m_crTo);
-
-	int nID = dc.SaveDC();
-
-	dc.SelectClipRgn(rgnDraw);
+	dc.FillSolidRect(&rcDraw, m_crTo);
 
 	if (0 == m_uDirection)
 	{
@@ -201,8 +197,7 @@ void CDuiSkinGradation::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAl
 			rcGradation.bottom = rcGradation.top + m_nSize;
 		GradientFillRectV(dc, rcGradation, m_crFrom, m_crTo);
 	}
-
-	dc.RestoreDC(nID);
+	CGdiAlpha::AlphaRestore(dc,ai);
 }
 
 

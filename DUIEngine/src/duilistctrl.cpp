@@ -169,38 +169,6 @@ int CDuiListBox::GetCurSel()
 	return m_iSelItem;
 }
 
-LRESULT CDuiListBox::OnGetItemRect(UINT,WPARAM wParam,LPARAM lParam)
-{
-	CDuiItemPanel *pItemObj=(CDuiItemPanel*)wParam;
-	LPRECT pRcItem=(LPRECT)lParam;
-
-	CRect rcClient;
-	GetClient(&rcClient);
-
-	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
-	int nPageItems=(rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
-
-	for(int iItem = iFirstVisible; iItem<GetItemCount() && iItem <iFirstVisible+nPageItems; iItem++)
-	{
-		if(m_arrItems[iItem] == pItemObj)
-		{
-			CRect rcRet(0,0,rcClient.Width(),m_nItemHei);
-			rcRet.OffsetRect(rcClient.left,rcClient.top-m_ptOrgin.y+iItem*m_nItemHei);
-			*pRcItem=rcRet;
-			break;
-		}
-	}
-	return 1;
-}
-
-LRESULT CDuiListBox::OnSetItemCapture(UINT uMsg,WPARAM wParam, LPARAM lParam)
-{
-	m_pCapturedFrame= (CDuiItemPanel*)wParam;
-	if(m_pCapturedFrame) SetDuiCapture();
-	else ReleaseDuiCapture();
-	return 0;
-}
-
 int CDuiListBox::GetItemObjIndex(CDuiPanel *pItemObj)
 {
 	if(m_iSelItem!=-1 && m_arrItems[m_iSelItem]==pItemObj) return m_iSelItem;
@@ -269,7 +237,6 @@ void CDuiListBox::RedrawItem(int iItem)
 		CRect rcItem(0,0,rcClient.Width(),m_nItemHei);
 		rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrgin.y);
 		rcItem.OffsetRect(rcClient.TopLeft());
-		rcItem.IntersectRect(rcItem,rcClient);
 		CDCHandle dc=GetDuiDC(&rcItem,OLEDC_PAINTBKGND);
 		DuiDCPaint duiDC;
 		BeforePaint(dc,duiDC);
@@ -307,8 +274,6 @@ int CDuiListBox::GetScrollLineSize(BOOL bVertical)
 
 void CDuiListBox::OnPaint(CDCHandle dc)
 {
-	if(IsUpdateLocked()) return;
-
 	DuiDCPaint duiDC;
 	BeforePaint(dc,duiDC);
 
@@ -603,6 +568,40 @@ BOOL CDuiListBox::OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect
 	if(m_iHoverItem==-1)
 		return __super::OnUpdateToolTip(hCurTipHost,hNewTipHost,rcTip,strTip);
 	return m_arrItems[m_iHoverItem]->OnUpdateToolTip(hCurTipHost,hNewTipHost,rcTip,strTip);
+}
+
+void CDuiListBox::OnItemSetCapture(CDuiItemPanel *pItem,BOOL bCapture )
+{
+	if(bCapture)
+	{
+		SetDuiCapture();
+		m_pCapturedFrame=pItem;
+	}else if(pItem==m_pCapturedFrame)
+	{
+		ReleaseDuiCapture();
+		m_pCapturedFrame=NULL;
+	}
+}
+
+BOOL CDuiListBox::OnItemGetRect(CDuiItemPanel *pItem,CRect &rcItem )
+{
+	CRect rcClient;
+	GetClient(&rcClient);
+
+	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
+	int nPageItems=(rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
+
+	for(int iItem = iFirstVisible; iItem<GetItemCount() && iItem <iFirstVisible+nPageItems; iItem++)
+	{
+		if(m_arrItems[iItem] == pItem)
+		{
+			CRect rcRet(0,0,rcClient.Width(),m_nItemHei);
+			rcRet.OffsetRect(rcClient.left,rcClient.top-m_ptOrgin.y+iItem*m_nItemHei);
+			rcItem=rcRet;
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 }//namespace DuiEngine

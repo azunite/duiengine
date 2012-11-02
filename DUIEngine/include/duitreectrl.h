@@ -27,6 +27,7 @@ public:
 
 class DUI_EXP CDuiTreeCtrl
 	: public CDuiScrollView
+	, public CDuiItemContainer
 	, protected CSTree<CDuiTreeItem *>
 {
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiTreeCtrl, "treectrl")
@@ -80,11 +81,6 @@ protected:
 	void DrawItem(CDCHandle & dc, CRect & rc, HSTREEITEM hItem);
 	void OnPaint(CDCHandle dc);
 
-	LRESULT OnSetItemCapture(UINT uMsg,WPARAM wParam, LPARAM lParam);
-
-	LRESULT OnGetItemRect(UINT,WPARAM wParam,LPARAM lParam);
-
-
 	void OnLButtonDown(UINT nFlags,CPoint pt);
 	void OnLButtonUp(UINT nFlags,CPoint pt);
 	void OnLButtonDbClick(UINT nFlags,CPoint pt);
@@ -97,6 +93,8 @@ protected:
 
 	BOOL IsAncestor(HSTREEITEM hItem1,HSTREEITEM hItem2);
 protected:
+	virtual void OnItemSetCapture(CDuiItemPanel *pItem,BOOL bCapture);
+	virtual BOOL OnItemGetRect(CDuiItemPanel *pItem,CRect &rcItem);
 
 	HSTREEITEM	m_hSelItem;
 	HSTREEITEM	m_hHoverItem;
@@ -128,8 +126,6 @@ protected:
 		MSG_WM_LBUTTONUP(OnLButtonUp)
 		MSG_WM_MOUSEMOVE(OnMouseMove)
 		MSG_WM_MOUSELEAVE(OnMouseLeave)
-		MESSAGE_HANDLER_EX(UM_ONITEMSETCAPTURE,OnSetItemCapture)
-		MESSAGE_HANDLER_EX(UM_ONITEMGETRECT,OnGetItemRect)
 	DUIWIN_END_MSG_MAP()
 };
 

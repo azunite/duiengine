@@ -19,12 +19,18 @@ class DUI_EXP CGdiAlpha
 {
 private:
 	static BYTE s_byAlphaBack[MAX_ALPHABUF];
+
+	static BOOL s_bAlphaEnable;
+
 	static LPBYTE ALPHABACKUP(BITMAP *pBitmap,int x,int y,int cx,int cy);
 	//恢复位图的Alpha通道
 	static void ALPHARESTORE(BITMAP *pBitmap,int x,int y,int cx,int cy,LPBYTE lpAlpha);
 
 	static void _swap(int &a,int &b);
 public:
+	static void SetAlphaEnable(BOOL bEnableAlpha) {s_bAlphaEnable=bEnableAlpha;}
+	static BOOL IsAlphaEnable(){return s_bAlphaEnable;}
+
 	static BOOL AlphaBackup(HDC hdc,LPCRECT pRect,ALPHAINFO &alphaInfo);
 
 	static void AlphaRestore(HDC hdc,const ALPHAINFO &alphaInfo);

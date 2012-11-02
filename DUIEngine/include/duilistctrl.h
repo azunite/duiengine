@@ -13,6 +13,7 @@
 namespace DuiEngine{
 
 class DUI_EXP CDuiListBox :public CDuiScrollView
+						  ,public CDuiItemContainer
 {
 public:
 
@@ -39,11 +40,7 @@ public:
 
 	int GetCurSel();
 
-	LRESULT OnGetItemRect(UINT,WPARAM wParam,LPARAM lParam);
-	
-	LRESULT OnSetItemCapture(UINT uMsg,WPARAM wParam, LPARAM lParam);
 	int GetItemObjIndex(CDuiPanel *pItemObj);
-
 
 	CDuiPanel * GetDuiItem(int iItem);
 	CDuiPanel * GetDuiItem(CDuiPanel *pItem);
@@ -64,6 +61,9 @@ public:
 
 	virtual BOOL Load(TiXmlElement* pTiXmlElem);
 protected:
+	virtual void OnItemSetCapture(CDuiItemPanel *pItem,BOOL bCapture);
+	virtual BOOL OnItemGetRect(CDuiItemPanel *pItem,CRect &rcItem);
+
 	virtual int GetScrollLineSize(BOOL bVertical);
 
 	void OnPaint(CDCHandle dc);
@@ -124,8 +124,6 @@ public:
 		MSG_WM_LBUTTONUP(OnLButtonUp)
 		MSG_WM_MOUSEMOVE(OnMouseMove)
 		MSG_WM_MOUSELEAVE(OnMouseLeave)
-		MESSAGE_HANDLER_EX(UM_ONITEMSETCAPTURE,OnSetItemCapture)
-		MESSAGE_HANDLER_EX(UM_ONITEMGETRECT,OnGetItemRect)
 	DUIWIN_END_MSG_MAP()
 };
 

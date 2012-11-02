@@ -497,53 +497,6 @@ void CDuiTreeCtrl::OnPaint(CDCHandle dc)
 	AfterPaint(dc,duiDC);
 }
 
-LRESULT CDuiTreeCtrl::OnSetItemCapture(UINT uMsg,WPARAM wParam, LPARAM lParam)
-{
-	m_pCapturedFrame= (CDuiItemPanel*)wParam;
-	if(m_pCapturedFrame) SetDuiCapture();
-	else ReleaseDuiCapture();
-	return 0;
-}
-
-LRESULT CDuiTreeCtrl::OnGetItemRect(UINT,WPARAM wParam,LPARAM lParam)
-{
-	CDuiTreeItem *pItemObj=dynamic_cast<CDuiTreeItem*>((CDuiItemPanel*)wParam);
-	if(pItemObj->m_bVisible==FALSE) return 0;
-
-	LPRECT pRcItem=(LPRECT)lParam;
-
-	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
-	int nPageItems=(m_rcWindow.Height()+m_nItemHei-1)/m_nItemHei+1;
-
-	int iVisible=-1;
-	HSTREEITEM hItem=CSTree<CDuiTreeItem*>::GetNextItem(STVI_ROOT);
-	while(hItem)
-	{
-		CDuiTreeItem *pItem=CSTree<CDuiTreeItem*>::GetItem(hItem);
-		if(pItem->m_bVisible) iVisible++;
-		if(iVisible > iFirstVisible+nPageItems) break;
-		if(iVisible>=iFirstVisible && pItem==pItemObj)
-		{
-			CRect rcRet(m_nIndent*pItemObj->m_nLevel,0,m_rcWindow.Width(),m_nItemHei);
-			rcRet.OffsetRect(m_rcWindow.left,m_rcWindow.top-m_ptOrgin.y+iVisible*m_nItemHei);
-			*pRcItem=rcRet;
-			break;
-		}
-		if(pItem->m_bCollapsed)
-		{//跳过被折叠的项
-			HSTREEITEM hChild= GetChildItem(hItem,FALSE);
-			while(hChild)
-			{
-				hItem=hChild;
-				hChild= GetChildItem(hItem,FALSE);
-			}
-		}
-		hItem=CSTree<CDuiTreeItem*>::GetNextItem(hItem);
-	}
-	return 1;
-}
-
-
 void CDuiTreeCtrl::OnLButtonDown(UINT nFlags,CPoint pt)
 {
 	if(m_pCapturedFrame)
@@ -722,4 +675,52 @@ BOOL CDuiTreeCtrl::IsAncestor(HSTREEITEM hItem1,HSTREEITEM hItem2)
 	return FALSE;
 }
 
+void CDuiTreeCtrl::OnItemSetCapture( CDuiItemPanel *pItem,BOOL bCapture )
+{
+	if(bCapture)
+	{
+		m_pCapturedFrame=pItem;
+		SetDuiCapture();
+	}else if(pItem==m_pCapturedFrame)
+	{
+		ReleaseDuiCapture();
+		m_pCapturedFrame=NULL;
+	}
+}
+
+BOOL CDuiTreeCtrl::OnItemGetRect( CDuiItemPanel *pItem,CRect &rcItem )
+{
+	CDuiTreeItem *pItemObj=dynamic_cast<CDuiTreeItem*>(pItem);
+	if(pItemObj->m_bVisible==FALSE) return FALSE;
+
+	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
+	int nPageItems=(m_rcWindow.Height()+m_nItemHei-1)/m_nItemHei+1;
+
+	int iVisible=-1;
+	HSTREEITEM hItem=CSTree<CDuiTreeItem*>::GetNextItem(STVI_ROOT);
+	while(hItem)
+	{
+		CDuiTreeItem *pItem=CSTree<CDuiTreeItem*>::GetItem(hItem);
+		if(pItem->m_bVisible) iVisible++;
+		if(iVisible > iFirstVisible+nPageItems) break;
+		if(iVisible>=iFirstVisible && pItem==pItemObj)
+		{
+			CRect rcRet(m_nIndent*pItemObj->m_nLevel,0,m_rcWindow.Width(),m_nItemHei);
+			rcRet.OffsetRect(m_rcWindow.left,m_rcWindow.top-m_ptOrgin.y+iVisible*m_nItemHei);
+			rcItem=rcRet;
+			return TRUE;
+		}
+		if(pItem->m_bCollapsed)
+		{//跳过被折叠的项
+			HSTREEITEM hChild= GetChildItem(hItem,FALSE);
+			while(hChild)
+			{
+				hItem=hChild;
+				hChild= GetChildItem(hItem,FALSE);
+			}
+		}
+		hItem=CSTree<CDuiTreeItem*>::GetNextItem(hItem);
+	}
+	return FALSE;
+}
 }//namespace DuiEngine

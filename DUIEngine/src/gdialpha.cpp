@@ -6,9 +6,11 @@ namespace DuiEngine{
 #define  MAX_ALPHABUF	1<<16
 
 BYTE CGdiAlpha::s_byAlphaBack[MAX_ALPHABUF];
+BOOL CGdiAlpha::s_bAlphaEnable=TRUE;
 
 LPBYTE CGdiAlpha::ALPHABACKUP(BITMAP *pBitmap,int x,int y,int cx,int cy)
 {
+	if(!s_bAlphaEnable) return NULL;
 	LPBYTE lpAlpha=s_byAlphaBack;
 	if(x+cx>=pBitmap->bmWidth) cx=pBitmap->bmWidth-x;
 	if(y+cy>=pBitmap->bmHeight) cy=pBitmap->bmHeight-y;
@@ -31,6 +33,8 @@ LPBYTE CGdiAlpha::ALPHABACKUP(BITMAP *pBitmap,int x,int y,int cx,int cy)
 //恢复位图的Alpha通道
 void CGdiAlpha::ALPHARESTORE(BITMAP *pBitmap,int x,int y,int cx,int cy,LPBYTE lpAlpha)
 {
+	if(!s_bAlphaEnable) return;
+
 	if(x+cx>=pBitmap->bmWidth) cx=pBitmap->bmWidth-x;
 	if(y+cy>=pBitmap->bmHeight) cy=pBitmap->bmHeight-y;
 	if(cx<0 || cy<0) return;
