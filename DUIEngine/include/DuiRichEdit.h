@@ -340,6 +340,7 @@ protected:
 	UINT	m_fAllowBeep		:1;	// Whether message beep is allowed in the control
 	UINT	m_fWantTab			:1;	// Whether control will deal with tab input
 	UINT	m_fSingleLineVCenter:1;	// Whether control that is single line will be vertical centered
+	UINT	m_fScrollPending	:1; // Whether scroll is activated by richedit or by panelex.
 	CDuiTextHost	*m_pTxtHost;
 };
 

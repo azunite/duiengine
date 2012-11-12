@@ -23,7 +23,7 @@ void CDuiCaption::OnLButtonDblClk( UINT nFlags, CPoint point )
 {
 	HWND hHost=GetContainer()->GetHostHwnd();
 
-	if (GetWindowLong(hHost,GWL_EXSTYLE) & WS_THICKFRAME)
+	if (GetWindowLong(hHost,GWL_STYLE) & WS_THICKFRAME)
 	{
 		if (WS_MAXIMIZE == (GetWindowLong(hHost,GWL_STYLE) & WS_MAXIMIZE))
 			SendMessage(hHost,WM_SYSCOMMAND, SC_RESTORE | HTCAPTION,0);

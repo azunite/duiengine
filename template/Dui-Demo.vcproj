@@ -511,6 +511,10 @@
 			Name="resource files"
 			>
 			<File
+				RelativePath=".\duires\dui-demo.ico"
+				>
+			</File>
+			<File
 				RelativePath=".\dui-demo.rc"
 				>
 				<FileConfiguration
@@ -599,10 +603,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath=".\duires\dui-demo.ico"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

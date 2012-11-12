@@ -238,10 +238,15 @@ BOOL CDuiTextHost::TxSetScrollRange( INT fnBar, LONG nMinPos, INT nMaxPos, BOOL 
 
 BOOL CDuiTextHost::TxSetScrollPos( INT fnBar, INT nPos, BOOL fRedraw )
 {
+	BOOL bRet=FALSE;
+	if(m_pDuiRichEdit->m_fScrollPending) return TRUE;
+	m_pDuiRichEdit->m_fScrollPending=TRUE;
 	if(fnBar==SB_HORZ)
-		return m_pDuiRichEdit->SetScrollPos(FALSE,nPos,fRedraw);
+		bRet= m_pDuiRichEdit->SetScrollPos(FALSE,nPos,fRedraw);
 	else
-		return m_pDuiRichEdit->SetScrollPos(TRUE,nPos,fRedraw);
+		bRet= m_pDuiRichEdit->SetScrollPos(TRUE,nPos,fRedraw);
+	m_pDuiRichEdit->m_fScrollPending=FALSE;
+	return bRet;
 }
 
 void CDuiTextHost::TxInvalidateRect( LPCRECT prc, BOOL fMode )
@@ -259,7 +264,7 @@ void CDuiTextHost::TxViewChange( BOOL fUpdate )
 {
 	if(fUpdate)
 	{
-		UpdateWindow(m_pDuiRichEdit->GetContainer()->GetHostHwnd());
+		m_pDuiRichEdit->NotifyInvalidate();
 	}
 }
 
@@ -468,6 +473,7 @@ CDuiRichEdit::CDuiRichEdit()
 ,m_fEnableAutoWordSel(TRUE)
 ,m_fWantTab(FALSE)
 ,m_fSingleLineVCenter(TRUE)
+,m_fScrollPending(FALSE)
 ,m_cchTextMost(cInitTextMax)
 ,m_chPasswordChar(_T('*'))
 ,m_lAccelPos(-1)
@@ -595,7 +601,13 @@ void CDuiRichEdit::OnDuiTimerEx( UINT_PTR idEvent )
 
 BOOL CDuiRichEdit::OnScroll( BOOL bVertical,UINT uCode,int nPos )
 {
+	if(m_fScrollPending) return FALSE;
 	LRESULT lresult=-1;
+// 	POINT pt={0};
+// 	pt.x=GetScrollPos(FALSE);
+// 	pt.y=GetScrollPos(TRUE);
+// 	DUITRACE(_T("\nedit scroll:(%d,%d)"),pt.x,pt.y);
+// 	m_pTxtHost->GetTextService()->TxSendMessage(EM_SETSCROLLPOS,0,(LPARAM)&pt,&lresult);
 	m_pTxtHost->GetTextService()->TxSendMessage(bVertical?WM_VSCROLL:WM_HSCROLL,MAKEWPARAM(uCode,nPos),0,&lresult);
 	return lresult==0;
 }
@@ -988,7 +1000,7 @@ LRESULT CDuiRichEdit::OnNcCalcSize( BOOL bCalcValidRects, LPARAM lParam )
 			m_rcInset.bottom=DYtoHimetricY(m_rcInsetPixel.bottom,yPerInch);
 		}
 		ReleaseDC(GetContainer()->GetHostHwnd(),hdc);
-		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_CLIENTRECTCHANGE, TXTBIT_CLIENTRECTCHANGE);
+		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(-1,-1);
 	}
 	return 0;
 }

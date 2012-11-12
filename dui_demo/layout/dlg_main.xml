@@ -1,4 +1,4 @@
-﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="1" translucent="0"  nomaxsize="0">
+﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="0" translucent="0"  nomaxsize="0">
 	<body>
     <dlg id="100" pos="0,0,-0,-0" class="cls_dlg_frame">
       <caption id="101" pos="0,0,-0,29">
@@ -9,7 +9,7 @@
         <imgbtn id="5" name="btn_minimize" skin="btn_sys_minimize" pos="-121,0" animate="0" />
       </caption>
 
-      <tabctrl pos="5,29,-5,-5" id="2000" cursel="1" animatesteps="10">
+      <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10">
         <tab id="113" title="miscellaneous" sep="5">
           <img pos="0,0" skin="icons" tip="img tip" msgtransparent="0"/>
           <check id="1300" pos="40,20" crtext="ff0000" >test1</check>
@@ -75,7 +75,8 @@
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+                <scrollbar pos="300,3,-10,-3" vertical="0" skin="sb_common" min="0" max="100" page="10" value="5"/>
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>

@@ -1,4 +1,4 @@
-// magicbox2.cpp : main source file for magicbox2.exe
+// dui-demo.cpp : main source file
 //
 
 #include "stdafx.h"
@@ -15,11 +15,11 @@
 #pragma comment(lib,"zlib.lib")
 #pragma comment(lib,"zipresprovider.lib")
 #endif 
-
+ 
 #ifdef _DEBUG
 #include <vld.h>//使用Vitural Leaker Detector来检测内存泄漏，可以从http://vld.codeplex.com/ 下载
 #endif
- 
+
 #include "MainDlg.h"
  
 
