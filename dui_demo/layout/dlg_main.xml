@@ -1,4 +1,4 @@
-﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="0" translucent="0"  nomaxsize="0">
+﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="1" translucent="0"  nomaxsize="0">
 	<body>
     <dlg id="100" pos="0,0,-0,-0" class="cls_dlg_frame">
       <caption id="101" pos="0,0,-0,29">
