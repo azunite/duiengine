@@ -169,13 +169,9 @@ public:
 	void OnPaint(CDCHandle dc);
 
 	LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
+
 	BOOL SetSkin(CDuiSkinBase *pSkin,int nSubID=0);
-	
-	void SetIcon(int nSubID);
 
-	BOOL SetImage(LPCTSTR pszFileName,BOOL bBitmap,LPRECT pRcMargin=NULL,BOOL bTile=FALSE);
-
-	BOOL SetImage(HBITMAP hBitmap, LPRECT pRcMargin=NULL, BOOL bTile=FALSE,BOOL bGdiplus=FALSE);
 protected:
 	BOOL m_bManaged;
 	int m_nSubImageID;

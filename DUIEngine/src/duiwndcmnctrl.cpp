@@ -209,9 +209,7 @@ CDuiImageWnd::~CDuiImageWnd()
 {
 	if(m_bManaged && m_pSkin)
 	{
-		CDuiImgBase *pImg=m_pSkin->GetImage();
-		if(pImg) delete pImg;
-		delete m_pSkin;
+		m_pSkin->Release();
 	}
 	m_pSkin=NULL;
 }
@@ -242,24 +240,18 @@ LRESULT CDuiImageWnd::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
 	return 0;
 }
 
-void CDuiImageWnd::SetIcon(int nSubID)
-{
-	m_nSubImageID=nSubID;
-}
-
 BOOL CDuiImageWnd::SetSkin(CDuiSkinBase *pSkin,int nSubID/*=0*/)
 {
 	if(IsVisible(TRUE)) NotifyInvalidate();
 	if(m_bManaged && m_pSkin)
 	{
-		CDuiImgBase *pImg=m_pSkin->GetImage();
-		if(pImg) delete pImg;
-		delete m_pSkin;
+		m_pSkin->Release();
+		m_bManaged=FALSE;
 	}
-	m_pSkin=NULL;
-
+	if(!pSkin) return FALSE;
 	m_pSkin=pSkin;
-	m_bManaged=FALSE;
+	m_pSkin->AddRef();
+	m_bManaged=TRUE;
 	m_nSubImageID=nSubID;
 	if(m_dlgpos.nCount==2 && m_pParent)
 	{//重新计算坐标
@@ -268,75 +260,6 @@ BOOL CDuiImageWnd::SetSkin(CDuiSkinBase *pSkin,int nSubID/*=0*/)
 	if(IsVisible(TRUE)) NotifyInvalidate();
 	return TRUE;
 }
-
-BOOL CDuiImageWnd::SetImage(LPCTSTR pszFileName,BOOL bBitmap,LPRECT pRcMargin/*=NULL*/,BOOL bTile/*=FALSE*/)
-{
-	if(IsVisible(TRUE)) NotifyInvalidate();
-	CDuiImgBase *pImg=NULL;
-	if(bBitmap) pImg=new CDuiBitmap;
-	else pImg=new CDuiImgX;
-	if(!pImg->LoadImg(pszFileName))
-	{
-		delete pImg;
-		return FALSE;
-	}
-
-	if(m_bManaged && m_pSkin)
-	{
-		CDuiImgBase *pImg=m_pSkin->GetImage();
-		if(pImg) delete pImg;
-		delete m_pSkin;
-	}
-
-	m_pSkin=new CDuiSkinImgFrame;
-	((CDuiSkinImgFrame*)m_pSkin)->SetImage(pImg);
-	((CDuiSkinImgFrame*)m_pSkin)->SetPropTile(bTile);
-	if(pRcMargin) ((CDuiSkinImgFrame*)m_pSkin)->SetMargin(pRcMargin->left,pRcMargin->top,pRcMargin->right,pRcMargin->bottom);
-	else ((CDuiSkinImgFrame*)m_pSkin)->SetMargin(0,0,0,0);
-	m_bManaged=TRUE;
-	m_nSubImageID=0;
-
-	if(m_dlgpos.nCount==2 && m_pParent)
-	{//重新计算坐标
-		m_pParent->DuiSendMessage(WM_CALCWNDPOS,0,(LPARAM)this);
-	}
-	if(IsVisible(TRUE)) NotifyInvalidate();
-
-	return TRUE;
-}
-
-BOOL CDuiImageWnd::SetImage(HBITMAP hBitmap, LPRECT pRcMargin/*=NULL*/, BOOL bTile/*=FALSE*/,BOOL bGdiplus/*=FALSE*/)
-{
-	if(IsVisible(TRUE)) NotifyInvalidate();
-	CDuiImgBase *pImg =NULL;
-	if(bGdiplus) pImg= new CDuiImgX(hBitmap);
-	else pImg= new CDuiBitmap(hBitmap);
-
-	if(m_bManaged && m_pSkin)
-	{
-		CDuiImgBase *pImg=m_pSkin->GetImage();
-		if(pImg) delete pImg;
-		delete m_pSkin;
-	}
-
-	m_pSkin=new CDuiSkinImgFrame;
-	((CDuiSkinImgFrame*)m_pSkin)->SetImage(pImg);
-	((CDuiSkinImgFrame*)m_pSkin)->SetPropTile(bTile);
-	if(pRcMargin) ((CDuiSkinImgFrame*)m_pSkin)->SetMargin(pRcMargin->left,pRcMargin->top,pRcMargin->right,pRcMargin->bottom);
-	else ((CDuiSkinImgFrame*)m_pSkin)->SetMargin(0,0,0,0);
-	m_bManaged=TRUE;
-	m_nSubImageID=0;
-
-	if(m_dlgpos.nCount==2 && m_pParent)
-	{//重新计算坐标
-		m_pParent->DuiSendMessage(WM_CALCWNDPOS,0,(LPARAM)this);
-	}
-	if(IsVisible(TRUE)) NotifyInvalidate();
-
-	return TRUE;
-}
-
-
 
 CDuiAnimateImgWnd::CDuiAnimateImgWnd():m_pSkin(NULL),m_iCurFrame(0),m_nSpeed(50),m_bAutoStart(TRUE)
 {
