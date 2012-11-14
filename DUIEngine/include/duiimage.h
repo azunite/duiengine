@@ -13,8 +13,8 @@ namespace DuiEngine{
 class DUI_EXP CDuiImgBase : public CDuiObject
 {
 public:
-	virtual ~CDuiImgBase(){Clear();}
-	virtual void Clear(){}
+	virtual ~CDuiImgBase(){}
+	virtual void Clear()=NULL;
 	virtual BOOL GetImageSize(SIZE & sz)=NULL;
 	virtual int GetWidth()=NULL;
 	virtual int GetHeight()=NULL;
@@ -32,6 +32,7 @@ class DUI_EXP CDuiBitmap : public CDuiImgBase
 public:
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiBitmap, "DuiBitmap")
 	CDuiBitmap();
+	~CDuiBitmap(){Clear();}
 
 	CDuiBitmap(HBITMAP hBitmap);
 
@@ -72,6 +73,7 @@ public:
 	CDuiImgX();
 
 	CDuiImgX(HBITMAP hBmp);
+	~CDuiImgX(){Clear();}
 
 	virtual void Clear();
 	virtual BOOL IsEmpty();
