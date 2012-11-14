@@ -261,6 +261,14 @@ BOOL CDuiImageWnd::SetSkin(CDuiSkinBase *pSkin,int nSubID/*=0*/)
 	return TRUE;
 }
 
+BOOL CDuiImageWnd::SetIcon( int nSubID )
+{
+	if(!m_pSkin) return FALSE;
+	if(nSubID<0 || nSubID>m_pSkin->GetStates()-1) return FALSE;
+	m_nSubImageID=nSubID;
+	return TRUE;
+}
+
 CDuiAnimateImgWnd::CDuiAnimateImgWnd():m_pSkin(NULL),m_iCurFrame(0),m_nSpeed(50),m_bAutoStart(TRUE)
 {
 	m_bMsgTransparent=TRUE;

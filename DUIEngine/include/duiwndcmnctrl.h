@@ -172,6 +172,7 @@ public:
 
 	BOOL SetSkin(CDuiSkinBase *pSkin,int nSubID=0);
 
+	BOOL SetIcon(int nSubID);
 protected:
 	BOOL m_bManaged;
 	int m_nSubImageID;
