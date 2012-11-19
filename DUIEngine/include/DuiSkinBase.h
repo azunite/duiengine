@@ -15,7 +15,11 @@ namespace DuiEngine{
 		}
 		virtual ~CDuiSkinBase()
 		{
-			if(m_bManaged && m_pDuiImg) delete m_pDuiImg;
+			if(m_bManaged && m_pDuiImg)
+			{
+				delete m_pDuiImg;
+				m_pDuiImg=NULL;
+			}
 		}
 
 		void OnFinalRelease()

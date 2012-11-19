@@ -26,6 +26,7 @@ DuiImgPool::DuiImgPool()
 
 DuiImgPool::~DuiImgPool()
 {
+	RemoveAll();//需要先清理图片，再释放gdi+，否则基类释放内存时会出错。
 	CDuiImgX::UninitGdiplus();
 }
 
