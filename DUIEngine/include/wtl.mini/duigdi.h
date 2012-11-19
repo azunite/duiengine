@@ -509,7 +509,7 @@ public:
 		LOGFONT logFont = { 0 };
 		logFont.lfCharSet = DEFAULT_CHARSET;
 		logFont.lfHeight = nPointSize;
-		SecureHelper::strncpy_x(logFont.lfFaceName, _countof(logFont.lfFaceName), lpszFaceName, _TRUNCATE);
+		_tcsncpy_s(logFont.lfFaceName, _countof(logFont.lfFaceName), lpszFaceName);
 
 		if(bBold)
 			logFont.lfWeight = FW_BOLD;
