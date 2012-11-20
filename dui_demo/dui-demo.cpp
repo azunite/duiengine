@@ -15,13 +15,13 @@
 #pragma comment(lib,"zlib.lib")
 #pragma comment(lib,"zipresprovider.lib")
 #endif 
- 
+
 #ifdef _DEBUG
 #include <vld.h>//使用Vitural Leaker Detector来检测内存泄漏，可以从http://vld.codeplex.com/ 下载
 #endif
 
 #include "MainDlg.h"
- 
+
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {

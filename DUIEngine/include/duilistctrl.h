@@ -17,7 +17,7 @@ class DUI_EXP CDuiListBox :public CDuiScrollView
 {
 public:
 
-	DUIOBJ_DECLARE_CLASS_NAME(CDuiListBox, "duilistbox")
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiListBox, "listbox")
 
 	CDuiListBox();
 

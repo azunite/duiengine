@@ -11,7 +11,7 @@
 
       <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10">
         <tab id="113" title="miscellaneous" sep="5">
-          <img pos="0,0" skin="icons" tip="img tip" msgtransparent="0"/>
+          <img id="1139" pos="300,200,400,300" skin="icons" tip="img tip" msgtransparent="0"/>
           <check id="1300" pos="40,20" crtext="ff0000" >test1</check>
           <check id="1301" pos="40,70">test2</check>
           <dlg pos="0,90,-0,-0">
@@ -34,7 +34,7 @@
                  <img id="2" pos1="1,2" skin="icons" msgtransparent="0"/>
              </template>
             </liststyle>
-            <editstyle crtext="ff0000" align="left" crbg="000088"/>
+            <editstyle crtext="000000" align="left" crbg="000088"/>
             <items>
               <item text="combobox.item1" icon="1" data="100"/>
               <item text="combobox.item2" icon="2" data="100"/>
@@ -46,7 +46,8 @@
           </combobox>
         </tab>
         <tab id="114" title="richedit">
-          <duiedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,40,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" hscrollbar="0" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left">richedit test 2012</duiedit>
+          <richedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,0,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left">richedit test 2012</richedit>
+
           <check id="1142" pos="10,|10">check 1</check>
           <check id="1143" pos="100,|10">check 2</check>
           <button name="IDC_REPSEL"  pos="200,|10,300,|35" class="normalbtn">repsel</button>
@@ -60,7 +61,7 @@
           <button class="normalbtn" tabstop="1"  name="测试" pos="20,50,200,80">reposition</button>
         </tab>
         <tab id="117" title="duilistbox">
-          <duilistbox name="mylist" pos="10,0,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
+          <listbox name="mylist" pos="10,0,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
             <items>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
@@ -104,7 +105,7 @@
                 <button class="normalbtn" pos="300,3,-10,-3">button</button>
               </item>
             </items>
-          </duilistbox>
+          </listbox>
         </tab>
         <tab id="118" title="duitreectrl">
           <treectrl pos="10,0,-10,-10"  name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10">

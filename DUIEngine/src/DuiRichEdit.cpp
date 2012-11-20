@@ -401,7 +401,7 @@ void CDuiTextHost::TxImmReleaseContext( HIMC himc )
 
 HRESULT CDuiTextHost::TxGetSelectionBarWidth( LONG *plSelBarWidth )
 {
-	*plSelBarWidth=m_pDuiRichEdit->m_lSelBarWidth;
+	*plSelBarWidth=0;
 	return S_OK;
 }
 
@@ -465,7 +465,7 @@ BOOL CDuiTextHost::Init(CDuiRichEdit* pDuiRichEdit,LPCWSTR pszText)
 CDuiRichEdit::CDuiRichEdit() 
 :m_pTxtHost(NULL)
 ,m_fTransparent(0)
-,m_fRich(FALSE)
+,m_fRich(1)
 ,m_fSaveSelection(TRUE)
 ,m_fVertical(FALSE)
 ,m_fWordWrap(FALSE)
@@ -477,7 +477,6 @@ CDuiRichEdit::CDuiRichEdit()
 ,m_cchTextMost(cInitTextMax)
 ,m_chPasswordChar(_T('*'))
 ,m_lAccelPos(-1)
-,m_lSelBarWidth(0)
 ,m_dwStyle(ES_LEFT|ES_AUTOHSCROLL)
 ,m_rcInsetPixel(2,2,2,2)
 {
@@ -491,15 +490,6 @@ LRESULT CDuiRichEdit::OnCreate( LPVOID )
 
 	InitDefaultCharFormat(&m_cfDef);
 	InitDefaultParaFormat(&m_pfDef);
-
-	CDCHandle dc=GetDC(GetContainer()->GetHostHwnd());
-	LONG xPerInch = ::GetDeviceCaps(dc, LOGPIXELSX); 
-	LONG yPerInch =	::GetDeviceCaps(dc, LOGPIXELSY); 
-	CRect rcClient;
-	GetClient(&rcClient);
-	m_sizelExtent.cx = DXtoHimetricX(rcClient.Width(), xPerInch);
-	m_sizelExtent.cy = DYtoHimetricY(rcClient.Height(), yPerInch);
-	ReleaseDC(GetContainer()->GetHostHwnd(),dc);
 
 	m_pTxtHost=new CDuiTextHost;
 	m_pTxtHost->AddRef();
@@ -603,12 +593,10 @@ BOOL CDuiRichEdit::OnScroll( BOOL bVertical,UINT uCode,int nPos )
 {
 	if(m_fScrollPending) return FALSE;
 	LRESULT lresult=-1;
-// 	POINT pt={0};
-// 	pt.x=GetScrollPos(FALSE);
-// 	pt.y=GetScrollPos(TRUE);
-// 	DUITRACE(_T("\nedit scroll:(%d,%d)"),pt.x,pt.y);
-// 	m_pTxtHost->GetTextService()->TxSendMessage(EM_SETSCROLLPOS,0,(LPARAM)&pt,&lresult);
+	m_fScrollPending=TRUE;
 	m_pTxtHost->GetTextService()->TxSendMessage(bVertical?WM_VSCROLL:WM_HSCROLL,MAKEWPARAM(uCode,nPos),0,&lresult);
+	m_fScrollPending=FALSE;
+	__super::OnScroll(bVertical,uCode,nPos);
 	return lresult==0;
 }
 

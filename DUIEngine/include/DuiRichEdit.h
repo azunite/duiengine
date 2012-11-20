@@ -181,7 +181,7 @@ class DUI_EXP CDuiRichEdit :public CDuiPanelEx
 {
 	friend class CDuiTextHost;
 public:
-	DUIOBJ_DECLARE_CLASS_NAME(CDuiRichEdit, "duiedit")
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiRichEdit, "richedit")
 
 	CDuiRichEdit();
 
@@ -307,7 +307,7 @@ protected:
 		DUIWIN_INT_ATTRIBUTE("style",m_dwStyle,FALSE)
 		DUIWIN_INT_ATTRIBUTE("maxbuf",m_cchTextMost,FALSE)
 		DUIWIN_INT_ATTRIBUTE("transparent",m_fTransparent,FALSE)
-		DUIWIN_INT_ATTRIBUTE("richedit",m_fRich,FALSE)
+		DUIWIN_INT_ATTRIBUTE("rich",m_fRich,FALSE)
 		DUIWIN_INT_ATTRIBUTE("vertical",m_fVertical,FALSE)
 		DUIWIN_INT_ATTRIBUTE("wordwrap",m_fWordWrap,FALSE)
 		DUIWIN_INT_ATTRIBUTE("allowbeep",m_fAllowBeep,FALSE)
@@ -324,7 +324,6 @@ protected:
 	TCHAR m_chPasswordChar;				// Password character
 	LONG		m_lAccelPos;			// Accelerator position
 	SIZEL		m_sizelExtent;			// Extent array
-	LONG		m_lSelBarWidth;			// Width of the selection bar
 	CRect		m_rcInset;				// inset margin
 	CRect		m_rcInsetPixel;			// inset margin in pixel
 	TEXTMETRIC	m_tmFont;				// 
@@ -344,4 +343,10 @@ protected:
 	CDuiTextHost	*m_pTxtHost;
 };
 
+class DUI_EXP CDuiEdit : public CDuiRichEdit
+{
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiRichEdit, "edit")
+public:
+	CDuiEdit(){m_fRich=0;}
+};
 }//namespace DuiEngine
