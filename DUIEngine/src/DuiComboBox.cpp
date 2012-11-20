@@ -96,9 +96,11 @@ int CComboList::OnCreate( LPCREATESTRUCT lpCreateStruct )
 
 void CComboList::OnFinalMessage(HWND)
 {
+	__super::OnFinalMessage(0);
 	MsgFilterUnregister(m_pOwner->GetContainer()->GetHostHwnd());
 	m_pOwner->m_pListBox=NULL;
 	delete this;
+
 }
 
 void CComboList::OnKillFocus( HWND wndFocus )
