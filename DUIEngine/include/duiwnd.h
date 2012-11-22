@@ -38,7 +38,7 @@ typedef struct tagDUIWNDPOS {
 #define DUIC_WANTRETURN		0x0004		/* Control wants return keys		*/
 #define DUIC_WANTCHARS      0x0008      /* Want WM_CHAR messages            */
 #define DUIC_WANTALLKEYS    0xFFFF      /* Control wants all keys           */
-
+#define DUIC_WANTSYSKEY		0x80000000	/* System Key */
 class DUI_EXP CDuiTimerID
 {
 public:

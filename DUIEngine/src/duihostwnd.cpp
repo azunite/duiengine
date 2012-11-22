@@ -594,6 +594,14 @@ LRESULT CDuiHostWnd::OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				return OnDuiNotify((LPNMHDR)&nms);
 			}
 		}
+	}else if(uMsg==WM_SYSKEYDOWN || uMsg==WM_SYSKEYUP)
+	{
+		CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_hFocus);
+		if(!pFocus  || !(pFocus->OnGetDuiCode()&DUIC_WANTSYSKEY))
+		{
+			SetMsgHandled(FALSE);
+			return 0;
+		}		
 	}
 	return DoFrameEvent(uMsg,wParam,lParam);
 }

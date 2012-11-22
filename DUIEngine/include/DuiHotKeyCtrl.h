@@ -29,7 +29,7 @@ protected:
 	virtual BOOL IsTabStop(){return TRUE;}
 	virtual UINT OnGetDuiCode()
 	{
-		return DUIC_WANTALLKEYS& (~DUIC_WANTTAB);
+		return DUIC_WANTALLKEYS|DUIC_WANTSYSKEY & (~DUIC_WANTTAB);
 	}
 
 	int OnCreate(LPVOID);
