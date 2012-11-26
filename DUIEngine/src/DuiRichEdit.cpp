@@ -493,18 +493,15 @@ LRESULT CDuiRichEdit::OnCreate( LPVOID )
 
 	m_pTxtHost=new CDuiTextHost;
 	m_pTxtHost->AddRef();
-#ifdef UNICODE
-	BOOL bInited=m_pTxtHost->Init(this,GetInnerText());
-#else
-	CStringW strTxt=CA2W(GetInnerText(),CP_ACP);
-	BOOL bInited=m_pTxtHost->Init(this,strTxt);
-#endif // UNICODE
-	if(!bInited)
+	if(!m_pTxtHost->Init(this,NULL))
 	{
 		m_pTxtHost->Release();
 		m_pTxtHost=NULL;
+		return 1;
 	}
-	return bInited?0:1;
+	m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_RICHTEXT|TXTBIT_CHARFORMATCHANGE|TXTBIT_PARAFORMATCHANGE, TXTBIT_RICHTEXT|TXTBIT_CHARFORMATCHANGE|TXTBIT_PARAFORMATCHANGE);
+	SetWindowText(GetInnerText());
+	return 0;
 }
 
 void CDuiRichEdit::OnDestroy()
@@ -988,7 +985,7 @@ LRESULT CDuiRichEdit::OnNcCalcSize( BOOL bCalcValidRects, LPARAM lParam )
 			m_rcInset.bottom=DYtoHimetricY(m_rcInsetPixel.bottom,yPerInch);
 		}
 		ReleaseDC(GetContainer()->GetHostHwnd(),hdc);
-		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(-1,-1);
+		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(TXTBIT_CLIENTRECTCHANGE, TXTBIT_CLIENTRECTCHANGE);
 	}
 	return 0;
 }
