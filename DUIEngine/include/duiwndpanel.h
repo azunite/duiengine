@@ -79,6 +79,8 @@ public:
 
 	SBHITINFO HitTest(CPoint pt);
 
+	virtual void GetClient(LPRECT pRect);
+
 protected:
 	CRect GetSbPartRect(BOOL bVertical,UINT uSBCode);
 
@@ -87,8 +89,6 @@ protected:
 	int OnCreate(LPVOID);
 
 	void OnNcPaint(CDCHandle dc);
-
-	virtual void GetClient(LPRECT pRect);
 
 	virtual BOOL OnDuiNcHitTest(CPoint pt);
 

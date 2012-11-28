@@ -25,7 +25,7 @@ protected:
 class CImageOle : public IOleObject, public IViewObject2
 {
 public:
-	CImageOle();
+	CImageOle(CDuiRichEdit *pRichedit);
 	~CImageOle(void);
 
 public:
@@ -78,9 +78,13 @@ public:
 	static VOID CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime);
 
 protected:
+	BOOL GetOleRect(LPRECT prc);
+
 	ULONG m_ulRef;
 	IOleClientSite *m_pOleClientSite;
 	IAdviseSink *m_pAdvSink;
+
+	CDuiRichEdit *m_pRichedit;
 
 	DuiEngine::CDuiSkinBase *m_pSkin;
 	int		m_iFrame;

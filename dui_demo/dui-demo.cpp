@@ -21,7 +21,7 @@
 #endif
 
 #include "MainDlg.h"
-
+ 
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {

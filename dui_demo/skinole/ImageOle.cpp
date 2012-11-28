@@ -1,5 +1,14 @@
 #include "StdAfx.h"
 #include "ImageOle.h"
+#include <tom.h>
+
+#define DEFINE_GUIDXXX(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
+	EXTERN_C const GUID CDECL name \
+	= { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
+
+DEFINE_GUIDXXX(IID_ITextDocument,0x8CC497C0,0xA1DF,0x11CE,0x80,0x98,
+			   0x00,0xAA,0x00,0x47,0xBE,0x5D);
+
 using namespace DuiEngine;
 
 CTimerHostWnd CImageOle::ms_TimerHostWnd;
@@ -33,12 +42,13 @@ void CTimerHostWnd::Release()
 }
 
 
-CImageOle::CImageOle()
+CImageOle::CImageOle(CDuiRichEdit *pRichedit)
 :m_ulRef(0)
 ,m_pOleClientSite(NULL)
 ,m_pAdvSink(NULL)
 ,m_pSkin(NULL)
 ,m_iFrame(0)
+,m_pRichedit(pRichedit)
 {
 	ms_TimerHostWnd.AddRef();
 }
@@ -294,8 +304,15 @@ void CImageOle::OnTimer(UINT_PTR idEvent)
 {
 	ms_TimerHostWnd.KillTimer(idEvent);
 
-	if (m_pAdvSink != NULL)
-		m_pAdvSink->OnViewChange(DVASPECT_CONTENT, -1);
+	CRect rcOle;
+	if(GetOleRect(&rcOle))
+	{
+		m_pRichedit->NotifyInvalidateRect(rcOle);
+	}
+// 	if (m_pAdvSink != NULL)
+// 	{
+// 		m_pAdvSink->OnViewChange(DVASPECT_CONTENT, -1);
+// 	}
 
 	CDuiSkinGif *pSkinGif=static_cast<CDuiSkinGif*>(m_pSkin);
 	DUIASSERT(pSkinGif);
@@ -324,6 +341,68 @@ void CImageOle::SetDuiSkinObj( CDuiSkinBase *pSkin )
 	{
 		m_pSkin->AddRef();
 	}
+}
+
+//需要用枚举的办法来获得指定OLE的显示位置，不知道有没有其它更好的办法。
+BOOL CImageOle::GetOleRect( LPRECT lpRect )
+{
+	IRichEditOle *pRichEditOle=NULL;
+	LRESULT lRes=m_pRichedit->DuiSendMessage(EM_GETOLEINTERFACE,0,(LPARAM)&pRichEditOle);
+	if(!pRichEditOle) return FALSE;
+
+	BOOL bRet=FALSE;
+
+	int nObjCount = pRichEditOle->GetObjectCount();
+	int i = 0;
+	for (i = 0;i < nObjCount;i++)
+	{	
+		REOBJECT reo;
+		ZeroMemory(&reo, sizeof(REOBJECT));
+		reo.cbStruct = sizeof(REOBJECT);
+
+		HRESULT hr = pRichEditOle->GetObject(i, &reo, REO_GETOBJ_POLEOBJ);
+		if (hr != S_OK)
+			continue;
+
+		reo.poleobj->Release();
+
+		if (reo.poleobj == (IOleObject *)this)
+		{
+
+			ITextDocument *pTextDocument = NULL;
+			ITextRange *pTextRange = NULL;
+
+			pRichEditOle->QueryInterface(IID_ITextDocument, (void **)&pTextDocument);
+			if (!pTextDocument)
+				break;
+
+			long nLeft = 0;
+			long nBottom = 0;
+			pTextDocument->Range(reo.cp, reo.cp, &pTextRange);
+			if (reo.dwFlags & REO_BELOWBASELINE)
+				hr = pTextRange->GetPoint(TA_BOTTOM|TA_LEFT, &nLeft, &nBottom);
+			else
+				hr = pTextRange->GetPoint(TA_BASELINE|TA_LEFT, &nLeft, &nBottom);
+
+			pTextDocument->Release();
+			pTextRange->Release();
+
+			CRect rcRichedit;
+			GetWindowRect(m_pRichedit->GetContainer()->GetHostHwnd(),&rcRichedit);
+			CSize szOle=m_pSkin->GetSkinSize();
+
+			lpRect->left   = nLeft - rcRichedit.left;
+			lpRect->bottom = nBottom - rcRichedit.top;
+			lpRect->right  = lpRect->left + szOle.cx ;
+			lpRect->top    = lpRect->bottom - szOle.cy;
+
+			bRet=TRUE;
+			break;
+		}
+	}
+
+	pRichEditOle->Release();
+	return bRet;
 }
 
 BOOL RichEdit_InsertSkin(CDuiRichEdit *pRicheditCtrl, CDuiSkinBase *pSkin)
@@ -355,7 +434,7 @@ BOOL RichEdit_InsertSkin(CDuiRichEdit *pRicheditCtrl, CDuiSkinBase *pSkin)
 	}
 
 
-	CImageOle *pImageOle = new CImageOle;
+	CImageOle *pImageOle = new CImageOle(pRicheditCtrl);
 	if (NULL == pImageOle)
 		return FALSE;
 
