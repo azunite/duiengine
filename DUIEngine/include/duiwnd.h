@@ -443,6 +443,17 @@ public:
 	//************************************
 	void PaintForeground(HDC hdc,LPRECT pRc);
 
+
+	//************************************
+	// Method:    AnimateWindow
+	// Function:  窗口动画效果
+	// Access:    public 
+	// Returns:   BOOL
+	// Parameter: DWORD dwTime,执行时间
+	// Parameter: DWORD dwFlags,执行模式
+	// remark: 
+	//************************************
+	BOOL AnimateWindow(DWORD dwTime,DWORD dwFlags);
 protected:
 	CRect		m_rcGetDC;
 	DWORD		m_gdcFlags;

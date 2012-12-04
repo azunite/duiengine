@@ -44,6 +44,14 @@
               <item text="combobox.item6" icon="6" data="100"/>
             </items>
           </combobox>
+          <listbox name="mylist2" pos="-100,10,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
+            <items>
+              <item>
+                <text pos="10,5" crtext="ff0000">red test afeaafeiafeja afeiafeji</text>
+              </item>
+            </items>
+          </listbox>
+          <realwnd name="realwnd_edit1" id="1309" wndclass="edit" pos="-200,10,-110,40"/>
         </tab>
         <tab id="114" title="richedit">
           <richedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,0,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left">richedit test 2012 中文字体</richedit>

@@ -66,7 +66,7 @@ void CComboList::UpdateItems(const CRect * prcOwner)
 	m_pListBox->EnsureVisible(m_pOwner->m_iCurSel);	
 	if(prcOwner)
 	{
-		AnimateWindow(m_hWnd,200,AW_SLIDE|AW_ACTIVATE|(bShowTop?AW_VER_NEGATIVE:AW_VER_POSITIVE));
+		::AnimateWindow(m_hWnd,200,AW_SLIDE|AW_ACTIVATE|(bShowTop?AW_VER_NEGATIVE:AW_VER_POSITIVE));
 	}
 }
 
@@ -120,23 +120,32 @@ BOOL CComboList::PreTranslateMessage( MSG* pMsg )
 }
 //////////////////////////////////////////////////////////////////////////
 // CComboEdit
-CComboEdit::CComboEdit( CDuiComboBox *pOwner ) :m_pOwner(pOwner)
+CComboEdit::CComboEdit( CDuiComboBox *pOwner )
 {
-
+	SetOwner(pOwner);
 }
 
 void CComboEdit::OnMouseHover( WPARAM wParam, CPoint ptPos )
 {
 	__super::OnMouseHover(wParam,ptPos);
-	m_pOwner->DuiSendMessage(WM_MOUSEHOVER,wParam,MAKELPARAM(ptPos.x,ptPos.y));
+	GetOwner()->DuiSendMessage(WM_MOUSEHOVER,wParam,MAKELPARAM(ptPos.x,ptPos.y));
 }
 
 void CComboEdit::OnMouseLeave()
 {
 	__super::OnMouseLeave();
-	m_pOwner->DuiSendMessage(WM_MOUSELEAVE);
+	GetOwner()->DuiSendMessage(WM_MOUSELEAVE);
 }
 
+LRESULT CComboEdit::DuiNotify( LPNMHDR pnms )
+{
+	//转发richedit的txNotify消息
+	if(pnms->code==DUINM_RICHEDIT_NOTIFY)
+	{
+		pnms->idFrom=GetOwner()->GetCmdID();
+	}
+	return __super::DuiNotify(pnms);
+}
 //////////////////////////////////////////////////////////////////////////
 // CDuiComboBox
 CDuiComboBox::CDuiComboBox(void)

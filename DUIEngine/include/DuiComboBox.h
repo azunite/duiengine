@@ -57,12 +57,12 @@ protected:
 	
 	void OnMouseLeave();
 
+	virtual LRESULT DuiNotify(LPNMHDR pnms);
+
 	DUIWIN_BEGIN_MSG_MAP()
 		MSG_WM_MOUSEHOVER(OnMouseHover)
 		MSG_WM_MOUSELEAVE(OnMouseLeave)
 	DUIWIN_END_MSG_MAP()
-
-	CDuiComboBox *m_pOwner;
 };
 
 class DUI_EXP CDuiComboBox :

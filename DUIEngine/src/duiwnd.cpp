@@ -1706,4 +1706,9 @@ void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWin
 	if(pCurWnd==pStart) bInRange=TRUE;//画前景时，pStart指定的窗口不绘制
 }
 
+BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
+{
+	return FALSE;
+}
+
 }//namespace DuiEngine
