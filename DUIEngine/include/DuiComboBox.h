@@ -9,7 +9,8 @@
 namespace DuiEngine
 {
 
-#define IDC_LIST	100
+#define IDC_CB_LIST	100
+#define IDC_CB_EDIT	-100
 
 struct CBITEM
 {

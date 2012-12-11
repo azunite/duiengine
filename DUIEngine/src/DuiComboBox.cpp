@@ -77,7 +77,7 @@ int CComboList::OnCreate( LPCREATESTRUCT lpCreateStruct )
 
 	m_pListBox=new CDuiListBox;
 	InsertChild(m_pListBox);
-	m_pListBox->SetCmdID(IDC_LIST);
+	m_pListBox->SetCmdID(IDC_CB_LIST);
 
 	TiXmlElement *pXmlTemplate=(TiXmlElement *)lpCreateStruct->lpCreateParams;
 	DUIASSERT(pXmlTemplate);
@@ -210,6 +210,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 		CStringA strPos;
 		strPos.Format("0,0,-%d,-0",szBtn.cx);
 		m_pEdit->SetAttribute("pos",strPos,TRUE);
+		m_pEdit->SetCmdID(IDC_CB_EDIT);
 	}
 	if(m_iCurSel!=-1 && m_iCurSel>=m_arrCbItem.size())
 		m_iCurSel=-1;
@@ -308,7 +309,7 @@ void CDuiComboBox::OnMouseLeave()
 LRESULT CDuiComboBox::DuiNotify(LPNMHDR pnms)
 {
 	LRESULT lRet=0;
-	if(pnms->idFrom==IDC_LIST)
+	if(pnms->idFrom==IDC_CB_LIST)
 	{
 		pnms->idFrom=GetCmdID();
 		if(pnms->code==DUINM_LBSELCHANGED && m_pListBox)
@@ -324,7 +325,7 @@ LRESULT CDuiComboBox::DuiNotify(LPNMHDR pnms)
 		{
 			lRet=__super::DuiNotify(pnms);
 		}
-		pnms->idFrom=IDC_LIST;
+		pnms->idFrom=IDC_CB_LIST;
 	}else
 	{
 		lRet=__super::DuiNotify(pnms);
