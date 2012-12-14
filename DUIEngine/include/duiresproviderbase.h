@@ -11,7 +11,7 @@
 
 #define INDEX_XML	"index.xml"		//文件夹资源的文件映射表索引表文件名
 
-#define MAX_TYPE		10
+#define MAX_RES_TYPE		10
 
 #ifdef _DEBUG
 #   define DUIRES_ASSERTW(expr, format, ...) \
@@ -37,7 +37,7 @@ namespace DuiEngine{
 		DuiResID(LPCSTR pszType,UINT id=0)
 		{
 			DUIASSERT(pszType);
-			strcpy_s(szType,MAX_TYPE,pszType);
+			strcpy_s(szType,MAX_RES_TYPE,pszType);
 			nID=(int)id;
 		}
 
@@ -48,7 +48,7 @@ namespace DuiEngine{
 			return nret<0;
 		}
 
-		char szType[MAX_TYPE+1];
+		char szType[MAX_RES_TYPE+1];
 		int	 nID;
 	};
 
