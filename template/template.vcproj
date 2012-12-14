@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Dui-Demo"
+	Name="Dui-Template"
 	ProjectGUID="{4E567F0E-9B95-4EEA-95B6-58BF748C69C4}"
 	RootNamespace="Dui-Demo"
 	TargetFrameworkVersion="0"
