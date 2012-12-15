@@ -635,12 +635,13 @@ void CDuiScrollView::SetViewSize(CSize szView)
 	CSize size=rcClient.Size();
 	m_wBarVisible=DUISB_NULL;	//关闭滚动条
 
-	if(size.cy<m_szView.cy || (size.cy<m_szView.cy-m_nSbWid && size.cx<m_szView.cx))
+	if(size.cy<m_szView.cy || (size.cy<m_szView.cy+m_nSbWid && size.cx<m_szView.cx))
 	{//需要纵向滚动条
 		m_wBarVisible|=DUISB_VERT;
 		m_siVer.nMin=0;
 		m_siVer.nMax=m_szView.cy-1;
-		if(size.cx<m_szView.cx-m_nSbWid)
+
+		if(size.cx<m_szView.cx+m_nSbWid)
 		{//需要横向滚动条
 			m_wBarVisible |= DUISB_HORZ;
 			m_siVer.nPage=size.cy-m_nSbWid;
@@ -650,15 +651,20 @@ void CDuiScrollView::SetViewSize(CSize szView)
 			m_siHoz.nPage=size.cx-m_nSbWid;
 		}else
 		{//不需要横向滚动条
-			m_siVer.nPage=size.cy;
+			m_siHoz.nPage=size.cx;
 			m_siHoz.nMin=0;
-			m_siHoz.nMax=m_siVer.nPage-1;
+			m_siHoz.nMax=m_siHoz.nPage-1;
+			m_siHoz.nPos=0;
+			m_ptOrgin.x=0;
 		}
 	}else
 	{//不需要纵向滚动条
 		m_siVer.nPage=size.cy;
 		m_siVer.nMin=0;
 		m_siVer.nMax=size.cy-1;
+		m_siVer.nPos=0;
+		m_ptOrgin.y=0;
+
 		if(size.cx<m_szView.cx)
 		{//需要横向滚动条
 			m_wBarVisible|=DUISB_HORZ;
@@ -666,8 +672,16 @@ void CDuiScrollView::SetViewSize(CSize szView)
 			m_siHoz.nMax=m_szView.cx-1;
 			m_siHoz.nPage=size.cx;
 		}
+		//不需要横向滚动条
+		else
+		{
+			m_siHoz.nPage=size.cx;
+			m_siHoz.nMin=0;
+			m_siHoz.nMax=m_siHoz.nPage-1;
+			m_siHoz.nPos=0;
+			m_ptOrgin.x=0;
+		}
 	}
-
 
 	SetScrollPos(TRUE,m_siVer.nPos,TRUE);
 	SetScrollPos(FALSE,m_siHoz.nPos,TRUE);
