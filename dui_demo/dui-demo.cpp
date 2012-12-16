@@ -21,7 +21,14 @@
 #endif
 
 #include "MainDlg.h"
- 
+
+//演示如何使用引擎外部实现的DUI控件
+class  CDuiListBox2 :public CDuiListBox
+{
+public:
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiListBox2, "listbox2")
+
+};
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
@@ -34,6 +41,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	*lpInsertPos = '\0';   
 
 	DuiSystem duiSystem(hInstance);
+
+	//生成控件类厂并注册到系统
+	TplDuiWindowFactory<CDuiListBox2> *pFacListCtrl= new TplDuiWindowFactory<CDuiListBox2>;
+	DuiWindowFactoryManager::getSingleton().RegisterFactory(pFacListCtrl);
+
 	DefaultLogger loger;
 	loger.setLogFilename(CStringA(szCurrentDir)+"\\dui-demo.log");
 	duiSystem.SetLogger(&loger);
@@ -82,6 +94,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	delete duiSystem.GetResProvider();
 	//释放资源 
 	CMenuWndHook::UnInstallHook();
+
+	//从系统中反注册控件类厂并删除类厂对象
+	DuiWindowFactoryManager::getSingleton().UnregisterFactory(pFacListCtrl);
+	delete pFacListCtrl;
 
 	CoUninitialize();
 	return nRet;

@@ -54,7 +54,7 @@
           <realwnd name="realwnd_edit1" id="1309" wndclass="edit" pos="-200,10,-110,40"/>
         </tab>
         <tab id="114" title="richedit">
-          <richedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,0,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left">richedit test 2012 中文字体</richedit>
+          <richedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,0,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left" hscrollbar="1" autohscroll="1">richedit test 2012 中文字体</richedit>
 
           <check id="1142" pos="10,|10">check 1</check>
           <check id="1143" pos="100,|10">check 2</check>
@@ -69,7 +69,7 @@
           <button class="normalbtn" tabstop="1"  name="测试" pos="20,50,200,80">reposition</button>
         </tab>
         <tab id="117" title="duilistbox">
-          <listbox name="mylist" pos="10,0,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
+          <listbox2 name="mylist" pos="10,0,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
             <items>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
@@ -113,10 +113,10 @@
                 <button class="normalbtn" pos="300,3,-10,-3">button</button>
               </item>
             </items>
-          </listbox>
+          </listbox2>
         </tab>
         <tab id="118" title="duitreectrl">
-          <treectrl pos="10,0,-10,-10"  name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10">
+          <treebox pos="10,0,-10,-10"  name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10">
             <!--             <switch /> -->
             <item>
               <text pos="10,5" crtext="ff0000">red test</text>
@@ -148,7 +148,7 @@
                 <button class="normalbtn" pos="300,3,-10,-3">button</button>
               </item>
             </item>
-          </treectrl>
+          </treebox>
         </tab>
         <tab id="118" title="splitwnd">
           <splitrow id="1180" pos="10,0,-10,-10" skinsep="skin_split_horz" sepsize="6">

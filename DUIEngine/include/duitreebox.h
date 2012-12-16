@@ -25,16 +25,16 @@ public:
 	HSTREEITEM m_hItem;
 };
 
-class DUI_EXP CDuiTreeCtrl
+class DUI_EXP CDuiTreeBox
 	: public CDuiScrollView
 	, public CDuiItemContainer
 	, protected CSTree<CDuiTreeItem *>
 {
-	DUIOBJ_DECLARE_CLASS_NAME(CDuiTreeCtrl, "treectrl")
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiTreeBox, "treebox")
 public:
-	CDuiTreeCtrl();
+	CDuiTreeBox();
 
-	virtual ~CDuiTreeCtrl();
+	virtual ~CDuiTreeBox();
 
 	HSTREEITEM InsertItem(TiXmlElement *pTiXmlItem,DWORD dwData,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
 	CDuiPanel* InsertItem(LPCWSTR pszXml,DWORD dwData,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);

@@ -3,7 +3,7 @@
 #include "DuiRichEdit.h"
 #include "duiwndcmnctrl.h"
 #include "duihostwnd.h"
-#include "duilistctrl.h"
+#include "duilistbox.h"
 #include <vector>
 
 namespace DuiEngine

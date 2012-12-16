@@ -1,0 +1,4 @@
+2012年12月16日（重要更新）
+1、将listbox的代码文件从duilistctrl.h,duilistctrl.cpp更改为duilistbox.h,duilistbox.cpp.
+2、将CDuiTreeCtrl控件类名更改为CDuiTreeBox，同时代码文件名也由duitreectrl->duitreebox。已经使用了该控件的工程注意同步更新代码及XML布局(将treectrl->treebox)。
+3、修改类厂的注册的反注册，修正原有版本的BUG及在使用DLL版本时注册外部类厂时可能出错的BUG。

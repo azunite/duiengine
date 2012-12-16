@@ -96,6 +96,7 @@ ULONG WINAPI CImageOle::Release(void)
 HRESULT WINAPI CImageOle::SetClientSite(IOleClientSite *pClientSite)
 {
 	m_pOleClientSite = pClientSite;
+	if(m_pOleClientSite) m_pOleClientSite->AddRef();
 	return S_OK;
 }
 
@@ -112,7 +113,11 @@ HRESULT WINAPI CImageOle::SetHostNames(LPCOLESTR szContainerApp, LPCOLESTR szCon
 
 HRESULT WINAPI CImageOle::Close(DWORD dwSaveOption)
 {
-	m_pOleClientSite = NULL;
+	if(m_pOleClientSite)
+	{
+		m_pOleClientSite->Release();
+		m_pOleClientSite = NULL;
+	}
 	if (m_pAdvSink != NULL)
 	{
 		m_pAdvSink->Release();
@@ -304,6 +309,25 @@ void CImageOle::OnTimer(UINT_PTR idEvent)
 {
 	ms_TimerHostWnd.KillTimer(idEvent);
 
+// 	IOleInPlaceSite *pIOleInPlaceSite=NULL;
+// 
+// 	HRESULT hr=m_pOleClientSite->QueryInterface(IID_IOleInPlaceSite,(void**)&pIOleInPlaceSite);
+// 
+// 	if(SUCCEEDED(hr) && pIOleInPlaceSite)
+// 	{
+// 		OLEINPLACEFRAMEINFO oleFrameInfo={sizeof(OLEINPLACEFRAMEINFO),0};
+// 		IOleInPlaceFrame *pIOleFrame=NULL;
+// 		IOleInPlaceUIWindow *pIOleUiWnd=NULL;
+// 		CRect rcOle1,rcOle2;
+// 		HRESULT hr=pIOleInPlaceSite->GetWindowContext(&pIOleFrame,&pIOleUiWnd,&rcOle1,&rcOle2,&oleFrameInfo);
+// 		if(SUCCEEDED(hr))
+// 		{
+// 			if(pIOleFrame) pIOleFrame->Release();
+// 			if(pIOleUiWnd) pIOleUiWnd->Release();
+// 		}
+// 		pIOleInPlaceSite->Release();
+// 	}
+
 	CRect rcOle;
 	if(GetOleRect(&rcOle))
 	{
@@ -447,6 +471,8 @@ BOOL RichEdit_InsertSkin(CDuiRichEdit *pRicheditCtrl, CDuiSkinBase *pSkin)
 		delete pImageOle;
 		return FALSE;
 	}
+
+	pImageOle->SetClientSite(pOleClientSite);
 
 	HRESULT hr = ::OleSetContainedObject(pOleObject, TRUE);
 

@@ -28,7 +28,7 @@ namespace DuiEngine{
 
 		virtual void DeleteSkin(CDuiSkinBase * pSkin)
 		{
-			pSkin->Release();
+			delete static_cast<T*>(pSkin);
 		}
 
 		virtual const CStringA & GetTypeName(){return m_strTypeName;}
@@ -46,24 +46,18 @@ namespace DuiEngine{
 			AddStandardSkin();
 		}
 
-		template<typename T>
-		bool RegisterFactory()
+		bool RegisterFactory(CSkinFactory *pSkinFactory)
 		{
-			CSkinFactory *pSkinFactory=new T;
-			if(HasKey(pSkinFactory->GetTypeName()))
-			{
-				delete pSkinFactory;
-				return false;
-			}
-			return AddKeyObject(pSkinFactory->GetTypeName(),pSkinFactory);
+			if(HasKey(pSkinFactory->GetTypeName())) return false;
+			m_mapNamedObj[pSkinFactory->GetTypeName()]=pSkinFactory;
+			return true;
 		}
 
-		CSkinFactory * UnregisterFactory(CStringA strTypeName)
+		bool UnregisterFactory(CSkinFactory *pSkinFactory)
 		{
-			if(!HasKey(strTypeName)) return NULL;
-			CSkinFactory *pRet=m_mapNamedObj[strTypeName];
-			RemoveKeyObject(strTypeName);
-			return pRet;
+			if(!HasKey(pSkinFactory->GetTypeName())) return false;
+			m_mapNamedObj.erase(pSkinFactory->GetTypeName());
+			return true;
 		}
 
 	protected:

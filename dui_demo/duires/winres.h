@@ -16,4 +16,5 @@
 #define	mylist		65538
 #define	mytree		65539
 #define	mylist2		65540
+#define	realwnd_edit1		1309
 /*----------------------------RES_BUILDER:end------------------------------------->*/

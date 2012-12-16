@@ -368,7 +368,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\duilistctrl.cpp"
+				RelativePath=".\src\duilistbox.cpp"
 				>
 			</File>
 			<File
@@ -472,7 +472,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\duitreectrl.cpp"
+				RelativePath=".\src\duitreebox.cpp"
 				>
 			</File>
 			<File
@@ -590,7 +590,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\duilistctrl.h"
+				RelativePath=".\include\duilistbox.h"
 				>
 			</File>
 			<File
@@ -694,7 +694,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\duitreectrl.h"
+				RelativePath=".\include\duitreebox.h"
 				>
 			</File>
 			<File

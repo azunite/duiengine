@@ -28,10 +28,12 @@ public:
 	{
 		return new T;
 	}
-	void DeleteWindow(DuiEngine::CDuiWindow* pWnd)
+
+	void DeleteWindow(CDuiWindow* pWnd)
 	{
-		delete pWnd;
+		delete static_cast<T*>(pWnd);
 	}
+
 	virtual const CStringA & getWindowType()
 	{
 		return m_strTypeName;
@@ -50,22 +52,35 @@ class DuiWindowFactoryManager :
 public:
 	DuiWindowFactoryManager(void);
 
-	template <typename T>
-	bool addFactory()
+	//************************************
+	// Method:    RegisterFactory,注册APP自定义的窗口类
+	// FullName:  DuiEngine::DuiWindowFactoryManager::RegisterFactory
+	// Access:    public 
+	// Returns:   bool
+	// Qualifier:
+	// Parameter: CDuiWindowFactory * pWndFactory
+	//************************************
+	bool RegisterFactory(CDuiWindowFactory *pWndFactory)
 	{
-		CDuiWindowFactory *pWndFactory= new T;
-		if(HasKey(pWndFactory->GetTypeName())) return false;
-		return AddKeyObject(pWndFactory->GetTypeName(),pWndFactory);
+		if(HasKey(pWndFactory->getWindowType())) return false;
+		m_mapNamedObj[pWndFactory->getWindowType()]=pWndFactory;
+		return true;
 	}
 
-	CDuiWindowFactory * removeFactory(const CStringA & strWndType)
+	//************************************
+	// Method:    UnregisterFactor,反注册APP自定义的窗口类
+	// FullName:  DuiEngine::DuiWindowFactoryManager::UnregisterFactor
+	// Access:    public 
+	// Returns:   bool
+	// Qualifier:
+	// Parameter: CDuiWindowFactory * pWndFactory
+	//************************************
+	bool UnregisterFactory(CDuiWindowFactory *pWndFactory)
 	{
-		if(!HasKey(strWndType)) return NULL;
-		CDuiWindowFactory *pRet=GetKeyObject(strWndType);
-		RemoveKeyObject(strWndType);
-		return pRet;
+		if(!HasKey(pWndFactory->getWindowType())) return false;
+		m_mapNamedObj.erase(pWndFactory->getWindowType());
+		return true;
 	}
-	
 
 protected:
 	static void OnKeyRemoved(const CDuiWindowFactoryPtr & obj)
