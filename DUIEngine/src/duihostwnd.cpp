@@ -43,7 +43,7 @@ HWND CDuiHostWnd::Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWO
 	if (NULL != m_hWnd)
 		return m_hWnd;
 
-	HWND hWnd = CSimpleWnd::Create(lpWindowName,dwStyle,0, x,y,nWidth,nHeight,hWndParent,lpParam);
+	HWND hWnd = CSimpleWnd::Create(lpWindowName,dwStyle,dwExStyle, x,y,nWidth,nHeight,hWndParent,lpParam);
 	if(!hWnd) return NULL;
 
 	//tooltip
@@ -101,8 +101,8 @@ BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
 
 	CStringA strValue;
 
-	m_dwDlgStyle    = WS_POPUP | WS_SYSMENU;
-	m_dwDlgExStyle  = WS_EX_TOPMOST;
+	m_dwDlgStyle    = WS_POPUP | WS_CLIPCHILDREN | WS_TABSTOP;
+	m_dwDlgExStyle  = 0;
 
 	DuiSendMessage(WM_DESTROY);
 
@@ -940,28 +940,14 @@ LRESULT CDuiHostWnd::OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam)
 // IDuiRealWnd
 HWND CDuiHostWnd::OnRealWndCreate(CDuiRealWnd *pRealWnd)
 {
-	HWND hWnd=0;
-	HWND hWndContainer=m_hWnd;
 	CRect rcWindow;
 	UINT uCmdID=pRealWnd->GetCmdID();
 	pRealWnd->GetRect(&rcWindow);
 
 	const CDuiRealWndParam & paramRealWnd=pRealWnd->GetRealWndParam();
-
-// 	if(paramRealWnd.m_strClassName==_T("browser"))
-// 	{
-// 		CIECtrl *pView=new CIECtrl;
-// 		pView->Load(paramRealWnd.m_pXmlParams);
-// 		pView->Create(hWndContainer,rcWindow,paramRealWnd.m_strWindowName,paramRealWnd.m_dwStyle | WS_CLIPCHILDREN,paramRealWnd.m_dwExStyle,uCmdID);
-// 		hWnd=pView->m_hWnd;
-// 		pRealWnd->SetData(pView);
-// 	}else
-	{
-		hWnd=CreateWindowEx(paramRealWnd.m_dwExStyle,paramRealWnd.m_strClassName,paramRealWnd.m_strWindowName,paramRealWnd.m_dwStyle,
+	return CreateWindowEx(paramRealWnd.m_dwExStyle,paramRealWnd.m_strClassName,paramRealWnd.m_strWindowName,paramRealWnd.m_dwStyle,
 			rcWindow.left,rcWindow.top,rcWindow.Width(),rcWindow.Height(),
-			hWndContainer,(HMENU)(ULONG_PTR)uCmdID,0,NULL);
-	}
-	return hWnd;
+			m_hWnd,(HMENU)(ULONG_PTR)uCmdID,0,NULL);
 }
 
 BOOL CDuiHostWnd::OnRealWndInit( CDuiRealWnd *pRealWnd )
