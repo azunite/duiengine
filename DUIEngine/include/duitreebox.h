@@ -37,7 +37,7 @@ public:
 	virtual ~CDuiTreeBox();
 
 	HSTREEITEM InsertItem(TiXmlElement *pTiXmlItem,DWORD dwData,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
-	CDuiPanel* InsertItem(LPCWSTR pszXml,DWORD dwData,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
+	CDuiTreeItem* InsertItem(LPCWSTR pszXml,DWORD dwData,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
 
 	BOOL RemoveItem(HSTREEITEM hItem);
 
@@ -61,6 +61,7 @@ public:
 	//自动修改pt的位置为相对当前项的偏移量
 	HSTREEITEM HitTest(CPoint &pt);
 
+	CDuiTreeItem * GetItemPanel(HSTREEITEM hItem){return GetItem(hItem);}
 protected:
 	void SetChildrenVisible(HSTREEITEM hItem,BOOL bVisible);
 

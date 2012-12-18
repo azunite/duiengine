@@ -85,7 +85,7 @@ HSTREEITEM CDuiTreeBox::InsertItem(TiXmlElement *pTiXmlItem,DWORD dwData,HSTREEI
 	return hRet;
 }
 
-CDuiPanel* CDuiTreeBox::InsertItem(LPCWSTR pszXml,DWORD dwData,HSTREEITEM hParent/*=STVI_ROOT*/, HSTREEITEM hInsertAfter/*=STVI_LAST*/,BOOL bEnsureVisible/*=FALSE*/)
+CDuiTreeItem* CDuiTreeBox::InsertItem(LPCWSTR pszXml,DWORD dwData,HSTREEITEM hParent/*=STVI_ROOT*/, HSTREEITEM hInsertAfter/*=STVI_LAST*/,BOOL bEnsureVisible/*=FALSE*/)
 {
 	TiXmlDocument xmlDoc;
 	CStringA strXml=CW2A(pszXml,CP_UTF8);;
