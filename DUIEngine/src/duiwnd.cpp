@@ -718,10 +718,10 @@ BOOL CDuiWindow::RedrawRegion(CDCHandle& dc, CRgn& rgn)
 		GetClient(&rcClient);
 		if(rgn.IsNull() || rgn.RectInRegion(rcClient))
 		{
-			int nSaveDC=0;
+			CRgn rgnOldClip;
 			if(IsClipClient())
 			{
-				nSaveDC=dc.SaveDC();
+				dc.GetClipRgn(rgnOldClip);
 				CRgn rgn;
 				rgn.CreateRectRgnIndirect(&rcClient);
 				dc.SelectClipRgn(rgn,RGN_AND);
@@ -744,9 +744,9 @@ BOOL CDuiWindow::RedrawRegion(CDCHandle& dc, CRgn& rgn)
 			}
 
 			AfterPaint(dc, DuiDC);		
-			if(nSaveDC!=0)
+			if(IsClipClient())
 			{
-				dc.RestoreDC(nSaveDC);
+				dc.SelectClipRgn(rgnOldClip);
 			}
 		}
 		DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link

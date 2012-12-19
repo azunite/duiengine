@@ -195,12 +195,13 @@ BOOL CDuiTextHost::TxCreateCaret( HBITMAP hbmp, INT xWidth, INT yHeight )
 
 HDC CDuiTextHost::TxGetDC()
 {
-	return GetDC(m_pDuiRichEdit->GetContainer()->GetHostHwnd());
+	return m_pDuiRichEdit->GetDuiDC(NULL,OLEDC_NODRAW);
 }
 
 INT CDuiTextHost::TxReleaseDC( HDC hdc )
 {
-	return ReleaseDC(m_pDuiRichEdit->GetContainer()->GetHostHwnd(),hdc);
+	m_pDuiRichEdit->ReleaseDuiDC(hdc);
+	return 1;
 }
 
 BOOL CDuiTextHost::TxShowScrollBar( INT fnBar, BOOL fShow )
@@ -514,9 +515,10 @@ void CDuiRichEdit::OnDestroy()
 	}
 }
 
+
 void CDuiRichEdit::OnPaint( CDCHandle dc )
 {
-	int nSaveDC=dc.SaveDC();//需要先记录状态，在TxDraw中DC的部分状态如文字颜色会改变。
+ 	int nSaveDC=dc.SaveDC();//需要先记录状态，在TxDraw中DC的部分状态如文字颜色会改变。
 	CRect rcClient,rcClip;
 	GetClient(&rcClient);
 	dc.GetClipBox(rcClip);
@@ -526,6 +528,8 @@ void CDuiRichEdit::OnPaint( CDCHandle dc )
 	{
 		CGdiAlpha::AlphaBackup(dc,&rcClient,ai);
 	}
+
+	RECTL rcL={rcClient.left,rcClient.top,rcClient.right,rcClient.bottom};
 	m_pTxtHost->GetTextService()->TxDraw(
 		DVASPECT_CONTENT,  		// Draw Aspect
 		/*-1*/0,						// Lindex
@@ -533,17 +537,18 @@ void CDuiRichEdit::OnPaint( CDCHandle dc )
 		NULL,					// target device information
 		dc,			// Draw device HDC
 		NULL, 				   	// Target device HDC
-		(RECTL *)&rcClient,			// Bounding client rectangle
-		NULL, 					// Clipping rectangle for metafiles
-		&rcClip,		// Update rectangle
+		&rcL,			// Bounding client rectangle
+		NULL, 			// Clipping rectangle for metafiles
+		&rcClient,		// Update rectangle
 		NULL, 	   				// Call back function
 		NULL,					// Call back parameter
 		m_fInplaceActive?TXTVIEW_ACTIVE:TXTVIEW_INACTIVE);	
+
 	if(GetContainer()->IsTranslucent())
 	{
 		CGdiAlpha::AlphaRestore(dc,ai);
 	}
-	dc.RestoreDC(nSaveDC);//恢复DC状态
+ 	dc.RestoreDC(nSaveDC);//恢复DC状态
 }
 
 void CDuiRichEdit::OnSetDuiFocus()

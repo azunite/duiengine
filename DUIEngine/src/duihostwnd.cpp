@@ -359,11 +359,18 @@ void CDuiHostWnd::OnPrint(CDCHandle dc, UINT uFlags)
 		}
 
 		m_memDC.FillSolidRect(&rcInvalid,0);//清除残留的alpha值
- 		RedrawRegion(CDCHandle(m_memDC), m_rgnInvalidate);	
+
+		//m_rgnInvalidate有可能在RedrawRegion时被修改，必须生成一个临时的区域对象
+		CRgn rgnUpdate;
+		if(m_rgnInvalidate)
+		{
+			rgnUpdate.CreateRectRgn(0,0,0,0);
+			rgnUpdate.CopyRgn(m_rgnInvalidate);
+			m_rgnInvalidate.DeleteObject();
+		}
+ 		RedrawRegion(CDCHandle(m_memDC), rgnUpdate);	
 		
 		m_memDC.SelectClipRgn(NULL);
-		if (!m_rgnInvalidate.IsNull())
-			m_rgnInvalidate.DeleteObject();
 
 		m_memDC.SelectFont(hftOld);
 
