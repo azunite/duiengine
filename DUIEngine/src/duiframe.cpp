@@ -179,7 +179,7 @@ void CDuiFrame::OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 	CDuiWindow *pCapture=DuiWindowManager::GetWindow(m_hCapture);
 	if(pCapture)
 	{
-		if(m_bNcHover) uMsg += WM_NCMOUSEFIRST - WM_MOUSEFIRST;//转换成NC对应的消息
+		if(m_bNcHover && uMsg!=WM_MOUSEWHEEL) uMsg += WM_NCMOUSEFIRST - WM_MOUSEFIRST;//转换成NC对应的消息
 		pCapture->DuiSendMessage(uMsg,wParam,lParam);
 	}
 	else 
@@ -188,7 +188,7 @@ void CDuiFrame::OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 		CDuiWindow *pHover=DuiWindowManager::GetWindow(m_hHover);
 		if(pHover  && !pHover->IsDisabled(TRUE))
 		{
-			if(m_bNcHover) uMsg += WM_NCMOUSEFIRST - WM_MOUSEFIRST;//转换成NC对应的消息
+			if(m_bNcHover && uMsg!=WM_MOUSEWHEEL) uMsg += WM_NCMOUSEFIRST - WM_MOUSEFIRST;//转换成NC对应的消息
 			pHover->DuiSendMessage(uMsg,wParam,lParam);
 		}
 	}
