@@ -640,15 +640,16 @@ void CDuiScrollView::SetViewSize(CSize szView)
 		m_wBarVisible|=DUISB_VERT;
 		m_siVer.nMin=0;
 		m_siVer.nMax=m_szView.cy-1;
+		m_siVer.nPage=size.cy;
 
 		if(size.cx<m_szView.cx+m_nSbWid)
 		{//需要横向滚动条
 			m_wBarVisible |= DUISB_HORZ;
-			m_siVer.nPage=size.cy-m_nSbWid;
+			m_siVer.nPage=size.cy-m_nSbWid > 0 ? size.cy-m_nSbWid : 0;
 
 			m_siHoz.nMin=0;
 			m_siHoz.nMax=m_szView.cx-1;
-			m_siHoz.nPage=size.cx-m_nSbWid;
+			m_siHoz.nPage=size.cx-m_nSbWid > 0 ? size.cx-m_nSbWid : 0;
 		}else
 		{//不需要横向滚动条
 			m_siHoz.nPage=size.cx;
