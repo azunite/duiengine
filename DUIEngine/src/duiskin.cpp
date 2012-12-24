@@ -201,7 +201,7 @@ void CDuiSkinGradation::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAl
 }
 
 
-CDuiScrollbarSkin::CDuiScrollbarSkin():m_nThumbLeft(0)
+CDuiScrollbarSkin::CDuiScrollbarSkin():m_nMagin(0)
 {
 
 }
@@ -236,14 +236,27 @@ void CDuiScrollbarSkin::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAl
 	CSize szFrame(sz.cx/9,sz.cx/9);
 	CRect rcSour(CPoint(szFrame.cx*iPart,szFrame.cy*nState),szFrame);
 
-	if(nSbCode==SB_THUMBTRACK)
-	{
-		if(bVertical) 
-			rcMargin.top=m_nThumbLeft,rcMargin.bottom=m_nThumbLeft;
-		else 
-			rcMargin.left=m_nThumbLeft,rcMargin.right=m_nThumbLeft;
-	}
+	if(bVertical) 
+		rcMargin.top=m_nMagin,rcMargin.bottom=m_nMagin;
+	else 
+		rcMargin.left=m_nMagin,rcMargin.right=m_nMagin;
+
 	FrameDraw(dc, m_pDuiImg , rcSour,rcDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);
+
+	if(nSbCode==SB_THUMBTRACK)
+	{		
+		CSize sz=GetSkinSize();
+		CSize szFrame(sz.cx/9,sz.cx/9);
+		int nOffset = bVertical ? szFrame.cy : 2*szFrame.cy;
+		rcSour.SetRect(szFrame.cx*8,nOffset,szFrame.cx*9,nOffset+szFrame.cy);
+		CRect rcThumbDraw(0, 0, szFrame.cx, szFrame.cy);
+		if (bVertical)
+			rcThumbDraw.OffsetRect(0, (rcDraw.Height() - szFrame.cy) / 2);
+		else
+			rcThumbDraw.OffsetRect((rcDraw.Width() - szFrame.cx) / 2, 0);
+		rcThumbDraw.OffsetRect(rcDraw.TopLeft());
+		FrameDraw(dc, m_pDuiImg , rcSour,rcThumbDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);
+	}
 }
 
 GUID CDuiSkinGif::ms_Guid = Gdiplus::FrameDimensionTime;

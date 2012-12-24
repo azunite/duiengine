@@ -168,10 +168,10 @@ public:
 
 public:
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-		DUIWIN_INT_ATTRIBUTE("thumbleft",m_nThumbLeft,FALSE)
+		DUIWIN_INT_ATTRIBUTE("magin",m_nMagin,FALSE)
 	DUIWIN_DECLARE_ATTRIBUTES_END()
 protected:
-	int			m_nThumbLeft;
+	int			m_nMagin;
 };
 
 class DUI_EXP CDuiSkinMenuBorder : public CDuiSkinImgFrame

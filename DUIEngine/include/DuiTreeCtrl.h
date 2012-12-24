@@ -30,7 +30,7 @@ enum {
     DuiTVIBtn_CheckBox
 };
 
-typedef struct tagDUITVITEM {    
+typedef struct tagTVITEM {    
 	CString		strText;
     int			nImage;
     int			nSelectedImage;
@@ -47,7 +47,7 @@ typedef struct tagDUITVITEM {
 	DWORD		dwToggleState;
 	DWORD       dwCheckBoxState;
 
-	tagDUITVITEM()
+	tagTVITEM()
 	{
 		nImage = -1;
 		nSelectedImage = -1;
@@ -65,12 +65,12 @@ typedef struct tagDUITVITEM {
 		dwCheckBoxState = DuiWndState_Normal;
 	}
 
-} DUITVITEM, *LPDUITVITEM;
+} TVITEM, *LPTVITEM;
 
 
 class DUI_EXP CDuiTreeCtrl
 	: public CDuiScrollView
-	, protected CSTree<LPDUITVITEM>
+	, protected CSTree<LPTVITEM>
 {
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiTreeCtrl, "treectrl")
 public:
@@ -112,13 +112,15 @@ public:
 	void PageUp();
 	void PageDown();
 
+	BOOL RedrawRegion(CDCHandle& dc, CRgn& rgn);
+
 protected:
 
 	virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
 	virtual void LoadBranch(HSTREEITEM hParent,TiXmlElement* pItem);
-	virtual void LoadItemAttribute(TiXmlElement *pTiXmlItem, LPDUITVITEM pItem);
+	virtual void LoadItemAttribute(TiXmlElement *pTiXmlItem, LPTVITEM pItem);
 
-	HSTREEITEM InsertItem(LPDUITVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM hInsertAfter,BOOL bEnsureVisible);
+	HSTREEITEM InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM hInsertAfter,BOOL bEnsureVisible);
 	HSTREEITEM InsertItem(TiXmlElement *pTiXmlItem,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
 	
 	virtual int GetScrollLineSize(BOOL bVertical);	
@@ -132,11 +134,11 @@ protected:
 	void CheckState(HSTREEITEM hItem, BOOL bCheck, BOOL bCheckChild = TRUE);	
 
 	virtual void ItemLayout();
-	virtual void CalaItemWidth(LPDUITVITEM pItem);
+	virtual void CalaItemWidth(LPTVITEM pItem);
 	virtual int  GetMaxItemWidth();
 	virtual int  GetMaxItemWidth(HSTREEITEM hItem);
 	int  GetItemShowIndex(HSTREEITEM hItemObj);
-	BOOL GetItemRect( LPDUITVITEM pItem,CRect &rcItem );
+	BOOL GetItemRect( LPTVITEM pItem,CRect &rcItem );
 
 	HSTREEITEM HitTest(CPoint &pt);		
 
@@ -194,7 +196,7 @@ protected:
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 		DUIWIN_INT_ATTRIBUTE("indent", m_nIndent, TRUE)
 		DUIWIN_INT_ATTRIBUTE("itemhei", m_nItemHei, TRUE)
-		DUIWIN_INT_ATTRIBUTE("itemmargin", m_nItemMargin, TRUE)		
+		DUIWIN_INT_ATTRIBUTE("itemmargin", m_nItemMargin, TRUE)
 		DUIWIN_INT_ATTRIBUTE("checkbox", m_bCheckBox, TRUE)
 		DUIWIN_SKIN_ATTRIBUTE("itembgskin", m_pItemBgSkin, TRUE)
 		DUIWIN_SKIN_ATTRIBUTE("itemselskin", m_pItemSelSkin, TRUE)
