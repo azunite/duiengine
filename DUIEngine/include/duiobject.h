@@ -53,8 +53,8 @@ public:                                                 \
 #define DUIWIN_DECLARE_ATTRIBUTES_BEGIN()                            \
 public:                                                             \
     virtual HRESULT SetAttribute(                                   \
-        CStringA strAttribName,                                     \
-        CStringA strValue,                                          \
+        const CStringA & strAttribName,                                     \
+        const CStringA &  strValue,                                          \
         BOOL     bLoading=FALSE)                                    \
     {                                                               \
         HRESULT hRet = E_FAIL;										\
@@ -335,12 +335,12 @@ public:
         return TRUE;
     }
 
-    virtual HRESULT SetAttribute(CStringA strAttribName, CStringA strValue, BOOL bLoading)
+    virtual HRESULT SetAttribute(const CStringA &  strAttribName, const CStringA &  strValue, BOOL bLoading)
     {
         return DefAttributeProc(strAttribName,strValue,bLoading);
     }
 
-	virtual HRESULT SetAttributeW(CStringA strAttribName, CStringW strValue, BOOL bLoading)
+	virtual HRESULT SetAttributeW(const CStringA &  strAttribName, const CStringW &  strValue, BOOL bLoading)
 	{
 		CStringA strValueUTF8=CW2A(strValue,CP_UTF8);
 		return SetAttribute(strAttribName,strValueUTF8,bLoading);

@@ -1334,7 +1334,7 @@ BOOL CDuiWindow::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 	return bRet;
 }
 
-HRESULT CDuiWindow::OnAttributeName(CStringA& strValue, BOOL bLoading)
+HRESULT CDuiWindow::OnAttributeName(const CStringA& strValue, BOOL bLoading)
 {
 	if(m_uCmdID==0)
 	{
@@ -1343,7 +1343,7 @@ HRESULT CDuiWindow::OnAttributeName(CStringA& strValue, BOOL bLoading)
 	return S_FALSE;
 }
 
-HRESULT CDuiWindow::OnAttributePosition(CStringA& strValue, BOOL bLoading)
+HRESULT CDuiWindow::OnAttributePosition(const CStringA& strValue, BOOL bLoading)
 {
 	if (strValue.IsEmpty()) return E_FAIL;
 	

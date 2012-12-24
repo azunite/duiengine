@@ -640,8 +640,8 @@ protected:
 	void OnSetDuiFocus();
 	void OnKillDuiFocus();
 
-	HRESULT OnAttributePosition(CStringA& strValue, BOOL bLoading);
-	HRESULT OnAttributeName(CStringA& strValue, BOOL bLoading);
+	HRESULT OnAttributePosition(const CStringA& strValue, BOOL bLoading);
+	HRESULT OnAttributeName(const CStringA& strValue, BOOL bLoading);
   
     DUIWIN_BEGIN_MSG_MAP()
 		MSG_WM_ERASEBKGND(OnEraseBkgnd)

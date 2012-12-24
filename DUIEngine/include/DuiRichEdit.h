@@ -279,7 +279,7 @@ protected:
 
 	LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
 
-	LRESULT OnSetTextColor(CStringA strValue,BOOL bLoading);
+	LRESULT OnSetTextColor(const CStringA &  strValue,BOOL bLoading);
 protected:
 	DUIWIN_BEGIN_MSG_MAP()
 		MSG_WM_CREATE(OnCreate)

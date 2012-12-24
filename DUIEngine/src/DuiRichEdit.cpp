@@ -1141,7 +1141,7 @@ void CDuiRichEdit::SetSel(DWORD dwSelection, BOOL bNoScroll)
 		DuiSendMessage(EM_SCROLLCARET, 0, 0L);
 }
 
-LRESULT CDuiRichEdit::OnSetTextColor( CStringA strValue,BOOL bLoading )
+LRESULT CDuiRichEdit::OnSetTextColor( const CStringA &  strValue,BOOL bLoading )
 {
 	m_style.m_crText=CDuiObject::HexStringToColor(strValue);
 	if(!bLoading)
