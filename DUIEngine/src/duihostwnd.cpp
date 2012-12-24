@@ -172,6 +172,8 @@ BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
 
 	_Redraw();
 
+	RedrawRegion(CDCHandle(m_memDC),CRgn());
+
 	if(m_bTranslucent) SetDuiTimer(TIMER_TRANSLUCENT,10);
 	else KillDuiTimer(TIMER_TRANSLUCENT);
 	return TRUE;
@@ -364,9 +366,7 @@ void CDuiHostWnd::OnPrint(CDCHandle dc, UINT uFlags)
 		CRgn rgnUpdate;
 		if(m_rgnInvalidate)
 		{
-			rgnUpdate.CreateRectRgn(0,0,0,0);
-			rgnUpdate.CopyRgn(m_rgnInvalidate);
-			m_rgnInvalidate.DeleteObject();
+			rgnUpdate.Attach(m_rgnInvalidate.Detach());
 		}
  		RedrawRegion(CDCHandle(m_memDC), rgnUpdate);	
 		
