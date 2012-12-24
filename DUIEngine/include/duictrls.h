@@ -7,6 +7,7 @@
 #include "duirealwnd.h"
 #include "duiitembox.h"
 #include "duitreebox.h"
+#include "DuiTreeCtrl.h"
 #include "DuiRichEdit.h"
 #include "DuiSplitWnd.h"
 #include "DuiComboBox.h"
