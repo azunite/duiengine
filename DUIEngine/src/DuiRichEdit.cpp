@@ -815,6 +815,8 @@ BOOL CDuiRichEdit::SetSaveSelection( BOOL fSaveSelection )
 
 HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStringA & strValue, BOOL bLoading)
 {
+	HRESULT hRet=S_FALSE;
+	DWORD dwBit=0,dwMask=0;
 	//hscrollbar
 	if(strAttribName=="hscrollbar")
 	{
@@ -822,6 +824,8 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 			m_dwStyle&=~WS_HSCROLL;
 		else
 			m_dwStyle|=WS_HSCROLL;
+		dwBit|=TXTBIT_SCROLLBARCHANGE;
+		dwMask|=TXTBIT_SCROLLBARCHANGE;
 	}
 	//vscrollbar
 	else if(strAttribName=="vscrollbar")
@@ -830,6 +834,8 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 			m_dwStyle&=~WS_VSCROLL;
 		else
 			m_dwStyle|=WS_VSCROLL;
+		dwBit|=TXTBIT_SCROLLBARCHANGE;
+		dwMask|=TXTBIT_SCROLLBARCHANGE;
 	}	
 	//auto hscroll
 	else if(strAttribName=="autohscroll")
@@ -838,6 +844,8 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 			m_dwStyle&=~ES_AUTOHSCROLL;
 		else
 			m_dwStyle|=ES_AUTOHSCROLL;
+		dwBit|=TXTBIT_SCROLLBARCHANGE;
+		dwMask|=TXTBIT_SCROLLBARCHANGE;
 	}	
 	//auto hscroll
 	else if(strAttribName=="autovscroll")
@@ -846,6 +854,8 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 			m_dwStyle&=~ES_AUTOVSCROLL;
 		else
 			m_dwStyle|=ES_AUTOVSCROLL;
+		dwBit|=TXTBIT_SCROLLBARCHANGE;
+		dwMask|=TXTBIT_SCROLLBARCHANGE;
 	}	
 	//multilines
 	else if(strAttribName=="multilines" && strValue!="0")
@@ -853,7 +863,8 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 		if(strValue=="0")
 			m_dwStyle&=~ES_MULTILINE;
 		else
-			m_dwStyle|=ES_MULTILINE;
+			m_dwStyle|=ES_MULTILINE,dwBit|=TXTBIT_MULTILINE;
+		dwMask|=TXTBIT_MULTILINE;
 	}	
 	//readonly
 	else if(strAttribName=="readonly")
@@ -861,7 +872,8 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 		if(strValue=="0")
 			m_dwStyle&=~ES_READONLY;
 		else
-			m_dwStyle|=ES_READONLY;
+			m_dwStyle|=ES_READONLY,dwBit|=TXTBIT_READONLY;
+		dwMask|=TXTBIT_READONLY;
 	}
 	//want return
 	else if(strAttribName=="wantreturn")
@@ -877,7 +889,8 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 		if(strValue=="0")
 			m_dwStyle&=~ES_PASSWORD;
 		else
-			m_dwStyle|=ES_PASSWORD;
+			m_dwStyle|=ES_PASSWORD,dwBit|=TXTBIT_USEPASSWORD;
+		dwMask|=TXTBIT_USEPASSWORD;
 	}
 	//number
 	else if(strAttribName=="number")
@@ -899,12 +912,16 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
 		if(strValue=="center") m_dwStyle|=ES_CENTER;
 		else if(strValue=="right") m_dwStyle|=ES_RIGHT;
 		else m_dwStyle|=ES_LEFT;
-		
 	}else
 	{
-		return __super::DefAttributeProc(strAttribName,strValue,bLoading);
+		hRet=__super::DefAttributeProc(strAttribName,strValue,bLoading);
 	}
-	return S_OK;
+	if(!bLoading)
+	{
+		m_pTxtHost->GetTextService()->OnTxPropertyBitsChange(dwMask,dwBit);
+		hRet=TRUE;
+	}
+	return hRet;
 }
 
 void CDuiRichEdit::OnLButtonDown( UINT nFlags, CPoint point )

@@ -336,6 +336,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiDropDownList.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\duifontpool.cpp"
 				>
 			</File>
@@ -369,6 +373,10 @@
 			</File>
 			<File
 				RelativePath=".\src\duilistbox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\duilistboxex.cpp"
 				>
 			</File>
 			<File
@@ -476,6 +484,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiTreeCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\DuiWindowManager.cpp"
 				>
 			</File>
@@ -558,6 +570,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\DuiDropDownList.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\duifontpool.h"
 				>
 			</File>
@@ -591,6 +607,10 @@
 			</File>
 			<File
 				RelativePath=".\include\duilistbox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\duilistboxex.h"
 				>
 			</File>
 			<File
