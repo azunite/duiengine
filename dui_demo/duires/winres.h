@@ -17,4 +17,6 @@
 #define	mytree		65539
 #define	mylist2		65540
 #define	realwnd_edit1		1309
+#define	IDC_CB_TEST		65541
+#define	mytree1		65542
 /*----------------------------RES_BUILDER:end------------------------------------->*/

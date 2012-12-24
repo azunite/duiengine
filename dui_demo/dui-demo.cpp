@@ -23,7 +23,7 @@
 #include "MainDlg.h"
 
 //演示如何使用引擎外部实现的DUI控件
-class  CDuiListBox2 :public CDuiListBox
+class  CDuiListBox2 :public CDuiListBoxEx
 {
 public:
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiListBox2, "listbox2")

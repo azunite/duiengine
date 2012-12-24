@@ -22,7 +22,7 @@
 <resid type="IMGX" id_name="IDP_BTN_SYS_RESOTRE"  id="83"  file="skins\btn_sys_restore.png" />
 
 <resid type="IMGX" id_name="IDP_TAB_COMMON"  id="103"  file="skins\tab_common.png" />
-<resid type="IMGX" id_name="IDP_SCROLL"  id="104"  file="skins\scrollbar.bmp" />
+<resid type="IMGX" id_name="IDP_SCROLL"  id="104"  file="skins\scrollbar.png" />
 <resid type="IMGX" id_name="IDP_EDIT_BORDER"  id="105"  file="skins\img_edit_border.png" />
 <resid type="IMGX" id_name="IDP_SPLIT_VERT"  id="106"  file="skins\split_vert.png" />
 <resid type="IMGX" id_name="IDP_SPLIT_HORZ"  id="107"  file="skins\split_horz.png" />
@@ -44,3 +44,8 @@
 <resid type="BMP" id_name="IDP_BMPMASK"  id="300"  file="skins\solve.bmp" />
 
 <resid type="IMGX" id_name="IDP_GIF_FACE0"  id="400"  file="skins\face0.gif" />
+
+<resid type="IMGX" id_name="IDR_TREE_TOGGLE"			id="500" file="skins\TreeToggle.png"/>
+<resid type="IMGX" id_name="IDR_TREE_CHECKBOX"		id="501" file="skins\TreeCheckBox.png"/>
+<resid type="IMGX" id_name="IDR_TREE_ICON"				id="502" file="skins\TreeIcon.png"/>
+<resid type="IMGX" id_name="IDP_ICON3"						id="503" file="skins\icon3.png"/>

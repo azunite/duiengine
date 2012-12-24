@@ -92,7 +92,7 @@ LRESULT CUIHander::OnComboListItemNotify( LPNMHDR pNHdr )
 	if(pItemNHdr->pOriginHdr->idFrom==3) 
 	{//delete button 
 		CDuiComboBox *pCombobox=(CDuiComboBox*)m_pMainDlg->FindChildByCmdID(1310);
-		CDuiListBox *pListBox=(CDuiListBox*)pItemNHdr->pHostDuiWin;
+		CDuiListBoxEx *pListBox=(CDuiListBoxEx*)pItemNHdr->pHostDuiWin;
 		int iItem=pListBox->GetItemObjIndex(pItemNHdr->pItem);
 		pCombobox->DeleteItem(iItem); 
 	}

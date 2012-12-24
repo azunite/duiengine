@@ -25,7 +25,7 @@
           <button id="1360" class="normalbtn" pos="10,200,150,230">dui menu</button>
           <hotkey id="1340" pos="350,20,450,45" />
           <button id="1307" pos="200,10,300,35" class="normalbtn">IE Ctrl</button>
-          <combobox id="1310" pos="100,40,300,64" dropdown="0" dropheight="250" class="cls_edit" font="8300" dotted="0" cursel="0">
+          <combobox id="1310" pos="100,40,300,64" dropdown="0" dropheight="250" class="cls_edit" font="8300" dotted="0" cursel="0" itempanel="1">
             <liststyle  class="cls_edit" crbg="FF0000" itemheight="50" id_text="1" id_icon="2" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
               <template>
                 <text id="1" pos="5,2" crtext="ff0000"/>
@@ -44,13 +44,25 @@
               <item text="combobox.item6" icon="6" data="100"/>
             </items>
           </combobox>
-          <listbox name="mylist2" pos="-100,10,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
+	        <combobox name="IDC_CB_TEST" pos="100,70,300,94" dropdown="1" dropheight="250" class="cls_edit" dotted="0" animtime=20>
+            <liststyle class="cls_edit"  iconskin="icon3" itemheight="30" crtext="000000" crseltext="FFFFFF" critembg="FFFFFF" critemselbg="000088" hottrack="1"/>
+            <editstyle inset="5,0,5,0" crtext="000000" align="left" crbg="FFFFFF"/>
+            <items>
+             <item text="combobox.item1" icon="1" data="100"/>
+              <item text="combobox.item2" icon="2" data="100"/>
+              <item text="combobox.item3" icon="3" data="103"/>
+              <item text="combobox.item4" icon="4" data="100"/>
+              <item text="combobox.item5" icon="5" data="105"/>
+              <item text="combobox.item6" icon="0" data="100"/>                          
+            </items>
+          </combobox>          
+          <listboxex name="mylist2" pos="-100,10,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
             <items>
               <item>
                 <text pos="10,5" crtext="ff0000">red test afeaafeiafeja afeiafeji</text>
               </item>
             </items>
-          </listbox>
+          </listboxex>
           <realwnd name="realwnd_edit1" id="1309" wndclass="edit" pos="-200,10,-110,40"/>
         </tab>
         <tab id="114" title="richedit">
@@ -115,7 +127,7 @@
             </items>
           </listbox2>
         </tab>
-        <tab id="118" title="duitreectrl">
+        <tab id="118" title="duitreebox">
           <treebox pos="10,0,-10,-10"  name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10">
             <!--             <switch /> -->
             <item>
@@ -150,7 +162,29 @@
             </item>
           </treebox>
         </tab>
-        <tab id="118" title="splitwnd">
+        <tab id="119" title="duitreectrl">
+     			<treectrl pos="10,0,-10,-10"  name="mytree1" itemhei="30" iconskin="TreeIcon" checkbox="1">
+					<item text="组织机构" img="0" selimg="1">
+						<item text="市场部" img="0" selimg="1">
+							<item text="南一区" img="2"/>
+							<item text="北二区" img="2"/>
+							<item text="西三区" img="2">
+								<item text="第一分队" img="0" selimg="1">
+									<item text="张三组" img="2"/>
+									<item text="李四组" img="2"/>
+									<item text="王五组" img="2"/>
+								</item>
+							</item>
+					  </item>
+						<item text="宣传部" img="0" selimg="1">
+							<item text="南一区" img="2"/>
+							<item text="北二区" img="2"/>
+							<item text="西三区" img="2"/>
+						</item>				
+ 					</item>
+		  		</treectrl> 	
+        </tab>        
+        <tab id="120" title="splitwnd">
           <splitrow id="1180" pos="10,0,-10,-10" skinsep="skin_split_horz" sepsize="6">
             <pane idealsize="250" minsize="30" priority="0" crbg="FF0000">
               <text pos="|-50,|-20">pane1 priority=2</text>
