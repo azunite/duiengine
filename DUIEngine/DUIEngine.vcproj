@@ -718,6 +718,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\DuiTreeCtrl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\DuiWindowManager.h"
 				>
 			</File>
