@@ -169,6 +169,10 @@ protected:
 	void OnMouseMove(UINT nFlags,CPoint pt);
 	void OnMouseLeave();
 
+	virtual void OnNodeFree(LPTVITEM & pItemData){
+		delete pItemData;
+	}
+
 protected:
 
 	HSTREEITEM	m_hSelItem;
