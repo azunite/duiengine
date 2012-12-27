@@ -3,12 +3,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "duistd.h"
-#include "duiobject.h"
 #include "duiimage.h"
-#include "DuiSystem.h"
 
-
-#pragma comment(lib, "gdiplus.lib")
+#pragma comment(lib,"gdiplus.lib")
 
 namespace DuiEngine{
 
@@ -78,11 +75,11 @@ static BOOL TransparentBlt2(
 }
 
 
-CDuiBitmap::CDuiBitmap():m_hBitmap(NULL),m_bManaged(FALSE),m_crMask(CLR_INVALID)
+CDuiBitmap::CDuiBitmap():m_hBitmap(NULL),m_crMask(CLR_INVALID)
 {
 }
 
-CDuiBitmap::CDuiBitmap(HBITMAP hBitmap):m_hBitmap(hBitmap),m_bManaged(TRUE)
+CDuiBitmap::CDuiBitmap(HBITMAP hBitmap):m_hBitmap(hBitmap),m_crMask(CLR_INVALID)
 {
 
 }
@@ -94,9 +91,8 @@ CDuiBitmap::operator HBITMAP()  const
 
 void CDuiBitmap::Clear()
 {
-	if(m_bManaged && m_hBitmap) DeleteObject(m_hBitmap);
+	if(m_hBitmap) DeleteObject(m_hBitmap);
 	m_hBitmap=NULL;
-	m_bManaged=FALSE;
 }
 
 BOOL CDuiBitmap::IsEmpty(){return m_hBitmap==NULL;}
@@ -196,40 +192,68 @@ BOOL CDuiBitmap::TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc
 	return TRUE;
 }
 
-BOOL CDuiBitmap::LoadImg(LPCTSTR pszFileName)
+
+void CDuiBitmap::SetAttributes( TiXmlElement *pTiXmlEle )
 {
-	Clear();
-	m_hBitmap = (HBITMAP)::LoadImage(NULL, pszFileName, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
-	if(m_hBitmap)
+	if(!pTiXmlEle) return;
+	const char * pszMask=pTiXmlEle->Attribute("mask");
+	if(pszMask)
 	{
-		m_bManaged=TRUE;
+		int r=0,g=0,b=0;
+		sscanf(pszMask,"%02x%02x%02x",&r,&g,&b);
+		m_crMask=RGB(r,g,b);
 	}
-	return !IsEmpty();
 }
 
-BOOL CDuiBitmap::LoadImg(UINT nIDResource,LPCSTR pszType/*=NULL*/)
+BOOL CDuiBitmap::LoadFromResource( HINSTANCE hInst,LPCSTR pszType,UINT uID )
 {
-	Clear();
-	m_hBitmap=DuiSystem::getSingleton().GetResProvider()->LoadBitmap(pszType,nIDResource);
-	if(!m_hBitmap) return FALSE;
-	m_bManaged=TRUE;
-	return TRUE;
+	assert(m_hBitmap==NULL);
+	m_hBitmap = (HBITMAP)::LoadImageA(hInst, MAKEINTRESOURCEA(uID), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+	return m_hBitmap!=NULL;
+}
+
+BOOL CDuiBitmap::LoadFromFile( LPCSTR pszPath )
+{
+	assert(m_hBitmap==NULL);
+	m_hBitmap = (HBITMAP)::LoadImageA(0, pszPath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+	return m_hBitmap!=NULL;
+}
+
+BOOL CDuiBitmap::LoadFromMemory( LPVOID pBuf,DWORD dwSize )
+{
+	assert(m_hBitmap==NULL);
+
+	HDC hDC = GetDC(NULL);
+	//读取位图头
+	BITMAPFILEHEADER *pBmpFileHeader=(BITMAPFILEHEADER *)pBuf; 
+	//检测位图头
+	if (pBmpFileHeader->bfType != ((WORD) ('M'<<8)|'B')) 
+	{
+		return NULL; 
+	} 
+	//判断位图长度
+	if (pBmpFileHeader->bfSize > (UINT)dwSize) 
+	{ 
+		return NULL; 
+	} 
+	LPBITMAPINFO lpBitmap=(LPBITMAPINFO)(pBmpFileHeader+1); 
+	LPVOID lpBits=(LPBYTE)pBuf+pBmpFileHeader->bfOffBits;
+	m_hBitmap= CreateDIBitmap(hDC,&lpBitmap->bmiHeader,CBM_INIT,lpBits,lpBitmap,DIB_RGB_COLORS);
+	ReleaseDC(NULL,hDC);
+	return m_hBitmap!=NULL;
 }
 
 
 //////////////////////////////////////////////////////////////////////////
 // CDuiImgX
 
-ULONG_PTR CDuiImgX::s_gdiplusToken = 0;
-
 CDuiImgX::CDuiImgX():m_pImg(NULL)
 {
 
 }
 
-CDuiImgX::CDuiImgX(HBITMAP hBmp)
+CDuiImgX::CDuiImgX(Gdiplus::Image * pImg):m_pImg(pImg)
 {
-	m_pImg=new Gdiplus::Bitmap(hBmp,NULL);
 }
 
 void CDuiImgX::Clear()
@@ -305,7 +329,6 @@ BOOL CDuiImgX::StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySr
 	{
 		delete pImgAttr;
 	}
-	DUIASSERT(bRet);
 	return bRet;
 }
 BOOL CDuiImgX::TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha/*=0xFF*/)
@@ -346,69 +369,91 @@ BOOL CDuiImgX::TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,i
 	return TRUE;
 }
 
-
-BOOL CDuiImgX::LoadImg(LPCTSTR pszFileName)
+BOOL CDuiImgX::LoadFromResource( HINSTANCE hInst,LPCSTR pszType,UINT uID )
 {
-	Clear();
-#ifdef _UNICODE
-	Gdiplus::Image *pImg=new Gdiplus::Image(pszFileName);
-#else
-	WCHAR szFileName[MAX_PATH+1];
-	MultiByteToWideChar(CP_ACP,0,pszFileName,-1,szFileName,MAX_PATH);
-	Gdiplus::Image *pImg=new Gdiplus::Image(szFileName);
-#endif
-	if(pImg->GetLastStatus() != 0)
-	{
-		delete pImg;
-		m_pImg=NULL;
-		return FALSE;
-	}
-	//获得图片帧数
-	UINT nCount = 0;
-	nCount = pImg->GetFrameDimensionsCount();
-	DUIASSERT(nCount>0);
+	assert(m_pImg==NULL);
 
-	int nFrames=1;
-	GUID* pDimensionIDs = new GUID[nCount];
-	if (pDimensionIDs != NULL)
+	HRSRC hRsrc = ::FindResourceA(hInst, MAKEINTRESOURCEA(uID), pszType);
+
+	if (NULL == hRsrc)
+		return NULL;
+
+	DWORD dwSize=::SizeofResource(hInst, hRsrc); 
+	if(dwSize==0) return NULL;
+
+
+	HGLOBAL hGlobal = ::LoadResource(hInst, hRsrc); 
+	if (NULL == hGlobal)
 	{
-		pImg->GetFrameDimensionsList(pDimensionIDs, nCount);
-		nFrames = pImg->GetFrameCount(&pDimensionIDs[0]);
-		delete pDimensionIDs;
-	}
-	if(nFrames==1)
-	{//只有一帧的图，直接缓存，防止图片文件占用。
-		m_pImg=new Gdiplus::Bitmap(pImg->GetWidth(),pImg->GetHeight());
-		Gdiplus::Graphics *g=new Gdiplus::Graphics(m_pImg);
-		g->DrawImage(pImg,0,0,pImg->GetWidth(),pImg->GetHeight());
-		delete g;
-		delete pImg;
-	}else
-	{
-		m_pImg=pImg;
+		return NULL;
 	}
 
-	return !IsEmpty();
+	LPVOID pBuffer = ::LockResource(hGlobal); 
+	if (NULL == pBuffer)
+	{
+		::FreeResource(hGlobal);
+		return NULL;
+	}
+
+	HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, dwSize);
+	BYTE* pMem = (BYTE*)::GlobalLock(hMem);
+	memcpy(pMem,pBuffer,dwSize);
+
+	::FreeResource(hGlobal);
+
+	IStream* pStm = NULL;
+	::CreateStreamOnHGlobal(hMem, TRUE, &pStm);
+
+	m_pImg = Gdiplus::Image::FromStream(pStm);
+
+	pStm->Release();
+	::GlobalUnlock(hMem);
+
+	return m_pImg!=NULL;
 }
 
-
-BOOL CDuiImgX::LoadImg(UINT nIDResource,LPCSTR pszType)
+BOOL CDuiImgX::LoadFromFile( LPCSTR pszPath )
 {
-	Clear();
-	m_pImg=DuiSystem::getSingleton().GetResProvider()->LoadImage(pszType,nIDResource);
-	return !IsEmpty();
+	assert(m_pImg==NULL);
+	WCHAR szPathW[MAX_PATH+1]={0};
+	::MultiByteToWideChar(CP_ACP,0,pszPath,-1,szPathW,MAX_PATH);
+	m_pImg=Gdiplus::Image::FromFile(szPathW);
+
+	return m_pImg!=NULL;
 }
 
+BOOL CDuiImgX::LoadFromMemory( LPVOID pBuf,DWORD dwSize )
+{
+	assert(m_pImg==NULL);
 
-void CDuiImgX::InitGdiplus()
+	HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, dwSize);
+	BYTE* pMem = (BYTE*)::GlobalLock(hMem);
+
+	memcpy(pMem, pBuf, dwSize);
+
+	IStream* pStm = NULL;
+	::CreateStreamOnHGlobal(hMem, TRUE, &pStm);
+
+	Gdiplus::Image * pImage = Gdiplus::Image::FromStream(pStm);
+
+	pStm->Release();
+	::GlobalUnlock(hMem);
+	// 	GlobalFree(hMem);
+	return m_pImg!=NULL;
+}
+
+ULONG_PTR CDuiImgX::s_gdiplusToken = 0;
+
+BOOL CDuiImgX::GdiplusStartup()
 {
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-	Gdiplus::GdiplusStartup(&s_gdiplusToken, &gdiplusStartupInput, NULL);
+	Gdiplus::Status st=Gdiplus::GdiplusStartup(&s_gdiplusToken, &gdiplusStartupInput, NULL);
+	return st==0;
 }
-void CDuiImgX::UninitGdiplus()
+
+void CDuiImgX::GdiplusShutdown()
 {
 	Gdiplus::GdiplusShutdown(s_gdiplusToken);
 }
-
 
 }//namespace DuiEngine

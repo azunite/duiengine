@@ -6,34 +6,28 @@
 //////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "duiimage.h"
+#include "duiimgbase.h"
+#include "duiresproviderbase.h"
 #include "DuiSingletonMap.h"
 
 namespace DuiEngine{
 
 typedef CDuiImgBase * CDuiImgBasePtr;
-class DUI_EXP DuiImgPool:public DuiSingletonMap<DuiImgPool,CDuiImgBasePtr,UINT>
+class DUI_EXP DuiImgPool:public DuiSingletonMap<DuiImgPool,CDuiImgBasePtr,DuiResID>
 {
 public:
     DuiImgPool();
     virtual ~DuiImgPool();
 
-    CDuiImgBase * GetImage(UINT uResID);
-
-	//增加一个图片文件到图片库中
-	//LPCTSTR pszFileName:图片文件名
-	//return:图片的ID,图片加载失败返回-1
-	UINT AddImage(LPCWSTR pszFileName,BOOL bBmp);
+    CDuiImgBase * GetImage(UINT uResID,LPCSTR pszType=NULL);
 
 protected:
 	static void OnKeyRemoved(const CDuiImgBasePtr & obj)
 	{
-		delete obj;
+		obj->Release();
 	}
 
     ULONG_PTR m_gdiplusToken;
-
-	UINT		 m_uAutoID;
 };
 
 }//namespace DuiEngine

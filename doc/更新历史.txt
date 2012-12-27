@@ -1,4 +1,10 @@
+2012年12月27日（重要更新）
+1、将图片加载模块抽象出来，方便在应用程序中配置自己的图片处理器。需要从CDuiImgDecoder派生出自己的图象处理器，生成一个实例交给CDuiResProvider，具体可以参考CDuiImgDecoder_Def的实现。
+2、删除库中的CDuiSkinGif类。
+3、将DuiMapSingleton中的std::map对象声明为指针对象，去除在Dll版本中的编译警告。
+
 2012年12月16日（重要更新）
 1、将listbox的代码文件从duilistctrl.h,duilistctrl.cpp更改为duilistbox.h,duilistbox.cpp.
 2、将CDuiTreeCtrl控件类名更改为CDuiTreeBox，同时代码文件名也由duitreectrl->duitreebox。已经使用了该控件的工程注意同步更新代码及XML布局(将treectrl->treebox)。
 3、修改类厂的注册的反注册，修正原有版本的BUG及在使用DLL版本时注册外部类厂时可能出错的BUG。
+

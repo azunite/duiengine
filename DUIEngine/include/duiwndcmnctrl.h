@@ -7,7 +7,6 @@
 
 #pragma once
 #include "duiwnd.h"
-#include "duiimage.h"
 #include "duitheme.h"
 #include "duiwndpanel.h"
 #include "duiwndnotify.h"

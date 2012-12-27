@@ -5,9 +5,12 @@
 #include "menuwndhook.h"
 #include "DuiSystem.h" 
 #include "DuiDefaultLogger.h"
- 
+
+#include "DuiSkinGif.h"	//应用层定义的皮肤对象
+
 //从ZIP文件加载皮肤模块
 #include "../zipresprovider/DuiResProviderZip.h"
+
 #ifdef DEBUG
 #pragma comment(lib,"zlib_d.lib")
 #pragma comment(lib,"zipresprovider_d.lib")
@@ -30,6 +33,7 @@ public:
 
 };
 
+
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
 	HRESULT hRes = CoInitialize(NULL);
@@ -40,15 +44,20 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	LPSTR lpInsertPos = strrchr( szCurrentDir, L'\\' );
 	*lpInsertPos = '\0';   
 
-	DuiSystem duiSystem(hInstance);
+
+	DuiSystem *pDuiSystem=new DuiSystem(hInstance);
 
 	//生成控件类厂并注册到系统
 	TplDuiWindowFactory<CDuiListBox2> *pFacListCtrl= new TplDuiWindowFactory<CDuiListBox2>;
 	DuiWindowFactoryManager::getSingleton().RegisterFactory(pFacListCtrl);
 
+	//生成皮肤类厂并注册到系统
+	TplSkinFactory<CDuiSkinGif> * pFacSkinGif = new TplSkinFactory<CDuiSkinGif>;
+	DuiSkinFactoryManager::getSingleton().RegisterFactory(pFacSkinGif);
+
 	DefaultLogger loger;
 	loger.setLogFilename(CStringA(szCurrentDir)+"\\dui-demo.log");
-	duiSystem.SetLogger(&loger);
+	pDuiSystem->SetLogger(&loger);
 
 	//从ZIP文件加载皮肤
 // 	DuiResProviderZip *zipSkin=new DuiResProviderZip;
@@ -60,8 +69,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 // 	}
 // 	duiSystem.SetResProvider(zipSkin); 
 
-	duiSystem.logEvent("demo started");
-	duiSystem.InitName2ID(IDR_NAME2ID,"XML2");//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
+	pDuiSystem->logEvent("demo started");
+	pDuiSystem->InitName2ID(IDR_NAME2ID,"XML2");//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 #ifdef __DUIFILE_RC 
     lstrcatA( szCurrentDir, "\\..\\dui_demo" );
 	DuiResProviderFiles *pResFiles=new DuiResProviderFiles;
@@ -70,9 +79,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		DUIASSERT(0);
 		return 1;
 	}
-	duiSystem.SetResProvider(pResFiles);
+	pDuiSystem->SetResProvider(pResFiles);
 #else 
-	duiSystem.SetResProvider(new DuiResProviderPE(hInstance));
+	pDuiSystem->SetResProvider(new DuiResProviderPE(hInstance));
 #endif 
 	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义
 	DuiString::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
@@ -89,15 +98,21 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		nRet = dlgMain.DoModal();  
 	}
 
-	duiSystem.logEvent("demo end");
+	pDuiSystem->logEvent("demo end");
 
-	delete duiSystem.GetResProvider();
+	delete pDuiSystem->GetResProvider();
 	//释放资源 
 	CMenuWndHook::UnInstallHook();
 
-	//从系统中反注册控件类厂并删除类厂对象
+	DuiSkinPool::getSingleton().RemoveAll();//以DLL方式使用DuiEngine时，使用了自定义皮肤类型时需要先删除皮肤池才能正常释放皮肤类厂。
+
+	//从系统中反注册控件及皮肤类厂并删除类厂对象
 	DuiWindowFactoryManager::getSingleton().UnregisterFactory(pFacListCtrl);
 	delete pFacListCtrl;
+	DuiSkinFactoryManager::getSingleton().UnregisterFactory(pFacSkinGif);
+	delete pFacSkinGif;
+
+	delete pDuiSystem;
 
 	CoUninitialize();
 	return nRet;

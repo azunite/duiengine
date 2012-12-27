@@ -8,7 +8,6 @@
 #include "duistd.h"
 #include "duiwndcmnctrl.h"
 
-#include "duiimage.h"
 #include "duitheme.h"
 #include "duiwndnotify.h"
 #include "duisystem.h"
@@ -743,10 +742,10 @@ void CDuiIconWnd::OnPaint(CDCHandle dc)
 	GetClient(&rcClient);
 	if(GetContainer()->IsTranslucent())
 	{
-		Gdiplus::Bitmap * pIcon=Gdiplus::Bitmap::FromHICON(m_theIcon);
-		Gdiplus::Graphics g(dc);
-		g.DrawImage(pIcon,rcClient.left,rcClient.top,rcClient.Width(),rcClient.Height());
-		delete pIcon;
+		ALPHAINFO ai;
+		CGdiAlpha::AlphaBackup(dc,&rcClient,ai);
+		DrawIconEx(dc, rcClient.left,rcClient.top,m_theIcon,rcClient.Width(),rcClient.Height(),0,NULL,DI_NORMAL);
+		CGdiAlpha::AlphaRestore(dc,ai);
 	}else
 	{
 		DrawIconEx(dc, rcClient.left,rcClient.top,m_theIcon,rcClient.Width(),rcClient.Height(),0,NULL,DI_NORMAL);

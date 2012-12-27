@@ -16,19 +16,19 @@ BOOL CDuiTimerEx::_SetTimer( HDUIWND hDuiWnd,UINT_PTR uTimerID,UINT nElapse )
 	UINT_PTR idEvent=::SetTimer(NULL,uTimerID,nElapse,_TimerProc);
 	if(idEvent==0) return FALSE;
 	TIMERINFO ti={hDuiWnd,uTimerID};
-	m_mapNamedObj[idEvent]=ti;
+	(*m_mapNamedObj)[idEvent]=ti;
 	return TRUE;
 }
 
 void CDuiTimerEx::_KillTimer( HDUIWND hDuiWnd,UINT_PTR uTimerID )
 {
-	std::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj.begin();
-	while(it!=m_mapNamedObj.end())
+	std::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj->begin();
+	while(it!=m_mapNamedObj->end())
 	{
 		if(it->second.hDuiWnd==hDuiWnd && it->second.uTimerID==uTimerID)
 		{
 			::KillTimer(NULL,it->first);
-			m_mapNamedObj.erase(it);
+			m_mapNamedObj->erase(it);
 			break;
 		}
 		it++;
@@ -37,14 +37,14 @@ void CDuiTimerEx::_KillTimer( HDUIWND hDuiWnd,UINT_PTR uTimerID )
 
 void CDuiTimerEx::_KillTimer( HDUIWND hDuiWnd )
 {
-	std::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj.begin();
-	while(it!=m_mapNamedObj.end())
+	std::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj->begin();
+	while(it!=m_mapNamedObj->end())
 	{
 		std::map<UINT_PTR,TIMERINFO>::iterator it1=it;
 		if(it1->second.hDuiWnd==hDuiWnd)
 		{
 			::KillTimer(NULL,it1->first);
-			m_mapNamedObj.erase(it1);
+			m_mapNamedObj->erase(it1);
 			break;
 		}
 		it++;

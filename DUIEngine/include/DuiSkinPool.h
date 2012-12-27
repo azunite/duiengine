@@ -49,14 +49,14 @@ namespace DuiEngine{
 		bool RegisterFactory(CSkinFactory *pSkinFactory)
 		{
 			if(HasKey(pSkinFactory->GetTypeName())) return false;
-			m_mapNamedObj[pSkinFactory->GetTypeName()]=pSkinFactory;
+			AddKeyObject(pSkinFactory->GetTypeName(),pSkinFactory);
 			return true;
 		}
 
 		bool UnregisterFactory(CSkinFactory *pSkinFactory)
 		{
 			if(!HasKey(pSkinFactory->GetTypeName())) return false;
-			m_mapNamedObj.erase(pSkinFactory->GetTypeName());
+			m_mapNamedObj->erase(pSkinFactory->GetTypeName());
 			return true;
 		}
 

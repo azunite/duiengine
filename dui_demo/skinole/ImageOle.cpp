@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "ImageOle.h"
+#include "../DuiSkinGif.h"
 #include <tom.h>
 
 #define DEFINE_GUIDXXX(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
@@ -309,34 +310,11 @@ void CImageOle::OnTimer(UINT_PTR idEvent)
 {
 	ms_TimerHostWnd.KillTimer(idEvent);
 
-// 	IOleInPlaceSite *pIOleInPlaceSite=NULL;
-// 
-// 	HRESULT hr=m_pOleClientSite->QueryInterface(IID_IOleInPlaceSite,(void**)&pIOleInPlaceSite);
-// 
-// 	if(SUCCEEDED(hr) && pIOleInPlaceSite)
-// 	{
-// 		OLEINPLACEFRAMEINFO oleFrameInfo={sizeof(OLEINPLACEFRAMEINFO),0};
-// 		IOleInPlaceFrame *pIOleFrame=NULL;
-// 		IOleInPlaceUIWindow *pIOleUiWnd=NULL;
-// 		CRect rcOle1,rcOle2;
-// 		HRESULT hr=pIOleInPlaceSite->GetWindowContext(&pIOleFrame,&pIOleUiWnd,&rcOle1,&rcOle2,&oleFrameInfo);
-// 		if(SUCCEEDED(hr))
-// 		{
-// 			if(pIOleFrame) pIOleFrame->Release();
-// 			if(pIOleUiWnd) pIOleUiWnd->Release();
-// 		}
-// 		pIOleInPlaceSite->Release();
-// 	}
-
 	CRect rcOle;
 	if(GetOleRect(&rcOle))
 	{
 		m_pRichedit->NotifyInvalidateRect(rcOle);
 	}
-// 	if (m_pAdvSink != NULL)
-// 	{
-// 		m_pAdvSink->OnViewChange(DVASPECT_CONTENT, -1);
-// 	}
 
 	CDuiSkinGif *pSkinGif=static_cast<CDuiSkinGif*>(m_pSkin);
 	DUIASSERT(pSkinGif);
@@ -496,10 +474,10 @@ BOOL RichEdit_InsertSkin(CDuiRichEdit *pRicheditCtrl, CDuiSkinBase *pSkin)
 	return TRUE;
 }
 
-BOOL RichEdit_InsertImage(CDuiRichEdit *pRicheditCtrl, LPCTSTR lpszFileName)
+BOOL RichEdit_InsertImage(CDuiRichEdit *pRicheditCtrl, LPCSTR lpszFileName)
 {
 	CDuiImgX *pImg=new CDuiImgX;
-	if(!pImg->LoadImg(lpszFileName))
+	if(!pImg->LoadFromFile(lpszFileName))
 	{
 		delete pImg;
 		return FALSE;

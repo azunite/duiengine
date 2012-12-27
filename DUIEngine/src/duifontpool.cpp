@@ -14,9 +14,9 @@ template<> DuiFontPool* Singleton<DuiFontPool>::ms_Singleton	= 0;
 
 
 DuiFontPool::DuiFontPool()
-: m_strFaceName(_T("Tahoma"))
-, m_lFontSize(-11)
+:  m_lFontSize(-11)
 {
+	_tcscpy(m_szDefFontFace,_T("Tahoma"));
 	m_pFunOnKeyRemoved=OnKeyRemoved;
 	SetKeyObject(FontKey(DUIF_DEFAULTFONT),_CreateDefaultGUIFont());
 }
@@ -48,7 +48,7 @@ HFONT DuiFontPool::GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdd
 
 void DuiFontPool::SetDefaultFont(LPCTSTR lpszFaceName, LONG lSize)
 {
-	m_strFaceName = lpszFaceName;
+	_tcscpy_s(m_szDefFontFace,_countof(m_szDefFontFace),lpszFaceName);
 	m_lFontSize = lSize;
 
 	HFONT hftOld = GetKeyObject(FontKey(DUIF_DEFAULTFONT));
@@ -65,7 +65,7 @@ HFONT DuiFontPool::_CreateDefaultGUIFont()
 	::GetObjectA(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &m_lfDefault);
 
 	m_lfDefault.lfHeight = _GetFontAbsHeight(m_lFontSize);
-	_tcscpy_s(m_lfDefault.lfFaceName,_countof(m_lfDefault.lfFaceName),  m_strFaceName);
+	_tcscpy_s(m_lfDefault.lfFaceName,_countof(m_lfDefault.lfFaceName),  m_szDefFontFace);
 
 	m_lfDefault.lfQuality = ANTIALIASED_QUALITY;
 

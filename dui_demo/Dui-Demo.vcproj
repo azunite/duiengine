@@ -402,6 +402,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DuiSkinGif.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainDlg.cpp"
 				>
 			</File>
@@ -450,6 +454,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
+			<File
+				RelativePath=".\DuiSkinGif.h"
+				>
+			</File>
 			<File
 				RelativePath=".\MainDlg.h"
 				>

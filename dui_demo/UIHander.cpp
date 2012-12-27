@@ -105,12 +105,12 @@ void CUIHander::OnIECtrl()
 	CDuiImageWnd *pImgWnd=(CDuiImageWnd*)m_pMainDlg->FindChildByCmdID(1139);
 	if(pImgWnd)
 	{
-		CDuiImgX *pImg=new CDuiImgX;
-		pImg->LoadImg(L"e:\\test.png");
-		CDuiImageList *pSkin=new CDuiImageList;
-		pSkin->SetImage(pImg);
-		pImgWnd->SetSkin(pSkin);
-		pSkin->Release();
+// 		CDuiImgX *pImg=new CDuiImgX;
+// 		pImg->LoadImg(L"e:\\test.png");
+// 		CDuiImageList *pSkin=new CDuiImageList;
+// 		pSkin->SetImage(pImg);
+// 		pImgWnd->SetSkin(pSkin);
+// 		pSkin->Release();
 	}
 }
 

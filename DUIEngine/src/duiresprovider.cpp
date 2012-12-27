@@ -9,40 +9,35 @@
 
 namespace DuiEngine{
 
-	DuiResProviderPE::DuiResProviderPE( HINSTANCE hInst ) :m_hResInst(hInst)
+	DuiResProviderPE::DuiResProviderPE( HINSTANCE hInst ,CDuiImgDecoder *pImgDecoder) 
+		: DuiResProviderBase(pImgDecoder),m_hResInst(hInst)
 	{
 
 	}
+
 	HBITMAP DuiResProviderPE::LoadBitmap( LPCSTR strType,UINT uID )
 	{
-		return ::LoadBitmap(m_hResInst,MAKEINTRESOURCE(uID));
+		return LoadBitmapA(m_hResInst,MAKEINTRESOURCEA(uID));
 	}
 
 	HICON DuiResProviderPE::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
 	{
-		return (HICON)::LoadImage(m_hResInst,MAKEINTRESOURCE(uID),IMAGE_ICON,cx,cy,LR_DEFAULTCOLOR|LR_DEFAULTSIZE);
+		return (HICON)::LoadImageA(m_hResInst, MAKEINTRESOURCEA(uID), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
 	}
 
-	Gdiplus::Image * DuiResProviderPE::LoadImage( LPCSTR strType,UINT uID )
+	CDuiImgBase * DuiResProviderPE::LoadImage( LPCSTR strType,UINT uID )
 	{
-		Gdiplus::Image *pImage=NULL;
-		DWORD dwSize=GetRawBufferSize(strType,uID);
-		if(dwSize==0) return NULL;
-
-		HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED, dwSize);
-		BYTE* pMem = (BYTE*)::GlobalLock(hMem);
-		GetRawBuffer(strType,uID,pMem,dwSize);
-
-		IStream* pStm = NULL;
-		::CreateStreamOnHGlobal(hMem, TRUE, &pStm);
-
-		pImage = Gdiplus::Image::FromStream(pStm);
-
-		pStm->Release();
-		::GlobalUnlock(hMem);
-// 		GlobalFree(hMem);
-
-		return pImage;	
+		if(!HasResource(strType,uID)) return NULL;
+		CDuiImgBase *pImg=GetImageDecoder()->CreateDuiImage(strType);
+		if(pImg)
+		{
+			if(!pImg->LoadFromResource(m_hResInst,strType,uID))
+			{
+				GetImageDecoder()->DestoryDuiImage(pImg);
+				pImg=NULL;
+			}
+		}
+		return pImg;
 	}
 
 	size_t DuiResProviderPE::GetRawBufferSize( LPCSTR strType,UINT uID )
@@ -86,8 +81,14 @@ namespace DuiEngine{
 		return TRUE;
 	}
 
+	BOOL DuiResProviderPE::HasResource( LPCSTR strType,UINT uID )
+	{
+		HRSRC hRsrc = ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
+		return (NULL != hRsrc);
+	}
 
-	DuiResProviderFiles::DuiResProviderFiles()
+
+	DuiResProviderFiles::DuiResProviderFiles(CDuiImgDecoder *pImgDecoder):DuiResProviderBase(pImgDecoder)
 	{
 	}
 
@@ -114,16 +115,18 @@ namespace DuiEngine{
 		return (HICON)::LoadImageA(NULL, strPath, IMAGE_ICON, cx, cy, LR_LOADFROMFILE);
 	}
 
-	Gdiplus::Image * DuiResProviderFiles::LoadImage( LPCSTR strType,UINT uID )
+	CDuiImgBase * DuiResProviderFiles::LoadImage( LPCSTR strType,UINT uID )
 	{
-		CStringA strPath=GetRes(strType,uID);
-		if(strPath.IsEmpty()) return NULL;
-		CStringW strPathW=CA2W(strPath);
-		Gdiplus::Image *pImg=new Gdiplus::Image(strPathW);
-		if(pImg->GetLastStatus() != 0)
+		if(!HasResource(strType,uID)) return NULL;
+		CDuiImgBase * pImg=GetImageDecoder()->CreateDuiImage(strType);
+		if(pImg)
 		{
-			delete pImg;
-			pImg=NULL;
+			CStringA strPath=GetRes(strType,uID);
+			if(!pImg->LoadFromFile(strPath))
+			{
+				GetImageDecoder()->DestoryDuiImage(pImg);
+				pImg=NULL;
+			}
 		}
 		return pImg;
 	}
@@ -205,4 +208,12 @@ namespace DuiEngine{
 		m_strPath=pszPath;
 		return TRUE;		
 	}
+
+	BOOL DuiResProviderFiles::HasResource( LPCSTR strType,UINT uID )
+	{
+		DuiResID resID(strType,uID);
+		std::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
+		return (it!=m_mapFiles.end());
+	}
+
 }//namespace DuiEngine

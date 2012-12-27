@@ -2,7 +2,8 @@
 #define _DUIRESPROVIDERBASE_
 #pragma once
 
-#include <GdiPlus.h>
+#include "DuiImgBase.h"
+#include "DuiImgDecoder_Def.h"
 
 #define DUIRES_XML_TYPE "XML"
 #define DUIRES_IMGX_TYPE "IMGX"
@@ -36,8 +37,13 @@ namespace DuiEngine{
 	public:
 		DuiResID(LPCSTR pszType,UINT id=0)
 		{
-			DUIASSERT(pszType);
-			strcpy_s(szType,MAX_RES_TYPE,pszType);
+			if(pszType)
+			{
+				strcpy_s(szType,MAX_RES_TYPE,pszType);
+			}else
+			{
+				szType[0]=0;
+			}
 			nID=(int)id;
 		}
 
@@ -55,12 +61,32 @@ namespace DuiEngine{
 	class DUI_EXP DuiResProviderBase
 	{
 	public:
-		virtual ~DuiResProviderBase(){}
-		virtual HBITMAP	LoadBitmap(LPCSTR strType,UINT uID)=NULL;
+		DuiResProviderBase(CDuiImgDecoder *pImgDecoder)
+		{
+			if(pImgDecoder==NULL)
+			{
+				m_bDefImgDecoder=TRUE;
+				m_pImgDecoder=new CDuiImgDecoder_Def;
+			}else
+			{
+				m_bDefImgDecoder=FALSE;
+				m_pImgDecoder=pImgDecoder;
+			}
+		}
+		virtual ~DuiResProviderBase(){
+			if(m_bDefImgDecoder) delete m_pImgDecoder;
+		}
+		virtual BOOL HasResource(LPCSTR strType,UINT uID)=NULL;
 		virtual HICON   LoadIcon(LPCSTR strType,UINT uID,int cx=0,int cy=0)=NULL;
-		virtual Gdiplus::Image * LoadImage(LPCSTR strType,UINT uID)=NULL;
+		virtual HBITMAP	LoadBitmap(LPCSTR strType,UINT uID)=NULL;
+		virtual CDuiImgBase * LoadImage(LPCSTR strType,UINT uID)=NULL;
 		virtual size_t GetRawBufferSize(LPCSTR strType,UINT uID)=NULL;
 		virtual BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size)=NULL;
+
+		CDuiImgDecoder *GetImageDecoder(){return m_pImgDecoder;};
+	protected:
+		CDuiImgDecoder * m_pImgDecoder;
+		BOOL	m_bDefImgDecoder;
 	};
 }//namespace DuiEngine
 #endif//_DUIRESPROVIDERBASE_

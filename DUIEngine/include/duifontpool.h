@@ -89,7 +89,7 @@ protected:
     LONG _GetFontAbsHeight(LONG lSize);
 
 	LOGFONT m_lfDefault;
-	CString m_strFaceName;
+	TCHAR m_szDefFontFace[LF_FACESIZE];
 	LONG m_lFontSize;
 };
 

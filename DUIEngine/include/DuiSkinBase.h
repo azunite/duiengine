@@ -1,7 +1,7 @@
 #pragma once
 
 #include "duiobject.h"
-#include "duiimage.h"
+#include "duiimgbase.h"
 #include "duiimgpool.h"
 #include "duiref.h"
 
@@ -34,14 +34,7 @@ namespace DuiEngine{
 
 		CStringA GetOwner() { return m_strOwner;}
 
-		virtual CDuiImgBase * SetImage(UINT uID)
-		{
-			if(m_bManaged && m_pDuiImg) delete m_pDuiImg;
-			CDuiImgBase * pRet=m_pDuiImg;
-			m_pDuiImg=DuiImgPool::getSingleton().GetImage(uID);
-			m_bManaged=FALSE;
-			return pRet;
-		}
+
 		virtual CDuiImgBase * SetImage(CDuiImgBase *pImg)
 		{
 			if(m_bManaged && m_pDuiImg) delete m_pDuiImg;
@@ -95,11 +88,9 @@ namespace DuiEngine{
 
 		virtual void OnAttributeFinish(TiXmlElement* pXmlElem)
 		{
+			//加载图片文件参数，它保存在皮肤的imgparam子节点中
 			TiXmlElement *pXmlImgParam=pXmlElem->FirstChildElement("imgparam");
-			if(pXmlImgParam && m_pDuiImg)
-			{//加载图片文件参数，它保存在皮肤的imgparam子节点中
-				m_pDuiImg->Load(pXmlImgParam);
-			}
+			if(m_pDuiImg) m_pDuiImg->SetAttributes(pXmlImgParam);
 		}
 
 		CDuiImgBase *m_pDuiImg;

@@ -66,7 +66,7 @@ namespace DuiEngine{
 			m_nCount=0;
 		}
 
-		DuiResProviderPE resProvider(m_hInst);
+		DuiResProviderPE resProvider(m_hInst,NULL);
 
 		DWORD dwSize=resProvider.GetRawBufferSize(pszType,uXmlResID);
 		if(dwSize==0) return 0;

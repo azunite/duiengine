@@ -37,8 +37,8 @@
 void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #define DUITRACE DuiTrace
 
-#include "strcvt\cpconv.h"
-#include "tinyxml\tinyxml.h"
+#include "..\dependencies\strcvt\cpconv.h"
+#include "..\dependencies\tinyxml\tinyxml.h"
 
 #ifdef DEBUG
 #pragma comment(lib,"strcvt_d.lib")
@@ -48,7 +48,7 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #pragma comment(lib,"tinyxml.lib")
 #endif//DEBUG
 
-
+#include "DuiAttrCrack.h"
 
 #ifndef NO_DUITYPES
 

@@ -7,9 +7,9 @@ namespace DuiEngine{
 class CDuiWindowFactory
 {
 public:
-	virtual DuiEngine::CDuiWindow* NewWindow() = 0;
+	virtual CDuiWindow* NewWindow() = 0;
 
-	virtual void DeleteWindow(DuiEngine::CDuiWindow* pWnd) = 0;
+	virtual void DeleteWindow(CDuiWindow* pWnd) = 0;
 
 	virtual const CStringA & getWindowType()=0;
 };
@@ -24,7 +24,7 @@ public:
 	}
 
 	// Implement WindowFactory interface
-	DuiEngine::CDuiWindow* NewWindow()
+	CDuiWindow* NewWindow()
 	{
 		return new T;
 	}
@@ -46,7 +46,7 @@ protected:
 
 
 typedef CDuiWindowFactory* CDuiWindowFactoryPtr;
-class DuiWindowFactoryManager :
+class DUI_EXP DuiWindowFactoryManager :
 	public DuiSingletonMap<DuiWindowFactoryManager,CDuiWindowFactoryPtr,CStringA>
 {
 public:
@@ -63,7 +63,8 @@ public:
 	bool RegisterFactory(CDuiWindowFactory *pWndFactory)
 	{
 		if(HasKey(pWndFactory->getWindowType())) return false;
-		m_mapNamedObj[pWndFactory->getWindowType()]=pWndFactory;
+		AddKeyObject(pWndFactory->getWindowType(),pWndFactory);
+// 		(*m_mapNamedObj)[pWndFactory->getWindowType()]=pWndFactory;
 		return true;
 	}
 
@@ -78,7 +79,7 @@ public:
 	bool UnregisterFactory(CDuiWindowFactory *pWndFactory)
 	{
 		if(!HasKey(pWndFactory->getWindowType())) return false;
-		m_mapNamedObj.erase(pWndFactory->getWindowType());
+		m_mapNamedObj->erase(pWndFactory->getWindowType());
 		return true;
 	}
 

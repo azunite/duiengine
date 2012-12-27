@@ -360,6 +360,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiImgDecoder_Def.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\duiimgpool.cpp"
 				>
 			</File>
@@ -542,6 +546,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\include\DuiAttrCrack.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\DuiCaption.h"
 				>
 			</File>
@@ -591,6 +599,14 @@
 			</File>
 			<File
 				RelativePath=".\include\duiimage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiImgBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiImgDecoder_Def.h"
 				>
 			</File>
 			<File

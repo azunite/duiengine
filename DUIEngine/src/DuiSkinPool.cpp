@@ -16,7 +16,6 @@ namespace DuiEngine{
 		AddKeyObject(CDuiSkinGradation::GetClassName(),new TplSkinFactory<CDuiSkinGradation>());
 		AddKeyObject(CDuiScrollbarSkin::GetClassName(),new TplSkinFactory<CDuiScrollbarSkin>());
 		AddKeyObject(CDuiSkinMenuBorder::GetClassName(),new TplSkinFactory<CDuiSkinMenuBorder>());
-		AddKeyObject(CDuiSkinGif::GetClassName(),new TplSkinFactory<CDuiSkinGif>());
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -107,15 +106,15 @@ namespace DuiEngine{
 
 		int nFreed=0;
 
-		std::map<CStringA,DuiSkinPtr>::iterator pos=m_mapNamedObj.begin();
-		while(pos!=m_mapNamedObj.end())
+		std::map<CStringA,DuiSkinPtr>::iterator pos=m_mapNamedObj->begin();
+		while(pos!=m_mapNamedObj->end())
 		{
 			std::map<CStringA,DuiSkinPtr>::iterator posPrev=pos;
 			pos++;
 			if(posPrev->second->GetOwner()==strOwnerName)
 			{
 				OnKeyRemoved(posPrev->second);
-				m_mapNamedObj.erase(posPrev);
+				m_mapNamedObj->erase(posPrev);
 				nFreed++;
 			}
 		}
