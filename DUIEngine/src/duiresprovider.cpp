@@ -42,7 +42,7 @@ namespace DuiEngine{
 
 	size_t DuiResProviderPE::GetRawBufferSize( LPCSTR strType,UINT uID )
 	{
-		HRSRC hRsrc = ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
+		HRSRC hRsrc = MyFindResource(strType,uID);
 
 		if (NULL == hRsrc)
 			return 0;
@@ -52,7 +52,8 @@ namespace DuiEngine{
 
 	BOOL DuiResProviderPE::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
 	{
-		HRSRC hRsrc = ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
+		DUIASSERT(strType);
+		HRSRC hRsrc = MyFindResource(strType,uID);
 
 		if (NULL == hRsrc)
 			return FALSE;
@@ -83,8 +84,16 @@ namespace DuiEngine{
 
 	BOOL DuiResProviderPE::HasResource( LPCSTR strType,UINT uID )
 	{
-		HRSRC hRsrc = ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
-		return (NULL != hRsrc);
+		DUIASSERT(strType);
+		return MyFindResource(strType,uID)!=NULL;
+	}
+
+	HRSRC DuiResProviderPE::MyFindResource( LPCSTR strType, UINT uID )
+	{
+		if(stricmp(strType,DUIRES_BMP_TYPE)==0) strType=MAKEINTRESOURCEA(2);//RT_BITMAP;
+		else if(stricmp(strType,DUIRES_ICON_TYPE)==0) strType=MAKEINTRESOURCEA(3);//RT_ICON;
+
+		return ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
 	}
 
 

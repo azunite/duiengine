@@ -461,7 +461,7 @@ void CDuiHostWnd::OnMouseMove(UINT nFlags, CPoint point)
 		tme.hwndTrack = m_hWnd;
 		tme.dwFlags = TME_LEAVE;
 		tme.dwHoverTime = 0;
-		m_bTrackFlag = _TrackMouseEvent(&tme);
+		m_bTrackFlag = TrackMouseEvent(&tme);
 	}
 
 	OnMouseEvent(WM_MOUSEMOVE,nFlags,MAKELPARAM(point.x,point.y));

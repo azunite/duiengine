@@ -15,7 +15,7 @@ namespace DuiEngine
 
 		virtual CDuiImgBase* CreateDuiImage(LPCSTR pszType);
 		virtual void DestoryDuiImage(CDuiImgBase* pImg);
-		virtual LPCSTR GetSupportTypes() {return "bmp\0imgx\0";}
+		virtual LPCSTR GetSupportTypes() {return "BMP\0IMGX\0";}
 	};
 
 }//end of namespace DuiEngine

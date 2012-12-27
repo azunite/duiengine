@@ -24,6 +24,7 @@ namespace DuiEngine{
 		BOOL HasResource(LPCSTR strType,UINT uID);
 
 	protected:
+		HRSRC MyFindResource(LPCSTR strType, UINT uID );
 		HINSTANCE m_hResInst;
 	};
 
