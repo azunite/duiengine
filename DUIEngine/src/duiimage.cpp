@@ -434,7 +434,7 @@ BOOL CDuiImgX::LoadFromMemory( LPVOID pBuf,DWORD dwSize )
 	IStream* pStm = NULL;
 	::CreateStreamOnHGlobal(hMem, TRUE, &pStm);
 
-	Gdiplus::Image * pImage = Gdiplus::Image::FromStream(pStm);
+	m_pImg = Gdiplus::Image::FromStream(pStm);
 
 	pStm->Release();
 	::GlobalUnlock(hMem);
