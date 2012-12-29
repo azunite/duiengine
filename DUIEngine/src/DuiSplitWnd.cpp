@@ -46,6 +46,50 @@ BOOL CDuiSplitWnd::GetPaneInfo( int iPane,int *pnIdealSize,int *pnMinSize,int *p
 	return TRUE;
 }
 
+BOOL CDuiSplitWnd::ShowPanel(int iPane)
+{
+	if (iPane < 0 || iPane >= m_arrPane.size()) return FALSE;
+
+	m_arrPane[iPane]->SetVisible(TRUE);
+	Relayout();
+	NotifyInvalidate();
+	return TRUE;
+}
+
+BOOL CDuiSplitWnd::HidePanel(int iPane)
+{
+	if (iPane < 0 || iPane >= m_arrPane.size()) return FALSE;
+
+	m_arrPane[iPane]->SetVisible(FALSE);
+	Relayout();
+	NotifyInvalidate();
+	return TRUE;
+}
+
+int CDuiSplitWnd::GetVisiblePanelCount()
+{
+	int nCount = 0;
+	for(int i=0; i<m_arrPane.size(); i++)
+	{
+		if (m_arrPane[i]->IsVisible())
+			nCount++;
+	}
+	return nCount;
+}
+
+int CDuiSplitWnd::GetNextVisiblePanel(int iPanel)
+{
+	if (iPanel < 0 || iPanel + 1 >=  m_arrPane.size())
+		return -1;
+
+	for(int i = iPanel + 1; i < m_arrPane.size(); i++)
+	{
+		if (m_arrPane[i]->IsVisible())
+			return i;
+	}
+	return -1;
+}
+
 BOOL CDuiSplitWnd::LoadChildren( TiXmlElement* pTiXmlChildElem )
 {
 	if(!pTiXmlChildElem) return FALSE;
@@ -69,6 +113,8 @@ BOOL CDuiSplitWnd::LoadChildren( TiXmlElement* pTiXmlChildElem )
 
 BOOL CDuiSplitWnd::OnDuiSetCursor(const CPoint &pt)
 {
+	if (!m_bAdjustable) return FALSE;
+
 	SetCursor(LoadCursor(NULL,MAKEINTRESOURCE(m_bColMode?IDC_SIZEWE:IDC_SIZENS)));
 	return TRUE;
 }
@@ -101,6 +147,7 @@ void CDuiSplitWnd::OnPaint( CDCHandle dc )
 		for(int i=0;i<m_arrPane.size()-1;i++)
 		{
 			CRect rcPane;
+			if (!m_arrPane[i]->IsVisible()) continue;
 			m_arrPane[i]->GetRect(&rcPane);
 			RB+=m_bColMode?rcPane.Width():rcPane.Height();
 			LT=RB;
@@ -128,6 +175,8 @@ void CDuiSplitWnd::OnLButtonDown( UINT nFlags,CPoint pt )
 {
 	__super::OnLButtonDown(nFlags,pt);
 
+	if (!m_bAdjustable) return;
+
 	CRect rcClient;
 	GetClient(&rcClient);
 
@@ -142,6 +191,7 @@ void CDuiSplitWnd::OnLButtonDown( UINT nFlags,CPoint pt )
 	for(int i=0;i<m_arrPane.size();i++)
 	{
 		CRect rcPane;
+		if (!m_arrPane[i]->IsVisible()) continue;
 		m_arrPane[i]->GetRect(&rcPane);
 		nLT=m_bColMode?rcPane.right:rcPane.bottom;
 		nRB=nLT+m_nSepSize;
@@ -166,8 +216,11 @@ void CDuiSplitWnd::OnMouseMove( UINT nFlags,CPoint pt )
 
 	LockUpdate();
 	CRect rcPane1,rcPane2;
+	int nNextPanel = GetNextVisiblePanel(m_iDragBeam);	
+	if (nNextPanel == -1) return;
+
 	m_arrPane[m_iDragBeam]->GetRect(&rcPane1);
-	m_arrPane[m_iDragBeam+1]->GetRect(&rcPane2);
+	m_arrPane[nNextPanel]->GetRect(&rcPane2);
 
 	CPoint ptMove=pt-m_ptClick;
 
@@ -234,13 +287,14 @@ void CDuiSplitWnd::Relayout()
 	int nTotalIdeal=0,nTotalMin=0;
 	for(int i=0;i<m_arrPane.size();i++)
 	{
+		if (!m_arrPane[i]->IsVisible()) continue;
 		nTotalIdeal+=m_arrPane[i]->m_nSizeIdeal;
 		nTotalMin+=m_arrPane[i]->m_nSizeMin;
 	}
 
 	CRect rcClient;
 	GetClient(&rcClient);
-	int nInter=(m_arrPane.size()-1)*m_nSepSize;
+	int nInter=(GetVisiblePanelCount()-1)*m_nSepSize;
 	int nSize=m_bColMode?rcClient.Width():rcClient.Height();
 
 	CRect rcPane=rcClient;
@@ -254,6 +308,7 @@ void CDuiSplitWnd::Relayout()
 	{//set all pane to minimize size		
 		for(int i=0;i<m_arrPane.size();i++)
 		{
+			if (!m_arrPane[i]->IsVisible()) continue;
 			nRB+=m_arrPane[i]->m_nSizeMin;
 			m_arrPane[i]->Move(&rcPane);
 			nLT=nRB+m_nSepSize;
@@ -265,6 +320,7 @@ void CDuiSplitWnd::Relayout()
 		int i;
 		for(i=0;i<m_arrPane.size();i++)
 		{
+			if (!m_arrPane[i]->IsVisible()) continue;
 			if(m_arrPane[i]->m_nPriority>nPriority)
 			{
 				nPriority=m_arrPane[i]->m_nPriority;
@@ -273,6 +329,7 @@ void CDuiSplitWnd::Relayout()
 		}
 		for(i=0;i<m_arrPane.size();i++)
 		{
+			if (!m_arrPane[i]->IsVisible()) continue;
 			if(i!=iLowest)
 				nRB+=m_arrPane[i]->m_nSizeIdeal;
 			else
@@ -299,11 +356,13 @@ void CDuiSplitWnd::Relayout()
 		BOOL bMinimize=FALSE;
 		for(i=0;i<m_arrPane.size();i++)
 		{
+			if (!m_arrPane[i]->IsVisible()) continue;
 			if(!bMinimize)
 			{
 				int nRequiredMin=0;
 				for(int j=i+1;j<m_arrPane.size();j++)
 				{
+					if (!m_arrPane[j]->IsVisible()) continue;
 					nRequiredMin+=pnPriority[j].pPane->m_nSizeMin;
 				}
 				if(nRequiredMin<nRemainSize-pnPriority[i].pPane->m_nSizeIdeal)
@@ -323,6 +382,7 @@ void CDuiSplitWnd::Relayout()
 		//设置格子位置
 		for(i=0;i<m_arrPane.size();i++)
 		{
+			if (!m_arrPane[i]->IsVisible()) continue;
 			nRB+=pPaneSize[i];
 			m_arrPane[i]->Move(&rcPane);
 			nLT=nRB+m_nSepSize;

@@ -44,7 +44,15 @@ public:
 
 	BOOL GetPaneInfo(int iPane,int *pnIdealSize,int *pnMinSize,int *pnPriority);
 
+	BOOL ShowPanel(int iPane);
+
+	BOOL HidePanel(int iPane);
+
 protected:
+
+	int GetVisiblePanelCount();
+
+	int GetNextVisiblePanel(int iPanel);
 
 	virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
 
