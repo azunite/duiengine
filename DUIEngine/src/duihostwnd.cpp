@@ -68,7 +68,7 @@ HWND CDuiHostWnd::Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWO
 
 HWND CDuiHostWnd::Create(HWND hWndParent,int x,int y,int nWidth,int nHeight)
 {
-	return Create(hWndParent, NULL,WS_POPUP,0,x,y,nWidth,nHeight,0);
+	return Create(hWndParent, NULL,WS_POPUP | WS_CLIPCHILDREN | WS_TABSTOP,0,x,y,nWidth,nHeight,0);
 }
 
 BOOL CDuiHostWnd::Load(UINT uResID)
@@ -101,8 +101,8 @@ BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
 
 	CStringA strValue;
 
-	m_dwDlgStyle    = WS_POPUP | WS_CLIPCHILDREN | WS_TABSTOP;
-	m_dwDlgExStyle  = 0;
+	m_dwDlgStyle =CSimpleWnd::GetStyle();
+	m_dwDlgExStyle  = CSimpleWnd::GetExStyle();
 
 	DuiSendMessage(WM_DESTROY);
 
@@ -406,6 +406,8 @@ void CDuiHostWnd::OnDestroy()
 {	
 	if(m_pTipCtrl)
 	{
+		if (m_pTipCtrl->IsWindow())
+			m_pTipCtrl->DestroyWindow();
 		delete m_pTipCtrl;
 	}
 
@@ -813,10 +815,9 @@ BOOL CDuiHostWnd::DuiSetCaretPos( int x,int y )
 
 LRESULT CDuiHostWnd::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
 {
-	if (bCalcValidRects)
+	if (bCalcValidRects && (CSimpleWnd::GetStyle() & WS_POPUP)) 
 	{
 		CRect rcWindow;
-
 		GetWindowRect(rcWindow);
 
 		LPNCCALCSIZE_PARAMS pParam = (LPNCCALCSIZE_PARAMS)lParam;
