@@ -65,6 +65,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				AdditionalLibraryDirectories="dependencies\lib"
 				GenerateDebugInformation="true"
@@ -142,6 +143,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="dependencies\lib"
@@ -208,6 +210,7 @@
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
+				ShowIncludes="false"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -220,6 +223,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="..\lib\$(ProjectName)_static_d.lib"
 				AdditionalLibraryDirectories=""
 			/>
@@ -287,6 +291,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="..\lib\$(ProjectName)_static.lib"
 				AdditionalLibraryDirectories=""
 			/>
@@ -814,6 +819,10 @@
 				</File>
 				<File
 					RelativePath=".\include\wtl.mini\duimisc.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\wtl.mini\stdstr.h"
 					>
 				</File>
 			</Filter>

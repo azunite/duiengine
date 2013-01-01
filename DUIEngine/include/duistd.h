@@ -32,36 +32,32 @@
 #include <Shlwapi.h>
 #include <OleCtl.h>
 #include <assert.h>
+#include <tchar.h>
 
 #define DUIASSERT(x) assert(x)
 void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #define DUITRACE DuiTrace
 
-#include "..\dependencies\strcvt\cpconv.h"
 #include "..\dependencies\tinyxml\tinyxml.h"
 
 #ifdef DEBUG
-#pragma comment(lib,"strcvt_d.lib")
 #pragma comment(lib,"tinyxml_d.lib")
 #else
-#pragma comment(lib,"strcvt.lib")
 #pragma comment(lib,"tinyxml.lib")
 #endif//DEBUG
 
-#include "DuiAttrCrack.h"
 
 #ifndef NO_DUITYPES
-
-#define _WTYPES_NS DuiEngine
-#include "wtl.mini/duicrack.h"
-#include "wtl.mini/duimisc.h"
-#include "wtl.mini/duigdi.h"
-
+	#define _WTYPES_NS DuiEngine
+	#include "wtl.mini/duicrack.h"
+	#include "wtl.mini/duimisc.h"
+	#include "wtl.mini/duigdi.h"
 #endif
 
-#include <string>
+#ifndef NO_STDSTR	//如果应用程序中已经有CString，则应该打开该开关，防止命名冲突
+	#include "wtl.mini/stdstr.h"
+#endif//NO_STDSTR
 
-#pragma comment(lib,"shlwapi.lib")
-#pragma comment(lib,"Msimg32.lib")
+#include "DuiAttrCrack.h"
 
 #pragma warning(disable:4251)

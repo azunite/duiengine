@@ -14,12 +14,15 @@
 #include "resource.h"	//APP资源
 #include "duires/res.h" //包含DUI资源定义
 
+#include "../zlib/zconf.h"
+#include "../zlib/zlib.h"
 
 using namespace DuiEngine;
 
 #ifdef _DEBUG
 
 # pragma comment(lib, "tinyxml_d.lib")
+#pragma comment(lib,"zlib_d.lib")
 
 	#ifdef DLL_DUI
 	# pragma comment(lib, "duiengine_d.lib")
@@ -29,6 +32,7 @@ using namespace DuiEngine;
 #else
 
 # pragma comment(lib, "tinyxml.lib")
+#pragma comment(lib,"zlib.lib")
 
 	#ifdef DLL_DUI
 	# pragma comment(lib, "duiengine.lib")

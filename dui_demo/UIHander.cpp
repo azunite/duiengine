@@ -18,12 +18,9 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 	//演示在程序初始化的时候通过如用户配置文件设置PANE的大小.
 // 	CDuiSplitWnd *pSplit=(CDuiSplitWnd*)m_pMainDlg->FindChildByCmdID(1180);
 // 	pSplit->SetPaneInfo(0,100,-1,-1);
-	CDuiRichEdit *pEdit=(CDuiRichEdit*)m_pMainDlg->FindChildByCmdID(1140);
-	pEdit->DuiSendMessage(EM_SETEVENTMASK,0,ENM_CHANGE);
+// 	CDuiRichEdit *pEdit=(CDuiRichEdit*)m_pMainDlg->FindChildByCmdID(1140);
+// 	pEdit->DuiSendMessage(EM_SETEVENTMASK,0,ENM_CHANGE);
 
-
-// 	CDuiWebkit *pwebkit=(CDuiWebkit*)m_pMainDlg->FindChildByCmdID(1205);
-// 	pwebkit->SetCookieUsage(L"e:\\testcookie.txt",100*1024,1024,100);
     return 0; 
 }
 
