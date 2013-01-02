@@ -21,10 +21,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 	DuiSystem duiSystem(hInstance);
 	DefaultLogger loger;
-	loger.setLogFilename(CStringA(szCurrentDir)+"\\dui-demo.log");
+	loger.setLogFilename(CA2T(CStringA(szCurrentDir)+"\\dui-demo.log"));
 	duiSystem.SetLogger(&loger);
 
-	duiSystem.logEvent("demo started");
+	duiSystem.logEvent(_T("demo started"));
 	duiSystem.InitName2ID(IDR_NAME2ID,"XML2");//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 #ifdef __DUIFILE_RC 
 	//从文件夹加载皮肤,指定皮肤位置
@@ -54,7 +54,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		nRet = dlgMain.DoModal();  
 	}
 
-	duiSystem.logEvent("demo end");
+	duiSystem.logEvent(_T("demo end"));
 
 	delete duiSystem.GetResProvider();
 
