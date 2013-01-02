@@ -53,7 +53,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies"
+				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies;..\duiengine\dependencies\eastl\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -147,7 +147,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies"
+				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies;..\duiengine\dependencies\eastl\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -240,7 +240,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies"
+				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies;..\duiengine\dependencies\eastl\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;DLL_DUI"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -334,7 +334,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies"
+				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies;..\duiengine\dependencies\eastl\include"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;DLL_DUI"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"

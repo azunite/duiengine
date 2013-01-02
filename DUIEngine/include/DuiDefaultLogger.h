@@ -72,7 +72,7 @@ public:
 	\return
 		Nothing
 	*/
-	virtual void logEvent(const CStringA & message, LoggingLevel level = Standard);
+	virtual void logEvent(LPCTSTR message, LoggingLevel level = Standard);
 
     /*!
     \brief
@@ -89,15 +89,14 @@ public:
         - true if events should be added to the end of the current file.
         - false if the current contents of the file should be discarded.
      */
-    virtual void setLogFilename(const CStringA& filename, bool append = false);
+    virtual void setLogFilename(LPCTSTR filename, bool append = false);
 
 protected:
     /*************************************************************************
 		Implementation Data
 	*************************************************************************/
-	std::ofstream	d_ostream;		//!< Stream used to implement the logger
-    std::vector<std::pair<CStringA, LoggingLevel> > d_cache;    //!< Used to cache log entries before log file is created.
-    std::ostringstream d_workstream;//!< Used to build log entry strings. 
+	FILE * d_pFile;
+    STL_NS::vector<STL_NS::pair<CString, LoggingLevel> > d_cache;    //!< Used to cache log entries before log file is created.
     bool d_caching;                 //!< true while log entries are beign cached (prior to logfile creation)
 };
 

@@ -3,7 +3,6 @@
 #include "duiobject.h"
 #include "duiskinpool.h"
 #include "SimpleWnd.h"
-#include <vector>
 
 namespace DuiEngine{
 
@@ -201,7 +200,7 @@ protected:
 
 	void BuildMenu(HMENU menuPopup,TiXmlElement *pTiXmlMenu);
 
-	std::vector<DuiMenuItemData *> m_arrDmmi;
+	STL_NS::vector<DuiMenuItemData *> m_arrDmmi;
 	CDuiMenuAttr	m_menuSkin;
 	CDuiMenu	*	m_pParent;
 };

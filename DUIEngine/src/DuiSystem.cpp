@@ -144,18 +144,18 @@ namespace DuiEngine{
 		delete DuiThreadActiveWndManager::getSingletonPtr();
 	}
 
-	void DuiSystem::logEvent( const CStringA & message, LoggingLevel level /*= Standard*/ )
+	void DuiSystem::logEvent( LPCTSTR message, LoggingLevel level /*= Standard*/ )
 	{
 		if(m_pLogger) m_pLogger->logEvent(message,level);
 	}
 
-	void DuiSystem::logEvent(LoggingLevel level , LPCSTR pszFormat, ...)
+	void DuiSystem::logEvent(LoggingLevel level , LPCTSTR pszFormat, ...)
 	{
 		if(!m_pLogger) return;
-		char szBuffer[1025] = { 0 };
+		TCHAR szBuffer[1025] = { 0 };
 		va_list argList;
 		va_start(argList, pszFormat);
-		::wvsprintfA((char*)szBuffer, pszFormat, argList);
+		::wvnsprintf(szBuffer,ARRAYSIZE(szBuffer)-1, pszFormat, argList);
 		va_end(argList);
 		m_pLogger->logEvent(szBuffer,level);
 	}

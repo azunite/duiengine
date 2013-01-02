@@ -930,7 +930,7 @@ LRESULT CDuiHostWnd::OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam)
 		m_aMsgFilter.push_back(pMsgFilter);
 	}else
 	{
-		std::vector<CDuiMessageFilter*>::iterator it= m_aMsgFilter.begin();
+		STL_NS::vector<CDuiMessageFilter*>::iterator it= m_aMsgFilter.begin();
 		while(it!=m_aMsgFilter.end())
 		{
 			if(*it == pMsgFilter)

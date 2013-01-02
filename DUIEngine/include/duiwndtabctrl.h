@@ -9,7 +9,6 @@
 
 #include "duiwndnotify.h"
 #include "duiwndcmnctrl.h"
-#include <vector>
 
 namespace DuiEngine{
 
@@ -99,7 +98,7 @@ protected:
     CPoint m_ptText;
     int m_nTabAlign;
 
-	std::vector<CDuiTab*> m_lstPages;
+	STL_NS::vector<CDuiTab*> m_lstPages;
 
 	CDuiTabSlide	m_tabSlide;
 

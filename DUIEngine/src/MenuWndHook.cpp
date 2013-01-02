@@ -28,7 +28,7 @@ const TCHAR CoolMenu_oldProc[] = _T("CoolMenu_oldProc");
 								class CMenuWndHook
 			  ------------------------------------------------
   ########################################################################*/
-std::map <HWND,CMenuWndHook*> CMenuWndHook::m_WndMenuMap;
+STL_NS::map <HWND,CMenuWndHook*> CMenuWndHook::m_WndMenuMap;
 
 HHOOK CMenuWndHook::m_hMenuHook = NULL;
 CStringA CMenuWndHook::m_strSkinName = "";
@@ -62,7 +62,7 @@ void CMenuWndHook::InstallHook(HINSTANCE hInst,LPCSTR pszSkinName)
 
 void CMenuWndHook::UnInstallHook()
 {
-	std::map<HWND,CMenuWndHook*>::iterator it=m_WndMenuMap.begin();
+	STL_NS::map<HWND,CMenuWndHook*>::iterator it=m_WndMenuMap.begin();
 
     while (it!=m_WndMenuMap.end())
     {
@@ -79,7 +79,7 @@ void CMenuWndHook::UnInstallHook()
 
 CMenuWndHook* CMenuWndHook::GetWndHook(HWND hwnd)
 {
-	std::map<HWND,CMenuWndHook*>::iterator it=m_WndMenuMap.find(hwnd);
+	STL_NS::map<HWND,CMenuWndHook*>::iterator it=m_WndMenuMap.find(hwnd);
 	if(it==m_WndMenuMap.end()) return NULL;
 	return it->second;
 }

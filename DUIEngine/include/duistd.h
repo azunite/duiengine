@@ -34,6 +34,18 @@
 #include <assert.h>
 #include <tchar.h>
 
+#ifndef USE_STDSTL
+	#include <eastl\string.h>
+	#include <eastl\vector.h>
+	#include <eastl\map.h>
+	#define STL_NS	eastl
+#else
+	#include <string>
+	#include <vector>
+	#include <map>
+	#define STL_NS std
+#endif
+
 #define DUIASSERT(x) assert(x)
 void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #define DUITRACE DuiTrace
@@ -41,9 +53,15 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #include "..\dependencies\tinyxml\tinyxml.h"
 
 #ifdef DEBUG
-#pragma comment(lib,"tinyxml_d.lib")
+	#pragma comment(lib,"tinyxml_d.lib")
+	#ifndef USE_STDSTL
+		#pragma comment(lib,"stl_d.lib")
+	#endif
 #else
-#pragma comment(lib,"tinyxml.lib")
+	#pragma comment(lib,"tinyxml.lib")
+	#ifndef USE_STDSTL
+		#pragma comment(lib,"stl.lib")
+	#endif
 #endif//DEBUG
 
 
@@ -54,10 +72,16 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 	#include "wtl.mini/duigdi.h"
 #endif
 
-#ifndef NO_STDSTR	//如果应用程序中已经有CString，则应该打开该开关，防止命名冲突
-	#include "wtl.mini/stdstr.h"
-#endif//NO_STDSTR
+#include "wtl.mini/stdstr.h" //注意：如果CString已经定义，可以定义NO_STDSTR来防止命名冲突
 
 #include "DuiAttrCrack.h"
 
 #pragma warning(disable:4251)
+
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif

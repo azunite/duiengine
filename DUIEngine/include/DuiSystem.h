@@ -66,9 +66,9 @@ public:
 	}
 	Logger * GetLogger() {return m_pLogger;}
 
-	void logEvent(const CStringA & message, LoggingLevel level = Standard);
+	void logEvent(LPCTSTR message, LoggingLevel level = Standard);
 
-	void logEvent(LoggingLevel level , LPCSTR format, ...);
+	void logEvent(LoggingLevel level , LPCTSTR format, ...);
 
 	UINT Name2ID(CStringA strName);
 

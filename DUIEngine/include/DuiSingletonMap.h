@@ -1,6 +1,5 @@
 #pragma once
 #include "DUISingleton.h"
-#include <map>
 namespace DuiEngine{
 
 template<class TClass,class TObj,class TKey=CStringA>
@@ -9,7 +8,7 @@ class DUI_EXP DuiSingletonMap :public Singleton<TClass>
 public:
 	DuiSingletonMap(void (*funOnKeyRemoved)(const TObj &)=NULL):m_pFunOnKeyRemoved(funOnKeyRemoved)
 	{
-		m_mapNamedObj=new std::map<TKey,TObj>;
+		m_mapNamedObj=new STL_NS::map<TKey,TObj>;
 	}
 	virtual ~DuiSingletonMap(){
 		RemoveAll();
@@ -54,7 +53,7 @@ public:
 	{
 		if(m_pFunOnKeyRemoved)
 		{
-			std::map<TKey,TObj>::iterator it=m_mapNamedObj->begin();
+			STL_NS::map<TKey,TObj>::iterator it=m_mapNamedObj->begin();
 			while(it!=m_mapNamedObj->end())
 			{
 				m_pFunOnKeyRemoved(it->second);
@@ -70,7 +69,7 @@ public:
 protected:
 	void (*m_pFunOnKeyRemoved)(const TObj &obj);
 
-	std::map<TKey,TObj> *m_mapNamedObj;
+	STL_NS::map<TKey,TObj> *m_mapNamedObj;
 };
 
 

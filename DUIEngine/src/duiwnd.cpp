@@ -656,7 +656,7 @@ BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
 	return TRUE;
 }
 
-CDuiWindow * CDuiWindow::LoadXmlChildren(std::string utf8Xml)
+CDuiWindow * CDuiWindow::LoadXmlChildren(STL_NS::string utf8Xml)
 {
 	TiXmlDocument doc;
 	doc.Parse( utf8Xml.c_str(),NULL, TIXML_ENCODING_UTF8); 

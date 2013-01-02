@@ -1,3 +1,8 @@
+2013年1月2日
+1、将stl库替换为eastl库，可能通过配置选择std库。
+2、将strcvt整合到duiengine库中。
+3、删除zipresprovider工程，以源代码方式加到dui-demo工程中。
+
 2012年12月27日（重要更新）
 1、将图片加载模块抽象出来，方便在应用程序中配置自己的图片处理器。需要从CDuiImgDecoder派生出自己的图象处理器，生成一个实例交给CDuiResProvider，具体可以参考CDuiImgDecoder_Def的实现。
 2、删除库中的CDuiSkinGif类。

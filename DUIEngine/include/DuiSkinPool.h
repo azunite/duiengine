@@ -7,6 +7,7 @@ namespace DuiEngine{
 	class CSkinFactory
 	{
 	public:
+		virtual ~CSkinFactory(){}
 		virtual CDuiSkinBase * NewSkin()=NULL;
 		virtual void DeleteSkin(CDuiSkinBase *)=NULL;
 		virtual const CStringA & GetTypeName()=NULL;

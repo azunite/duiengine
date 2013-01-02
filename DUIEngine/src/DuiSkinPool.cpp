@@ -106,10 +106,10 @@ namespace DuiEngine{
 
 		int nFreed=0;
 
-		std::map<CStringA,DuiSkinPtr>::iterator pos=m_mapNamedObj->begin();
+		STL_NS::map<CStringA,DuiSkinPtr>::iterator pos=m_mapNamedObj->begin();
 		while(pos!=m_mapNamedObj->end())
 		{
-			std::map<CStringA,DuiSkinPtr>::iterator posPrev=pos;
+			STL_NS::map<CStringA,DuiSkinPtr>::iterator posPrev=pos;
 			pos++;
 			if(posPrev->second->GetOwner()==strOwnerName)
 			{

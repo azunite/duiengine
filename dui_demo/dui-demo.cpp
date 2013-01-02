@@ -27,32 +27,32 @@ public:
 
 };
 
-
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
 	HRESULT hRes = CoInitialize(NULL);
 	DUIASSERT(SUCCEEDED(hRes));
  
-
 	//////////////////////////////////////////////////////////////////////////
-	//<--资源类型选择
+	//<--资源类型选择 
 	DuiSystem * pDuiModeSel = new DuiSystem(hInstance);
 	DuiResProviderZip *pResModeSel= new DuiResProviderZip;
 	pResModeSel->Init(hInstance,IDR_ZIP_MODESEL,_T("ZIP"));
 	pDuiModeSel->SetResProvider(pResModeSel);
-	DuiSkinPool::getSingleton().Init(100); // 加载皮肤,为了不依赖于程序中的宏定义，此处的ID采用硬编码
-	DuiStylePool::getSingleton().Init(101); // 加载风格
-	DuiCSS::getSingleton().Init(104);//加载类默认属性
-	int nMode=0;
-	{
-		CResModeSelDlg dlgModeSel;  
-		if(IDOK==dlgModeSel.DoModal())
-		{
-			nMode=dlgModeSel.m_nMode;
-		}
-	}
+ 	DuiSkinPool::getSingleton().Init(100); // 加载皮肤,为了不依赖于程序中的宏定义，此处的ID采用硬编码
+ 	DuiStylePool::getSingleton().Init(101); // 加载风格
+ 	DuiCSS::getSingleton().Init(104);//加载类默认属性
+	int nMode=-1;
+ 	{
+ 		CResModeSelDlg dlgModeSel;  
+ 		if(IDOK==dlgModeSel.DoModal())
+ 		{
+ 			nMode=dlgModeSel.m_nMode;
+ 		}
+ 	}
 	delete pResModeSel;
 	delete pDuiModeSel;
+	if(nMode==-1) return -1;
+
 	//资源类型选择完成 -->
 	
 	DuiSystem *pDuiSystem=new DuiSystem(hInstance);
@@ -72,11 +72,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	*lpInsertPos = '\0';   
 
 	DefaultLogger loger;
-	loger.setLogFilename(CStringA(szCurrentDir)+"\\dui-demo.log");
+	loger.setLogFilename(CA2T(CStringA(szCurrentDir)+"\\dui-demo.log")); 
 	pDuiSystem->SetLogger(&loger);
 	pDuiSystem->InitName2ID(IDR_NAME2ID,"XML2");//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 
-	//根据选择的资源加载模式生成resprovider
+	//根据选择的资源加载模式生成resprovider 
 	switch(nMode)
 	{
 	case 0://load from files
@@ -89,13 +89,13 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 				return 1;
 			}
 			pDuiSystem->SetResProvider(pResFiles);
-			pDuiSystem->logEvent("load resource from files");
+			pDuiSystem->logEvent(_T("load resource from files"));
 		}
 		break;
 	case 1://load from PE
 		{
 			pDuiSystem->SetResProvider(new DuiResProviderPE(hInstance));
-			pDuiSystem->logEvent("load resource from exe");
+			pDuiSystem->logEvent(_T("load resource from exe"));
 		}
 		break;
 	default://load form ZIP
@@ -109,7 +109,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 				return 1;
 			}
 			pDuiSystem->SetResProvider(zipSkin); 
-			pDuiSystem->logEvent("load resource from zip");
+			pDuiSystem->logEvent(_T("load resource from zip"));
 		}
 		break;
 	}
@@ -126,10 +126,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	int nRet = 0; 
 	// BLOCK: Run application
 	{
-		pDuiSystem->logEvent("demo started");
+		pDuiSystem->logEvent(_T("demo started"));
 		CMainDlg dlgMain;  
 		nRet = dlgMain.DoModal();  
-		pDuiSystem->logEvent("demo end");
+		pDuiSystem->logEvent(_T("demo end"));
 	}
 
 

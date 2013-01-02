@@ -2,7 +2,6 @@
 #include "duiwnd.h"
 #include "DuiRichEdit.h"
 #include "DuiDropDownList.h"
-#include <vector>
 
 namespace DuiEngine
 {
@@ -130,7 +129,7 @@ protected:
 	int	m_iCurSel;
 	int  m_iAnimTime;	
 
-	std::vector<CBITEM> m_arrCbItem;
+	STL_NS::vector<CBITEM> m_arrCbItem;
 
 };
 

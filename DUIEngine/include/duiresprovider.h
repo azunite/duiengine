@@ -6,8 +6,6 @@
 #pragma once
 
 #include "duiresproviderbase.h"
-#include <map>
-
 
 namespace DuiEngine{
 
@@ -46,7 +44,7 @@ namespace DuiEngine{
 		CStringA GetRes( LPCSTR strType,UINT uID );
 
 		CStringA m_strPath;
-		std::map<DuiResID,CStringA> m_mapFiles;
+		STL_NS::map<DuiResID,CStringA> m_mapFiles;
 	};
 
 }//namespace DuiEngine

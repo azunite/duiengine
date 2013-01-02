@@ -22,7 +22,7 @@ BOOL CDuiTimerEx::_SetTimer( HDUIWND hDuiWnd,UINT_PTR uTimerID,UINT nElapse )
 
 void CDuiTimerEx::_KillTimer( HDUIWND hDuiWnd,UINT_PTR uTimerID )
 {
-	std::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj->begin();
+	STL_NS::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj->begin();
 	while(it!=m_mapNamedObj->end())
 	{
 		if(it->second.hDuiWnd==hDuiWnd && it->second.uTimerID==uTimerID)
@@ -37,10 +37,10 @@ void CDuiTimerEx::_KillTimer( HDUIWND hDuiWnd,UINT_PTR uTimerID )
 
 void CDuiTimerEx::_KillTimer( HDUIWND hDuiWnd )
 {
-	std::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj->begin();
+	STL_NS::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj->begin();
 	while(it!=m_mapNamedObj->end())
 	{
-		std::map<UINT_PTR,TIMERINFO>::iterator it1=it;
+		STL_NS::map<UINT_PTR,TIMERINFO>::iterator it1=it;
 		if(it1->second.hDuiWnd==hDuiWnd)
 		{
 			::KillTimer(NULL,it1->first);

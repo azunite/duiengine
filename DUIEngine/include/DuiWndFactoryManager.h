@@ -7,6 +7,7 @@ namespace DuiEngine{
 class CDuiWindowFactory
 {
 public:
+	virtual ~CDuiWindowFactory(){}
 	virtual CDuiWindow* NewWindow() = 0;
 
 	virtual void DeleteWindow(CDuiWindow* pWnd) = 0;

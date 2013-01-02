@@ -17,7 +17,6 @@
 #include "duirealwnd.h"
 
 #include "SimpleWnd.h"
-#include <vector>
 
 #pragma warning(disable: 4996)
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,7 +90,7 @@ protected:
 
 	BOOL _PreTranslateMessage(MSG* pMsg);
 
-	std::vector<CDuiMessageFilter*> m_aMsgFilter;
+	STL_NS::vector<CDuiMessageFilter*> m_aMsgFilter;
 protected:
 	//////////////////////////////////////////////////////////////////////////
 	// Message handler

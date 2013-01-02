@@ -3,14 +3,13 @@
 
 #pragma once
 
-#include <string>
 #include <tchar.h>
 
 template<class _Elem,int elesize=sizeof(_Elem)>
-class DUI_EXP CStdString : public std::basic_string<_Elem>
+class DUI_EXP CStdString : public STL_NS::basic_string<_Elem>
 {
 public:
-	typedef std::basic_string<_Elem> _basestr;
+	typedef STL_NS::basic_string<_Elem> _basestr;
 	CStdString(){}
 	CStdString(const _Elem ch):_basestr(1,ch)
 	{
@@ -190,7 +189,10 @@ public:
 
 	static CStdString<char> CvtA2A(const CStdString<char> & str,unsigned int cp=CP_ACP)
 	{
-		return str;
+		if(cp==CP_ACP)
+			return str;
+		CStdString<wchar_t> strw=CvtA2W(str,cp);
+		return CvtW2A(strw);
 	}
 
 	static CStdString<wchar_t> CvtW2W(const CStdString<wchar_t> &str,unsigned int cp=CP_ACP)
@@ -205,6 +207,7 @@ public:
 #define CP_ACP 0
 #endif//CP_ACP
 
+#ifndef NO_STDSTR
 
 typedef  CStdString<char> CStringA;
 typedef  CStdString<wchar_t> CStringW;
@@ -234,6 +237,7 @@ typedef CString CStringT;
 #define CT2W CA2W
 #endif // UNICODE
 
+#endif //NO_STDSTR
 
 #endif // __DUISTR_H__
 

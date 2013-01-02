@@ -30,12 +30,6 @@
 #ifndef _DUILogger_h_
 #define _DUILogger_h_
 
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <utility>
-#include "DUISingleton.h"
-
 
 // Start of DuiEngine namespace section
 namespace DuiEngine
@@ -112,7 +106,7 @@ public:
 	\return
 		Nothing
 	*/
-	virtual void logEvent(const CStringA & message, LoggingLevel level = Standard)=0;
+	virtual void logEvent(LPCTSTR, LoggingLevel level = Standard)=0;
 
 
     /*!
@@ -132,7 +126,7 @@ public:
         - true if events should be added to the end of the current file.
         - false if the current contents of the file should be discarded.
      */
-    virtual void setLogFilename(const CStringA& filename, bool append = false)=0;
+    virtual void setLogFilename(LPCTSTR filename, bool append = false)=0;
 
 
 protected:

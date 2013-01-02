@@ -7,7 +7,6 @@
 
 #pragma  once
 
-#include <vector>
 #include "duiwndpanel.h"
 
 namespace DuiEngine{
@@ -126,7 +125,7 @@ protected:
 
 protected:
 
-	std::vector<LPLBITEM> m_arrItems;
+	STL_NS::vector<LPLBITEM> m_arrItems;
 
 	int		m_nItemHei;
 	int		m_iSelItem;

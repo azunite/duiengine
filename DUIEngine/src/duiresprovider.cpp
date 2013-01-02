@@ -104,7 +104,7 @@ namespace DuiEngine{
 	CStringA DuiResProviderFiles::GetRes( LPCSTR strType,UINT uID )
 	{
 		DuiResID resID(strType,uID);
-		std::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
+		STL_NS::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
 		if(it==m_mapFiles.end()) return "";
 		CStringA strRet=m_strPath+"\\"+it->second;
 		return strRet;
@@ -221,7 +221,7 @@ namespace DuiEngine{
 	BOOL DuiResProviderFiles::HasResource( LPCSTR strType,UINT uID )
 	{
 		DuiResID resID(strType,uID);
-		std::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
+		STL_NS::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
 		return (it!=m_mapFiles.end());
 	}
 

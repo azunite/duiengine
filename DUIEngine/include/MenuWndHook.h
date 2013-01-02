@@ -10,7 +10,6 @@
   ########################################################################*/
 
 #pragma once
-#include <map>
 
 namespace DuiEngine{
 
@@ -49,7 +48,7 @@ public:
 protected:
 	HWND m_hWnd;
 
-	static std::map<HWND, CMenuWndHook*> m_WndMenuMap;
+	static STL_NS::map<HWND, CMenuWndHook*> m_WndMenuMap;
     static HHOOK m_hMenuHook;
 	static CStringA	m_strSkinName;
 };
