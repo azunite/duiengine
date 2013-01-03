@@ -756,7 +756,7 @@ BOOL CDuiWindow::RedrawRegion(CDCHandle& dc, CRgn& rgn)
 	return FALSE;
 }
 
-void CDuiWindow::OnAttributeChanged( CStringA strAttrName,BOOL bLoading,HRESULT hRet )
+void CDuiWindow::OnAttributeChanged( const CStringA & strAttrName,BOOL bLoading,HRESULT hRet )
 {
 	if(!bLoading && hRet==S_OK)
 	{

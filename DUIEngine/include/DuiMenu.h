@@ -186,7 +186,7 @@ public:
 	
 	BOOL LoadMenu(UINT uResID);
 
-	BOOL InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,CString strText, int iIcon);
+	BOOL InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,LPCTSTR strText, int iIcon);
 
 	UINT TrackPopupMenu( UINT uFlags, int x, int y, HWND hWnd, LPCRECT prcRect=NULL);
 

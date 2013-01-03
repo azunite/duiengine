@@ -377,7 +377,7 @@ int CDuiComboBox::GetWindowText( LPTSTR lpString, int nMaxCount )
 	}
 }
 
-BOOL CDuiComboBox::SetWindowText(CString strText)
+BOOL CDuiComboBox::SetWindowText(LPCTSTR strText)
 {
 	if(m_bDropdown) return FALSE;
 	return m_pEdit->SetWindowText(strText);

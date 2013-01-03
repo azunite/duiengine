@@ -226,7 +226,7 @@ CDuiMenu CDuiMenu::GetSubMenu(int nPos)
 	return ret;
 }
 
-BOOL CDuiMenu::InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,CString strText, int iIcon)
+BOOL CDuiMenu::InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,LPCTSTR strText, int iIcon)
 {
 	nFlags|=MF_OWNERDRAW;
 	if(nFlags&MF_SEPARATOR)

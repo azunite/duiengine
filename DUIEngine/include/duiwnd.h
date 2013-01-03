@@ -395,7 +395,7 @@ public:
 	
 	virtual BOOL IsClipClient(){return m_bClipClient;}
 
-	virtual void OnAttributeChanged(CStringA strAttrName,BOOL bLoading,HRESULT hRet);
+	virtual void OnAttributeChanged(const CStringA & strAttrName,BOOL bLoading,HRESULT hRet);
 public:
 
  	//************************************

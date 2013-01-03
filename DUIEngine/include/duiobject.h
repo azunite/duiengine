@@ -104,7 +104,7 @@ public:
 	//tolua_end
 protected:
 	virtual void OnAttributeFinish(TiXmlElement* pXmlElem){}
-	virtual void OnAttributeChanged(CStringA strAttrName,BOOL bLoading,HRESULT hRet){}
+	virtual void OnAttributeChanged(const CStringA & strAttrName,BOOL bLoading,HRESULT hRet){}
 	//************************************
 	// Method:    LoadTemplateAttribute
 	// Function:  从类属性模板载入属性
