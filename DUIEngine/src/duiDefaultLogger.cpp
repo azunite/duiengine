@@ -49,9 +49,8 @@ namespace DuiEngine
         logEvent(_T("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+"));
         logEvent(_T("+                     DuiEngine - Event log                                   +"));
         logEvent(_T("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n"));
-        TCHAR addr_buff[32];
-        _stprintf(addr_buff, _T("(%p)"), static_cast<void*>(this));
-		logEvent(_T("DuiEngine::Logger singleton created. "));
+        TCHAR addr_buff[100];
+		_stprintf(addr_buff, _T("DuiEngine::Logger singleton created: (%p)"), static_cast<void*>(this));
 		logEvent(addr_buff);
     }
 
@@ -62,10 +61,9 @@ namespace DuiEngine
     {
         if (d_pFile)
         {
-            TCHAR addr_buff[32];
-            _stprintf(addr_buff, _T("(%p)"), static_cast<void*>(this));
-            logEvent(_T("DuiEngine::Logger singleton destroyed. "));
-			logEvent(addr_buff);
+            TCHAR addr_buff[100];
+			_stprintf(addr_buff, _T("DuiEngine::Logger singleton destroyed.:(%p)"), static_cast<void*>(this));
+            logEvent(addr_buff);
 			fclose(d_pFile);
         }
     }
@@ -82,57 +80,49 @@ namespace DuiEngine
         if (etm)
         {
             // clear sting stream
-			CString d_strbuf=_T("");
+			CString strbuf;
 
-            // write date
-//             d_workstream << setfill('0') << setw(2) << etm->tm_mday << '/' <<
-//             setfill('0') << setw(2) << 1 + etm->tm_mon << '/' <<
-//             setw(4) << (1900 + etm->tm_year) << ' ';
-
-            // write time
-//             d_workstream << setfill('0') << setw(2) << etm->tm_hour << ':' <<
-//             setfill('0') << setw(2) << etm->tm_min << ':' <<
-//             setfill('0') << setw(2) << etm->tm_sec << ' ';
+			strbuf.Format(_T("%04/%02/02 %02:%02:%02 "),etm->tm_year,etm->tm_mon,etm->tm_mday,etm->tm_hour,etm->tm_min,etm->tm_sec);
 
             // write event type code
             switch(level)
             {
             case Errors:
-                d_strbuf+= _T("(Error)\t");
+                strbuf+= _T("(Error)\t");
                 break;
 
             case Warnings:
-                d_strbuf+= _T("(Warn)\t");
+                strbuf+= _T("(Warn)\t");
                 break;
 
             case Standard:
-                d_strbuf+= _T("(Std) \t");
+                strbuf+= _T("(Std) \t");
                 break;
 
             case Informative:
-                d_strbuf+= _T("(Info) \t");
+                strbuf+= _T("(Info) \t");
                 break;
 
             case Insane:
-                d_strbuf+= _T("(Insan)\t");
+                strbuf+= _T("(Insan)\t");
                 break;
 
             default:
-                d_strbuf+= _T("(Unkwn)\t");
+                strbuf+= _T("(Unkwn)\t");
                 break;
             }
 
-            d_strbuf+= message;
-			d_strbuf+=_T("\n");
+            strbuf+= message;
+			strbuf+=_T("\n");
 
             if (d_caching)
             {
-                d_cache.push_back(STL_NS::make_pair(d_strbuf, level));
+                d_cache.push_back(STL_NS::make_pair(strbuf, level));
             }
             else if (d_level >= level)
             {
                 // write message
-				_ftprintf(d_pFile,(LPCTSTR)d_strbuf);
+				_ftprintf(d_pFile,(LPCTSTR)strbuf);
 				fflush(d_pFile);
             }
         }

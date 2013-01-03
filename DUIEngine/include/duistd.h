@@ -25,7 +25,8 @@
 #define DUI_EXP
 #endif
 
-# pragma warning(disable: 4661)
+# pragma warning(disable:4661)
+# pragma warning(disable:4251)
 
 #include <Windows.h>
 #include <CommCtrl.h>
@@ -34,16 +35,16 @@
 #include <assert.h>
 #include <tchar.h>
 
-#ifndef USE_STDSTL
-	#include <eastl\string.h>
-	#include <eastl\vector.h>
-	#include <eastl\map.h>
-	#define STL_NS	eastl
-#else
+#ifndef USE_EASTL
 	#include <string>
 	#include <vector>
 	#include <map>
 	#define STL_NS std
+#else
+	#include <eastl\string.h>
+	#include <eastl\vector.h>
+	#include <eastl\map.h>
+	#define STL_NS	eastl
 #endif
 
 #define DUIASSERT(x) assert(x)
@@ -59,7 +60,7 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 	#endif
 #else
 	#pragma comment(lib,"tinyxml.lib")
-	#ifndef USE_STDSTL
+	#ifdef USE_EASTL
 		#pragma comment(lib,"stl.lib")
 	#endif
 #endif//DEBUG
@@ -72,11 +73,9 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 	#include "wtl.mini/duigdi.h"
 #endif
 
-#include "wtl.mini/stdstr.h" //注意：如果CString已经定义，可以定义NO_STDSTR来防止命名冲突
+#include "wtl.mini/stdstr.h" //注意：如果CString已经定义，可以定义NO_DUISTR来防止命名冲突
 
 #include "DuiAttrCrack.h"
-
-#pragma warning(disable:4251)
 
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))

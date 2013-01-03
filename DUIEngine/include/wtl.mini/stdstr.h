@@ -61,7 +61,7 @@ public:
 	void MakeUpper()
 	{
 		size_t i;
-		if(sizeof(_Elem)==1)
+		if(elesize==1)
 			for(i=0;i<size();i++)
 			{
 				char & ch=(char &)at(i);
@@ -128,7 +128,7 @@ public:
 		_Elem szBuffer[1025] = { 0 };
 		va_list argList;
 		va_start(argList, pstrFormat);
-		if(sizeof(_Elem)==1)
+		if(elesize==1)
 		{
 			const char * pszFormat=(const char *)sFormat.c_str();
 			iRet = ::wvsprintfA((char*)szBuffer, pszFormat, argList);
@@ -207,10 +207,10 @@ public:
 #define CP_ACP 0
 #endif//CP_ACP
 
-#ifndef NO_STDSTR
+#ifndef NO_DUISTR
 
-typedef  CStdString<char> CStringA;
-typedef  CStdString<wchar_t> CStringW;
+typedef CStdString<char> CStringA;
+typedef CStdString<wchar_t> CStringW;
 
 #ifdef UNICODE
 typedef  CStringW CString;
@@ -237,7 +237,7 @@ typedef CString CStringT;
 #define CT2W CA2W
 #endif // UNICODE
 
-#endif //NO_STDSTR
+#endif //NO_DUISTR
 
 #endif // __DUISTR_H__
 
