@@ -28,7 +28,7 @@
  	virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha=0xFF);
  
  	virtual int GetStates(){return m_nFrames;}
- 	virtual void OnAttributeChanged(CStringA strAttrName,BOOL bLoading,HRESULT hRet);
+ 	virtual void OnAttributeChanged(const CStringA & strAttrName,BOOL bLoading,HRESULT hRet);
  	virtual SIZE GetSkinSize()
  	{
  		SIZE sz={0};

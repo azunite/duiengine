@@ -67,7 +67,7 @@ void CDuiSkinGif::OnSetImage()
 	}
 }
 
-void CDuiSkinGif::OnAttributeChanged( CStringA strAttrName,BOOL bLoading,HRESULT hRet )
+void CDuiSkinGif::OnAttributeChanged(const CStringA & strAttrName,BOOL bLoading,HRESULT hRet )
 {
 	if(strAttrName=="src") 
 		OnSetImage();
