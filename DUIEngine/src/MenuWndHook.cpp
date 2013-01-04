@@ -129,13 +129,15 @@ LRESULT CALLBACK CMenuWndHook::WindowHook(int code, WPARAM wParam, LPARAM lParam
             break;
         }
 
+		AddWndHook(pStruct->hwnd);
+
         // 取得原来的窗口过程 ----------------------------------
         WNDPROC oldWndProc = (WNDPROC)(long)::GetWindowLong(hWnd, GWL_WNDPROC);
         if (oldWndProc == NULL)
         {
             break;
         }
-		
+
         DUIASSERT(oldWndProc != CoolMenuProc);
         // 保存到窗口的属性中 ----------------------------------
         if (!SetProp(hWnd, CoolMenu_oldProc, oldWndProc) )
