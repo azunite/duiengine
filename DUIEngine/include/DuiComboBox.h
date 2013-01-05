@@ -12,7 +12,7 @@ struct CBITEM
 {
 	CString strText;
 	int iIcon;
-	DWORD dwData;
+	LPARAM lParam;
 };
 
 class CDuiComboBox;
@@ -46,7 +46,7 @@ class DUI_EXP CDuiComboBox
 
 public:
 	CDuiComboBox(void);
-	~CDuiComboBox(void);
+	virtual ~CDuiComboBox(void);
 
 	int SetCurSel(int iSel);
 
@@ -54,7 +54,11 @@ public:
 
 	BOOL GetItemInfo(int iItem,CBITEM *pCbItem);
 
-	int InsertItem(int iPos,LPCTSTR pszText,int iIcon,DWORD dwData);
+	LPARAM GetItemData(int iItem) const;
+
+	int SetItemData(int iItem, LPARAM lParam);
+
+	int InsertItem(int iPos,LPCTSTR pszText,int iIcon,LPARAM lParam);
 
 	BOOL DeleteItem(int iItem);
 

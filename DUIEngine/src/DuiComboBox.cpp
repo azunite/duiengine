@@ -85,7 +85,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 			cbi.strText=CA2T(pItem->Attribute("text"),CP_UTF8);
 			pItem->Attribute("icon",&cbi.iIcon);
 			const char *pszData=pItem->Attribute("data");
-			if(pszData) cbi.dwData=atoi(pszData);
+			if(pszData) cbi.lParam=atoi(pszData);
 			m_arrCbItem.push_back(cbi);
 			pItem=pItem->NextSiblingElement("item");
 		}
@@ -334,9 +334,22 @@ BOOL CDuiComboBox::GetItemInfo( int iItem,CBITEM *pCbItem )
 	return TRUE;
 }
 
-int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,DWORD dwData )
+LPARAM CDuiComboBox::GetItemData(int iItem) const
 {
-	CBITEM cbi={pszText,iIcon,dwData};
+	if(iItem<0 || iItem>=m_arrCbItem.size()) return FALSE;
+	return m_arrCbItem[iItem].lParam;
+}
+
+int CDuiComboBox::SetItemData(int iItem, LPARAM lParam)
+{
+	if(iItem<0 || iItem>=m_arrCbItem.size()) return CB_ERR;
+	m_arrCbItem[iItem].lParam = lParam;
+	return 0;
+}
+
+int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,LPARAM lParam )
+{
+	CBITEM cbi={pszText,iIcon,lParam};
 	if(iPos<0 || iPos>m_arrCbItem.size()) iPos=m_arrCbItem.size();
 	m_arrCbItem.insert(m_arrCbItem.begin()+iPos,cbi);
 	if(m_pListBox)
