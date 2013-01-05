@@ -32,6 +32,7 @@ public:
 	static LRESULT CALLBACK CoolMenuProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static LRESULT CALLBACK WindowHook (int code, WPARAM wParam, LPARAM lParam);
 
+	int  OnCreate(LPCREATESTRUCT lpCreateStruct);
 	void OnNcCalcsize(BOOL bValidCalc,NCCALCSIZE_PARAMS* lpncsp);
 	void OnNcDestroy();
 	void OnPrint(CDCHandle dc);

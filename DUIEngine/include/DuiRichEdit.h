@@ -187,6 +187,7 @@ public:
 
 public://richedit interface
 	int GetWindowText(LPTSTR lpString, int nMaxCount );
+	int GetWindowTextLength();
 	BOOL SetWindowText(LPCTSTR lpszText);
 	void SetSel(DWORD dwSelection, BOOL bNoScroll = FALSE);
 	void ReplaceSel(LPWSTR pszText,BOOL bCanUndo=TRUE);

@@ -55,19 +55,19 @@ enum LoggingLevel
     want to perform special logging, derive your own class from Logger and initialize
     a object of that type before you create the DUI::System singleton.
 */
-class DUI_EXP Logger 
+class DUI_EXP DuiLogger 
 {
 public:
 	/*!
 	\brief
 		Constructor for Logger object.
 	*/
-	Logger(void) ;
+	DuiLogger(void) ;
 
 	/*!
 	\brief Destructor for Logger object.
 	*/
-	virtual ~Logger(void);
+	virtual ~DuiLogger(void);
 
 
 	/*!

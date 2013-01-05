@@ -34,6 +34,7 @@ protected:
 	int			m_nShowSpan;
 	CStringA	m_strTip;
 	BOOL		m_bTextTip;
+	BOOL        m_bSetDelayTimer;
 	CRect		m_rcTarget;
 	CFont		m_font;
 };

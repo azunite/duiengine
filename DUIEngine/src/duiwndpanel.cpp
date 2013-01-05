@@ -342,6 +342,11 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
 			m_bDragSb=TRUE;
 			m_ptDragSb=point;
 			m_nDragPos=m_HitInfo.bVertical?m_siVer.nPos:m_siHoz.nPos;
+
+			CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
+			HDC hdc=GetDuiDC(&rcSlide,OLEDC_PAINTBKGND);			
+			m_pSkinSb->Draw(hdc,rcSlide,MAKESBSTATE(SB_THUMBTRACK,DuiWndState_PushDown,m_HitInfo.bVertical));
+			ReleaseDuiDC(hdc);
 		}
 	}
 }
@@ -427,7 +432,7 @@ void CDuiPanelEx::OnNcMouseMove(UINT nFlags, CPoint point)
 
 		HDC hdc=GetDuiDC(&rcRail,OLEDC_PAINTBKGND);
 		m_pSkinSb->Draw(hdc,rcRail,MAKESBSTATE(SB_PAGEUP,DuiWndState_Normal,m_HitInfo.bVertical));
-		m_pSkinSb->Draw(hdc,rcSlide,MAKESBSTATE(SB_THUMBTRACK,DuiWndState_Hover,m_HitInfo.bVertical));
+		m_pSkinSb->Draw(hdc,rcSlide,MAKESBSTATE(SB_THUMBTRACK,DuiWndState_PushDown,m_HitInfo.bVertical));
 		ReleaseDuiDC(hdc);
 
 		if(nNewTrackPos!=psi->nTrackPos)

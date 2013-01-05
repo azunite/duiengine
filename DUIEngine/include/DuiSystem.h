@@ -58,15 +58,15 @@ public:
 	}
 	DuiResProviderBase * GetResProvider(){return m_pResProvider;}
 
-	Logger *SetLogger(Logger *pLogger)
+	DuiLogger *SetLogger(DuiLogger *pLogger)
 	{
-		Logger *pRet=m_pLogger;
+		DuiLogger *pRet=m_pLogger;
 		m_pLogger=pLogger;
 		return pRet;
 	}
-	Logger * GetLogger() {return m_pLogger;}
+	DuiLogger * GetLogger() {return m_pLogger;}
 
-	void logEvent(LPCTSTR message, LoggingLevel level = Standard);
+	void logEvent(LPCTSTR message, LoggingLevel level = Standard);	
 
 	void logEvent(LoggingLevel level , LPCTSTR format, ...);
 
@@ -86,7 +86,7 @@ protected:
 	ATOM			m_atomWnd;
 
 	DuiResProviderBase	* m_pResProvider;
-	Logger * m_pLogger;
+	DuiLogger * m_pLogger;
 	HINSTANCE m_hInst;
 
 	//name-id map

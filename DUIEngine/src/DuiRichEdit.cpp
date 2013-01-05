@@ -213,7 +213,7 @@ BOOL CDuiTextHost::TxShowScrollBar( INT fnBar, BOOL fShow )
 	case SB_VERT:wBar=DUISB_VERT;break;
 	case SB_HORZ:wBar=DUISB_HORZ;break;
 	}
-	m_pDuiRichEdit->SetDuiTimer(TIMER_INVALIDATE,40);//todo:滚动条显示状态切换的时候似乎没有刷新，暂时用一个定时器来处理。
+	m_pDuiRichEdit->SetDuiTimer(TIMER_INVALIDATE,40);//todo:??????????????????,????????????
 	return m_pDuiRichEdit->ShowScrollBar(wBar,fShow);
 }
 
@@ -518,7 +518,7 @@ void CDuiRichEdit::OnDestroy()
 
 void CDuiRichEdit::OnPaint( CDCHandle dc )
 {
- 	int nSaveDC=dc.SaveDC();//需要先记录状态，在TxDraw中DC的部分状态如文字颜色会改变。
+ 	int nSaveDC=dc.SaveDC();//???????,?TxDraw?DC??????????????
 	CRect rcClient,rcClip;
 	GetClient(&rcClient);
 	dc.GetClipBox(rcClip);
@@ -548,7 +548,7 @@ void CDuiRichEdit::OnPaint( CDCHandle dc )
 	{
 		CGdiAlpha::AlphaRestore(dc,ai);
 	}
- 	dc.RestoreDC(nSaveDC);//恢复DC状态
+ 	dc.RestoreDC(nSaveDC);//??DC??
 }
 
 void CDuiRichEdit::OnSetDuiFocus()
@@ -1127,6 +1127,11 @@ int CDuiRichEdit::GetWindowText(LPTSTR lpString,
 )
 {
 	return (int)DuiSendMessage(WM_GETTEXT,(WPARAM)nMaxCount,(LPARAM)lpString);
+}
+
+int CDuiRichEdit::GetWindowTextLength()
+{
+	return (int)DuiSendMessage(WM_GETTEXTLENGTH);
 }
 
 void CDuiRichEdit::ReplaceSel(LPWSTR pszText,BOOL bCanUndo)

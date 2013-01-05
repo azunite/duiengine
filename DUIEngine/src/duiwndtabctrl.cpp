@@ -92,9 +92,12 @@ CDuiTabCtrl::CDuiTabCtrl() : m_nCurrentPage(0)
 , m_pSkinTab(NULL)
 , m_pSkinIcon(NULL)
 , m_pSkinSplitter(NULL)
+, m_pSkinFrame(NULL)
 , m_nTabSpacing(0)
 , m_nTabWidth(0)
 , m_nTabHeight(0)
+, m_nTabPos(0)
+, m_nFramePos(0)
 , m_nHoverTabItem(-1)
 , m_nTabAlign(AlignTop)
 , m_nAnimateSteps(0)
@@ -111,15 +114,39 @@ void CDuiTabCtrl::OnPaint( CDCHandle dc )
 	CRect rcItem,rcItemPrev;
 	CRect rcSplit;
 	DWORD dwState;
+	int nSaveDC=dc.SaveDC();
+	CRgn rgnDraw;
+
 	GetClient(&rcTabs);
 	if(m_nTabAlign==AlignLeft)
 		rcTabs.right=rcTabs.left+m_nTabWidth;
 	else
 		rcTabs.bottom=rcTabs.top+m_nTabHeight;
-	int nSaveDC=dc.SaveDC();
-	CRgn rgnTabs;
-	rgnTabs.CreateRectRgnIndirect(&rcTabs);
-	dc.SelectClipRgn(rgnTabs,RGN_AND);
+
+	if (m_pSkinFrame)
+	{
+		CRect rcFrame;
+		GetClient(rcFrame);
+		rgnDraw.CreateRectRgnIndirect(&rcFrame);
+		dc.SelectClipRgn(rgnDraw,RGN_AND);
+
+		switch (m_nTabAlign)
+		{
+        case AlignTop:
+			rcFrame.top += m_nTabHeight + m_nFramePos;
+            break;
+        case AlignLeft:
+            rcFrame.left += m_nTabWidth + m_nFramePos;
+            break;
+		}		
+		m_pSkinFrame->Draw(dc, rcFrame, DuiWndState_Normal);
+	}
+	else
+	{
+		rgnDraw.CreateRectRgnIndirect(&rcTabs);
+		dc.SelectClipRgn(rgnDraw,RGN_AND);
+	}	
+
 	for(int i=0;i<GetItemCount();i++)
 	{
 		dwState=DuiWndState_Normal;
@@ -155,9 +182,9 @@ void CDuiTabCtrl::OnCalcChildPos( CDuiWindow *pDuiWndChild )
 	CRect rcClient;
 	GetClient(&rcClient);
 	if(m_nTabAlign==AlignLeft)
-		rcClient.left+=m_nTabWidth;
+		rcClient.left+= (m_nTabWidth+m_nFramePos);
 	else
-		rcClient.top+=m_nTabHeight;
+		rcClient.top+= (m_nTabHeight+m_nFramePos);
 	DUIWNDPOS WndPos = {rcClient.left,rcClient.top,rcClient.Width(),rcClient.Height()};
 	pDuiWndChild->DuiSendMessage(WM_WINDOWPOSCHANGED, NULL, (LPARAM)&WndPos);
 }
@@ -453,10 +480,10 @@ BOOL CDuiTabCtrl::GetItemRect( int nIndex, CRect &rcItem )
 	switch (m_nTabAlign)
 	{
 	case AlignTop:
-		rcItem.OffsetRect(nIndex * (rcItem.Width()+ m_nTabSpacing),0); 
+		rcItem.OffsetRect(m_nTabPos + nIndex * (rcItem.Width()+ m_nTabSpacing),0); 
 		break;
 	case AlignLeft:
-		rcItem.OffsetRect(0, nIndex * (rcItem.Height()+ m_nTabSpacing)); 
+		rcItem.OffsetRect(0, m_nTabPos + nIndex * (rcItem.Height()+ m_nTabSpacing)); 
 		break;
 	}
 

@@ -137,7 +137,7 @@ LRESULT CALLBACK CMenuWndHook::WindowHook(int code, WPARAM wParam, LPARAM lParam
         {
             break;
         }
-
+		
         DUIASSERT(oldWndProc != CoolMenuProc);
         // 保存到窗口的属性中 ----------------------------------
         if (!SetProp(hWnd, CoolMenu_oldProc, oldWndProc) )
@@ -167,6 +167,16 @@ LRESULT CALLBACK CMenuWndHook::CoolMenuProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 	OutputDebugStringA(szBuf);
     switch (uMsg)
     {
+		case WM_CREATE:
+			{
+				LRESULT lResult = CallWindowProc(oldWndProc, hWnd, uMsg, wParam, lParam);
+				if ((pWnd = GetWndHook(hWnd)) != NULL)
+				{
+					lResult = (LRESULT)pWnd->OnCreate((LPCREATESTRUCT)lParam); 
+				}
+				return lResult;
+			}
+			break;
 		case WM_NCCALCSIZE:
 			{
 				LRESULT lResult = CallWindowProc(oldWndProc, hWnd, uMsg, wParam, lParam);
@@ -231,6 +241,12 @@ LRESULT CALLBACK CMenuWndHook::CoolMenuProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 								消息处理函数	
 			  ------------------------------------------------
   ########################################################################*/
+int CMenuWndHook::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	SetClassLong(m_hWnd, GCL_STYLE, GetClassLong(m_hWnd, GCL_STYLE) & ~CS_DROPSHADOW);
+	return 0;
+}
+
 void CMenuWndHook::OnWindowPosChanging(WINDOWPOS *pWindowPos)
 {
 	if(m_strSkinName.IsEmpty()) return;
@@ -258,7 +274,7 @@ void CMenuWndHook::OnNcCalcsize(BOOL bValidCalc,NCCALCSIZE_PARAMS* lpncsp)
 
 void CMenuWndHook::OnNcPaint()
 {
-	CDCHandle dc=GetDC(m_hWnd);
+	CDCHandle dc=GetWindowDC(m_hWnd);
  	OnPrint(dc);
 	ReleaseDC(m_hWnd,dc);
 }

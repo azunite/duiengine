@@ -44,7 +44,7 @@ namespace DuiEngine
     implement your own Logger implementation and create a object of the
     Logger type before creating the DUI::System singleton.
 */
-class DUI_EXP DefaultLogger : public Logger
+class DUI_EXP DefaultLogger : public DuiLogger
 {
 public:
 	/*!

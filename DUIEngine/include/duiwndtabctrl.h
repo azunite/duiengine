@@ -54,7 +54,7 @@ typedef enum tagSLIDEDIR
 	SD_BOTTOMTOP,
 }SLIDEDIR;
 
-class CDuiTabSlide : public CDuiWindow
+class DUI_EXP CDuiTabSlide : public CDuiWindow
 {
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiTabSlide, "tabslide")
 
@@ -91,16 +91,19 @@ protected:
     int m_nTabSpacing;
     int m_nTabWidth;
     int m_nTabHeight;
+    int m_nTabPos;
+    int m_nFramePos;
     CDuiSkinBase *m_pSkinTab;
     CDuiSkinBase *m_pSkinIcon;
     CDuiSkinBase *m_pSkinSplitter;
+    CDuiSkinBase *m_pSkinFrame;
     CPoint m_ptIcon;
     CPoint m_ptText;
     int m_nTabAlign;
 
-	STL_NS::vector<CDuiTab*> m_lstPages;
+    STL_NS::vector<CDuiTab*> m_lstPages;
 
-	CDuiTabSlide	m_tabSlide;
+    CDuiTabSlide	m_tabSlide;
 
     enum {
         AlignTop,
@@ -175,10 +178,13 @@ protected:
         DUIWIN_INT_ATTRIBUTE("cursel", m_nCurrentPage, FALSE)
         DUIWIN_INT_ATTRIBUTE("tabwidth", m_nTabWidth, FALSE)
         DUIWIN_INT_ATTRIBUTE("tabheight", m_nTabHeight, FALSE)
+        DUIWIN_INT_ATTRIBUTE("tabpos", m_nTabPos, FALSE)
+        DUIWIN_INT_ATTRIBUTE("framepos", m_nFramePos, FALSE)
         DUIWIN_INT_ATTRIBUTE("tabspacing", m_nTabSpacing, FALSE)
         DUIWIN_SKIN_ATTRIBUTE("tabskin", m_pSkinTab, FALSE)
         DUIWIN_SKIN_ATTRIBUTE("iconskin", m_pSkinIcon, FALSE)
         DUIWIN_SKIN_ATTRIBUTE("splitterskin", m_pSkinSplitter, FALSE)
+        DUIWIN_SKIN_ATTRIBUTE("frameskin", m_pSkinFrame, FALSE)
         DUIWIN_INT_ATTRIBUTE("icon-x", m_ptIcon.x, FALSE)
         DUIWIN_INT_ATTRIBUTE("icon-y", m_ptIcon.y, FALSE)
         DUIWIN_INT_ATTRIBUTE("text-x", m_ptText.x, FALSE)

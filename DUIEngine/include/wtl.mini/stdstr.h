@@ -6,7 +6,7 @@
 #include <tchar.h>
 
 template<class _Elem,int elesize=sizeof(_Elem)>
-class DUI_EXP CStdString : public STL_NS::basic_string<_Elem>
+class CStdString : public STL_NS::basic_string<_Elem>
 {
 public:
 	typedef STL_NS::basic_string<_Elem> _basestr;

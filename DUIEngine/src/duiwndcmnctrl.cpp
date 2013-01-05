@@ -534,6 +534,9 @@ void CDuiImageBtnWnd::OnPaint(CDCHandle dc)
 				);
 		}
 	}
+
+	if (!m_strInnerText.IsEmpty())
+		CDuiWindow::OnPaint(dc);
 }
 
 void CDuiImageBtnWnd::OnStateChanged(DWORD dwOldState,DWORD dwNewState)

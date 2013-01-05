@@ -88,7 +88,7 @@ protected:
 
 	void _Redraw();
 
-	BOOL _PreTranslateMessage(MSG* pMsg);
+	virtual BOOL _PreTranslateMessage(MSG* pMsg);
 
 	STL_NS::vector<CDuiMessageFilter*> m_aMsgFilter;
 protected:

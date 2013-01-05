@@ -8,7 +8,7 @@ namespace DuiEngine{
 
 #define MARGIN_TIP		5
 
-CDuiTipCtrl::CDuiTipCtrl(void):m_nDelay(500),m_nShowSpan(5000),m_dwHostID(0)
+CDuiTipCtrl::CDuiTipCtrl(void):m_nDelay(500),m_nShowSpan(5000),m_dwHostID(0),m_bSetDelayTimer(FALSE)
 {
 }
 
@@ -16,8 +16,6 @@ CDuiTipCtrl::~CDuiTipCtrl(void)
 {
 	if(m_font) m_font.DeleteObject();
 }
-
-
 
 BOOL CDuiTipCtrl::Create( HWND hOwner )
 {
@@ -51,10 +49,11 @@ void CDuiTipCtrl::RelayEvent( const MSG *pMsg )
 			if(!m_rcTarget.PtInRect(pt))
 			{
 				OnTimer(TIMERID_SPAN);//hide tip
-			}else if(!IsWindowVisible() && !m_strTip.IsEmpty())
+			}else if(!IsWindowVisible() && !m_strTip.IsEmpty()&&!m_bSetDelayTimer)
 			{
 				KillTimer(TIMERID_DELAY);
 				SetTimer(TIMERID_DELAY,m_nDelay);
+				m_bSetDelayTimer = TRUE;
 				::ClientToScreen(pMsg->hwnd,&pt);
 				SetWindowPos(0,pt.x,pt.y+24,0,0,SWP_NOSIZE|SWP_NOZORDER|SWP_NOSENDCHANGING|SWP_NOACTIVATE);
 			}
@@ -83,7 +82,7 @@ void CDuiTipCtrl::ShowTip(BOOL bShow)
 {
 	if(!bShow)
 	{
-		m_dwHostID=0;
+		//m_dwHostID=0;
 		ShowWindow(SW_HIDE);
 		m_rcTarget.SetRect(0,0,0,0);
 		m_strTip="";
@@ -100,13 +99,13 @@ void CDuiTipCtrl::ShowTip(BOOL bShow)
 	}
 }
 
-
 void CDuiTipCtrl::OnTimer( UINT_PTR idEvent )
 {
 	switch(idEvent)
 	{
 	case TIMERID_DELAY:
 		KillTimer(TIMERID_DELAY);
+		m_bSetDelayTimer = FALSE;
 		ShowTip(TRUE);
 		SetTimer(TIMERID_SPAN,m_nShowSpan);
 		break;
