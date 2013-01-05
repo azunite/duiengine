@@ -163,7 +163,7 @@ class DUI_EXP CDuiImageWnd : public CDuiWindow
 public:
 	CDuiImageWnd();
 
-	~CDuiImageWnd();
+	virtual ~CDuiImageWnd();
 
 	void OnPaint(CDCHandle dc);
 
@@ -195,6 +195,7 @@ class DUI_EXP CDuiAnimateImgWnd : public CDuiWindow
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiAnimateImgWnd, "animateimg")
 public:
 	CDuiAnimateImgWnd();
+	virtual ~CDuiAnimateImgWnd(){}
 
 	void OnPaint(CDCHandle dc);
 
@@ -285,6 +286,7 @@ class DUI_EXP CDuiImageBtnWnd : public CDuiImageWnd
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiImageBtnWnd, "imgbtn")
 public:
 	CDuiImageBtnWnd();
+	virtual ~CDuiImageBtnWnd(){}
 
 	virtual BOOL NeedRedrawWhenStateChange();
 

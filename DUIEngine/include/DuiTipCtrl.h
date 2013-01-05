@@ -8,7 +8,7 @@ class CDuiTipCtrl : public CSimpleWnd
 {
 public:
 	CDuiTipCtrl(void);
-	~CDuiTipCtrl(void);
+	virtual ~CDuiTipCtrl(void);
 
 	BOOL Create(HWND hOwner);
 

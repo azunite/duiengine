@@ -12,6 +12,7 @@ class DUI_EXP CDuiSplitPane : public CDuiPanel
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiSplitPane, "splitpane")
 public:
 	CDuiSplitPane();
+	virtual ~CDuiSplitPane(){}
 
 protected:
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
@@ -37,7 +38,7 @@ class DUI_EXP CDuiSplitWnd :
 	};
 public:
 	CDuiSplitWnd(void);
-	~CDuiSplitWnd(void);
+	virtual ~CDuiSplitWnd(void);
 	
 	BOOL SetPaneInfo(int iPane,int nIdealSize,int nMinSize,int nPriority);
 

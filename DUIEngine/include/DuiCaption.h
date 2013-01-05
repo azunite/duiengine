@@ -9,7 +9,7 @@ namespace DuiEngine
 		DUIOBJ_DECLARE_CLASS_NAME(CDuiCaption, "caption")
 	public:
 		CDuiCaption(void);
-		~CDuiCaption(void);
+		virtual ~CDuiCaption(void);
 	
 	protected:
 		void OnLButtonDown(UINT nFlags, CPoint point);

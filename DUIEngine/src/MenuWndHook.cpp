@@ -162,9 +162,6 @@ LRESULT CALLBACK CMenuWndHook::CoolMenuProc(HWND hWnd, UINT uMsg, WPARAM wParam,
 	WNDPROC oldWndProc = (WNDPROC)::GetProp(hWnd, CoolMenu_oldProc);
     CMenuWndHook* pWnd = NULL;
 	
-	char szBuf[100];
-	sprintf(szBuf,"\nHOOK MSG=0x%04X",uMsg);
-	OutputDebugStringA(szBuf);
     switch (uMsg)
     {
 		case WM_CREATE:

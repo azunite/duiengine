@@ -76,7 +76,7 @@ class DUI_EXP CSimpleWnd : public CMessageMap
 {
 public:
 	CSimpleWnd(HWND hWnd=0);
-	~CSimpleWnd(void);
+	virtual ~CSimpleWnd(void);
 
 	static ATOM RegisterSimpleWnd(HINSTANCE hInst,LPCTSTR pszSimpleWndName);
 

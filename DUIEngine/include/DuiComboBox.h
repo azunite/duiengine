@@ -21,6 +21,7 @@ class CComboEdit:public CDuiEdit
 {
 public:
 	CComboEdit(CDuiComboBox *pOwner);
+	virtual ~CComboEdit(){}
 
 protected:
 	void OnMouseHover(WPARAM wParam, CPoint ptPos);

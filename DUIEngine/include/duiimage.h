@@ -20,7 +20,7 @@ class DUI_EXP CDuiBitmap : public CDuiImgBase
 {
 public:
 	CDuiBitmap();
-	~CDuiBitmap(){Clear();}
+	virtual ~CDuiBitmap(){Clear();}
 
 	virtual BOOL LoadFromResource(HINSTANCE hInst,LPCSTR pszType,UINT uID);
 	virtual BOOL LoadFromFile(LPCSTR pszPath);
@@ -77,7 +77,7 @@ public:
 
 	CDuiImgX(Gdiplus::Image* pImg);
 
-	~CDuiImgX(){Clear();}
+	virtual ~CDuiImgX(){Clear();}
 
 	virtual BOOL LoadFromResource(HINSTANCE hInst,LPCSTR pszType,UINT uID);
 	virtual BOOL LoadFromFile(LPCSTR pszPath);

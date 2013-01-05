@@ -10,7 +10,7 @@ class DUI_EXP CDuiHotKeyCtrl :
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiHotKeyCtrl, "hotkey")
 public:
 	CDuiHotKeyCtrl(void);
-	~CDuiHotKeyCtrl(void);
+	virtual ~CDuiHotKeyCtrl(void);
 
 	void SetRule(WORD wInvalidComp,WORD wModifier);
 

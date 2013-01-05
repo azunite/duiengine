@@ -24,6 +24,7 @@ class DUI_EXP CDuiItemPanel : public CDuiFrame
 {
 public:
 	CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml,CDuiItemContainer *pItemContainer=NULL);
+	virtual ~CDuiItemPanel(){}
 
 	virtual void OnFinalRelease();
 

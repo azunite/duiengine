@@ -17,6 +17,7 @@ class DUI_EXP CDuiItemBox
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiItemBox, "itembox")
 public:
 	CDuiItemBox();
+	virtual ~CDuiItemBox(){}
 
 	CDuiPanel* InsertItem(LPCWSTR pszXml,int iItem=-1,BOOL bEnsureVisible=FALSE);
 

@@ -38,6 +38,7 @@ class DUI_EXP CDuiHostWnd
 {
 public:
 	CDuiHostWnd(UINT uResID = 0);
+	virtual ~CDuiHostWnd(){}
 
 public:
 

@@ -24,7 +24,7 @@ public:
 		m_uPositionType = SizeX_FitParent|SizeY_FitParent;
     }
 
-	~CDuiTab()
+	virtual ~CDuiTab()
 	{
 	}
 
@@ -62,6 +62,8 @@ public:
 	CDuiTabSlide():m_hMemDC(NULL),m_hBmp(NULL)
 	{
 	}
+
+	virtual ~CDuiTabSlide(){}
 	
 	void SetPage1(CDuiWindow *pPage1);
 
@@ -114,6 +116,7 @@ protected:
 public:
 
     CDuiTabCtrl();
+	virtual ~CDuiTabCtrl(){}
 
     int GetCurSel()
     {

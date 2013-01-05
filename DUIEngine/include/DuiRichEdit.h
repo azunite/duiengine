@@ -184,6 +184,7 @@ public:
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiRichEdit, "richedit")
 
 	CDuiRichEdit();
+	virtual ~CDuiRichEdit(){}
 
 public://richedit interface
 	int GetWindowText(LPTSTR lpString, int nMaxCount );
@@ -349,5 +350,6 @@ class DUI_EXP CDuiEdit : public CDuiRichEdit
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiRichEdit, "edit")
 public:
 	CDuiEdit(){m_fRich=0;}
+	virtual ~CDuiEdit(){}
 };
 }//namespace DuiEngine

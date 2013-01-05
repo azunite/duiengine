@@ -60,6 +60,7 @@ class DUI_EXP CDuiDropDownListBase : public CDuiHostWnd
 {
 public:
 	CDuiDropDownListBase(CDuiDropDownListOwner* pOwner,int nDropHeight);
+	virtual ~CDuiDropDownListBase(){}
 	
 	virtual void DeleteItem(int iItem) = 0;
 	virtual void UpdateItems(const CRect * prcOwner=NULL)=0;

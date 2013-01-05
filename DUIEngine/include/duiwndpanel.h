@@ -20,6 +20,8 @@ public:
     {
     }
 
+	virtual ~CDuiPanel(){}
+
 public:
     // Hittest children
     virtual HDUIWND DuiGetHWNDFromPoint(POINT ptHitTest, BOOL bOnlyText);
@@ -57,6 +59,7 @@ class DUI_EXP CDuiPanelEx: public CDuiPanel
 
 public:
 	CDuiPanelEx();
+	virtual ~CDuiPanelEx(){}
 
 	BOOL ShowScrollBar(int wBar, BOOL bShow);
 
@@ -152,6 +155,7 @@ class DUI_EXP CDuiScrollView : public CDuiPanelEx
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiScrollView, "scrollview")
 public:
 	CDuiScrollView();
+	virtual ~CDuiScrollView(){}
 
 	CSize GetViewSize();
 
