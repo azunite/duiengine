@@ -822,7 +822,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\include\wtl.mini\stdstr.h"
+					RelativePath=".\include\wtl.mini\duistr.h"
 					>
 				</File>
 			</Filter>

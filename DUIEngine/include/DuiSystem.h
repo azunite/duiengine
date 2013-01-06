@@ -16,6 +16,8 @@
 
 namespace DuiEngine{
 
+#define DUI_MAX_NAME	30	//控件名字的最大长度
+
 class DUI_EXP DuiSystem :
 	public Singleton<DuiSystem>
 {
@@ -23,9 +25,11 @@ class DUI_EXP DuiSystem :
 	{
 	public:
 		CNamedID(){}
-		CNamedID(CStringA name,UINT id):strName(name),uID(id)
+		CNamedID(LPCSTR name,UINT id)
 		{
-
+			DUIASSERT(strlen(name)<=DUI_MAX_NAME);
+			strcpy_s(strName,DUI_MAX_NAME,name);
+			uID=id;
 		}
 
 		static int Compare( __in const void * id1, __in const void * id2 )
@@ -35,7 +39,7 @@ class DUI_EXP DuiSystem :
 			return strcmp(pid1->strName,pid2->strName);
 		}
 
-		CStringA	strName;
+		char 		strName[DUI_MAX_NAME+1];
 		UINT		uID;
 	};
 

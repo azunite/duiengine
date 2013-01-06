@@ -36,12 +36,10 @@
 #include <tchar.h>
 
 #ifndef USE_EASTL
-	#include <string>
 	#include <vector>
 	#include <map>
 	#define STL_NS std
 #else
-	#include <eastl\string.h>
 	#include <eastl\vector.h>
 	#include <eastl\map.h>
 	#define STL_NS	eastl
@@ -73,7 +71,7 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 	#include "wtl.mini/duigdi.h"
 #endif
 
-#include "wtl.mini/stdstr.h" //注意：如果CString已经定义，可以定义NO_DUISTR来防止命名冲突
+#include "wtl.mini/duistr.h" //注意：如果CString已经定义，可以定义NO_DUISTR来防止命名冲突
 
 #include "DuiAttrCrack.h"
 

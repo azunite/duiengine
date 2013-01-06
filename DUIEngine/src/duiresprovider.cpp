@@ -90,8 +90,8 @@ namespace DuiEngine{
 
 	HRSRC DuiResProviderPE::MyFindResource( LPCSTR strType, UINT uID )
 	{
-		if(stricmp(strType,DUIRES_BMP_TYPE)==0) strType=MAKEINTRESOURCEA(2);//RT_BITMAP;
-		else if(stricmp(strType,DUIRES_ICON_TYPE)==0) strType=MAKEINTRESOURCEA(3);//RT_ICON;
+		if(_stricmp(strType,DUIRES_BMP_TYPE)==0) strType=MAKEINTRESOURCEA(2);//RT_BITMAP;
+		else if(_stricmp(strType,DUIRES_ICON_TYPE)==0) strType=MAKEINTRESOURCEA(3);//RT_ICON;
 
 		return ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
 	}

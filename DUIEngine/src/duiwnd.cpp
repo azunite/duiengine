@@ -656,10 +656,10 @@ BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
 	return TRUE;
 }
 
-CDuiWindow * CDuiWindow::LoadXmlChildren(STL_NS::string utf8Xml)
+CDuiWindow * CDuiWindow::LoadXmlChildren(LPCSTR utf8Xml)
 {
 	TiXmlDocument doc;
-	doc.Parse( utf8Xml.c_str(),NULL, TIXML_ENCODING_UTF8); 
+	doc.Parse( utf8Xml,NULL, TIXML_ENCODING_UTF8); 
 	if(doc.Error()) return NULL;
 	CDuiWindow *pCurLast=m_pLastChild;
 	BOOL bLoaded=LoadChildren(doc.RootElement());

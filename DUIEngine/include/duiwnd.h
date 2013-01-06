@@ -360,9 +360,9 @@ public:
 
 
 	// 从XML创建子窗口
-	// STL_NS::string utf8Xml: utf8 编码的XML串
+	// LPCSTR utf8Xml: utf8 编码的XML串
 	// return : 顶层的最后一个窗口
-	CDuiWindow *LoadXmlChildren(STL_NS::string utf8Xml);//tolua_export
+	CDuiWindow *LoadXmlChildren(LPCSTR utf8Xml);//tolua_export
 
 	void NotifyInvalidate();//tolua_export
 	void NotifyInvalidateRect(LPRECT lprect);//tolua_export
