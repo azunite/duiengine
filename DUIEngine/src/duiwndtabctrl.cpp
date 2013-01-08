@@ -219,7 +219,7 @@ BOOL CDuiTabCtrl::RemoveItem( int nIndex )
 	CDuiTab * pTab = GetItem(nIndex); 
 
 	DestroyChild(pTab); 
-	m_lstPages.erase(m_lstPages.begin()+nIndex);
+	m_lstPages.RemoveAt(nIndex);
 
 	if (m_nCurrentPage < 0 || m_nCurrentPage >= GetItemCount())
 	{
@@ -293,7 +293,7 @@ void CDuiTabCtrl::OnDestroy()
 	{
 		DestroyChild(m_lstPages[i]); 
 	}
-	m_lstPages.clear();
+	m_lstPages.RemoveAll();
 }
 
 LRESULT CDuiTabCtrl::OnCreate( LPVOID )
@@ -407,7 +407,7 @@ BOOL CDuiTabCtrl::LoadChildren( TiXmlElement* pTiXmlChildElem )
 		InsertItem(pXmlChild,-1,TRUE);
 	}
 
-	if((m_nCurrentPage==-1 || m_nCurrentPage>=m_lstPages.size()) && m_lstPages.size()>0)
+	if((m_nCurrentPage==-1 || m_nCurrentPage>=m_lstPages.GetCount() && m_lstPages.GetCount()>0))
 	{
 		m_nCurrentPage=0;
 	}
@@ -442,9 +442,10 @@ int CDuiTabCtrl::InsertItem( TiXmlElement *pXmlElement,int iInsert/*=-1*/,BOOL b
 	CDuiTab *pChild=NULL;
 	if (!CDuiTab::CheckAndNew(pXmlElement->Value(),(void**)&pChild)) return -1;
 
-	if(iInsert==-1) iInsert=m_lstPages.size();
+	if(iInsert==-1) iInsert=m_lstPages.GetCount();
 	InsertChild(pChild);
-	m_lstPages.insert(m_lstPages.begin()+iInsert,pChild);
+
+	m_lstPages.InsertAt(iInsert,pChild);
 
 	pChild->Load(pXmlElement);
 	pChild->SetPositionType(SizeX_FitParent|SizeY_FitParent);

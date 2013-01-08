@@ -318,7 +318,7 @@ BOOL CDuiHostWnd::_PreTranslateMessage(MSG* pMsg)
 	if(m_pTipCtrl  && m_pTipCtrl->IsWindow()) m_pTipCtrl->RelayEvent(pMsg);
 
 	// loop backwards
-	for(int i = m_aMsgFilter.size() - 1; i >= 0; i--)
+	for(int i = m_aMsgFilter.GetCount() - 1; i >= 0; i--)
 	{
 		CDuiMessageFilter* pMessageFilter = m_aMsgFilter[i];
 		if(pMessageFilter != NULL && pMessageFilter->PreTranslateMessage(pMsg))
@@ -927,18 +927,18 @@ LRESULT CDuiHostWnd::OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam)
 	CDuiMessageFilter *pMsgFilter=(CDuiMessageFilter*)lParam;
 	if(wParam)
 	{
-		m_aMsgFilter.push_back(pMsgFilter);
+		m_aMsgFilter.Add(pMsgFilter);
 	}else
 	{
-		STL_NS::vector<CDuiMessageFilter*>::iterator it= m_aMsgFilter.begin();
-		while(it!=m_aMsgFilter.end())
+		int i = 0;
+		while(i < m_aMsgFilter.GetCount())
 		{
-			if(*it == pMsgFilter)
+			if(m_aMsgFilter.GetAt(i) == pMsgFilter)
 			{
-				m_aMsgFilter.erase(it);
+				m_aMsgFilter.RemoveAt(i);
 				break;
 			}
-			it++;
+			i++;
 		}
 	}
 	return 0;

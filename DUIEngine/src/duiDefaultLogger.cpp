@@ -82,7 +82,7 @@ namespace DuiEngine
             // clear sting stream
 			CString strbuf;
 
-			strbuf.Format(_T("%04d/%02d/%02d %02d:%02d:%02d "),1900+etm->tm_year,etm->tm_mon,etm->tm_mday,etm->tm_hour,etm->tm_min,etm->tm_sec);
+			strbuf.Format(_T("%04d/%02d/%02d %02d:%02d:%02d "),1900+etm->tm_year,etm->tm_mon+1,etm->tm_mday,etm->tm_hour,etm->tm_min,etm->tm_sec);
             // write event type code
             switch(level)
             {
@@ -116,7 +116,7 @@ namespace DuiEngine
 
             if (d_caching)
             {
-                d_cache.push_back(STL_NS::make_pair(strbuf, level));
+				d_cache.Add(LOGRECORD(strbuf, level));
             }
             else if (d_level >= level)
             {
@@ -143,20 +143,16 @@ namespace DuiEngine
         {
             d_caching = false;
 
-            STL_NS::vector<STL_NS::pair<CString, LoggingLevel> >::iterator iter = d_cache.begin();
-
-            while (iter != d_cache.end())
-            {
-                if (d_level >= (*iter).second)
-                {
-					_ftprintf(d_pFile,(LPCTSTR)(*iter).first);
+			for(int i=0;i<d_cache.GetCount();i++)
+			{
+				if (d_level >= d_cache[i].level)
+				{
+					_ftprintf(d_pFile,d_cache[i].msg);
 					fflush(d_pFile);
-                }
+				}
+			}
 
-                ++iter;
-            }
-
-            d_cache.clear();
+			d_cache.RemoveAll();
         }
     }
 

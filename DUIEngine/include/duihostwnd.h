@@ -91,7 +91,7 @@ protected:
 
 	virtual BOOL _PreTranslateMessage(MSG* pMsg);
 
-	STL_NS::vector<CDuiMessageFilter*> m_aMsgFilter;
+	CDuiArray<CDuiMessageFilter*> m_aMsgFilter;
 protected:
 	//////////////////////////////////////////////////////////////////////////
 	// Message handler

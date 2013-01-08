@@ -134,8 +134,7 @@ protected:
 	int	m_iCurSel;
 	int  m_iAnimTime;	
 
-	STL_NS::vector<CBITEM> m_arrCbItem;
-
+	CDuiArray<CBITEM> m_arrCbItem;
 };
 
 }//namespace

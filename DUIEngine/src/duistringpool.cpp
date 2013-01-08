@@ -12,10 +12,10 @@
 
 namespace DuiEngine{
 
-template<> DuiString* Singleton<DuiString>::ms_Singleton	= 0;
+template<> DuiStringPool* Singleton<DuiStringPool>::ms_Singleton	= 0;
 
 
-BOOL DuiString::BuildString(CString &strContainer)
+BOOL DuiStringPool::BuildString(CString &strContainer)
 {
 	BOOL bRet=FALSE;
 	int nSubStringStart=-1;
@@ -39,7 +39,7 @@ BOOL DuiString::BuildString(CString &strContainer)
 	return bRet;
 }
 
-BOOL DuiString::Init(UINT uResID)
+BOOL DuiStringPool::Init(UINT uResID)
 {
 	DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
 	if(!pRes) return FALSE;
@@ -84,15 +84,15 @@ BOOL DuiString::Init(UINT uResID)
 	return TRUE;
 }
 
-CString DuiString::Get( UINT uID )
+LPCTSTR DuiStringPool::Get( UINT uID )
 {
-	CString strRet;
+	m_strTmp.Assign(NULL);
 	if(HasKey(uID))
 	{
-		strRet=GetKeyObject(uID);
-		BuildString(strRet);
+		m_strTmp=GetKeyObject(uID);
+		BuildString(m_strTmp);
 	}
-	return strRet;
+	return m_strTmp;
 }
 
 }//namespace DuiEngine

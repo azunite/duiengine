@@ -96,7 +96,18 @@ protected:
 		Implementation Data
 	*************************************************************************/
 	FILE * d_pFile;
-    STL_NS::vector<STL_NS::pair<CString, LoggingLevel> > d_cache;    //!< Used to cache log entries before log file is created.
+	struct LOGRECORD
+	{
+		LOGRECORD(){}
+		LOGRECORD(const CString & _msg,LoggingLevel _level)
+		{
+			msg=_msg;
+			level=_level;
+		}
+		CString msg;
+		LoggingLevel level;
+	};
+	CDuiArray<LOGRECORD> d_cache; //!< Used to cache log entries before log file is created.
     bool d_caching;                 //!< true while log entries are beign cached (prior to logfile creation)
 };
 

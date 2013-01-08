@@ -35,15 +35,6 @@
 #include <assert.h>
 #include <tchar.h>
 
-#ifndef USE_EASTL
-	#include <vector>
-	#include <map>
-	#define STL_NS std
-#else
-	#include <eastl\vector.h>
-	#include <eastl\map.h>
-	#define STL_NS	eastl
-#endif
 
 #define DUIASSERT(x) assert(x)
 void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
@@ -53,14 +44,8 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 
 #ifdef DEBUG
 	#pragma comment(lib,"tinyxml_d.lib")
-	#ifndef USE_STDSTL
-		#pragma comment(lib,"stl_d.lib")
-	#endif
 #else
 	#pragma comment(lib,"tinyxml.lib")
-	#ifdef USE_EASTL
-		#pragma comment(lib,"stl.lib")
-	#endif
 #endif//DEBUG
 
 
@@ -72,6 +57,7 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #endif
 
 #include "wtl.mini/duistr.h" //注意：如果CString已经定义，可以定义NO_DUISTR来防止命名冲突
+#include "wtl.mini/duicoll.h" 
 
 #include "DuiAttrCrack.h"
 

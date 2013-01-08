@@ -8,8 +8,6 @@
 #include "../../DUIEngine/include/DuiImgBase.h"
 
 #include "ZipArchive.h"
-#include <map>
-
 
 namespace DuiEngine{
 
@@ -33,7 +31,7 @@ public:
 protected:
 	BOOL LoadSkin();
 	CString GetFilePath(UINT uID,LPCSTR pszType);
-	std::map<DuiResID,CString> m_mapFiles;
+	CDuiMap<DuiResID,CString> m_mapFiles;
 
 	CZipArchive m_zipFile;
 };

@@ -195,12 +195,13 @@ public:
 	CDuiMenu GetSubMenu(int nPos);
 
 	HMENU m_hMenu;
+	
 protected:
 	CDuiMenu(CDuiMenu *pParent);
 
 	void BuildMenu(HMENU menuPopup,TiXmlElement *pTiXmlMenu);
 
-	STL_NS::vector<DuiMenuItemData *> m_arrDmmi;
+	CDuiArray<DuiMenuItemData *> m_arrDmmi;
 	CDuiMenuAttr	m_menuSkin;
 	CDuiMenu	*	m_pParent;
 };

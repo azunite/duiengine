@@ -28,7 +28,7 @@ const TCHAR CoolMenu_oldProc[] = _T("CoolMenu_oldProc");
 								class CMenuWndHook
 			  ------------------------------------------------
   ########################################################################*/
-STL_NS::map <HWND,CMenuWndHook*> CMenuWndHook::m_WndMenuMap;
+CDuiMap <HWND,CMenuWndHook*> CMenuWndHook::m_WndMenuMap;
 
 HHOOK CMenuWndHook::m_hMenuHook = NULL;
 CStringA CMenuWndHook::m_strSkinName = "";
@@ -47,7 +47,7 @@ CMenuWndHook::~CMenuWndHook ()
         ::SetWindowLong(m_hWnd, GWL_WNDPROC, (DWORD)(ULONG)oldWndProc);
         ::RemoveProp(m_hWnd, CoolMenu_oldProc);
     }
-    m_WndMenuMap.erase(m_hWnd);
+    m_WndMenuMap.RemoveKey(m_hWnd);
 }
 
 void CMenuWndHook::InstallHook(HINSTANCE hInst,LPCSTR pszSkinName)
@@ -62,14 +62,13 @@ void CMenuWndHook::InstallHook(HINSTANCE hInst,LPCSTR pszSkinName)
 
 void CMenuWndHook::UnInstallHook()
 {
-	STL_NS::map<HWND,CMenuWndHook*>::iterator it=m_WndMenuMap.begin();
-
-    while (it!=m_WndMenuMap.end())
-    {
-		delete it->second;
-		it++;
-    }
-    m_WndMenuMap.clear();
+	POSITION pos= m_WndMenuMap.GetStartPosition();
+	while(pos)
+	{
+		CDuiMap<HWND,CMenuWndHook*>::CPair *p=m_WndMenuMap.GetNext(pos);
+		delete p->m_value;
+	}
+	m_WndMenuMap.RemoveAll();
 	
     if (m_hMenuHook != NULL)
     {
@@ -79,9 +78,10 @@ void CMenuWndHook::UnInstallHook()
 
 CMenuWndHook* CMenuWndHook::GetWndHook(HWND hwnd)
 {
-	STL_NS::map<HWND,CMenuWndHook*>::iterator it=m_WndMenuMap.find(hwnd);
-	if(it==m_WndMenuMap.end()) return NULL;
-	return it->second;
+
+	CDuiMap<HWND,CMenuWndHook*>::CPair *p=m_WndMenuMap.Lookup(hwnd);
+	if(!p) return NULL;
+	return p->m_value;
 }
 
 CMenuWndHook* CMenuWndHook::AddWndHook(HWND hwnd)

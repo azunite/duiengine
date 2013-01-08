@@ -164,7 +164,7 @@ public:                                                             \
 	if (attribname == strAttribName)                            \
 		{                                                           \
 		varname = CA2T(strValue, CP_UTF8);                      \
-		DuiString::getSingleton().BuildString(varname);						\
+		DuiStringPool::getSingleton().BuildString(varname);						\
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \

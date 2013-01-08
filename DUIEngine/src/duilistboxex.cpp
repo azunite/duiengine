@@ -44,7 +44,7 @@ void CDuiListBoxEx::DeleteAllItems(BOOL bUpdate/*=TRUE*/)
 	{
 		m_arrItems[i]->Release();
 	}
-	m_arrItems.clear();
+	m_arrItems.RemoveAll();
 	m_iSelItem=-1;
 	m_iHoverItem=-1;
 	m_pCapturedFrame=NULL;
@@ -64,7 +64,7 @@ void CDuiListBoxEx::DeleteItem(int iItem)
 	}
 
 	m_arrItems[iItem]->Release();
-	m_arrItems.erase(m_arrItems.begin()+iItem);
+	m_arrItems.RemoveAt(iItem);
 
 	if(m_iSelItem==iItem) m_iSelItem=-1;
 	else if(m_iSelItem>iItem) m_iSelItem--;
@@ -96,7 +96,7 @@ int CDuiListBoxEx::InsertItem(int iItem,CDuiItemPanel *pItemObj,DWORD dwData/*=0
 	pItemObj->Move(CRect(0,0,m_rcClient.Width(),m_nItemHei));
 	pItemObj->SetSkin(m_pItemSkin);
 
-	m_arrItems.insert(m_arrItems.begin()+iItem,pItemObj);
+	m_arrItems.InsertAt(iItem,pItemObj);
 
 	if(m_iSelItem>=iItem) m_iSelItem++;
 	if(m_iHoverItem>=iItem) m_iHoverItem++;
@@ -222,7 +222,7 @@ BOOL CDuiListBoxEx::SetItemCount(DWORD *pData,int nItems)
 	return TRUE;
 }
 
-int CDuiListBoxEx::GetItemCount() {return m_arrItems.size();}
+int CDuiListBoxEx::GetItemCount() {return m_arrItems.GetCount();}
 
 void CDuiListBoxEx::RedrawItem(int iItem)
 {

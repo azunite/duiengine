@@ -11,11 +11,14 @@
 #include <yvals.h>
 #include <wchar.h>
 
+_declspec(selectany) int strNull[] = { 0, 0 };	//empty string
+
 namespace DuiEngine
 {
 
+
 template<class _Elem>
-struct DUI_EXP char_traits
+struct char_traits
 {	// properties of a string or stream element
 	typedef _Elem char_type;
 
@@ -133,7 +136,7 @@ struct DUI_EXP char_traits
 };
 
 // STRUCT char_traits<wchar_t>
-template<> struct DUI_EXP char_traits<wchar_t>
+template<> struct char_traits<wchar_t>
 {	// properties of a string or stream wchar_t element
 	typedef wchar_t _Elem;
 	typedef _Elem char_type;	// for overloads
@@ -150,17 +153,17 @@ template<> struct DUI_EXP char_traits<wchar_t>
 
 	static int compareNoCase(const _Elem * _First1,const _Elem * _First2)
 	{
-		return _wcsicmp(_First1,_First2);
+		return ::_wcsicmp(_First1,_First2);
 	}
 
 	static void strupr(_Elem * pstr)
 	{
-		_wcsupr(pstr);
+		::_wcsupr(pstr);
 	}
 
 	static void strlwr(_Elem * pstr)
 	{
-		_wcslwr(pstr);
+		::_wcslwr(pstr);
 	}
 
 	static bool  eq(const _Elem& _Left, const _Elem& _Right)
@@ -231,7 +234,7 @@ template<> struct DUI_EXP char_traits<wchar_t>
 
 
 // STRUCT char_traits<char> (FROM <string>)
-template<> struct DUI_EXP char_traits<char>
+template<> struct char_traits<char>
 {	// properties of a string or stream char element
 	typedef char _Elem;
 	typedef _Elem char_type;
@@ -330,39 +333,37 @@ template<> struct DUI_EXP char_traits<char>
 
 
 template<class _Elem,class _Traits=char_traits<_Elem>>
-class DUI_EXP CDuiString
+class CDuiString
 {
 public:
-	enum { MAX_LOCAL_STRING_LEN = 63 };
+	typedef _Elem XCHAR;
+	typedef const XCHAR * PCXSTR;
+	typedef _Traits StrTraits;
 
-	CDuiString() : m_pstr(m_szBuffer),m_nLength(0)
+	CDuiString() : m_pstr(NULL),m_nLength(0)
 	{
-		m_szBuffer[0] = '\0';
 	}
 
-	CDuiString(const _Elem ch) : m_pstr(m_szBuffer),m_nLength(0)
+	CDuiString(const _Elem ch) : m_pstr(NULL),m_nLength(0)
 	{
-		m_szBuffer[0] = ch;
-		m_szBuffer[1] = '\0';
+		Assign(&ch,1);
 	}
 
-	CDuiString(const _Elem * lpsz, int nLen=-1) : m_pstr(m_szBuffer),m_nLength(0)
+	CDuiString(const _Elem * lpsz, int nLen=-1) : m_pstr(NULL),m_nLength(0)
 	{      
 		if(nLen==-1) nLen=_Traits::length(lpsz);
 		DUIASSERT(!_Traits::IsBadStringPtr(lpsz,nLen) || lpsz==NULL);
-		m_szBuffer[0] = '\0';
 		Assign(lpsz, nLen);
 	}
 
-	CDuiString(const CDuiString& src) : m_pstr(m_szBuffer),m_nLength(0)
+	CDuiString(const CDuiString& src) : m_pstr(NULL),m_nLength(0)
 	{
-		m_szBuffer[0] = '\0';
-		Assign(src.m_pstr);
+		Assign(src.m_pstr,src.GetLength());
 	}
 
 	~CDuiString()
 	{
-		if( m_pstr != m_szBuffer ) free(m_pstr);
+		if(GetLength()) free(m_pstr);
 	}
 
 	int GetLength() const
@@ -381,23 +382,9 @@ public:
 
 		DUIASSERT(!_Traits::IsBadStringPtr(pstr,nCount));
 
-		if( nCount + GetLength() >= MAX_LOCAL_STRING_LEN ) {
-			if( m_pstr == m_szBuffer ) {
-				m_pstr = static_cast<_Elem *>(malloc((nCount +GetLength()+ 1) * sizeof(_Elem)));
-				_Traits::copy(m_pstr,m_szBuffer,GetLength());
-			}
-			else {
-				m_pstr = static_cast<_Elem *>(realloc(m_pstr, (nCount +GetLength()+ 1) * sizeof(_Elem)));
-			}
-			_Traits::copy(m_pstr+GetLength(),pstr,nCount);
-		}
-		else {
-			if( m_pstr != m_szBuffer ) {
-				free(m_pstr);
-				m_pstr = m_szBuffer;
-			}
-			_Traits::copy(m_pstr+GetLength(),pstr,nCount);
-		}
+		m_pstr = static_cast<_Elem *>(realloc(m_pstr, (nCount +m_nLength+ 1) * sizeof(_Elem)));
+		_Traits::copy(m_pstr+m_nLength,pstr,nCount);
+
 		m_nLength+=nCount;
 		m_pstr[m_nLength]=0;
 	}
@@ -406,19 +393,21 @@ public:
 	{
 		if(cchMax<0) cchMax=_Traits::length(pstr);
 
-		if( cchMax < MAX_LOCAL_STRING_LEN ) {
-			if( m_pstr != m_szBuffer ) {
-				free(m_pstr);
-				m_pstr = m_szBuffer;
-			}
+		if( cchMax > GetLength() ) {
+			if(GetLength())
+				m_pstr = static_cast<_Elem *>(realloc(m_pstr, (cchMax + 1) * sizeof(_Elem)));
+			else
+				m_pstr = static_cast<_Elem *>(calloc((cchMax + 1) , sizeof(_Elem)));
 		}
-		else if( cchMax > GetLength() || m_pstr == m_szBuffer ) {
-			if( m_pstr == m_szBuffer ) m_pstr = NULL;
-			m_pstr = static_cast<_Elem *>(realloc(m_pstr, (cchMax + 1) * sizeof(_Elem)));
+		if(cchMax==0)
+		{
+			Empty();
+		}else
+		{
+			_Traits::copy(m_pstr,pstr,cchMax);
+			m_pstr[cchMax]=0;
+			m_nLength=cchMax;
 		}
-		_Traits::copy(m_pstr,pstr,cchMax);
-		m_pstr[cchMax]=0;
-		m_nLength=cchMax;
 	}
 
 	bool IsEmpty() const 
@@ -428,9 +417,8 @@ public:
 
 	void Empty() 
 	{ 
-		if( m_pstr != m_szBuffer ) free(m_pstr);
-		m_pstr = m_szBuffer;
-		m_szBuffer[0] = '\0'; 
+		if( m_nLength ) free(m_pstr);
+		m_pstr=(_Elem*)(LPBYTE)strNull;
 		m_nLength=0;
 	}
 
@@ -441,17 +429,19 @@ public:
 
 	_Elem GetAt(int nIndex) const
 	{
+		DUIASSERT(nIndex>=0 && nIndex < GetLength());
 		return m_pstr[nIndex];
 	}
 
 	_Elem operator[] (int nIndex) const
 	{ 
+		DUIASSERT(nIndex>=0 && nIndex < GetLength());
 		return m_pstr[nIndex];
 	}   
 
 	const CDuiString& operator=(const CDuiString& src)
 	{      
-		Assign(src);
+		Assign(src.GetData(),src.GetLength());
 		return *this;
 	}
 
@@ -477,17 +467,14 @@ public:
 
 	const CDuiString& operator=(const _Elem ch)
 	{
-		Empty();
-		m_szBuffer[0] = ch;
-		m_szBuffer[1] = '\0';
-		m_nLength=1;
+		Assign(&ch,1);
 		return *this;
 	}
 
 	CDuiString operator+(const CDuiString& src) const
 	{
 		CDuiString sTemp = *this;
-		sTemp.Append(src);
+		sTemp.Append(src,src.GetLength());
 		return sTemp;
 	}
 
@@ -512,7 +499,7 @@ public:
 
 	const CDuiString& operator+=(const CDuiString& src)
 	{      
-		Append(src);
+		Append(src.GetData(),src.GetLength());
 		return *this;
 	}
 
@@ -537,11 +524,13 @@ public:
 
 	int Compare(const _Elem * lpsz) const 
 	{ 
+		if(!lpsz) return m_nLength;
 		return _Traits::compare(m_pstr,lpsz);
 	}
 
 	int CompareNoCase(const _Elem * lpsz) const 
 	{ 
+		if(!lpsz) return m_nLength;
 		return _Traits::compareNoCase(m_pstr,lpsz);
 	}
 
@@ -635,7 +624,7 @@ public:
 		va_start(argList, pstrFormat);
 		int iRet = _Traits::wvsprintf(szBuffer, sFormat, argList);
 		va_end(argList);
-		Assign(szBuffer);
+		Assign(szBuffer,iRet);
 		return iRet;
 	}
 
@@ -647,13 +636,74 @@ public:
 		va_start(argList, pstrFormat);
 		int iRet = _Traits::wvsprintf(szBuffer, sFormat, argList);
 		va_end(argList);
-		Assign(szBuffer);
+		Assign(szBuffer,iRet);
 		return iRet;
 	}
 protected:
 	_Elem * m_pstr;
 	int		m_nLength;
-	_Elem m_szBuffer[MAX_LOCAL_STRING_LEN + 1];
+};
+
+
+
+template< typename T >
+class CDuiStringElementTraits
+{
+public:
+	typedef typename T::PCXSTR INARGTYPE;
+	typedef T& OUTARGTYPE;
+
+	static void __cdecl CopyElements( _Out_capcount_(nElements) T* pDest, _In_count_(nElements) const T* pSrc, _In_ size_t nElements )
+	{
+		for( size_t iElement = 0; iElement < nElements; iElement++ )
+		{
+			pDest[iElement] = pSrc[iElement];
+		}
+	}
+
+	static void __cdecl RelocateElements( _Out_capcount_(nElements) T* pDest, _In_count_(nElements) T* pSrc, _In_ size_t nElements )
+	{
+		memmove_s( pDest, nElements*sizeof( T ), pSrc, nElements*sizeof( T ) );
+	}
+
+	static ULONG __cdecl Hash( _In_ INARGTYPE str )
+	{
+		DUIASSERT( str != NULL );
+		ULONG nHash = 0;
+		const T::XCHAR* pch = str;
+		while( *pch != 0 )
+		{
+			nHash = (nHash<<5)+nHash+(*pch);
+			pch++;
+		}
+
+		return( nHash );
+	}
+
+	static bool __cdecl CompareElements( _In_ INARGTYPE str1, _In_ INARGTYPE str2 )
+	{
+		return( T::StrTraits::compare( str1, str2 ) == 0 );
+	}
+
+	static int __cdecl CompareElementsOrdered( _In_ INARGTYPE str1, _In_ INARGTYPE str2 )
+	{
+		return( T::StrTraits::compare( str1, str2 ) );
+	}
+};
+
+template< typename T >
+class CElementTraits;
+
+template<>
+class CElementTraits< CDuiString<char> > :
+	public CDuiStringElementTraits< CDuiString<char> >
+{
+};
+
+template<>
+class CElementTraits< CDuiString<wchar_t> > :
+	public CDuiStringElementTraits< CDuiString<wchar_t> >
+{
 };
 
 	template<class _Elem,class _Traits>
@@ -661,7 +711,7 @@ protected:
 	{	// test for NTCS vs. string equality
 		return (_Right.Compare(_Left)==0);
 	}
-
+	//*
 	template<class _Elem,class _Traits>
 	bool __CLRCALL_OR_CDECL operator!=(const _Elem * _Left, const CDuiString<_Elem,_Traits> & _Right)
 	{	// test for NTCS vs. string equality
@@ -670,30 +720,30 @@ protected:
 	template<class _Elem,class _Traits>
 	bool __CLRCALL_OR_CDECL operator<=(const _Elem * _Left, const CDuiString<_Elem,_Traits> & _Right)
 	{	// test for NTCS vs. string equality
-		return (_Right.Compare(_Left)<=0);
+		return (_Right.Compare(_Left)>0);
 	}
 	template<class _Elem,class _Traits>
 	bool __CLRCALL_OR_CDECL operator<(const _Elem * _Left, const CDuiString<_Elem,_Traits> & _Right)
 	{	// test for NTCS vs. string equality
-		return (_Right.Compare(_Left)<0);
+		return (_Right.Compare(_Left)>=0);
 	}
 
 	template<class _Elem,class _Traits>
 	bool __CLRCALL_OR_CDECL operator>=(const _Elem * _Left, const CDuiString<_Elem,_Traits> & _Right)
 	{	// test for NTCS vs. string equality
-		return (_Right.Compare(_Left)>=0);
+		return (_Right.Compare(_Left)<0);
 	}
 	template<class _Elem,class _Traits>
 	bool __CLRCALL_OR_CDECL operator>(const _Elem * _Left, const CDuiString<_Elem,_Traits> & _Right)
 	{	// test for NTCS vs. string equality
-		return (_Right.Compare(_Left)>0);
+		return (_Right.Compare(_Left)<=0);
 	}
-
+//*/
 #ifndef CP_ACP
 #define CP_ACP 0
 #endif//CP_ACP
 
-class DUI_EXP CDuiStrCpCvt{
+class CDuiStrCpCvt{
 public:
 	static CDuiString<char> CvtW2A(const CDuiString<wchar_t> & str,unsigned int cp=CP_ACP)
 	{

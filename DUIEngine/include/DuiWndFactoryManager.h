@@ -80,7 +80,7 @@ public:
 	bool UnregisterFactory(CDuiWindowFactory *pWndFactory)
 	{
 		if(!HasKey(pWndFactory->getWindowType())) return false;
-		m_mapNamedObj->erase(pWndFactory->getWindowType());
+		m_mapNamedObj->RemoveKey(pWndFactory->getWindowType());
 		return true;
 	}
 

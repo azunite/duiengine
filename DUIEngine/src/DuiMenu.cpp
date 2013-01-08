@@ -258,14 +258,14 @@ BOOL CDuiMenu::InsertMenu(UINT nPosition, UINT nFlags, UINT_PTR nIDNewItem,LPCTS
 	CDuiMenu *pRootMenu=this;
 	while(pRootMenu->m_pParent) pRootMenu=pRootMenu->m_pParent;
 	//将分配的内存放到根菜单的内存节点列表中
-	pRootMenu->m_arrDmmi.push_back(pMenuData);
+	pRootMenu->m_arrDmmi.Add(pMenuData);
 
 	if(nFlags&MF_POPUP)
 	{//对子菜单还需要做数据迁移处理
 		CDuiMenu *pSubMenu=(CDuiMenu*)(LPVOID)nIDNewItem;
-		for(int i=0;i<pSubMenu->m_arrDmmi.size();i++)
-			pRootMenu->m_arrDmmi.push_back(pSubMenu->m_arrDmmi[i]);
-		pSubMenu->m_arrDmmi.clear();
+		for(int i=0;i<pSubMenu->m_arrDmmi.GetCount();i++)
+			pRootMenu->m_arrDmmi.Add(pSubMenu->m_arrDmmi[i]);
+		pSubMenu->m_arrDmmi.RemoveAll();
 		pSubMenu->m_pParent=this;
 	}
 	return TRUE;
@@ -330,7 +330,7 @@ void CDuiMenu::BuildMenu( HMENU menuPopup,TiXmlElement *pTiXmlMenu )
 				AppendMenu(menuPopup,uFlag,(UINT_PTR)hSubMenu,(LPCTSTR)pdmmi);
 				BuildMenu(hSubMenu,pTiXmlItem);//build sub menu
 			}
-			m_arrDmmi.push_back(pdmmi);
+			m_arrDmmi.Add(pdmmi);
 		}else if(strcmp("sep",pTiXmlItem->Value())==0)
 		{
 			AppendMenu(menuPopup,MF_SEPARATOR|MF_OWNERDRAW,(UINT_PTR)0,(LPCTSTR)NULL);
@@ -344,8 +344,8 @@ void CDuiMenu::DestroyMenu()
 	if(!m_pParent)
 	{
 		if(m_hMenu) ::DestroyMenu(m_hMenu);
-		for(int i=0;i<m_arrDmmi.size();i++) delete m_arrDmmi[i];
-		m_arrDmmi.clear();
+		for(int i=0;i<m_arrDmmi.GetCount();i++) delete m_arrDmmi[i];
+		m_arrDmmi.RemoveAll();
 	}
 }
 

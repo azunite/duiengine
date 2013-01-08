@@ -83,9 +83,9 @@ namespace DuiEngine{
 	CString DuiResProviderZip::GetFilePath( UINT uID,LPCSTR pszType )
 	{
 		DuiResID resID(pszType,uID);
-		std::map<DuiResID,CString>::iterator it = m_mapFiles.find(resID);
-		if(it==m_mapFiles.end()) return _T("");
-		return it->second;
+		CDuiMap<DuiResID,CString>::CPair *p = m_mapFiles.Lookup(resID);
+		if(!p) return _T("");
+		return p->m_value;
 	}
 
 	size_t DuiResProviderZip::GetRawBufferSize( LPCSTR strType,UINT uID )
@@ -117,8 +117,8 @@ namespace DuiEngine{
 	BOOL DuiResProviderZip::HasResource( LPCSTR strType,UINT uID )
 	{
 		DuiResID resID(strType,uID);
-		std::map<DuiResID,CString>::iterator it = m_mapFiles.find(resID);
-		return it!=m_mapFiles.end();
+		CDuiMap<DuiResID,CString>::CPair *p = m_mapFiles.Lookup(resID);
+		return p!=NULL;
 	}
 
 	BOOL DuiResProviderZip::LoadSkin()

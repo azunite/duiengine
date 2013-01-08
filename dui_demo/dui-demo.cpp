@@ -51,6 +51,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
  	}
 	delete pResModeSel;
 	delete pDuiModeSel;
+
 	if(nMode==-1) return -1;
 
 	//资源类型选择完成 -->
@@ -115,8 +116,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	}
 
 	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义
-	BOOL bOK=DuiString::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
-	DuiFontPool::getSingleton().SetDefaultFont(DuiString::getSingleton().Get(IDS_APP_FONT), -12); // 设置字体,必须在style加载前设置。
+	BOOL bOK=DuiStringPool::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
+	DuiFontPool::getSingleton().SetDefaultFont(DuiStringPool::getSingleton().Get(IDS_APP_FONT), -12); // 设置字体,必须在style加载前设置。
 	bOK=DuiSkinPool::getSingleton().Init(IDR_DUI_SKIN_DEF); // 加载皮肤
 	bOK=DuiStylePool::getSingleton().Init(IDR_DUI_STYLE_DEF); // 加载风格
 	bOK=DuiCSS::getSingleton().Init(IDR_DUI_OBJATTR_DEF);//加载类默认属性

@@ -33,39 +33,55 @@
 
 namespace DuiEngine
 {
-	class FontKey
+	class DUI_EXP FontKey
 	{
 	public:
-		FontKey(DWORD dwStyle,CString strFaceName=_T(""))
+		FontKey(DWORD _dwStyle,LPCTSTR pszFaceName=NULL)
 		{
-			this->strFaceName=strFaceName;
-			this->dwStyle=dwStyle;
+			if(pszFaceName)
+			{
+				_tcscpy_s(strFaceName,LF_FACESIZE,pszFaceName);
+			}else
+			{
+				strFaceName[0]=0;
+			}
+			dwStyle=_dwStyle;
 		}
+		TCHAR	strFaceName[LF_FACESIZE+1];
+		DWORD	 dwStyle;
+	};
 
-		ULONG Hash() const
+	template<>
+	class DUI_EXP CElementTraits< FontKey > :
+		public CElementTraitsBase< FontKey >
+	{
+	public:
+		static ULONG Hash( INARGTYPE fontKey )
 		{
 			ULONG_PTR uRet=0;
-			CString strType=strFaceName;
+			CString strType=fontKey.strFaceName;
 			strType.MakeLower();
 			for(int i=0;i<strType.GetLength();i++)
 			{
 				uRet=uRet*68+strType[i];
 			}
 
-			return (ULONG)(uRet*10000+(UINT)dwStyle+1);
+			return (ULONG)(uRet*10000+(UINT)fontKey.dwStyle+1);
 		}
 
-		bool operator < ( const FontKey &rt) const
+		static bool CompareElements( INARGTYPE element1, INARGTYPE element2 )
 		{
-			ULONG u1=Hash();
-			ULONG u2=rt.Hash();
-			return u1<u2;
+			return _tcsicmp(element1.strFaceName,element2.strFaceName)==0 && element1.dwStyle==element2.dwStyle;
 		}
 
-		CString strFaceName;
-		DWORD	 dwStyle;
+		static int CompareElementsOrdered( INARGTYPE element1, INARGTYPE element2 )
+		{
+			int nRet=_tcsicmp(element1.strFaceName,element2.strFaceName);
+			if(nRet<0) return -1;
+			if(nRet>0) return 1;
+			return element1.dwStyle-element2.dwStyle;
+		}
 	};
-
 
 class DUI_EXP DuiFontPool :public DuiSingletonMap<DuiFontPool,HFONT,FontKey>
 {

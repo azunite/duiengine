@@ -11,12 +11,14 @@
 
 namespace DuiEngine{
 
-class DUI_EXP DuiString :public DuiSingletonMap<DuiString,CString,UINT>
+class DUI_EXP DuiStringPool :public DuiSingletonMap<DuiStringPool,CString,UINT>
 {
 public:
 	BOOL BuildString(CString &strContainer);
     BOOL Init(UINT uResID);
-	CString Get(UINT uID);
+	LPCTSTR Get(UINT uID);
+protected:
+	CString	m_strTmp;
 };
 
 }//namespace DuiEngine

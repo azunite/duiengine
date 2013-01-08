@@ -117,8 +117,7 @@ namespace DuiEngine{
 		new DuiWindowFactoryManager();
 		new DuiWindowManager();
 		new CDuiTimerEx();
-
-		new DuiString();
+		new DuiStringPool();
 		new DuiCSS();
 		new DuiFontPool();
 		new DuiStylePool();
@@ -130,18 +129,15 @@ namespace DuiEngine{
 	{
 		delete DuiFontPool::getSingletonPtr();
 		delete DuiStylePool::getSingletonPtr();
-		delete DuiString::getSingletonPtr();
-
+		delete DuiStringPool::getSingletonPtr();
 		delete CDuiTimerEx::getSingletonPtr();
-		delete DuiWindowManager::getSingletonPtr();
 		delete DuiWindowFactoryManager::getSingletonPtr();
-
 		delete DuiSkinPool::getSingletonPtr();
 		delete DuiSkinFactoryManager::getSingletonPtr();
 		delete DuiCSS::getSingletonPtr();
 		delete DuiImgPool::getSingletonPtr();
-
 		delete DuiThreadActiveWndManager::getSingletonPtr();
+		delete DuiWindowManager::getSingletonPtr();
 	}
 
 	void DuiSystem::logEvent( LPCTSTR message, LoggingLevel level /*= Standard*/ )

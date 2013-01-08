@@ -86,7 +86,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 			pItem->Attribute("icon",&cbi.iIcon);
 			const char *pszData=pItem->Attribute("data");
 			if(pszData) cbi.lParam=atoi(pszData);
-			m_arrCbItem.push_back(cbi);
+			m_arrCbItem.Add(cbi);
 			pItem=pItem->NextSiblingElement("item");
 		}
 		bRet=TRUE;
@@ -116,7 +116,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 		m_pEdit->SetAttribute("pos",strPos,TRUE);
 		m_pEdit->SetCmdID(IDC_CB_EDIT);
 	}
-	if(m_iCurSel!=-1 && m_iCurSel>=m_arrCbItem.size())
+	if(m_iCurSel!=-1 && m_iCurSel>=m_arrCbItem.GetCount())
 		m_iCurSel=-1;
 	int iSel=m_iCurSel;
 	m_iCurSel=-1;
@@ -305,7 +305,7 @@ int CDuiComboBox::SetCurSel( int iSel )
 				SetInnerText(NULL);
 		}else
 		{
-			if(iSel>=0 && iSel<m_arrCbItem.size())
+			if(iSel>=0 && iSel<m_arrCbItem.GetCount())
 			{
 				m_iCurSel=iSel;
 				if(m_pEdit)
@@ -329,20 +329,20 @@ int CDuiComboBox::GetCurSel()
 
 BOOL CDuiComboBox::GetItemInfo( int iItem,CBITEM *pCbItem )
 {
-	if(iItem<0 || iItem>=m_arrCbItem.size()) return FALSE;
+	if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return FALSE;
 	*pCbItem=m_arrCbItem[iItem];
 	return TRUE;
 }
 
 LPARAM CDuiComboBox::GetItemData(int iItem) const
 {
-	if(iItem<0 || iItem>=m_arrCbItem.size()) return FALSE;
+	if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return FALSE;
 	return m_arrCbItem[iItem].lParam;
 }
 
 int CDuiComboBox::SetItemData(int iItem, LPARAM lParam)
 {
-	if(iItem<0 || iItem>=m_arrCbItem.size()) return CB_ERR;
+	if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return CB_ERR;
 	m_arrCbItem[iItem].lParam = lParam;
 	return 0;
 }
@@ -350,8 +350,8 @@ int CDuiComboBox::SetItemData(int iItem, LPARAM lParam)
 int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,LPARAM lParam )
 {
 	CBITEM cbi={pszText,iIcon,lParam};
-	if(iPos<0 || iPos>m_arrCbItem.size()) iPos=m_arrCbItem.size();
-	m_arrCbItem.insert(m_arrCbItem.begin()+iPos,cbi);
+	if(iPos<0 || iPos>m_arrCbItem.GetCount()) iPos=m_arrCbItem.GetCount();
+	m_arrCbItem.InsertAt(iPos,cbi);
 	if(m_pListBox)
 	{//update list box
 		m_pListBox->UpdateItems();
@@ -361,8 +361,8 @@ int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,LPARAM lParam )
 
 BOOL CDuiComboBox::DeleteItem( int iItem )
 {
-	if(iItem<0 || iItem>=m_arrCbItem.size()) return FALSE;
-	m_arrCbItem.erase(m_arrCbItem.begin()+iItem);
+	if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return FALSE;
+	m_arrCbItem.RemoveAt(iItem);
 	if(m_pListBox)
 	{//update list box
 		m_pListBox->DeleteItem(iItem);
@@ -408,12 +408,12 @@ CDuiWindow* CDuiComboBox::GetWindow()
 
 int  CDuiComboBox::GetListItemCount()
 {
-	return m_arrCbItem.size();
+	return m_arrCbItem.GetCount();
 }
 
 LPCTSTR	CDuiComboBox::GetListItemText(int nItem)
 {
-	if (nItem < 0 || nItem >= m_arrCbItem.size())
+	if (nItem < 0 || nItem >= m_arrCbItem.GetCount())
 		return NULL;
 
 	return m_arrCbItem[nItem].strText;
@@ -421,7 +421,7 @@ LPCTSTR	CDuiComboBox::GetListItemText(int nItem)
 
 int CDuiComboBox::GetListItemIcon(int nItem)
 {
-	if (nItem < 0 || nItem >= m_arrCbItem.size())
+	if (nItem < 0 || nItem >= m_arrCbItem.GetCount())
 		return -1;
 
 	return m_arrCbItem[nItem].iIcon;

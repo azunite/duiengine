@@ -94,7 +94,7 @@ protected:
 	DUIWIN_END_MSG_MAP()
 
 protected:
-	STL_NS::vector<CDuiSplitPane *> m_arrPane;
+	CDuiArray<CDuiSplitPane *> m_arrPane;
 	CDuiSkinBase *m_pSkinSep;
 	int m_nSepSize;
 	BOOL m_bAdjustable;

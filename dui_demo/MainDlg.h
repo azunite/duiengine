@@ -55,7 +55,7 @@ protected:
 	BEGIN_MSG_MAP_EX(CMainDlg)
 		MSG_WM_CREATE(OnCreate)
 		MSG_WM_CLOSE(OnClose)
-// 		MSG_WM_WINDOWPOSCHANGED(OnWindowPosChanged)
+		MSG_WM_WINDOWPOSCHANGED(OnWindowPosChanged)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
 		CHAIN_MSG_MAP_MEMBER((*m_pUiHandler))
 		CHAIN_MSG_MAP(CDuiHostWnd)

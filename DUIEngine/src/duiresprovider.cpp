@@ -104,9 +104,9 @@ namespace DuiEngine{
 	CStringA DuiResProviderFiles::GetRes( LPCSTR strType,UINT uID )
 	{
 		DuiResID resID(strType,uID);
-		STL_NS::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
-		if(it==m_mapFiles.end()) return "";
-		CStringA strRet=m_strPath+"\\"+it->second;
+		CDuiMap<DuiResID,CStringA>::CPair *p=m_mapFiles.Lookup(resID);
+		if(!p) return "";
+		CStringA strRet=m_strPath+"\\"+p->m_value;
 		return strRet;
 	}
 
@@ -221,8 +221,8 @@ namespace DuiEngine{
 	BOOL DuiResProviderFiles::HasResource( LPCSTR strType,UINT uID )
 	{
 		DuiResID resID(strType,uID);
-		STL_NS::map<DuiResID,CStringA>::iterator it=m_mapFiles.find(resID);
-		return (it!=m_mapFiles.end());
+		CDuiMap<DuiResID,CStringA>::CPair *p=m_mapFiles.Lookup(resID);
+		return (p!=NULL);
 	}
 
 }//namespace DuiEngine

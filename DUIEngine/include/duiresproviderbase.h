@@ -15,6 +15,7 @@
 #define MAX_RES_TYPE		10
 
 #ifdef _DEBUG
+#include <crtdbg.h>
 #   define DUIRES_ASSERTW(expr, format, ...) \
 	(void) ((!!(expr)) || \
 	(1 != _CrtDbgReportW(_CRT_ASSERT, _CRT_WIDE(__FILE__), __LINE__, NULL, format, __VA_ARGS__)) || \
@@ -32,7 +33,7 @@
 
 namespace DuiEngine{
 
-	class DuiResID
+	class DUI_EXP DuiResID
 	{
 	public:
 		DuiResID(LPCSTR pszType,UINT id=0)
@@ -47,15 +48,41 @@ namespace DuiEngine{
 			nID=(int)id;
 		}
 
-		bool operator < ( const DuiResID & rt) const
-		{
-			int nret=_stricmp(szType,rt.szType);
-			if(nret==0) nret=(int)(nID-rt.nID);
-			return nret<0;
-		}
-
 		char szType[MAX_RES_TYPE+1];
 		int	 nID;
+	};
+
+
+	template<>
+	class DUI_EXP CElementTraits< DuiResID > :
+		public CElementTraitsBase< DuiResID >
+	{
+	public:
+		static ULONG Hash( INARGTYPE resid )
+		{
+			ULONG_PTR uRet=0;
+			CStringA strType=resid.szType;
+			strType.MakeLower();
+			for(int i=0;i<strType.GetLength();i++)
+			{
+				uRet=uRet*68+strType[i];
+			}
+
+			return (ULONG)(uRet*10000+(UINT)resid.nID);
+		}
+
+		static bool CompareElements( INARGTYPE element1, INARGTYPE element2 )
+		{
+			return _stricmp(element1.szType,element2.szType)==0 && element1.nID==element2.nID;
+		}
+
+		static int CompareElementsOrdered( INARGTYPE element1, INARGTYPE element2 )
+		{
+			int nRet=_stricmp(element1.szType,element2.szType);
+			if(nRet<0) return -1;
+			if(nRet>0) return 1;
+			return element1.nID-element2.nID;
+		}
 	};
 
 	class DUI_EXP DuiResProviderBase

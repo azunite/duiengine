@@ -22,32 +22,30 @@ BOOL CDuiTimerEx::_SetTimer( HDUIWND hDuiWnd,UINT_PTR uTimerID,UINT nElapse )
 
 void CDuiTimerEx::_KillTimer( HDUIWND hDuiWnd,UINT_PTR uTimerID )
 {
-	STL_NS::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj->begin();
-	while(it!=m_mapNamedObj->end())
+	POSITION pos=m_mapNamedObj->GetStartPosition();
+	while(pos)
 	{
-		if(it->second.hDuiWnd==hDuiWnd && it->second.uTimerID==uTimerID)
+		CDuiMap<UINT_PTR,TIMERINFO>::CPair *p=m_mapNamedObj->GetNext(pos);
+		if(p->m_value.hDuiWnd==hDuiWnd && p->m_value.uTimerID==uTimerID)
 		{
-			::KillTimer(NULL,it->first);
-			m_mapNamedObj->erase(it);
+			::KillTimer(NULL,p->m_key);
+			m_mapNamedObj->RemoveAtPos((POSITION)p);
 			break;
 		}
-		it++;
 	}
 }
 
 void CDuiTimerEx::_KillTimer( HDUIWND hDuiWnd )
 {
-	STL_NS::map<UINT_PTR,TIMERINFO>::iterator it=m_mapNamedObj->begin();
-	while(it!=m_mapNamedObj->end())
+	POSITION pos=m_mapNamedObj->GetStartPosition();
+	while(pos)
 	{
-		STL_NS::map<UINT_PTR,TIMERINFO>::iterator it1=it;
-		if(it1->second.hDuiWnd==hDuiWnd)
+		CDuiMap<UINT_PTR,TIMERINFO>::CPair *p=m_mapNamedObj->GetNext(pos);
+		if(p->m_value.hDuiWnd==hDuiWnd)
 		{
-			::KillTimer(NULL,it1->first);
-			m_mapNamedObj->erase(it1);
-			break;
+			::KillTimer(NULL,p->m_key);
+			m_mapNamedObj->RemoveAtPos((POSITION)p);
 		}
-		it++;
 	}
 }
 

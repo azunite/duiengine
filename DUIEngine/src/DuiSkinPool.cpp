@@ -59,7 +59,7 @@ namespace DuiEngine{
 		return _InitSkins(xmlDoc.RootElement());
 	}
 
-	int DuiSkinPool::LoadSkins(CStringA strOwnerName)
+	int DuiSkinPool::LoadSkins(LPCSTR strOwnerName)
 	{
 		int nLoaded=0;
 		CStringA strSkinName, strTypeName;
@@ -100,28 +100,27 @@ namespace DuiEngine{
 	}
 
 
-	int DuiSkinPool::FreeSkins( CStringA strOwnerName )
+	int DuiSkinPool::FreeSkins( LPCSTR strOwnerName )
 	{
-		if(strOwnerName.IsEmpty()) return 0;
+		if(!strOwnerName || strlen(strOwnerName)==0) return 0;
 
 		int nFreed=0;
 
-		STL_NS::map<CStringA,DuiSkinPtr>::iterator pos=m_mapNamedObj->begin();
-		while(pos!=m_mapNamedObj->end())
+		POSITION pos=m_mapNamedObj->GetStartPosition();
+		while(pos)
 		{
-			STL_NS::map<CStringA,DuiSkinPtr>::iterator posPrev=pos;
-			pos++;
-			if(posPrev->second->GetOwner()==strOwnerName)
+			CDuiMap<CStringA,DuiSkinPtr>::CPair *p=m_mapNamedObj->GetNext(pos);
+			if(p->m_value->GetOwner()==strOwnerName)
 			{
-				OnKeyRemoved(posPrev->second);
-				m_mapNamedObj->erase(posPrev);
+				OnKeyRemoved(p->m_value);
+				m_mapNamedObj->RemoveAtPos((POSITION)p);
 				nFreed++;
 			}
 		}
 		return nFreed;
 	}
 
-	CDuiSkinBase* DuiSkinPool::GetSkin(CStringA strSkinName)
+	CDuiSkinBase* DuiSkinPool::GetSkin(LPCSTR strSkinName)
 	{
 		if(!HasKey(strSkinName)) return NULL;
 		return GetKeyObject(strSkinName);

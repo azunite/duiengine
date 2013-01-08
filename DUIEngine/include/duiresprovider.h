@@ -44,7 +44,7 @@ namespace DuiEngine{
 		CStringA GetRes( LPCSTR strType,UINT uID );
 
 		CStringA m_strPath;
-		STL_NS::map<DuiResID,CStringA> m_mapFiles;
+		CDuiMap<DuiResID,CStringA> m_mapFiles;
 	};
 
 }//namespace DuiEngine

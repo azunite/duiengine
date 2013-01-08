@@ -41,7 +41,7 @@ CDuiListBox::~CDuiListBox()
 
 int CDuiListBox::GetCount() const
 {
-	return m_arrItems.size();
+	return m_arrItems.GetCount();
 }
 
 BOOL CDuiListBox::SetCount(DWORD *pData,int nItems)
@@ -160,7 +160,7 @@ void CDuiListBox::DeleteAll()
 		if (m_arrItems[i])
 			delete m_arrItems[i];
 	}
-	m_arrItems.clear();
+	m_arrItems.RemoveAll();
 
 	m_iSelItem=-1;
 	m_iHoverItem=-1;
@@ -176,7 +176,7 @@ BOOL CDuiListBox::DeleteString(int nIndex)
 
 	if (m_arrItems[nIndex])
 		delete m_arrItems[nIndex];
-	m_arrItems.erase(m_arrItems.begin()+nIndex);
+	m_arrItems.RemoveAt(nIndex);
 
 	if(m_iSelItem==nIndex) m_iSelItem=-1;
 	else if(m_iSelItem>nIndex) m_iSelItem--;
@@ -314,7 +314,7 @@ void CDuiListBox::LoadItemAttribute(TiXmlElement *pTiXmlItem, LPLBITEM pItem)
 			pItem->dwData = atol(pAttrib->Value());
 	}
 	pItem->strText =  CA2T(pTiXmlItem->GetText(), CP_UTF8);	
-	DuiString::getSingleton().BuildString(pItem->strText);
+	DuiStringPool::getSingleton().BuildString(pItem->strText);
 }
 
 int CDuiListBox::InsertItem(int nIndex, LPLBITEM pItem)
@@ -326,7 +326,7 @@ int CDuiListBox::InsertItem(int nIndex, LPLBITEM pItem)
 		nIndex = GetCount();
 	}
 
-	m_arrItems.insert(m_arrItems.begin()+nIndex, pItem);
+	m_arrItems.InsertAt(nIndex, pItem);
 
 	if(m_iSelItem >= nIndex) m_iSelItem++;
 	if(m_iHoverItem >= nIndex) m_iHoverItem++;

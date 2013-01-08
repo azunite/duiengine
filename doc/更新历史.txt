@@ -1,3 +1,11 @@
+2013年1月8日（重要更新）
+1、实现DUI版本CString。
+2、从ATL中提取map,array,list集合实现CDuiMap,CDuiArray,CDuiList。
+3、删除项目对stl的依赖。dll版本编译后体积缩小120K.
+4、将DuiString对象更名为DuiStringPool。
+5、修改部分接口，将参数为CString的改为LPCXSTR.
+6、更新“一言”修改后的CDuiTreeCtrl.
+
 2013年1月2日
 1、将stl库替换为eastl库，可能通过配置选择std库。
 2、将strcvt整合到duiengine库中。

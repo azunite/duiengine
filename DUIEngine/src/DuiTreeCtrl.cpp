@@ -45,17 +45,17 @@ CDuiTreeCtrl::~CDuiTreeCtrl()
 
 HSTREEITEM CDuiTreeCtrl::InsertItem(LPCTSTR lpszItem, HSTREEITEM hParent, HSTREEITEM hInsertAfter)
 {
-	return InsertItem(lpszItem, -1, -1, 0, NULL,  hParent, hInsertAfter);
+	return InsertItem(lpszItem, -1, -1, NULL,  hParent, hInsertAfter);
 }
 
 HSTREEITEM CDuiTreeCtrl::InsertItem(LPCTSTR lpszItem, int nImage,
 		int nSelectedImage, HSTREEITEM hParent, HSTREEITEM hInsertAfter)
 {
-	return InsertItem(lpszItem, nImage, nSelectedImage, 0, NULL,  hParent, hInsertAfter);
+	return InsertItem(lpszItem, nImage, nSelectedImage, NULL,  hParent, hInsertAfter);
 }
 
 HSTREEITEM CDuiTreeCtrl::InsertItem(LPCTSTR lpszItem, int nImage,
-	int nSelectedImage, DWORD dwItemData, LPARAM lParam,
+	int nSelectedImage, LPARAM lParam,
 	HSTREEITEM hParent, HSTREEITEM hInsertAfter)
 {
 	LPTVITEM pItemObj = new TVITEM();
@@ -63,7 +63,6 @@ HSTREEITEM CDuiTreeCtrl::InsertItem(LPCTSTR lpszItem, int nImage,
 	pItemObj->strText = lpszItem;
 	pItemObj->nImage = nImage;
 	pItemObj->nSelectedImage  = nSelectedImage;
-	pItemObj->dwData = dwItemData;
 	pItemObj->lParam = lParam;
 
 	return InsertItem(pItemObj, hParent, hInsertAfter, TRUE);
@@ -212,25 +211,25 @@ BOOL CDuiTreeCtrl::GetItemImage(HSTREEITEM hItem, int& nImage, int& nSelectedIma
 	return FALSE;
 }
 
-DWORD_PTR CDuiTreeCtrl::GetItemData(HSTREEITEM hItem) const
+LPARAM CDuiTreeCtrl::GetItemData(HSTREEITEM hItem) const
 {
 	if (hItem)
 	{
 		LPTVITEM pItem=CSTree<LPTVITEM>::GetItem(hItem);
 		if (pItem)
-			return pItem->dwData;
+			return pItem->lParam;
 	}
 	return 0;
 }
 
-BOOL CDuiTreeCtrl::SetItemData(HSTREEITEM hItem, DWORD_PTR dwData)
+BOOL CDuiTreeCtrl::SetItemData(HSTREEITEM hItem, LPARAM lParam)
 {
 	if (hItem)
 	{
 		LPTVITEM pItem=CSTree<LPTVITEM>::GetItem(hItem);
 		if (pItem)
 		{
-			pItem->dwData = dwData;
+			pItem->lParam = lParam;
 			return TRUE;
 		}
 	}
@@ -388,7 +387,7 @@ void CDuiTreeCtrl::LoadItemAttribute(TiXmlElement *pTiXmlItem, LPTVITEM pItem)
 		else if ( !_stricmp(pAttrib->Name(), "selimg"))
 			pItem->nSelectedImage = atoi(pAttrib->Value());
 		else if ( !_stricmp(pAttrib->Name(), "data"))
-			pItem->dwData = atol(pAttrib->Value());
+			pItem->lParam = atol(pAttrib->Value());
 	}
 }
 
@@ -988,6 +987,15 @@ void CDuiTreeCtrl::ItemLButtonUp(HSTREEITEM hItem, UINT nFlags,CPoint pt)
 			DuiWndState_PushDown == (pItem->dwCheckBoxState & DuiWndState_PushDown))
 		{
 			ModifyChekcBoxState(hItem, 0, DuiWndState_PushDown);
+
+			DUINMCOMMAND nms;
+			nms.hdr.code = DUINM_COMMAND;
+			nms.hdr.hwndFrom = NULL;
+			nms.hdr.idFrom = GetCmdID();
+			nms.uItemID = GetCmdID();
+			nms.szItemClass = GetObjectClass();
+			nms.uItemData = hItem; 
+			DuiNotify((LPNMHDR)&nms);
 		}
 
 		m_nItemPushDownBtn = DuiTVIBtn_None;
@@ -1062,6 +1070,30 @@ void CDuiTreeCtrl::ItemMouseLeave(HSTREEITEM hItem)
 	}
 }
 
+void CDuiTreeCtrl::NotifyParent()
+{
+	DUINMTBSELCHANGED nms;
+	nms.hdr.code=DUINM_TBSELCHANGED;
+	nms.hdr.hwndFrom=NULL;
+	nms.hdr.idFrom=GetCmdID();
+	nms.hOldSel=m_hSelItem;
+	nms.hNewSel=m_hHoverItem;
+
+	if(m_hSelItem)
+	{
+		HSTREEITEM hOldSelItem = m_hSelItem;
+		m_hSelItem = m_hHoverItem;		
+		RedrawItem(hOldSelItem);
+	}
+	else
+		m_hSelItem = m_hHoverItem;
+
+	if(m_hSelItem)
+	RedrawItem(m_hSelItem);
+
+	DuiNotify((LPNMHDR)&nms);
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 BOOL CDuiTreeCtrl::RedrawRegion(CDCHandle& dc, CRgn& rgn)
@@ -1119,28 +1151,7 @@ void CDuiTreeCtrl::OnLButtonDown(UINT nFlags,CPoint pt)
 	m_hHoverItem=HitTest(pt);
 
 	if(m_hHoverItem!=m_hSelItem)
-	{
-		DUINMTBSELCHANGED nms;
-		nms.hdr.code=DUINM_TBSELCHANGED;
-		nms.hdr.hwndFrom=NULL;
-		nms.hdr.idFrom=GetCmdID();
-		nms.hOldSel=m_hSelItem;
-		nms.hNewSel=m_hHoverItem;
-
-		if(m_hSelItem)
-		{
-			HSTREEITEM hOldSelItem = m_hSelItem;
-			m_hSelItem = m_hHoverItem;		
-			RedrawItem(hOldSelItem);
-		}
-		else
-			m_hSelItem = m_hHoverItem;
-
-		if(m_hSelItem)
-			RedrawItem(m_hSelItem);
-
-		DuiNotify((LPNMHDR)&nms);			
-	}
+		NotifyParent();
 
 	//pt 已经在HitTest中被修改过
 	if(m_hHoverItem)
@@ -1148,6 +1159,14 @@ void CDuiTreeCtrl::OnLButtonDown(UINT nFlags,CPoint pt)
 		m_hCaptureItem = m_hHoverItem;
 		ItemLButtonDown(m_hHoverItem, nFlags, pt);
 	}
+}
+
+void CDuiTreeCtrl::OnRButtonDown(UINT nFlags, CPoint pt)
+{
+	m_hHoverItem=HitTest(pt);
+
+	if(m_hHoverItem!=m_hSelItem)
+		NotifyParent();
 }
 
 void CDuiTreeCtrl::OnLButtonUp(UINT nFlags,CPoint pt)

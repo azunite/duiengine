@@ -59,7 +59,7 @@ void CGdiAlpha::_swap(int &a,int &b)
 BOOL CGdiAlpha::AlphaBackup(HDC hdc,LPCRECT pRect,ALPHAINFO &alphaInfo)
 {
 	HBITMAP hBmp=(HBITMAP)GetCurrentObject(hdc,OBJ_BITMAP);
-	_ASSERT(hBmp);
+	DUIASSERT(hBmp);
 	BITMAP  bm;
 	GetObject(hBmp,sizeof(BITMAP),&bm);
 
@@ -78,10 +78,10 @@ void CGdiAlpha::AlphaRestore(HDC hdc,const ALPHAINFO &alphaInfo)
 {
 	if(!alphaInfo.lpBuf) return;
 	HBITMAP hBmp=(HBITMAP)GetCurrentObject(hdc,OBJ_BITMAP);
-	_ASSERT(hBmp);
+	DUIASSERT(hBmp);
 	BITMAP  bm;
 	GetObject(hBmp,sizeof(BITMAP),&bm);
-	_ASSERT(bm.bmBitsPixel==32);
+	DUIASSERT(bm.bmBitsPixel==32);
 	ALPHARESTORE(&bm,alphaInfo.rc.left,alphaInfo.rc.top,alphaInfo.rc.right - alphaInfo.rc.left, alphaInfo.rc.bottom - alphaInfo.rc.top,alphaInfo.lpBuf);
 }
 

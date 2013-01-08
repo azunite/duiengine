@@ -34,7 +34,6 @@ typedef struct tagTVITEM {
 	CString		strText;
     int			nImage;
     int			nSelectedImage;
-	DWORD		dwData;
 	LPARAM      lParam;	
 
 	HSTREEITEM	hItem;					
@@ -51,7 +50,6 @@ typedef struct tagTVITEM {
 	{
 		nImage = -1;
 		nSelectedImage = -1;
-		dwData = 0;
 		lParam = NULL;
 
 		hItem = NULL;
@@ -82,7 +80,7 @@ public:
 	HSTREEITEM InsertItem(LPCTSTR lpszItem, int nImage,
 		int nSelectedImage, HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST);		
 	HSTREEITEM InsertItem(LPCTSTR lpszItem, int nImage,
-		int nSelectedImage, DWORD dwItemData, LPARAM lParam,
+		int nSelectedImage, LPARAM lParam,
 		HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST);
 
 	BOOL RemoveItem(HSTREEITEM hItem);
@@ -99,8 +97,8 @@ public:
 	BOOL SetItemText(HSTREEITEM hItem, LPCTSTR lpszItem);
 	BOOL GetItemImage(HSTREEITEM hItem, int& nImage, int& nSelectedImage) const;
 	BOOL SetItemImage(HSTREEITEM hItem, int nImage, int nSelectedImage);
-	DWORD_PTR GetItemData(HSTREEITEM hItem) const;
-	BOOL SetItemData(HSTREEITEM hItem, DWORD_PTR dwData);
+	LPARAM GetItemData(HSTREEITEM hItem) const;
+	BOOL SetItemData(HSTREEITEM hItem, LPARAM lParam);
 	BOOL ItemHasChildren(HSTREEITEM hItem);
 
 	BOOL GetCheckState(HSTREEITEM hItem) const;	
@@ -155,6 +153,8 @@ protected:
 
 	void ItemMouseMove(HSTREEITEM hItem, UINT nFlags,CPoint pt);
 	void ItemMouseLeave(HSTREEITEM hItem);
+
+	void NotifyParent();
 	
 protected:
 
@@ -165,6 +165,7 @@ protected:
 	void OnLButtonDown(UINT nFlags,CPoint pt);
 	void OnLButtonUp(UINT nFlags,CPoint pt);
 	void OnLButtonDbClick(UINT nFlags,CPoint pt);
+	void OnRButtonDown(UINT nFlags, CPoint pt);
 
 	void OnMouseMove(UINT nFlags,CPoint pt);
 	void OnMouseLeave();
@@ -219,6 +220,7 @@ protected:
 		MSG_WM_LBUTTONDOWN(OnLButtonDown)
 		MSG_WM_LBUTTONDBLCLK(OnLButtonDbClick)
 		MSG_WM_LBUTTONUP(OnLButtonUp)
+		MSG_WM_RBUTTONDOWN(OnRButtonDown);
 		MSG_WM_MOUSEMOVE(OnMouseMove)
 		MSG_WM_MOUSELEAVE(OnMouseLeave)
 	DUIWIN_END_MSG_MAP()

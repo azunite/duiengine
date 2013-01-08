@@ -97,7 +97,7 @@ protected:
 
 	void OnDestroy();
 protected:
-	STL_NS::vector<CDuiItemPanel *> m_arrItems;
+	CDuiArray<CDuiItemPanel *> m_arrItems;
 
 	int		m_nItemHei;
 	int		m_iSelItem;

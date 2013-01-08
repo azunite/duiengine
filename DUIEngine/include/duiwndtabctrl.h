@@ -103,7 +103,7 @@ protected:
     CPoint m_ptText;
     int m_nTabAlign;
 
-    STL_NS::vector<CDuiTab*> m_lstPages;
+    CDuiArray<CDuiTab*> m_lstPages;
 
     CDuiTabSlide	m_tabSlide;
 
@@ -135,7 +135,7 @@ public:
 
 	int GetItemCount()
 	{ 
-		return m_lstPages.size();
+		return m_lstPages.GetCount();
 	}
 
     CDuiTab* GetItem(int nIndex);

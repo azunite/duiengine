@@ -125,7 +125,7 @@ protected:
 
 protected:
 
-	STL_NS::vector<LPLBITEM> m_arrItems;
+	CDuiArray<LPLBITEM>	m_arrItems;
 
 	int		m_nItemHei;
 	int		m_iSelItem;

@@ -57,7 +57,7 @@ namespace DuiEngine{
 		bool UnregisterFactory(CSkinFactory *pSkinFactory)
 		{
 			if(!HasKey(pSkinFactory->GetTypeName())) return false;
-			m_mapNamedObj->erase(pSkinFactory->GetTypeName());
+			m_mapNamedObj->RemoveKey(pSkinFactory->GetTypeName());
 			return true;
 		}
 
@@ -81,11 +81,11 @@ namespace DuiEngine{
 
 		BOOL Init(LPCSTR lpszXml);
 
-		CDuiSkinBase* GetSkin(CStringA strSkinName);
+		CDuiSkinBase* GetSkin(LPCSTR strSkinName);
 
-		int LoadSkins(CStringA  pszOwnerName);
+		int LoadSkins(LPCSTR  pszOwnerName);
 
-		int FreeSkins(CStringA  pszOwnerName);
+		int FreeSkins(LPCSTR  pszOwnerName);
 
 
 	protected:

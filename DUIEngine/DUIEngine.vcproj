@@ -810,6 +810,10 @@
 				Name="wtl.mini"
 				>
 				<File
+					RelativePath=".\include\wtl.mini\duicoll.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\wtl.mini\duicrack.h"
 					>
 				</File>

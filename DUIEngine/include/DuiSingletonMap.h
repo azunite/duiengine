@@ -8,7 +8,7 @@ class DUI_EXP DuiSingletonMap :public Singleton<TClass>
 public:
 	DuiSingletonMap(void (*funOnKeyRemoved)(const TObj &)=NULL):m_pFunOnKeyRemoved(funOnKeyRemoved)
 	{
-		m_mapNamedObj=new STL_NS::map<TKey,TObj>;
+		m_mapNamedObj=new CDuiMap<TKey,TObj>;
 	}
 	virtual ~DuiSingletonMap(){
 		RemoveAll();
@@ -17,7 +17,7 @@ public:
 
 	bool HasKey(const TKey & key)
 	{
-		return m_mapNamedObj->find(key)!=m_mapNamedObj->end();
+		return m_mapNamedObj->Lookup(key)!=NULL;
 	}
 	bool GetKeyObject(const TKey & key,TObj & obj)
 	{
@@ -46,30 +46,36 @@ public:
 		{
 			m_pFunOnKeyRemoved((*m_mapNamedObj)[key]);
 		}
-		m_mapNamedObj->erase(key);
+		m_mapNamedObj->RemoveKey(key);
 		return true;
 	}
 	void RemoveAll()
 	{
 		if(m_pFunOnKeyRemoved)
 		{
-			STL_NS::map<TKey,TObj>::iterator it=m_mapNamedObj->begin();
-			while(it!=m_mapNamedObj->end())
+			POSITION pos=m_mapNamedObj->GetStartPosition();
+			while(pos)
 			{
-				m_pFunOnKeyRemoved(it->second);
-				it++;
+				CDuiMap<TKey,TObj>::CPair *p=m_mapNamedObj->GetNext(pos);
+				m_pFunOnKeyRemoved(p->m_value);
 			}
+// 			CDuiMap<TKey,TObj>::iterator it=m_mapNamedObj->begin();
+// 			while(it!=m_mapNamedObj->end())
+// 			{
+// 				m_pFunOnKeyRemoved(it->second);
+// 				it++;
+// 			}
 		}
-		m_mapNamedObj->clear();
+		m_mapNamedObj->RemoveAll();
 	}
 	size_t GetCount()
 	{
-		return m_mapNamedObj->size();
+		return m_mapNamedObj->GetCount();
 	}
 protected:
 	void (*m_pFunOnKeyRemoved)(const TObj &obj);
 
-	STL_NS::map<TKey,TObj> *m_mapNamedObj;
+	CDuiMap<TKey,TObj> *m_mapNamedObj;
 };
 
 
