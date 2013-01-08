@@ -6,5 +6,5 @@
 // DLL Èë¿Úµã
 extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-	return TRUE;
+    return TRUE;
 }

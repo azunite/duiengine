@@ -7,18 +7,18 @@ protected:                                                          \
 	virtual BOOL ProcessDuiWndMessage(                              \
 	UINT uMsg, WPARAM wParam,                        \
 	LPARAM lParam, LRESULT& lResult)                            \
-	{                                                              
+	{
 
 #define DUIWIN_END_MSG_MAP()                                        \
 	if (!IsMsgHandled())                                        \
 	return __super::ProcessDuiWndMessage(                   \
 	uMsg, wParam, lParam, lResult);                     \
 	return TRUE;                                                \
-	}                                                               
+	}
 
 #define DUIWIN_END_MSG_MAP_BASE()                                    \
 	return DuiWndProc(uMsg,wParam,lParam,lResult);               \
-	}                                                               
+	}
 
 
 #define WM_CALCWNDPOS	WM_GETMINMAXINFO

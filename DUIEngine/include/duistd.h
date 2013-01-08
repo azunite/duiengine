@@ -43,21 +43,21 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #include "..\dependencies\tinyxml\tinyxml.h"
 
 #ifdef DEBUG
-	#pragma comment(lib,"tinyxml_d.lib")
+#pragma comment(lib,"tinyxml_d.lib")
 #else
-	#pragma comment(lib,"tinyxml.lib")
+#pragma comment(lib,"tinyxml.lib")
 #endif//DEBUG
 
 
 #ifndef NO_DUITYPES
-	#define _WTYPES_NS DuiEngine
-	#include "wtl.mini/duicrack.h"
-	#include "wtl.mini/duimisc.h"
-	#include "wtl.mini/duigdi.h"
+#define _WTYPES_NS DuiEngine
+#include "wtl.mini/duicrack.h"
+#include "wtl.mini/duimisc.h"
+#include "wtl.mini/duigdi.h"
 #endif
 
 #include "wtl.mini/duistr.h" //注意：如果CString已经定义，可以定义NO_DUISTR来防止命名冲突
-#include "wtl.mini/duicoll.h" 
+#include "wtl.mini/duicoll.h"
 
 #include "DuiAttrCrack.h"
 

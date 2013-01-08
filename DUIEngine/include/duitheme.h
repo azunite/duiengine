@@ -10,7 +10,8 @@
 #include <Uxtheme.h>
 #include <tmschema.h>
 
-namespace DuiEngine{
+namespace DuiEngine
+{
 
 class DUI_EXP DuiWinThemeFunc
 {
@@ -20,25 +21,25 @@ class DUI_EXP DuiWinThemeFunc
     typedef HRESULT (WINAPI *FnSetWindowTheme)(HWND hwnd, LPCWSTR pszSubAppName, LPCWSTR pszSubIdList);
 
 public:
-    DuiWinThemeFunc(); 
+    DuiWinThemeFunc();
 
-    static BOOL IsValid(); 
+    static BOOL IsValid();
 
-    static HTHEME OpenThemeData(HWND hwnd, LPCWSTR pszClassList); 
+    static HTHEME OpenThemeData(HWND hwnd, LPCWSTR pszClassList);
 
-    static HRESULT CloseThemeData(HTHEME hTheme); 
+    static HRESULT CloseThemeData(HTHEME hTheme);
 
-    static HRESULT DrawThemeBackground(HTHEME hTheme, HDC hdc, int iPartId, int iStateId, const RECT *pRect, OPTIONAL const RECT *pClipRect); 
+    static HRESULT DrawThemeBackground(HTHEME hTheme, HDC hdc, int iPartId, int iStateId, const RECT *pRect, OPTIONAL const RECT *pClipRect);
 
-    static HRESULT SetWindowTheme(HWND hwnd, LPCWSTR pszSubAppName, LPCWSTR pszSubIdList); 
+    static HRESULT SetWindowTheme(HWND hwnd, LPCWSTR pszSubAppName, LPCWSTR pszSubIdList);
 
     enum
     {
-        DuiThemeNameButton = 0, 
-        DuiThemeNameEnd, 
+        DuiThemeNameButton = 0,
+        DuiThemeNameEnd,
     };
 
-    static LPCWSTR ThemeName(int nID); 
+    static LPCWSTR ThemeName(int nID);
 
 private:
 
@@ -51,7 +52,7 @@ private:
 
     static DuiWinThemeFunc* ms_pInstance;
 
-    static DuiWinThemeFunc* _Instance(); 
+    static DuiWinThemeFunc* _Instance();
 
 };
 
@@ -61,40 +62,40 @@ template<int t_nThemeId, int t_partid>
 class DUI_EXP CDuiWinTheme
 {
 public:
-	CDuiWinTheme(HWND hWnd = NULL)
-		: m_hTheme(NULL)
-	{
-		if (hWnd)
-			OpenTheme(hWnd);
-	}
+    CDuiWinTheme(HWND hWnd = NULL)
+        : m_hTheme(NULL)
+    {
+        if (hWnd)
+            OpenTheme(hWnd);
+    }
 
-	~CDuiWinTheme()
-	{
-		DuiWinThemeFunc::CloseThemeData(m_hTheme);
-	}
+    ~CDuiWinTheme()
+    {
+        DuiWinThemeFunc::CloseThemeData(m_hTheme);
+    }
 
-	BOOL IsValid()
-	{
-		return (NULL != m_hTheme);
-	}
+    BOOL IsValid()
+    {
+        return (NULL != m_hTheme);
+    }
 
-	BOOL OpenTheme(HWND hWnd)
-	{
-		if (m_hTheme)
-			return FALSE;
+    BOOL OpenTheme(HWND hWnd)
+    {
+        if (m_hTheme)
+            return FALSE;
 
-		m_hTheme = DuiWinThemeFunc::OpenThemeData(NULL, DuiWinThemeFunc::ThemeName(t_nThemeId));
+        m_hTheme = DuiWinThemeFunc::OpenThemeData(NULL, DuiWinThemeFunc::ThemeName(t_nThemeId));
 
-		if (m_hTheme)
-			return TRUE;
+        if (m_hTheme)
+            return TRUE;
 
-		return FALSE;
-	}
+        return FALSE;
+    }
 
-	void DrawBackground(HDC hdc, int iStateId, const RECT *pRect)
-	{
-		DuiWinThemeFunc::DrawThemeBackground(m_hTheme, hdc, t_partid, iStateId, pRect, NULL);
-	}
+    void DrawBackground(HDC hdc, int iStateId, const RECT *pRect)
+    {
+        DuiWinThemeFunc::DrawThemeBackground(m_hTheme, hdc, t_partid, iStateId, pRect, NULL);
+    }
 
 protected:
 

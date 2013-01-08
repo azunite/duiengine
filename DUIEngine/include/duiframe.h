@@ -13,45 +13,45 @@ namespace DuiEngine
 {
 
 class DUI_EXP CDuiFrame : public CDuiPanel
-				, public CDuiContainer
+    , public CDuiContainer
 {
 public:
-	CDuiFrame();
+    CDuiFrame();
 
-	virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
-
-
-	virtual BOOL OnReleaseDuiCapture();
-
-	virtual HDUIWND OnSetDuiCapture(HDUIWND hDuiWnd);
-	virtual void OnSetDuiFocus(HDUIWND hDuiWnd);
-
-	virtual HDUIWND GetDuiCapture();
-
-	virtual HDUIWND GetDuiFocus();
-
-	virtual HDUIWND GetDuiHover();
-
-protected:
-	virtual void OnFrameMouseMove(UINT uFlag,CPoint pt);
-
-	virtual void OnFrameMouseLeave();
+    virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
 
-	virtual BOOL OnFrameSetCursor(const CPoint &pt);
+    virtual BOOL OnReleaseDuiCapture();
 
-	virtual void OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
+    virtual HDUIWND OnSetDuiCapture(HDUIWND hDuiWnd);
+    virtual void OnSetDuiFocus(HDUIWND hDuiWnd);
 
-	virtual void OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
-	virtual void OnFrameKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+    virtual HDUIWND GetDuiCapture();
 
-	static CDuiWindow * GetNextKeyHostWnd(CDuiWindow *pCurWnd,CDuiWindow *pFirst);
+    virtual HDUIWND GetDuiFocus();
+
+    virtual HDUIWND GetDuiHover();
 
 protected:
-	HDUIWND m_hCapture;
-	HDUIWND m_hHover;
-	BOOL	m_bNcHover;
-	HDUIWND m_hFocus;
+    virtual void OnFrameMouseMove(UINT uFlag,CPoint pt);
+
+    virtual void OnFrameMouseLeave();
+
+
+    virtual BOOL OnFrameSetCursor(const CPoint &pt);
+
+    virtual void OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
+
+    virtual void OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
+    virtual void OnFrameKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+
+    static CDuiWindow * GetNextKeyHostWnd(CDuiWindow *pCurWnd,CDuiWindow *pFirst);
+
+protected:
+    HDUIWND m_hCapture;
+    HDUIWND m_hHover;
+    BOOL	m_bNcHover;
+    HDUIWND m_hFocus;
 };
 
 }//namespace DuiEngine

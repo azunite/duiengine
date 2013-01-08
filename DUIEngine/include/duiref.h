@@ -1,34 +1,39 @@
 #pragma once
 
-namespace DuiEngine{
+namespace DuiEngine
+{
 
 //tolua_begin
 class DUI_EXP CDuiRef
 {
 public:
-	CDuiRef():m_nRef(1)
-	{
-	}
+    CDuiRef():m_nRef(1)
+    {
+    }
 
-	~CDuiRef()
-	{
+    ~CDuiRef()
+    {
 
-	}
+    }
 
-	int AddRef(){return ++m_nRef;}
+    int AddRef()
+    {
+        return ++m_nRef;
+    }
 
-	void Release(){
-		--m_nRef;
-		if(m_nRef==0)
-		{
-			OnFinalRelease();
-		}
-	}
+    void Release()
+    {
+        --m_nRef;
+        if(m_nRef==0)
+        {
+            OnFinalRelease();
+        }
+    }
 
 protected:
-	virtual void OnFinalRelease()=NULL;
+    virtual void OnFinalRelease()=NULL;
 
-	int m_nRef;
+    int m_nRef;
 };
 //tolua_end
 }//namespace DuiEngine

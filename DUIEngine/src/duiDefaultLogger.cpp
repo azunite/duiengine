@@ -39,121 +39,121 @@
 namespace DuiEngine
 {
 
-    /*************************************************************************
-        Constructor
-    *************************************************************************/
-    DefaultLogger::DefaultLogger(void) :
-            d_caching(true),d_pFile(NULL)
+/*************************************************************************
+    Constructor
+*************************************************************************/
+DefaultLogger::DefaultLogger(void) :
+    d_caching(true),d_pFile(NULL)
+{
+    // create log header
+    logEvent(_T("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+"));
+    logEvent(_T("+                     DuiEngine - Event log                                   +"));
+    logEvent(_T("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n"));
+    TCHAR addr_buff[100];
+    _stprintf(addr_buff, _T("DuiEngine::Logger singleton created: (%p)"), static_cast<void*>(this));
+    logEvent(addr_buff);
+}
+
+/*************************************************************************
+    Destructor
+*************************************************************************/
+DefaultLogger::~DefaultLogger(void)
+{
+    if (d_pFile)
     {
-        // create log header
-        logEvent(_T("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+"));
-        logEvent(_T("+                     DuiEngine - Event log                                   +"));
-        logEvent(_T("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n"));
         TCHAR addr_buff[100];
-		_stprintf(addr_buff, _T("DuiEngine::Logger singleton created: (%p)"), static_cast<void*>(this));
-		logEvent(addr_buff);
+        _stprintf(addr_buff, _T("DuiEngine::Logger singleton destroyed.:(%p)"), static_cast<void*>(this));
+        logEvent(addr_buff);
+        fclose(d_pFile);
     }
+}
 
-    /*************************************************************************
-        Destructor
-    *************************************************************************/
-    DefaultLogger::~DefaultLogger(void)
+/*************************************************************************
+    Logs an event
+*************************************************************************/
+void DefaultLogger::logEvent(LPCTSTR message, LoggingLevel level /* = Standard */)
+{
+    time_t  et;
+    time(&et);
+    tm* etm = localtime(&et);
+
+    if (etm)
     {
-        if (d_pFile)
+        // clear sting stream
+        CString strbuf;
+
+        strbuf.Format(_T("%04d/%02d/%02d %02d:%02d:%02d "),1900+etm->tm_year,etm->tm_mon+1,etm->tm_mday,etm->tm_hour,etm->tm_min,etm->tm_sec);
+        // write event type code
+        switch(level)
         {
-            TCHAR addr_buff[100];
-			_stprintf(addr_buff, _T("DuiEngine::Logger singleton destroyed.:(%p)"), static_cast<void*>(this));
-            logEvent(addr_buff);
-			fclose(d_pFile);
+        case Errors:
+            strbuf+= _T("(Error)\t");
+            break;
+
+        case Warnings:
+            strbuf+= _T("(Warn)\t");
+            break;
+
+        case Standard:
+            strbuf+= _T("(Std) \t");
+            break;
+
+        case Informative:
+            strbuf+= _T("(Info) \t");
+            break;
+
+        case Insane:
+            strbuf+= _T("(Insan)\t");
+            break;
+
+        default:
+            strbuf+= _T("(Unkwn)\t");
+            break;
         }
-    }
 
-    /*************************************************************************
-        Logs an event
-    *************************************************************************/
-    void DefaultLogger::logEvent(LPCTSTR message, LoggingLevel level /* = Standard */)
-    {
-        time_t  et;
-        time(&et);
-        tm* etm = localtime(&et);
+        strbuf+= message;
+        strbuf+=_T("\n");
 
-        if (etm)
-        {
-            // clear sting stream
-			CString strbuf;
-
-			strbuf.Format(_T("%04d/%02d/%02d %02d:%02d:%02d "),1900+etm->tm_year,etm->tm_mon+1,etm->tm_mday,etm->tm_hour,etm->tm_min,etm->tm_sec);
-            // write event type code
-            switch(level)
-            {
-            case Errors:
-                strbuf+= _T("(Error)\t");
-                break;
-
-            case Warnings:
-                strbuf+= _T("(Warn)\t");
-                break;
-
-            case Standard:
-                strbuf+= _T("(Std) \t");
-                break;
-
-            case Informative:
-                strbuf+= _T("(Info) \t");
-                break;
-
-            case Insane:
-                strbuf+= _T("(Insan)\t");
-                break;
-
-            default:
-                strbuf+= _T("(Unkwn)\t");
-                break;
-            }
-
-            strbuf+= message;
-			strbuf+=_T("\n");
-
-            if (d_caching)
-            {
-				d_cache.Add(LOGRECORD(strbuf, level));
-            }
-            else if (d_level >= level)
-            {
-                // write message
-				_ftprintf(d_pFile,(LPCTSTR)strbuf);
-				fflush(d_pFile);
-            }
-        }
-    }
-
-
-    void DefaultLogger::setLogFilename(LPCTSTR filename, bool append)
-    {
-		if(d_pFile)
-		{
-			fclose(d_pFile);
-			d_pFile=NULL;
-		}
-		d_pFile=_tfopen(filename,append?_T("a+"):_T("w"));
-
-
-        // write out cached log strings.
         if (d_caching)
         {
-            d_caching = false;
-
-			for(int i=0;i<d_cache.GetCount();i++)
-			{
-				if (d_level >= d_cache[i].level)
-				{
-					_ftprintf(d_pFile,d_cache[i].msg);
-					fflush(d_pFile);
-				}
-			}
-
-			d_cache.RemoveAll();
+            d_cache.Add(LOGRECORD(strbuf, level));
+        }
+        else if (d_level >= level)
+        {
+            // write message
+            _ftprintf(d_pFile,(LPCTSTR)strbuf);
+            fflush(d_pFile);
         }
     }
+}
+
+
+void DefaultLogger::setLogFilename(LPCTSTR filename, bool append)
+{
+    if(d_pFile)
+    {
+        fclose(d_pFile);
+        d_pFile=NULL;
+    }
+    d_pFile=_tfopen(filename,append?_T("a+"):_T("w"));
+
+
+    // write out cached log strings.
+    if (d_caching)
+    {
+        d_caching = false;
+
+        for(int i=0; i<d_cache.GetCount(); i++)
+        {
+            if (d_level >= d_cache[i].level)
+            {
+                _ftprintf(d_pFile,d_cache[i].msg);
+                fflush(d_pFile);
+            }
+        }
+
+        d_cache.RemoveAll();
+    }
+}
 
 } // End of  DuiEngine namespace section

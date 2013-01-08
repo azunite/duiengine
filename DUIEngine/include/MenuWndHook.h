@@ -11,47 +11,48 @@
 
 #pragma once
 
-namespace DuiEngine{
+namespace DuiEngine
+{
 
 /*########################################################################
 			  ------------------------------------------------
 							 CMenuWndHook 类
 			  ------------------------------------------------
   ########################################################################*/
-	class DUI_EXP CMenuWndHook
+class DUI_EXP CMenuWndHook
 {
 // 建构 ---------------------------------------------------------
 public:
     CMenuWndHook(HWND hWnd);
-	~CMenuWndHook();
-	static void InstallHook(HINSTANCE hInst,LPCSTR pszSkinName=NULL);
-	static void UnInstallHook();
+    ~CMenuWndHook();
+    static void InstallHook(HINSTANCE hInst,LPCSTR pszSkinName=NULL);
+    static void UnInstallHook();
 
 // 消息 ----------------------------------------------------------
 public:
-	static LRESULT CALLBACK CoolMenuProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static LRESULT CALLBACK WindowHook (int code, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK CoolMenuProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    static LRESULT CALLBACK WindowHook (int code, WPARAM wParam, LPARAM lParam);
 
-	int  OnCreate(LPCREATESTRUCT lpCreateStruct);
-	void OnNcCalcsize(BOOL bValidCalc,NCCALCSIZE_PARAMS* lpncsp);
-	void OnNcDestroy();
-	void OnPrint(CDCHandle dc);
-	void OnNcPaint();
-	void OnWindowPosChanging(WINDOWPOS* pWindowPos);
-	void SetLayeredAttr();
+    int  OnCreate(LPCREATESTRUCT lpCreateStruct);
+    void OnNcCalcsize(BOOL bValidCalc,NCCALCSIZE_PARAMS* lpncsp);
+    void OnNcDestroy();
+    void OnPrint(CDCHandle dc);
+    void OnNcPaint();
+    void OnWindowPosChanging(WINDOWPOS* pWindowPos);
+    void SetLayeredAttr();
 
 // 操作 ----------------------------------------------------------
 public:
-	static CMenuWndHook* AddWndHook(HWND hwnd);
-	static CMenuWndHook* GetWndHook(HWND hwnd);
+    static CMenuWndHook* AddWndHook(HWND hwnd);
+    static CMenuWndHook* GetWndHook(HWND hwnd);
 
 // 数据 -----------------------------------------------------------
 protected:
-	HWND m_hWnd;
+    HWND m_hWnd;
 
-	static CDuiMap<HWND, CMenuWndHook*> m_WndMenuMap;
+    static CDuiMap<HWND, CMenuWndHook*> m_WndMenuMap;
     static HHOOK m_hMenuHook;
-	static CStringA	m_strSkinName;
+    static CStringA	m_strSkinName;
 };
 
 }//namespace DuiEngine

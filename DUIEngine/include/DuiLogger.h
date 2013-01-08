@@ -41,11 +41,11 @@ namespace DuiEngine
 */
 enum LoggingLevel
 {
-	Errors,			//!< Only actual error conditions will be logged.
+    Errors,			//!< Only actual error conditions will be logged.
     Warnings,       //!< Warnings will be logged as well.
-	Standard,		//!< Basic events will be logged (default level).
-	Informative,	//!< Useful tracing (object creations etc) information will be logged.
-	Insane			//!< Mostly everything gets logged (use for heavy tracing only, log WILL be big).
+    Standard,		//!< Basic events will be logged (default level).
+    Informative,	//!< Useful tracing (object creations etc) information will be logged.
+    Insane			//!< Mostly everything gets logged (use for heavy tracing only, log WILL be big).
 };
 
 /*!
@@ -55,58 +55,64 @@ enum LoggingLevel
     want to perform special logging, derive your own class from Logger and initialize
     a object of that type before you create the DUI::System singleton.
 */
-class DUI_EXP DuiLogger 
+class DUI_EXP DuiLogger
 {
 public:
-	/*!
-	\brief
-		Constructor for Logger object.
-	*/
-	DuiLogger(void) ;
+    /*!
+    \brief
+    	Constructor for Logger object.
+    */
+    DuiLogger(void) ;
 
-	/*!
-	\brief Destructor for Logger object.
-	*/
-	virtual ~DuiLogger(void);
-
-
-	/*!
-	\brief
-		Set the level of logging information that will get out to the log file
-
-	\param level
-		One of the LoggingLevel enumerated values that specified the level of logging information required.
-
-	\return
-		Nothing
-	*/
-	void	setLoggingLevel(LoggingLevel level)		{d_level = level;}
+    /*!
+    \brief Destructor for Logger object.
+    */
+    virtual ~DuiLogger(void);
 
 
-	/*!
-	\brief
-		return the current logging level setting
+    /*!
+    \brief
+    	Set the level of logging information that will get out to the log file
 
-	\return
-		One of the LoggingLevel enumerated values specifying the current level of logging
-	*/
-	LoggingLevel	getLoggingLevel(void) const		{return d_level;}
+    \param level
+    	One of the LoggingLevel enumerated values that specified the level of logging information required.
+
+    \return
+    	Nothing
+    */
+    void	setLoggingLevel(LoggingLevel level)
+    {
+        d_level = level;
+    }
 
 
-	/*!
-	\brief
-		Add an event to the log.
+    /*!
+    \brief
+    	return the current logging level setting
 
-	\param message
-		String object containing the message to be added to the event log.
+    \return
+    	One of the LoggingLevel enumerated values specifying the current level of logging
+    */
+    LoggingLevel	getLoggingLevel(void) const
+    {
+        return d_level;
+    }
 
-	\param level
-		LoggingLevel for this message.  If \a level is greater than the current set logging level, the message is not logged.
 
-	\return
-		Nothing
-	*/
-	virtual void logEvent(LPCTSTR, LoggingLevel level = Standard)=0;
+    /*!
+    \brief
+    	Add an event to the log.
+
+    \param message
+    	String object containing the message to be added to the event log.
+
+    \param level
+    	LoggingLevel for this message.  If \a level is greater than the current set logging level, the message is not logged.
+
+    \return
+    	Nothing
+    */
+    virtual void logEvent(LPCTSTR, LoggingLevel level = Standard)=0;
 
 
     /*!
@@ -130,7 +136,7 @@ public:
 
 
 protected:
-	LoggingLevel	d_level;		//!< Holds current logging level
+    LoggingLevel	d_level;		//!< Holds current logging level
 };
 
 

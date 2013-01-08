@@ -124,6 +124,7 @@
 				Optimization="2"
 				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS;DLL_DUI"
+				ExceptionHandling="1"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="duistd.h"

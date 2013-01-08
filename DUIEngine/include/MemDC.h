@@ -1,21 +1,25 @@
 #pragma once
 
-namespace DuiEngine{
+namespace DuiEngine
+{
 
 class DUI_EXP CMemDC :	public CDC
 {
 public:
-	CMemDC();
-	CMemDC(HDC hdc, const CRect & rc);
-	CMemDC(HDC hdc, HBITMAP hBmp);
-	~CMemDC(void);
+    CMemDC();
+    CMemDC(HDC hdc, const CRect & rc);
+    CMemDC(HDC hdc, HBITMAP hBmp);
+    ~CMemDC(void);
 
-	HBITMAP SelectBitmap(HBITMAP hBmp);
-	BOOL	HasBitmap(){return m_bHasBitmap;}
+    HBITMAP SelectBitmap(HBITMAP hBmp);
+    BOOL	HasBitmap()
+    {
+        return m_bHasBitmap;
+    }
 protected:
-	HBITMAP		m_hOldBmp;
-	BOOL		m_bBmpOwner;
-	BOOL		m_bHasBitmap;
+    HBITMAP		m_hOldBmp;
+    BOOL		m_bBmpOwner;
+    BOOL		m_bHasBitmap;
 };
 
 }//namespace DuiEngine

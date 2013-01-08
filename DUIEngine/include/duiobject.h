@@ -8,7 +8,7 @@
 #pragma once
 
 #if !defined(TINYXML_INCLUDED)
-    #error Please include tinyxml.h first!
+#error Please include tinyxml.h first!
 #endif
 
 #include "DuiCSS.h"
@@ -44,9 +44,10 @@ public:                                                 \
         if(strcmp(GetClassName(), lpszName)  == 0) return TRUE;  \
 		return __super::IsClass(lpszName);				\
     }                                                   \
+ 
 
-
-namespace DuiEngine{
+namespace DuiEngine
+{
 
 //tolua_begin
 class DUI_EXP CDuiObject
@@ -60,29 +61,32 @@ public:
     {
     }
 
-	virtual BOOL IsClass(LPCSTR lpszName) {return FALSE;}
+    virtual BOOL IsClass(LPCSTR lpszName)
+    {
+        return FALSE;
+    }
     virtual LPCSTR GetObjectClass() = 0;
 
     virtual BOOL Load(TiXmlElement* pXmlElem)
     {
-		if(!pXmlElem) return FALSE;
+        if(!pXmlElem) return FALSE;
 #ifdef _DEBUG
-		{
-			TiXmlPrinter printer;
-			printer.SetStreamPrinting();
-			pXmlElem->Accept( &printer );
-			m_strXml=printer.CStr();
-		}
+        {
+            TiXmlPrinter printer;
+            printer.SetStreamPrinting();
+            pXmlElem->Accept( &printer );
+            m_strXml=printer.CStr();
+        }
 #endif
-		//检索并设置类的默认属性
-		LoadTemplateAttribute(GetObjectClass());
+        //检索并设置类的默认属性
+        LoadTemplateAttribute(GetObjectClass());
 
-		//设置当前对象的属性
+        //设置当前对象的属性
         for (TiXmlAttribute *pAttrib = pXmlElem->FirstAttribute(); NULL != pAttrib; pAttrib = pAttrib->Next())
         {
             SetAttribute(pAttrib->Name(), pAttrib->Value(), TRUE);
         }
-		OnAttributeFinish(pXmlElem);
+        OnAttributeFinish(pXmlElem);
         return TRUE;
     }
 
@@ -91,41 +95,41 @@ public:
         return DefAttributeProc(strAttribName,strValue,bLoading);
     }
 
-	virtual HRESULT SetAttributeW(const CStringA &  strAttribName, const CStringW &  strValue, BOOL bLoading)
-	{
-		CStringA strValueUTF8=CW2A(strValue,CP_UTF8);
-		return SetAttribute(strAttribName,strValueUTF8,bLoading);
-	}
+    virtual HRESULT SetAttributeW(const CStringA &  strAttribName, const CStringW &  strValue, BOOL bLoading)
+    {
+        CStringA strValueUTF8=CW2A(strValue,CP_UTF8);
+        return SetAttribute(strAttribName,strValueUTF8,bLoading);
+    }
 
-	virtual HRESULT DefAttributeProc(const CStringA & strAttribName,const CStringA & strValue, BOOL bLoading)
-	{
-		return E_FAIL;
-	}
-	//tolua_end
+    virtual HRESULT DefAttributeProc(const CStringA & strAttribName,const CStringA & strValue, BOOL bLoading)
+    {
+        return E_FAIL;
+    }
+    //tolua_end
 protected:
-	virtual void OnAttributeFinish(TiXmlElement* pXmlElem){}
-	virtual void OnAttributeChanged(const CStringA & strAttrName,BOOL bLoading,HRESULT hRet){}
-	//************************************
-	// Method:    LoadTemplateAttribute
-	// Function:  从类属性模板载入属性
-	// Access:    protected 
-	// Returns:   void
-	// Parameter: CStringA strTemplate
-	// remark: 使用属性baseClass来支持嵌套
-	//************************************
-	void LoadTemplateAttribute(CStringA strTemplate)
-	{
-		if(!DuiCSS::getSingleton().HasKey(strTemplate)) return;
-		TiXmlElement *pObjDefAttr=DuiCSS::getSingleton().GetKeyObject(strTemplate);
-		const char * pszBaseCls=pObjDefAttr->Attribute("baseClass");
-		if(pszBaseCls) LoadTemplateAttribute(pszBaseCls);//深度优先，防止属性重复问题
+    virtual void OnAttributeFinish(TiXmlElement* pXmlElem) {}
+    virtual void OnAttributeChanged(const CStringA & strAttrName,BOOL bLoading,HRESULT hRet) {}
+    //************************************
+    // Method:    LoadTemplateAttribute
+    // Function:  从类属性模板载入属性
+    // Access:    protected
+    // Returns:   void
+    // Parameter: CStringA strTemplate
+    // remark: 使用属性baseClass来支持嵌套
+    //************************************
+    void LoadTemplateAttribute(CStringA strTemplate)
+    {
+        if(!DuiCSS::getSingleton().HasKey(strTemplate)) return;
+        TiXmlElement *pObjDefAttr=DuiCSS::getSingleton().GetKeyObject(strTemplate);
+        const char * pszBaseCls=pObjDefAttr->Attribute("baseClass");
+        if(pszBaseCls) LoadTemplateAttribute(pszBaseCls);//深度优先，防止属性重复问题
 
-		for (TiXmlAttribute *pAttrib = pObjDefAttr->FirstAttribute(); NULL != pAttrib; pAttrib = pAttrib->Next())
-		{
-			if(strcmp(pAttrib->Name(),"baseClass")==0) continue;
-			SetAttribute(pAttrib->Name(), pAttrib->Value(), TRUE);
-		}
-	}
+        for (TiXmlAttribute *pAttrib = pObjDefAttr->FirstAttribute(); NULL != pAttrib; pAttrib = pAttrib->Next())
+        {
+            if(strcmp(pAttrib->Name(),"baseClass")==0) continue;
+            SetAttribute(pAttrib->Name(), pAttrib->Value(), TRUE);
+        }
+    }
 
     static ULONG HexStringToULong(LPCSTR lpszValue, int nSize = -1)
     {
@@ -154,16 +158,16 @@ protected:
     static COLORREF HexStringToColor(LPCSTR lpszValue)
     {
         return RGB(
-            HexStringToULong(lpszValue, 2), 
-            HexStringToULong(lpszValue + 2, 2), 
-            HexStringToULong(lpszValue + 4, 2)
-            );
+                   HexStringToULong(lpszValue, 2),
+                   HexStringToULong(lpszValue + 2, 2),
+                   HexStringToULong(lpszValue + 4, 2)
+               );
     }
 
 #ifdef	_DEBUG
-	CStringA m_strXml;
+    CStringA m_strXml;
 #endif//_DEBUG
-	//tolua_begin
+    //tolua_begin
 };
 //tolua_end
 

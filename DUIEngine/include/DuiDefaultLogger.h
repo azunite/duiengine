@@ -2,7 +2,7 @@
 	filename: 	DUIDefaultLogger.h
 	created:	25/1/2006
 	author:		Andrew Zabolotny
-	
+
 	purpose:	Defines interface for the default Logger implementation
 *************************************************************************/
 /***************************************************************************
@@ -47,32 +47,32 @@ namespace DuiEngine
 class DUI_EXP DefaultLogger : public DuiLogger
 {
 public:
-	/*!
-	\brief
-		Constructor for DefaultLogger object.
-	*/
-	DefaultLogger(void);
+    /*!
+    \brief
+    	Constructor for DefaultLogger object.
+    */
+    DefaultLogger(void);
 
-	/*!
-	\brief Destructor for DefaultLogger object.
-	*/
-	virtual ~DefaultLogger(void);
+    /*!
+    \brief Destructor for DefaultLogger object.
+    */
+    virtual ~DefaultLogger(void);
 
-	
-	/*!
-	\brief
-		Add an event to the log.
 
-	\param message
-		String object containing the message to be added to the event log.
+    /*!
+    \brief
+    	Add an event to the log.
 
-	\param level
-		LoggingLevel for this message.  If \a level is greater than the current set logging level, the message is not logged.
+    \param message
+    	String object containing the message to be added to the event log.
 
-	\return
-		Nothing
-	*/
-	virtual void logEvent(LPCTSTR message, LoggingLevel level = Standard);
+    \param level
+    	LoggingLevel for this message.  If \a level is greater than the current set logging level, the message is not logged.
+
+    \return
+    	Nothing
+    */
+    virtual void logEvent(LPCTSTR message, LoggingLevel level = Standard);
 
     /*!
     \brief
@@ -93,21 +93,21 @@ public:
 
 protected:
     /*************************************************************************
-		Implementation Data
-	*************************************************************************/
-	FILE * d_pFile;
-	struct LOGRECORD
-	{
-		LOGRECORD(){}
-		LOGRECORD(const CString & _msg,LoggingLevel _level)
-		{
-			msg=_msg;
-			level=_level;
-		}
-		CString msg;
-		LoggingLevel level;
-	};
-	CDuiArray<LOGRECORD> d_cache; //!< Used to cache log entries before log file is created.
+    	Implementation Data
+    *************************************************************************/
+    FILE * d_pFile;
+    struct LOGRECORD
+    {
+        LOGRECORD() {}
+        LOGRECORD(const CString & _msg,LoggingLevel _level)
+        {
+            msg=_msg;
+            level=_level;
+        }
+        CString msg;
+        LoggingLevel level;
+    };
+    CDuiArray<LOGRECORD> d_cache; //!< Used to cache log entries before log file is created.
     bool d_caching;                 //!< true while log entries are beign cached (prior to logfile creation)
 };
 

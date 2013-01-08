@@ -18,7 +18,7 @@ public:                                                             \
 	BOOL     bLoading=FALSE)                                    \
 	{                                                               \
 	HRESULT hRet = E_FAIL;										\
-
+ 
 
 #define DUIWIN_DECLARE_ATTRIBUTES_END()                              \
 	return __super::SetAttribute(                       \
@@ -29,21 +29,21 @@ public:                                                             \
 	OnAttributeChanged(strAttribName,bLoading,hRet);		\
 	return hRet;                                                \
 	}                                                               \
-
+ 
 #define DUIWIN_CHAIN_ATTRIBUTE(varname)			                   \
 	if (SUCCEEDED(hRet = varname.SetAttribute(strAttribName, strValue, bLoading)))   \
 		{                                                           \
 		/*return hRet;*/                                            \
 		}                                                           \
 		else                                                        \
-
+ 
 #define DUIWIN_CUSTOM_ATTRIBUTE(attribname, func)                    \
 	if (attribname == strAttribName)                            \
 		{                                                           \
 		hRet = func(strValue, bLoading);                        \
 		}                                                           \
 		else                                                        \
-
+ 
 // Int = %d StringA
 #define DUIWIN_INT_ATTRIBUTE(attribname, varname, allredraw)         \
 	if (attribname == strAttribName)                            \
@@ -54,7 +54,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // Rect = %d,%d,%d,%d StringA
 #define DUIWIN_RECT_ATTRIBUTE(attribname, varname, allredraw)         \
 	if (attribname == strAttribName)                            \
@@ -63,7 +63,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 
 // Size = %d,%d StringA
 #define DUIWIN_SIZE_ATTRIBUTE(attribname, varname, allredraw)         \
@@ -73,7 +73,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // Point = %d,%d StringA
 #define DUIWIN_POINT_ATTRIBUTE(attribname, varname, allredraw)         \
 	if (attribname == strAttribName)                            \
@@ -82,7 +82,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 
 // Float = %f StringA
 #define DUIWIN_FLOAT_ATTRIBUTE(attribname, varname, allredraw)         \
@@ -92,7 +92,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // UInt = %u StringA
 #define DUIWIN_UINT_ATTRIBUTE(attribname, varname, allredraw)        \
 	if (attribname == strAttribName)                            \
@@ -103,7 +103,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // DWORD = %u StringA
 #define DUIWIN_DWORD_ATTRIBUTE(attribname, varname, allredraw)       \
 	if (attribname == strAttribName)                            \
@@ -114,7 +114,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // WORD = %u StringA
 #define DUIWIN_WORD_ATTRIBUTE(attribname, varname, allredraw)       \
 	if (attribname == strAttribName)                            \
@@ -125,7 +125,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 
 // bool = 0 or 1 StringA
 #define DUIWIN_BIT_ATTRIBUTE(attribname, varname, maskbit, allredraw) \
@@ -138,7 +138,7 @@ public:                                                             \
 			hRet = allredraw ? S_OK : S_FALSE;						\
 		}                                                           \
 		else                                                        \
-
+ 
 
 // StringA = StringA
 #define DUIWIN_STRING_ATTRIBUTE(attribname, varname, allredraw)      \
@@ -148,7 +148,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // StringW = StringA
 #define DUIWIN_WSTRING_ATTRIBUTE(attribname, varname, allredraw)      \
 	if (attribname == strAttribName)                            \
@@ -157,7 +157,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 
 // StringT = StringA
 #define DUIWIN_TSTRING_ATTRIBUTE(attribname, varname, allredraw)     \
@@ -168,7 +168,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // DWORD = %X StringA
 #define DUIWIN_HEX_ATTRIBUTE(attribname, varname, allredraw)         \
 	if (attribname == strAttribName)                            \
@@ -177,7 +177,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // COLORREF = %06X StringA
 #define DUIWIN_COLOR_ATTRIBUTE(attribname, varname, allredraw)       \
 	if (attribname == strAttribName)                            \
@@ -186,7 +186,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // HFONT = %04X StringA
 #define DUIWIN_FONT_ATTRIBUTE(attribname, varname, allredraw)        \
 	if (attribname == strAttribName)                            \
@@ -206,7 +206,7 @@ public:                                                             \
 			hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // Value In {String1 : Value1, String2 : Value2 ...}
 #define DUIWIN_ENUM_ATTRIBUTE(attribname, vartype, allredraw)        \
 	if (attribname == strAttribName)                            \
@@ -214,19 +214,19 @@ public:                                                             \
 		vartype varTemp;                                        \
 		\
 		hRet = allredraw ? S_OK : S_FALSE;                      \
-
+ 
 #define DUIWIN_ENUM_VALUE(enumstring, enumvalue)                     \
 	if (strValue == enumstring)                             \
 	varTemp = enumvalue;                                \
 			else                                                    \
-
+ 
 #define DUIWIN_ENUM_END(varname)                                     \
 	return E_FAIL;                                      \
 	\
 	varname = varTemp;                                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // DuiStyle From StringA Key
 #define DUIWIN_STYLE_ATTRIBUTE(attribname, varname, allredraw)       \
 	if (attribname == strAttribName)                            \
@@ -235,7 +235,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 // DuiSkinPool From StringA Key
 #define DUIWIN_SKIN_ATTRIBUTE(attribname, varname, allredraw)        \
 	if (attribname == strAttribName)                            \
@@ -244,7 +244,7 @@ public:                                                             \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 
 #define DUIWIN_IMAGE_ATTRIBUTE(attribname, varname, allredraw)        \
 	if (attribname == strAttribName)                            \
@@ -259,6 +259,6 @@ public:                                                             \
 			hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
-
+ 
 
 #endif//DUIATTRCRACK_H

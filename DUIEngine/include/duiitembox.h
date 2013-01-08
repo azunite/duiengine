@@ -9,67 +9,68 @@
 #pragma once
 #include "duiwndpanel.h"
 
-namespace DuiEngine{
+namespace DuiEngine
+{
 
 class DUI_EXP CDuiItemBox
-	: public CDuiScrollView
+    : public CDuiScrollView
 {
-	DUIOBJ_DECLARE_CLASS_NAME(CDuiItemBox, "itembox")
+    DUIOBJ_DECLARE_CLASS_NAME(CDuiItemBox, "itembox")
 public:
-	CDuiItemBox();
-	virtual ~CDuiItemBox(){}
+    CDuiItemBox();
+    virtual ~CDuiItemBox() {}
 
-	CDuiPanel* InsertItem(LPCWSTR pszXml,int iItem=-1,BOOL bEnsureVisible=FALSE);
+    CDuiPanel* InsertItem(LPCWSTR pszXml,int iItem=-1,BOOL bEnsureVisible=FALSE);
 
-	BOOL RemoveItem(UINT iItem);
+    BOOL RemoveItem(UINT iItem);
 
-	BOOL RemoveItem(CDuiWindow * pChild);
+    BOOL RemoveItem(CDuiWindow * pChild);
 
-	BOOL SetNewPosition(CDuiWindow * pChild, DWORD nPos, BOOL bEnsureVisible = TRUE); 
+    BOOL SetNewPosition(CDuiWindow * pChild, DWORD nPos, BOOL bEnsureVisible = TRUE);
 
-	void RemoveAllItems();
+    void RemoveAllItems();
 
-	int GetItemCount();
+    int GetItemCount();
 
-	void PageUp();
+    void PageUp();
 
-	void PageDown();
+    void PageDown();
 
-	void EnsureVisible(CDuiWindow *pItem);
+    void EnsureVisible(CDuiWindow *pItem);
 
-	int GetItemPos(CDuiWindow * lpCurItem); 
+    int GetItemPos(CDuiWindow * lpCurItem);
 
 protected:
-	int m_nItemWid,m_nItemHei;	
-	int m_nSepWid,m_nSepHei;
+    int m_nItemWid,m_nItemHei;
+    int m_nSepWid,m_nSepHei;
 
-	void UpdateScroll();
-	CRect GetItemRect(int iItem);
+    void UpdateScroll();
+    CRect GetItemRect(int iItem);
 
-	void BringWindowAfter(CDuiWindow * pChild, CDuiWindow * pInsertAfter); 
+    void BringWindowAfter(CDuiWindow * pChild, CDuiWindow * pInsertAfter);
 
-	void OnSize(UINT nType, CSize size);
-	
-	void OnCalcChildPos(CDuiWindow *pDuiWndChild);
+    void OnSize(UINT nType, CSize size);
 
-	void ReLayout();
-	virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
+    void OnCalcChildPos(CDuiWindow *pDuiWndChild);
 
-	virtual int GetScrollLineSize(BOOL bVertical);
+    void ReLayout();
+    virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
 
-	virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
+    virtual int GetScrollLineSize(BOOL bVertical);
 
-	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-		DUIWIN_INT_ATTRIBUTE("itemwid", m_nItemWid, TRUE)
-		DUIWIN_INT_ATTRIBUTE("itemhei", m_nItemHei, TRUE)
-		DUIWIN_INT_ATTRIBUTE("sepwid", m_nSepWid, TRUE)
-		DUIWIN_INT_ATTRIBUTE("sephei", m_nSepHei, TRUE)
-	DUIWIN_DECLARE_ATTRIBUTES_END()
+    virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
 
-	DUIWIN_BEGIN_MSG_MAP()
-		MSG_WM_SIZE(OnSize)
-		MSG_WM_CALCWNDPOS(OnCalcChildPos)
-	DUIWIN_END_MSG_MAP()
+    DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
+    DUIWIN_INT_ATTRIBUTE("itemwid", m_nItemWid, TRUE)
+    DUIWIN_INT_ATTRIBUTE("itemhei", m_nItemHei, TRUE)
+    DUIWIN_INT_ATTRIBUTE("sepwid", m_nSepWid, TRUE)
+    DUIWIN_INT_ATTRIBUTE("sephei", m_nSepHei, TRUE)
+    DUIWIN_DECLARE_ATTRIBUTES_END()
+
+    DUIWIN_BEGIN_MSG_MAP()
+    MSG_WM_SIZE(OnSize)
+    MSG_WM_CALCWNDPOS(OnCalcChildPos)
+    DUIWIN_END_MSG_MAP()
 
 };
 

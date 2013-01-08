@@ -10,7 +10,8 @@
 #include "duiresproviderbase.h"
 #include "DuiSingletonMap.h"
 
-namespace DuiEngine{
+namespace DuiEngine
+{
 
 typedef CDuiImgBase * CDuiImgBasePtr;
 class DUI_EXP DuiImgPool:public DuiSingletonMap<DuiImgPool,CDuiImgBasePtr,DuiResID>
@@ -22,10 +23,10 @@ public:
     CDuiImgBase * GetImage(UINT uResID,LPCSTR pszType=NULL);
 
 protected:
-	static void OnKeyRemoved(const CDuiImgBasePtr & obj)
-	{
-		obj->Release();
-	}
+    static void OnKeyRemoved(const CDuiImgBasePtr & obj)
+    {
+        obj->Release();
+    }
 
     ULONG_PTR m_gdiplusToken;
 };

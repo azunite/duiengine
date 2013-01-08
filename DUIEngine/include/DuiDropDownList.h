@@ -24,69 +24,78 @@ class CDuiDropDownListEx;
 
 class DUI_EXP CDuiDropDownListOwner
 {
-	friend class CDuiDropDownListBase;
-	friend class CDuiDropDownList;
-	friend class CDuiDropDownListEx;
+    friend class CDuiDropDownListBase;
+    friend class CDuiDropDownList;
+    friend class CDuiDropDownListEx;
 
 public:
-	CDuiDropDownListOwner() {}
-	virtual ~CDuiDropDownListOwner(){}
+    CDuiDropDownListOwner() {}
+    virtual ~CDuiDropDownListOwner() {}
 
 protected:
 
-	virtual HWND GetHostHwnd() = 0;
+    virtual HWND GetHostHwnd() = 0;
 
-	virtual CDuiWindow* GetWindow() = 0;
+    virtual CDuiWindow* GetWindow() = 0;
 
-	virtual int  GetListItemCount() = 0;
+    virtual int  GetListItemCount() = 0;
 
-	virtual LPCTSTR	GetListItemText(int nItem) = 0;
+    virtual LPCTSTR	GetListItemText(int nItem) = 0;
 
-	virtual int GetListItemIcon(int nItem) = 0;
+    virtual int GetListItemIcon(int nItem) = 0;
 
-	virtual DWORD GetListItemData(int nItem) { return 0; }
+    virtual DWORD GetListItemData(int nItem)
+    {
+        return 0;
+    }
 
-	virtual int GetListCurSel() { return -1; }
+    virtual int GetListCurSel()
+    {
+        return -1;
+    }
 
-	virtual int GetAnimateTime() { return 200; }
+    virtual int GetAnimateTime()
+    {
+        return 200;
+    }
 
-	virtual void OnDropDownListClose() = 0;	
+    virtual void OnDropDownListClose() = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 class DUI_EXP CDuiDropDownListBase : public CDuiHostWnd
-					   , public CDuiMessageFilter
+    , public CDuiMessageFilter
 {
 public:
-	CDuiDropDownListBase(CDuiDropDownListOwner* pOwner,int nDropHeight);
-	virtual ~CDuiDropDownListBase(){}
-	
-	virtual void DeleteItem(int iItem) = 0;
-	virtual void UpdateItems(const CRect * prcOwner=NULL)=0;
+    CDuiDropDownListBase(CDuiDropDownListOwner* pOwner,int nDropHeight);
+    virtual ~CDuiDropDownListBase() {}
+
+    virtual void DeleteItem(int iItem) = 0;
+    virtual void UpdateItems(const CRect * prcOwner=NULL)=0;
 
 protected:
-	int  OnCreate(LPCREATESTRUCT lpCreateStruct);
-	void OnKillFocus(HWND wndFocus);
-	void OnClose();
+    int  OnCreate(LPCREATESTRUCT lpCreateStruct);
+    void OnKillFocus(HWND wndFocus);
+    void OnClose();
 
-	virtual void CreateListBox(TiXmlElement *pXmlTemplate) = 0;
-	virtual void OnFinalMessage(HWND);
-	virtual BOOL PreTranslateMessage(MSG* pMsg);
+    virtual void CreateListBox(TiXmlElement *pXmlTemplate) = 0;
+    virtual void OnFinalMessage(HWND);
+    virtual BOOL PreTranslateMessage(MSG* pMsg);
 
-	BOOL FixPosition(const CRect * prcOwner, int nDropHeight);
+    BOOL FixPosition(const CRect * prcOwner, int nDropHeight);
 
 protected:
 
-	int			m_nDropHeight;
-	CDuiDropDownListOwner* m_pOwner;
+    int			m_nDropHeight;
+    CDuiDropDownListOwner* m_pOwner;
 
-	BEGIN_MSG_MAP_EX(CDuiDropDownList)
-		MSG_WM_CREATE(OnCreate)
-		MSG_WM_KILLFOCUS(OnKillFocus)
-		MSG_WM_CLOSE(OnClose)
-		CHAIN_MSG_MAP(CDuiHostWnd)
-	END_MSG_MAP()
+    BEGIN_MSG_MAP_EX(CDuiDropDownList)
+    MSG_WM_CREATE(OnCreate)
+    MSG_WM_KILLFOCUS(OnKillFocus)
+    MSG_WM_CLOSE(OnClose)
+    CHAIN_MSG_MAP(CDuiHostWnd)
+    END_MSG_MAP()
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -94,17 +103,17 @@ protected:
 class DUI_EXP CDuiDropDownList : public CDuiDropDownListBase
 {
 public:
-	CDuiDropDownList(CDuiDropDownListOwner* pOwner,int nDropHeight);
-	virtual ~CDuiDropDownList(){}
+    CDuiDropDownList(CDuiDropDownListOwner* pOwner,int nDropHeight);
+    virtual ~CDuiDropDownList() {}
 
-	virtual void DeleteItem(int iItem);
-	virtual void UpdateItems(const CRect * prcOwner=NULL);
+    virtual void DeleteItem(int iItem);
+    virtual void UpdateItems(const CRect * prcOwner=NULL);
 
 protected:
 
-	virtual void CreateListBox(TiXmlElement *pXmlTemplate);
+    virtual void CreateListBox(TiXmlElement *pXmlTemplate);
 
-	CDuiListBox *m_pListBox;
+    CDuiListBox *m_pListBox;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -112,19 +121,19 @@ protected:
 class DUI_EXP CDuiDropDownListEx : public CDuiDropDownListBase
 {
 public:
-	CDuiDropDownListEx(CDuiDropDownListOwner* pOwner,int nDropHeight);
-	virtual ~CDuiDropDownListEx(){}
+    CDuiDropDownListEx(CDuiDropDownListOwner* pOwner,int nDropHeight);
+    virtual ~CDuiDropDownListEx() {}
 
-	virtual void DeleteItem(int iItem);
-	virtual void UpdateItems(const CRect * prcOwner=NULL);
+    virtual void DeleteItem(int iItem);
+    virtual void UpdateItems(const CRect * prcOwner=NULL);
 
 protected:
 
-	virtual void CreateListBox(TiXmlElement *pXmlTemplate);
+    virtual void CreateListBox(TiXmlElement *pXmlTemplate);
 
-	int m_nTextID;
-	int m_nIconID;
-	CDuiListBoxEx *m_pListBox;
+    int m_nTextID;
+    int m_nIconID;
+    CDuiListBoxEx *m_pListBox;
 };
 
 }//namespace
