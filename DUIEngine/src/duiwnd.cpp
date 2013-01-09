@@ -557,16 +557,16 @@ CDuiWindow* CDuiWindow::FindChildByCmdID(UINT uCmdID)
 
 BOOL CDuiWindow::LoadChildren(TiXmlElement* pTiXmlChildElem)
 {
-    CDuiWindow *pPrevChild=NULL;
     for (TiXmlElement* pXmlChild = pTiXmlChildElem; NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement())
     {
-        CStringA strWndType=pXmlChild->Value();
-        if(!DuiWindowFactoryManager::getSingleton().HasKey(strWndType)) continue;
-        CDuiWindowFactory *pFactory=DuiWindowFactoryManager::getSingleton().GetKeyObject(strWndType);
-        CDuiWindow *pChild = pFactory->NewWindow();
+        CDuiWindow *pChild = DuiWindowFactoryManager::getSingleton().CreateWindowByName(pXmlChild->Value());
+		if(!pChild)
+		{
+// 			DUIASSERT(FALSE);
+			continue;
+		}
 
-        InsertChild(pChild);
-
+		InsertChild(pChild);
         pChild->Load(pXmlChild);
     }
     return TRUE;

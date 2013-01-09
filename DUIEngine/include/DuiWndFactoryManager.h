@@ -14,6 +14,8 @@ public:
     virtual void DeleteWindow(CDuiWindow* pWnd) = 0;
 
     virtual const CStringA & getWindowType()=0;
+
+	virtual	BOOL IsSysWindow()=0;
 };
 
 template <typename T>
@@ -21,7 +23,7 @@ class TplDuiWindowFactory : public CDuiWindowFactory
 {
 public:
     //! Default constructor.
-    TplDuiWindowFactory()
+	TplDuiWindowFactory(BOOL bSysCtrl=FALSE):m_bSysCtrl(bSysCtrl)
     {
         m_strTypeName=T::GetClassName();
     }
@@ -42,8 +44,10 @@ public:
         return m_strTypeName;
     }
 
+	virtual BOOL IsSysWindow() {return m_bSysCtrl;}
 protected:
     CStringA m_strTypeName;
+	BOOL	m_bSysCtrl;
 };
 
 
@@ -61,13 +65,17 @@ public:
     // Access:    public
     // Returns:   bool
     // Qualifier:
-    // Parameter: CDuiWindowFactory * pWndFactory
+    // Parameter: CDuiWindowFactory * pWndFactory:窗口工厂指针
+	// Parameter: bool bReplace:强制替换原有工厂标志
     //************************************
-    bool RegisterFactory(CDuiWindowFactory *pWndFactory)
+    bool RegisterFactory(CDuiWindowFactory *pWndFactory,bool bReplace=false)
     {
-        if(HasKey(pWndFactory->getWindowType())) return false;
+        if(HasKey(pWndFactory->getWindowType()))
+		{
+			if(!bReplace) return false;
+			RemoveKeyObject(pWndFactory->getWindowType());
+		}
         AddKeyObject(pWndFactory->getWindowType(),pWndFactory);
-// 		(*m_mapNamedObj)[pWndFactory->getWindowType()]=pWndFactory;
         return true;
     }
 
@@ -86,11 +94,9 @@ public:
         return true;
     }
 
+	CDuiWindow *CreateWindowByName(LPCSTR pszClassName);
 protected:
-    static void OnKeyRemoved(const CDuiWindowFactoryPtr & obj)
-    {
-        delete obj;
-    }
+    static void OnWndFactoryRemoved(const CDuiWindowFactoryPtr & obj);
 
     void AddStandardWindowFactory();
 };

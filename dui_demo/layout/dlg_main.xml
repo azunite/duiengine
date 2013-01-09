@@ -81,7 +81,7 @@
           <button class="normalbtn" tabstop="1"  name="测试" pos="20,50,200,80">reposition</button>
         </tab>
         <tab id="117" title="duilistbox">
-          <listbox2 name="mylist" pos="10,0,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
+          <listboxex name="mylist" pos="10,0,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
             <items>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
@@ -97,7 +97,7 @@
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
                 <scrollbar pos="300,3,-10,-3" vertical="0" skin="sb_common" min="0" max="100" page="10" value="5"/>
-<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+                <button class="normalbtn" pos="300,3,-10,-3">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
@@ -125,8 +125,9 @@
                 <button class="normalbtn" pos="300,3,-10,-3">button</button>
               </item>
             </items>
-          </listbox2>
-        </tab>
+          </listboxex>
+        
+      </tab>
         <tab id="118" title="duitreebox">
           <treebox pos="10,0,-10,-10"  name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10">
             <!--             <switch /> -->

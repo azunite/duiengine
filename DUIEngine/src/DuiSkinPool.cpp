@@ -11,12 +11,23 @@ template<> DuiSkinFactoryManager * Singleton<DuiSkinFactoryManager>::ms_Singleto
 
 void DuiSkinFactoryManager::AddStandardSkin()
 {
-    AddKeyObject(CDuiImageList::GetClassName(),new TplSkinFactory<CDuiImageList>());
-    AddKeyObject(CDuiSkinImgFrame::GetClassName(),new TplSkinFactory<CDuiSkinImgFrame>());
-    AddKeyObject(CDuiSkinButton::GetClassName(),new TplSkinFactory<CDuiSkinButton>());
-    AddKeyObject(CDuiSkinGradation::GetClassName(),new TplSkinFactory<CDuiSkinGradation>());
-    AddKeyObject(CDuiScrollbarSkin::GetClassName(),new TplSkinFactory<CDuiScrollbarSkin>());
-    AddKeyObject(CDuiSkinMenuBorder::GetClassName(),new TplSkinFactory<CDuiSkinMenuBorder>());
+    AddKeyObject(CDuiImageList::GetClassName(),new TplSkinFactory<CDuiImageList>(TRUE));
+    AddKeyObject(CDuiSkinImgFrame::GetClassName(),new TplSkinFactory<CDuiSkinImgFrame>(TRUE));
+    AddKeyObject(CDuiSkinButton::GetClassName(),new TplSkinFactory<CDuiSkinButton>(TRUE));
+    AddKeyObject(CDuiSkinGradation::GetClassName(),new TplSkinFactory<CDuiSkinGradation>(TRUE));
+    AddKeyObject(CDuiScrollbarSkin::GetClassName(),new TplSkinFactory<CDuiScrollbarSkin>(TRUE));
+    AddKeyObject(CDuiSkinMenuBorder::GetClassName(),new TplSkinFactory<CDuiSkinMenuBorder>(TRUE));
+}
+
+void DuiSkinFactoryManager::OnSkinRemoved( const CSkinFactoryPtr & obj )
+{
+	if(obj->IsSysSkin()) delete obj;
+}
+
+CDuiSkinBase * DuiSkinFactoryManager::CreateSkinByName( LPCSTR pszClassName )
+{
+	if(!HasKey(pszClassName)) return NULL;
+	return GetKeyObject(pszClassName)->NewSkin();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,15 +89,11 @@ int DuiSkinPool::LoadSkins(LPCSTR strOwnerName)
                 continue;
 
             DUIASSERT(!HasKey(strSkinName));
-            if(DuiSkinFactoryManager::getSingleton().HasKey(strTypeName))
+			CDuiSkinBase *pSkin=DuiSkinFactoryManager::getSingleton().CreateSkinByName(strTypeName);
+            if(pSkin)
             {
-                CSkinFactory *pSkinFactory=DuiSkinFactoryManager::getSingleton().GetKeyObject(strTypeName);
-                CDuiSkinBase *pSkin = pSkinFactory->NewSkin();
-
                 pSkin->Load(pXmlSkin);
-
                 pSkin->SetOwner(strOwnerName);
-
                 AddKeyObject(strSkinName,pSkin);
                 nLoaded++;
             }

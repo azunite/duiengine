@@ -12,13 +12,14 @@ public:
     virtual CDuiSkinBase * NewSkin()=NULL;
     virtual void DeleteSkin(CDuiSkinBase *)=NULL;
     virtual const CStringA & GetTypeName()=NULL;
+	virtual BOOL IsSysSkin()=NULL;
 };
 
 template<typename T>
 class TplSkinFactory :public CSkinFactory
 {
 public:
-    TplSkinFactory()
+	TplSkinFactory(BOOL bSysSkin=FALSE):m_bSysSkin(bSysSkin)
     {
         m_strTypeName=T::GetClassName();
     }
@@ -37,8 +38,12 @@ public:
     {
         return m_strTypeName;
     }
+
+	virtual BOOL IsSysSkin(){return m_bSysSkin;}
+
 protected:
     CStringA m_strTypeName;
+	BOOL	m_bSysSkin;
 };
 
 typedef CSkinFactory * CSkinFactoryPtr;
@@ -47,13 +52,17 @@ class DUI_EXP DuiSkinFactoryManager: public DuiSingletonMap<DuiSkinFactoryManage
 public:
     DuiSkinFactoryManager()
     {
-        m_pFunOnKeyRemoved=OnKeyRemoved;
+        m_pFunOnKeyRemoved=OnSkinRemoved;
         AddStandardSkin();
     }
 
-    bool RegisterFactory(CSkinFactory *pSkinFactory)
+    bool RegisterFactory(CSkinFactory *pSkinFactory,bool bReplace=false)
     {
-        if(HasKey(pSkinFactory->GetTypeName())) return false;
+        if(HasKey(pSkinFactory->GetTypeName()))
+		{
+			if(!bReplace) return false;
+			RemoveKeyObject(pSkinFactory->GetTypeName());
+		}
         AddKeyObject(pSkinFactory->GetTypeName(),pSkinFactory);
         return true;
     }
@@ -65,11 +74,10 @@ public:
         return true;
     }
 
+	CDuiSkinBase * CreateSkinByName(LPCSTR pszClassName);
+
 protected:
-    static void OnKeyRemoved(const CSkinFactoryPtr & obj)
-    {
-        delete obj;
-    }
+    static void OnSkinRemoved(const CSkinFactoryPtr & obj);
     void AddStandardSkin();
 };
 

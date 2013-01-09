@@ -102,7 +102,7 @@ size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*
     return m_nCount;
 }
 
-UINT DuiSystem::Name2ID( CStringA strName )
+UINT DuiSystem::Name2ID( LPCSTR strName )
 {
     if(m_nCount==0) return 0;
     CNamedID *pFind=(CNamedID*)bsearch(&CNamedID(strName,0),m_pBuf,m_nCount,sizeof(CNamedID),CNamedID::Compare);

@@ -87,7 +87,7 @@ public:
 
     void logEvent(LoggingLevel level , LPCTSTR format, ...);
 
-    UINT Name2ID(CStringA strName);
+    UINT Name2ID(LPCSTR strName);
 
     size_t InitName2ID(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 

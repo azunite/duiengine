@@ -23,7 +23,7 @@
 class  CDuiListBox2 :public CDuiListBoxEx
 {
 public:
-	DUIOBJ_DECLARE_CLASS_NAME(CDuiListBox2, "listbox2")
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiListBox2, "listboxex")
 
 };
 
@@ -60,7 +60,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 	//生成控件类厂并注册到系统
 	TplDuiWindowFactory<CDuiListBox2> *pFacListCtrl= new TplDuiWindowFactory<CDuiListBox2>;
-	DuiWindowFactoryManager::getSingleton().RegisterFactory(pFacListCtrl);
+	DuiWindowFactoryManager::getSingleton().RegisterFactory(pFacListCtrl,true);
 
 	//生成皮肤类厂并注册到系统
 	TplSkinFactory<CDuiSkinGif> * pFacSkinGif = new TplSkinFactory<CDuiSkinGif>;
