@@ -4,8 +4,10 @@
 #pragma once
 
 #include "UIHander.h"
+#include "wtlhelper/whwindow.h"
 
 class CMainDlg : public CDuiHostWnd
+	,public CWHRoundRectFrameHelper<CMainDlg>
 {
 public:
 	CMainDlg();
@@ -28,14 +30,16 @@ public:
 		SendMessage(WM_SYSCOMMAND,SC_MINIMIZE);
 	}
 
-	void OnWindowPosChanged(LPWINDOWPOS lpWndPos)
+	void OnSize(UINT nType, CSize size)
 	{
-		DefWindowProc();
-		if(IsZoomed()) 
+		SetMsgHandled(FALSE);
+		if(!IsLayoutInited()) return;
+
+		if(nType==SIZE_MAXIMIZED)
 		{
 			FindChildByCmdID(3)->SetVisible(TRUE);
 			FindChildByCmdID(2)->SetVisible(FALSE);
-		}else
+		}else if(nType==SIZE_RESTORED)
 		{
 			FindChildByCmdID(3)->SetVisible(FALSE);
 			FindChildByCmdID(2)->SetVisible(TRUE);
@@ -53,9 +57,10 @@ protected:
 	DUI_NOTIFY_MAP_END()	
 
 	BEGIN_MSG_MAP_EX(CMainDlg)
+		CHAIN_MSG_MAP(CWHRoundRectFrameHelper<CMainDlg>)
 		MSG_WM_CREATE(OnCreate)
 		MSG_WM_CLOSE(OnClose)
-		MSG_WM_WINDOWPOSCHANGED(OnWindowPosChanged)
+		MSG_WM_SIZE(OnSize)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
 		CHAIN_MSG_MAP_MEMBER((*m_pUiHandler))
 		CHAIN_MSG_MAP(CDuiHostWnd)

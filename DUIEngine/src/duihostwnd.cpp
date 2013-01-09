@@ -34,6 +34,7 @@ CDuiHostWnd::CDuiHostWnd(UINT uResID/* =0*/)
     , m_bResizable(FALSE)
     , m_szMin(200, 200)
     , m_pTipCtrl(NULL)
+	, m_bLayoutInited(FALSE)
 {
     SetContainer(this);
 }
@@ -178,6 +179,8 @@ BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
 
     if(m_bTranslucent) SetDuiTimer(TIMER_TRANSLUCENT,10);
     else KillDuiTimer(TIMER_TRANSLUCENT);
+
+	m_bLayoutInited=TRUE;
     return TRUE;
 }
 
@@ -1023,6 +1026,11 @@ void CDuiHostWnd::OnRealWndSize( CDuiRealWnd *pRealWnd )
         pRealWnd->GetClient(&rcClient);
         ::SetWindowPos(pRealWnd->GetRealHwnd(FALSE),0, rcClient.left, rcClient.top, rcClient.Width(), rcClient.Height(), SWP_NOZORDER);
     }
+}
+
+BOOL CDuiHostWnd::IsLayoutInited()
+{
+	return m_bLayoutInited;
 }
 
 }//namespace DuiEngine

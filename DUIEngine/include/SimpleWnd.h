@@ -457,6 +457,12 @@ public:
         return ::ShowWindow(m_hWnd,nCmdShow);
     }
 
+	int SetWindowRgn(HRGN hRgn,BOOL bRedraw=TRUE)
+	{
+		DUIASSERT(::IsWindow(m_hWnd));
+		return ::SetWindowRgn(m_hWnd,hRgn,bRedraw);
+	}
+
     LRESULT DefWindowProc()
     {
         const MSG* pMsg = m_pCurrentMsg;

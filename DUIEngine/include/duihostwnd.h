@@ -48,6 +48,8 @@ public:
 
     BOOL SetXml(LPCSTR lpszXml);
 
+	BOOL IsLayoutInited();
+
     UINT_PTR DoModal(HWND hWndParent = NULL, LPRECT rect = NULL);
 
     void EndDialog(UINT uRetCode);
@@ -76,6 +78,7 @@ protected:
     CPoint m_ptCaret;		//≤Â»Î∑˚Œª÷√
     BOOL m_bNeedRepaint;
     BOOL m_bNeedAllRepaint;
+	BOOL m_bLayoutInited;
 
     CDuiTipCtrl	* m_pTipCtrl;
 
