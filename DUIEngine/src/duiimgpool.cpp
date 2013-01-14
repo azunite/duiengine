@@ -19,7 +19,7 @@ template<> DuiImgPool * Singleton<DuiImgPool>::ms_Singleton =0;
 
 DuiImgPool::DuiImgPool()
 {
-    m_pFunOnKeyRemoved=OnKeyRemoved;
+    m_pFunOnKeyRemoved=OnImageRemoved;
 }
 
 DuiImgPool::~DuiImgPool()

@@ -61,12 +61,6 @@ public:
                 CDuiMap<TKey,TObj>::CPair *p=m_mapNamedObj->GetNext(pos);
                 m_pFunOnKeyRemoved(p->m_value);
             }
-// 			CDuiMap<TKey,TObj>::iterator it=m_mapNamedObj->begin();
-// 			while(it!=m_mapNamedObj->end())
-// 			{
-// 				m_pFunOnKeyRemoved(it->second);
-// 				it++;
-// 			}
         }
         m_mapNamedObj->RemoveAll();
     }

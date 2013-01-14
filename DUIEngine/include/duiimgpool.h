@@ -23,12 +23,10 @@ public:
     CDuiImgBase * GetImage(UINT uResID,LPCSTR pszType=NULL);
 
 protected:
-    static void OnKeyRemoved(const CDuiImgBasePtr & obj)
+    static void OnImageRemoved(const CDuiImgBasePtr & obj)
     {
         obj->Release();
     }
-
-    ULONG_PTR m_gdiplusToken;
 };
 
 }//namespace DuiEngine
