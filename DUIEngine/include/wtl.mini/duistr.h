@@ -403,7 +403,12 @@ operator const _Elem *() const
 void Append(const _Elem * pstr,int nCount=-1)
 {
     if(nCount<0) nCount=_Traits::length(pstr);
-
+	if(GetLength()==0)
+	{
+		Assign(pstr,nCount);
+		return;
+	}
+	
     DUIASSERT(!_Traits::IsBadStringPtr(pstr,nCount));
 
     m_pstr = static_cast<_Elem *>(realloc(m_pstr, (nCount +m_nLength+ 1) * sizeof(_Elem)));
