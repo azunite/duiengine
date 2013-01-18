@@ -474,10 +474,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\duitheme.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\DuiThreadActiveWndManager.cpp"
 				>
 			</File>
@@ -717,10 +713,6 @@
 			</File>
 			<File
 				RelativePath=".\include\DuiSystem.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duitheme.h"
 				>
 			</File>
 			<File

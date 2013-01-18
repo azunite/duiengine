@@ -8,9 +8,9 @@
 #include "duistd.h"
 #include "duiwndcmnctrl.h"
 
-#include "duitheme.h"
 #include "duiwndnotify.h"
 #include "duisystem.h"
+#include <vsstyle.h>
 
 namespace DuiEngine
 {
