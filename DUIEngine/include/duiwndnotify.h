@@ -264,7 +264,16 @@ typedef struct tagDUIRICHEDITNOTIFY
     LPVOID pv;
 } DUIRICHEDITNOTIFY,*LPDUIRICHEDITNOTIFY;
 
-
+class CDuiSliderBar;
+#define DUINM_SLIDER	30
+typedef struct tagDUINMSLIDER
+{
+	NMHDR hdr;
+	UINT uSbCode;
+	CDuiSliderBar *pSliderBar;
+	int	 nPos;
+	BOOL bVertical;
+} DUINMSLIDER,*LPDUINMSLIDER;
 
 //////////////////////////////////////////////////////////////////////////
 //  internal notify message

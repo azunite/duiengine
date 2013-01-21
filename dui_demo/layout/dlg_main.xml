@@ -25,6 +25,7 @@
           <button id="1360" class="normalbtn" pos="10,200,150,230">dui menu</button>
           <hotkey id="1340" pos="350,20,450,45" />
           <button id="1307" pos="200,10,300,35" class="normalbtn">IE Ctrl</button>
+          <sliderbar name="IDC_SLIDERTEST" pos="100,100,-10,120" thumbskin="slidethumb" interheight="6" crbg="0095FF" crsel="E47100" value="20"/>
           <combobox id="1310" pos="100,40,300,64" dropdown="0" dropheight="250" class="cls_edit" font="8300" dotted="0" cursel="0" itempanel="1">
             <liststyle  class="cls_edit" crbg="FF0000" itemheight="50" id_text="1" id_icon="2" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
               <template>

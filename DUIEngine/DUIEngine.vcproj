@@ -426,6 +426,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiSliderBar.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\DuiSplitWnd.cpp"
 				>
 			</File>
@@ -697,6 +701,10 @@
 			</File>
 			<File
 				RelativePath=".\include\DuiSkinPool.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiSliderBar.h"
 				>
 			</File>
 			<File

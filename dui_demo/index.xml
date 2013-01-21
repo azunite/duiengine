@@ -49,3 +49,5 @@
 <resid type="IMGX" id_name="IDR_TREE_CHECKBOX"		id="501" file="skins\TreeCheckBox.png"/>
 <resid type="IMGX" id_name="IDR_TREE_ICON"				id="502" file="skins\TreeIcon.png"/>
 <resid type="IMGX" id_name="IDP_ICON3"						id="503" file="skins\icon3.png"/>
+
+<resid type="IMGX" id_name="IDP_SLIDETHUMB"						id="505" file="skins\slider.png"/>

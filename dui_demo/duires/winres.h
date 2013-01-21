@@ -15,4 +15,5 @@
 #define	mylist		65542
 #define	mytree		65543
 #define	mytree1		65544
+#define	IDC_SLIDERTEST		65545
 /*----------------------------RES_BUILDER:end------------------------------------->*/

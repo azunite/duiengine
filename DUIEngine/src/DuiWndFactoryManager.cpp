@@ -52,6 +52,7 @@ void DuiWindowFactoryManager::AddStandardWindowFactory()
     AddKeyObject(CDuiComboBox::GetClassName(),new TplDuiWindowFactory<CDuiComboBox>(TRUE));
     AddKeyObject(CDuiHotKeyCtrl::GetClassName(),new TplDuiWindowFactory<CDuiHotKeyCtrl>(TRUE));
     AddKeyObject(CDuiCaption::GetClassName(),new TplDuiWindowFactory<CDuiCaption>(TRUE));
+    AddKeyObject(CDuiSliderBar::GetClassName(),new TplDuiWindowFactory<CDuiSliderBar>(TRUE));
 
 }
 

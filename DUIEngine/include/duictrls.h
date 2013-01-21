@@ -13,3 +13,4 @@
 #include "DuiComboBox.h"
 #include "DuiHotKeyCtrl.h"
 #include "DuiCaption.h"
+#include "DuiSliderBar.h"
