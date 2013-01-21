@@ -12,7 +12,7 @@
       <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10">
         <tab id="113" title="miscellaneous" sep="5">
           <img id="1139" pos="300,200,400,300" skin="icons" tip="img tip" msgtransparent="0"/>
-          <check id="1300" pos="40,20" crtext="ff0000" >test1</check>
+          <check id="1300" pos="40,20" crtext="ff0000" state="4">test1</check>
           <check id="1301" pos="40,70">test2</check>
           <dlg pos="0,90,-0,-0">
             <radio id="1303" pos="10,10">radio1</radio>

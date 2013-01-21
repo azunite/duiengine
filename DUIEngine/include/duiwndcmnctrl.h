@@ -351,7 +351,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 // Check Box
 //
-// Usage: <check state=1>This is a check-box</check>
+// Usage: <check state=4>This is a check-box</check>
 //
 class DUI_EXP CDuiCheckBox : public CDuiWindow
 {
@@ -404,7 +404,6 @@ protected:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, FALSE)
     DUIWIN_SKIN_ATTRIBUTE("focusskin", m_pFocusSkin, FALSE)
-    DUIWIN_UINT_ATTRIBUTE("state", m_dwState, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()
@@ -486,8 +485,6 @@ protected:
     CDuiSkinBase *m_pSkin;
     CDuiSkinBase *m_pFocusSkin;
 
-    int m_nState;
-
     UINT _GetDrawState();
 
     virtual BOOL NeedRedrawWhenStateChange();
@@ -514,7 +511,6 @@ protected:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, FALSE)
     DUIWIN_SKIN_ATTRIBUTE("focusskin", m_pFocusSkin, FALSE)
-    DUIWIN_UINT_ATTRIBUTE("check", m_nState, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()

@@ -157,7 +157,7 @@ class CDuiMenuODWnd : public CSimpleWnd
 {
     friend class CDuiOwnerDraw<CDuiMenuODWnd>;
 public:
-    CDuiMenuODWnd();
+    CDuiMenuODWnd(HWND hMenuOwner);
 
 protected:
     void OnInitMenu(HMENU menu);
@@ -176,6 +176,8 @@ protected:
     CHAIN_MSG_MAP(CDuiOwnerDraw<CDuiMenuODWnd>)
     REFLECT_NOTIFICATIONS_EX()
     END_MSG_MAP()
+
+	HWND m_hMenuOwner;
 };
 
 

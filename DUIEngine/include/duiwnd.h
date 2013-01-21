@@ -535,6 +535,7 @@ protected:
     DUIWIN_CHAIN_ATTRIBUTE(m_style)					//支持对style中的属性定制
     DUIWIN_INT_ATTRIBUTE("id", m_uCmdID, FALSE)
     DUIWIN_INT_ATTRIBUTE("data", m_uData, 0 )
+	DUIWIN_UINT_ATTRIBUTE("state", m_dwState, FALSE)
     DUIWIN_TSTRING_ATTRIBUTE("href", m_strLinkUrl, FALSE)
     DUIWIN_TSTRING_ATTRIBUTE("tip", m_strToolTipText, FALSE)
     DUIWIN_ENUM_ATTRIBUTE("valign", UINT, TRUE)

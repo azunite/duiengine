@@ -31,19 +31,19 @@ void CDuiMenuAttr::OnAttributeFinish( TiXmlElement* pXmlElem )
 }
 //////////////////////////////////////////////////////////////////////////
 
-CDuiMenuODWnd::CDuiMenuODWnd()
+CDuiMenuODWnd::CDuiMenuODWnd(HWND hMenuOwner):m_hMenuOwner(hMenuOwner)
 {
 
 }
 
 void CDuiMenuODWnd::OnInitMenu( HMENU menu )
 {
-    ::SendMessage(GetParent(m_hWnd),WM_INITMENU,(WPARAM)menu,0);
+    ::SendMessage(m_hMenuOwner,WM_INITMENU,(WPARAM)menu,0);
 }
 
 void CDuiMenuODWnd::OnInitMenuPopup( HMENU menuPopup, UINT nIndex, BOOL bSysMenu )
 {
-    ::SendMessage(GetParent(m_hWnd),WM_INITMENUPOPUP,(WPARAM)menuPopup,MAKELPARAM(nIndex,bSysMenu));
+    ::SendMessage(m_hMenuOwner,WM_INITMENUPOPUP,(WPARAM)menuPopup,MAKELPARAM(nIndex,bSysMenu));
 }
 
 void CDuiMenuODWnd::DrawItem( LPDRAWITEMSTRUCT lpDrawItemStruct )
@@ -169,7 +169,7 @@ void CDuiMenuODWnd::MeasureItem( LPMEASUREITEMSTRUCT lpMeasureItemStruct )
 
 void CDuiMenuODWnd::OnMenuSelect( UINT nItemID, UINT nFlags, HMENU menu )
 {
-    ::SendMessage(GetParent(m_hWnd),WM_MENUSELECT,MAKEWPARAM(nItemID,nFlags),(LPARAM)menu);
+    ::SendMessage(m_hMenuOwner,WM_MENUSELECT,MAKEWPARAM(nItemID,nFlags),(LPARAM)menu);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -290,13 +290,13 @@ UINT CDuiMenu::TrackPopupMenu(
 {
     DUIASSERT(IsMenu(m_hMenu));
 
-    CDuiMenuODWnd menuOwner;
+    CDuiMenuODWnd menuOwner(hWnd);
     *(static_cast<CDuiMenuAttr*>(&menuOwner))=m_menuSkin;
-    menuOwner.Create(NULL,WS_POPUP,WS_EX_NOACTIVATE,0,0,0,0,hWnd,NULL);
+    menuOwner.Create(NULL,WS_POPUP,WS_EX_NOACTIVATE,0,0,0,0,NULL,NULL);
     UINT uNewFlags=uFlags|TPM_RETURNCMD;
     UINT uRet=::TrackPopupMenu(m_hMenu,uNewFlags,x,y,0,menuOwner.m_hWnd,prcRect);
     menuOwner.DestroyWindow();
-    if(uRet && !(uFlags&TPM_RETURNCMD)) SendMessage(hWnd,WM_COMMAND,uRet,0);
+	if(uRet && !(uFlags&TPM_RETURNCMD)) ::SendMessage(hWnd,WM_COMMAND,uRet,0);
     return uRet;
 }
 
