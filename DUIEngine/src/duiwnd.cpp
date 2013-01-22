@@ -1630,6 +1630,8 @@ void CDuiWindow::PaintBackground( HDC hdc,LPRECT pRc )
     CRgn rgn;
     rgn.CreateRectRgnIndirect(&rcDraw);
     ::ExtSelectClipRgn(hdc,rgn,RGN_AND);
+	CDCHandle dc(hdc);
+	dc.FillSolidRect(pRc,0);//Çå³ý²ÐÁôµÄalphaÖµ
 
     CDuiWindow *pEnd=this;
     while(pEnd && !pEnd->IsVisible(TRUE))
