@@ -43,5 +43,6 @@
   <imglst name="icon3"							src="503"  subwidth="15"/>
 
   <imglst name="slidethumb" src="505" subwidth="18"/>
+  <imglst name="ncshadow" src="510" />
 
 </skins>

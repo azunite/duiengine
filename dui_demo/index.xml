@@ -51,3 +51,4 @@
 <resid type="IMGX" id_name="IDP_ICON3"						id="503" file="skins\icon3.png"/>
 
 <resid type="IMGX" id_name="IDP_SLIDETHUMB"						id="505" file="skins\slider.png"/>
+<resid type="IMGX" id_name="IDP_SHADOWNC"						id="510" file="skins\bk_shadow.png"/>

@@ -1025,7 +1025,11 @@ void CDuiWindow::OnNcPaint(CDCHandle dc)
 
         DWORD nState=0;
         if(DuiWndState_Hover & m_dwState) nState=1;
-        if(m_pNcSkin) m_pNcSkin->Draw(dc,m_rcWindow,nState);
+        if(m_pNcSkin)
+		{
+			if(nState>=m_pNcSkin->GetStates()) nState=0;
+			m_pNcSkin->Draw(dc,m_rcWindow,nState);
+		}
         else
         {
             COLORREF crBg = m_style.m_crBg;
