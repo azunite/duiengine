@@ -11,7 +11,7 @@ public:
     virtual ~CSkinFactory() {}
     virtual CDuiSkinBase * NewSkin()=NULL;
     virtual void DeleteSkin(CDuiSkinBase *)=NULL;
-    virtual const CStringA & GetTypeName()=NULL;
+    virtual const CDuiStringA & GetTypeName()=NULL;
 	virtual BOOL IsSysSkin()=NULL;
 };
 
@@ -34,7 +34,7 @@ public:
         delete static_cast<T*>(pSkin);
     }
 
-    virtual const CStringA & GetTypeName()
+    virtual const CDuiStringA & GetTypeName()
     {
         return m_strTypeName;
     }
@@ -42,12 +42,12 @@ public:
 	virtual BOOL IsSysSkin(){return m_bSysSkin;}
 
 protected:
-    CStringA m_strTypeName;
+    CDuiStringA m_strTypeName;
 	BOOL	m_bSysSkin;
 };
 
 typedef CSkinFactory * CSkinFactoryPtr;
-class DUI_EXP DuiSkinFactoryManager: public DuiSingletonMap<DuiSkinFactoryManager,CSkinFactoryPtr,CStringA>
+class DUI_EXP DuiSkinFactoryManager: public DuiSingletonMap<DuiSkinFactoryManager,CSkinFactoryPtr,CDuiStringA>
 {
 public:
     DuiSkinFactoryManager()
@@ -82,7 +82,7 @@ protected:
 };
 
 typedef CDuiSkinBase * DuiSkinPtr;
-class DUI_EXP DuiSkinPool :public DuiSingletonMap<DuiSkinPool,DuiSkinPtr,CStringA>
+class DUI_EXP DuiSkinPool :public DuiSingletonMap<DuiSkinPool,DuiSkinPtr,CDuiStringA>
 {
 public:
     DuiSkinPool();

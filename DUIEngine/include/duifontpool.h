@@ -60,7 +60,7 @@ public:
     static ULONG Hash( INARGTYPE fontKey )
     {
         ULONG_PTR uRet=0;
-        CString strType=fontKey.strFaceName;
+        CDuiStringT strType=fontKey.strFaceName;
         strType.MakeLower();
         for(int i=0; i<strType.GetLength(); i++)
         {
@@ -89,9 +89,9 @@ class DUI_EXP DuiFontPool :public DuiSingletonMap<DuiFontPool,HFONT,FontKey>
 public:
     DuiFontPool();
 
-    HFONT GetFont(WORD uKey,CString strFaceName=_T(""));
+    HFONT GetFont(WORD uKey,CDuiStringT strFaceName=_T(""));
 
-    HFONT GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding = 0,CString strFaceName=_T(""));
+    HFONT GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding = 0,CDuiStringT strFaceName=_T(""));
     void SetDefaultFont(LPCTSTR lpszFaceName, LONG lSize);
 protected:
     static void OnKeyRemoved(const HFONT & obj)
@@ -101,7 +101,7 @@ protected:
 
     HFONT _CreateDefaultGUIFont();
 
-    HFONT _CreateNewFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding,CString strFaceName=_T(""));
+    HFONT _CreateNewFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding,CDuiStringT strFaceName=_T(""));
 
     LONG _GetFontAbsHeight(LONG lSize);
 

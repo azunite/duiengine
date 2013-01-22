@@ -415,7 +415,7 @@ public:
 };
 
 template< typename T, class CharTraits = CDefaultCharTraits<T::XCHAR> >
-class CStringElementTraitsI :
+class CDuiStringElementTraitsI :
     public CElementTraitsBase< T >
 {
 public:
@@ -451,7 +451,7 @@ public:
 };
 
 template< typename T >
-class CStringRefElementTraits :
+class CDuiStringRefElementTraits :
     public CElementTraitsBase< T >
 {
 public:

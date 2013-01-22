@@ -58,9 +58,9 @@ protected:
 
     void UpdateCaret();
 
-    CStringA FormatHotkey();
+    CDuiStringA FormatHotkey();
 
-    CStringA GetKeyName(WORD vk);
+    CDuiStringA GetKeyName(WORD vk);
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_CREATE(OnCreate)

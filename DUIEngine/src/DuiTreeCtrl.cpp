@@ -171,7 +171,7 @@ HSTREEITEM CDuiTreeCtrl::GetSelectedItem()
 	return m_hSelItem;
 }
 
-BOOL CDuiTreeCtrl::GetItemText(HSTREEITEM hItem, CString& strText) const
+BOOL CDuiTreeCtrl::GetItemText(HSTREEITEM hItem, CDuiStringT& strText) const
 {
 	if (hItem)
 	{

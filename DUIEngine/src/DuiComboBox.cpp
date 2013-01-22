@@ -111,7 +111,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 			m_pEdit->Load(pTiEditStyle);
 		else
 			m_pEdit->DuiSendMessage(WM_CREATE);
-		CStringA strPos;
+		CDuiStringA strPos;
 		strPos.Format("0,0,-%d,-0",szBtn.cx);
 		m_pEdit->SetAttribute("pos",strPos,TRUE);
 		m_pEdit->SetCmdID(IDC_CB_EDIT);

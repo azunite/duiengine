@@ -18,7 +18,7 @@ public:
     CDuiRealWndParam();
     ~CDuiRealWndParam();
 
-    CString m_strClassName,m_strWindowName;
+    CDuiStringT m_strClassName,m_strWindowName;
     DWORD	 m_dwStyle,m_dwExStyle;
     TiXmlElement *m_pXmlParams;
 };

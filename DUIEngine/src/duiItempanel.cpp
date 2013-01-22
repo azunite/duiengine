@@ -206,7 +206,7 @@ DWORD CDuiItemPanel::GetItemData()
     return m_dwData;
 }
 
-BOOL CDuiItemPanel::OnUpdateToolTip( HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CString &strTip )
+BOOL CDuiItemPanel::OnUpdateToolTip( HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip )
 {
     if(hCurTipHost==m_hHover) return FALSE;
 

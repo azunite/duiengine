@@ -21,7 +21,7 @@ DuiFontPool::DuiFontPool()
     SetKeyObject(FontKey(DUIF_DEFAULTFONT),_CreateDefaultGUIFont());
 }
 
-HFONT DuiFontPool::GetFont(WORD uKey,CString strFaceName)
+HFONT DuiFontPool::GetFont(WORD uKey,CDuiStringT strFaceName)
 {
     HFONT hftRet=0;
     FontKey key(uKey,strFaceName);
@@ -41,7 +41,7 @@ HFONT DuiFontPool::GetFont(WORD uKey,CString strFaceName)
     return hftRet;
 }
 
-HFONT DuiFontPool::GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding /*= 0*/,CString strFaceName/*=""*/)
+HFONT DuiFontPool::GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding /*= 0*/,CDuiStringT strFaceName/*=""*/)
 {
     return GetFont(DUIF_MAKEKEY(bBold, bUnderline, bItalic, chAdding),strFaceName);
 }
@@ -72,7 +72,7 @@ HFONT DuiFontPool::_CreateDefaultGUIFont()
     return ::CreateFontIndirect(&m_lfDefault);
 }
 
-HFONT DuiFontPool::_CreateNewFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding,CString strFaceName/*=""*/)
+HFONT DuiFontPool::_CreateNewFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding,CDuiStringT strFaceName/*=""*/)
 {
     LOGFONT lfNew;
 

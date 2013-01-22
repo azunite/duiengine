@@ -28,12 +28,12 @@ public:
         delete this;
     }
 
-    void SetOwner(CStringA strOwner)
+    void SetOwner(CDuiStringA strOwner)
     {
         m_strOwner=strOwner;
     }
 
-    CStringA GetOwner()
+    CDuiStringA GetOwner()
     {
         return m_strOwner;
     }
@@ -102,7 +102,7 @@ protected:
     }
 
     CDuiImgBase *m_pDuiImg;
-    CStringA	m_strOwner;
+    CDuiStringA	m_strOwner;
     BOOL		m_bManaged;
 };
 

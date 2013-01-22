@@ -32,7 +32,7 @@ const TCHAR CoolMenu_oldProc[] = _T("CoolMenu_oldProc");
 CDuiMap <HWND,CMenuWndHook*> CMenuWndHook::m_WndMenuMap;
 
 HHOOK CMenuWndHook::m_hMenuHook = NULL;
-CStringA CMenuWndHook::m_strSkinName = "";
+CDuiStringA CMenuWndHook::m_strSkinName = "";
 
 CMenuWndHook::CMenuWndHook (HWND hWnd)
     : m_hWnd(hWnd)

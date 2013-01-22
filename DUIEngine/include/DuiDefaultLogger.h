@@ -99,12 +99,12 @@ protected:
     struct LOGRECORD
     {
         LOGRECORD() {}
-        LOGRECORD(const CString & _msg,LoggingLevel _level)
+        LOGRECORD(const CDuiStringT & _msg,LoggingLevel _level)
         {
             msg=_msg;
             level=_level;
         }
-        CString msg;
+        CDuiStringT msg;
         LoggingLevel level;
     };
     CDuiArray<LOGRECORD> d_cache; //!< Used to cache log entries before log file is created.

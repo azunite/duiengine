@@ -185,15 +185,15 @@ protected:
     CRect m_rcWindow;
     UINT m_uPositionType;
     DuiStyle m_style;
-    CString m_strInnerText;
+    CDuiStringT m_strInnerText;
     LONG m_lSpecifyWidth;
     LONG m_lSpecifyHeight;
     DWORD m_dwState;
     UINT m_uVAlign;
-    CString m_strLinkUrl;
+    CDuiStringT m_strLinkUrl;
     BOOL m_bMsgTransparent;		//不处理用户操作标志
     BOOL m_bVisible;
-    CString m_strToolTipText;
+    CDuiStringT m_strToolTipText;
     int	 m_nSepSpace;	//自动排版的水平空格
     BOOL m_bClipClient;
 
@@ -257,7 +257,7 @@ public:
     virtual BOOL OnDuiSetCursor(const CPoint &pt);
 
     // Get tooltip Info
-    virtual BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CString &strTip);
+    virtual BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip);
 
     // Get DuiWindow state
     DWORD GetState(void);//tolua_export
@@ -404,7 +404,7 @@ public:
         return m_bClipClient;
     }
 
-    virtual void OnAttributeChanged(const CStringA & strAttrName,BOOL bLoading,HRESULT hRet);
+    virtual void OnAttributeChanged(const CDuiStringA & strAttrName,BOOL bLoading,HRESULT hRet);
 public:
 
     //************************************
@@ -652,8 +652,8 @@ protected:
     void OnSetDuiFocus();
     void OnKillDuiFocus();
 
-    HRESULT OnAttributePosition(const CStringA& strValue, BOOL bLoading);
-    HRESULT OnAttributeName(const CStringA& strValue, BOOL bLoading);
+    HRESULT OnAttributePosition(const CDuiStringA& strValue, BOOL bLoading);
+    HRESULT OnAttributeName(const CDuiStringA& strValue, BOOL bLoading);
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_ERASEBKGND(OnEraseBkgnd)

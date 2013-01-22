@@ -77,7 +77,7 @@ protected:
 
     virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
     // Get tooltip Info
-    virtual BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CString &strTip);
+    virtual BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip);
 
     void NotifySelChange(int nOldSel,int nNewSel,UINT uMsg);
 

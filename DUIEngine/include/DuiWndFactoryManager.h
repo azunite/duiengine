@@ -13,7 +13,7 @@ public:
 
     virtual void DeleteWindow(CDuiWindow* pWnd) = 0;
 
-    virtual const CStringA & getWindowType()=0;
+    virtual const CDuiStringA & getWindowType()=0;
 
 	virtual	BOOL IsSysWindow()=0;
 };
@@ -39,14 +39,14 @@ public:
         delete static_cast<T*>(pWnd);
     }
 
-    virtual const CStringA & getWindowType()
+    virtual const CDuiStringA & getWindowType()
     {
         return m_strTypeName;
     }
 
 	virtual BOOL IsSysWindow() {return m_bSysCtrl;}
 protected:
-    CStringA m_strTypeName;
+    CDuiStringA m_strTypeName;
 	BOOL	m_bSysCtrl;
 };
 
@@ -54,7 +54,7 @@ protected:
 
 typedef CDuiWindowFactory* CDuiWindowFactoryPtr;
 class DUI_EXP DuiWindowFactoryManager :
-    public DuiSingletonMap<DuiWindowFactoryManager,CDuiWindowFactoryPtr,CStringA>
+    public DuiSingletonMap<DuiWindowFactoryManager,CDuiWindowFactoryPtr,CDuiStringA>
 {
 public:
     DuiWindowFactoryManager(void);

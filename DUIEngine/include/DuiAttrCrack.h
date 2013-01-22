@@ -13,8 +13,8 @@
 #define DUIWIN_DECLARE_ATTRIBUTES_BEGIN()                            \
 public:                                                             \
 	virtual HRESULT SetAttribute(                                   \
-	const CStringA & strAttribName,                                     \
-	const CStringA &  strValue,                                          \
+	const CDuiStringA & strAttribName,                                     \
+	const CDuiStringA &  strValue,                                          \
 	BOOL     bLoading=FALSE)                                    \
 	{                                                               \
 	HRESULT hRet = E_FAIL;										\
@@ -195,8 +195,8 @@ public:                                                             \
 		if(nPos!=-1)\
 			{\
 			DWORD dwValue = CDuiObject::HexStringToULong(strValue,nPos);  \
-			CStringA strFace=strValue.Right(strValue.GetLength()-nPos-1);\
-			CString strFaceT=CA2T(strFace,CP_UTF8);\
+			CDuiStringA strFace=strValue.Right(strValue.GetLength()-nPos-1);\
+			CDuiStringT strFaceT=CA2T(strFace,CP_UTF8);\
 			varname = DuiFontPool::getSingleton().GetFont(LOWORD(dwValue),strFaceT);    \
 			}else\
 			{\
@@ -252,7 +252,7 @@ public:                                                             \
 		int nPos=strValue.ReverseFind(':');\
 		if(nPos!=-1)\
 			{\
-			CStringA strType=strValue.Right(strValue.GetLength()-nPos-1);\
+			CDuiStringA strType=strValue.Right(strValue.GetLength()-nPos-1);\
 			varname = DuiImgPool::getSingleton().GetImage(StrToIntA(strValue.Left(nPos)),strType);        \
 			}else\
 			varname = DuiImgPool::getSingleton().GetImage(StrToIntA(strValue));        \

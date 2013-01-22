@@ -160,7 +160,7 @@ void CUIHander::OnWebkit_Go()
 // 	CDuiRichEdit *pEdit=static_cast<CDuiRichEdit*>(m_pMainDlg->FindChildByCmdID(1203));
 // 	WCHAR szURI[200];
 // 	pEdit->GetWindowText(szURI,200);
-// 	CStringA strURI=CW2A(szURI,CP_UTF8);
+// 	CDuiStringA strURI=CW2A(szURI,CP_UTF8);
 // 	pWebkitCtrl->SetURI(strURI);
 }
 

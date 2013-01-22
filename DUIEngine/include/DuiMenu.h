@@ -52,7 +52,7 @@ protected:
 struct DuiMenuItemInfo
 {
     int iIcon;
-    CString strText;
+    CDuiStringT strText;
 };
 struct DuiMenuItemData
 {

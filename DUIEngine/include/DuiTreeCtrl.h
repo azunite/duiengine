@@ -31,7 +31,7 @@ enum {
 };
 
 typedef struct tagTVITEM {    
-	CString		strText;
+	CDuiStringT		strText;
     int			nImage;
     int			nSelectedImage;
 	LPARAM      lParam;	
@@ -93,7 +93,7 @@ public:
 	HSTREEITEM GetParentItem(HSTREEITEM hItem);
 	HSTREEITEM GetSelectedItem();
 
-	BOOL GetItemText(HSTREEITEM hItem, CString& strText) const;
+	BOOL GetItemText(HSTREEITEM hItem, CDuiStringT& strText) const;
 	BOOL SetItemText(HSTREEITEM hItem, LPCTSTR lpszItem);
 	BOOL GetItemImage(HSTREEITEM hItem, int& nImage, int& nSelectedImage) const;
 	BOOL SetItemImage(HSTREEITEM hItem, int nImage, int nSelectedImage);

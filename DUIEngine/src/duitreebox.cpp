@@ -89,7 +89,7 @@ HSTREEITEM CDuiTreeBox::InsertItem(TiXmlElement *pTiXmlItem,DWORD dwData,HSTREEI
 CDuiTreeItem* CDuiTreeBox::InsertItem(LPCWSTR pszXml,DWORD dwData,HSTREEITEM hParent/*=STVI_ROOT*/, HSTREEITEM hInsertAfter/*=STVI_LAST*/,BOOL bEnsureVisible/*=FALSE*/)
 {
     TiXmlDocument xmlDoc;
-    CStringA strXml=CW2A(pszXml,CP_UTF8);;
+    CDuiStringA strXml=CW2A(pszXml,CP_UTF8);;
 
     xmlDoc.Parse(strXml);
     if(xmlDoc.Error()) return NULL;

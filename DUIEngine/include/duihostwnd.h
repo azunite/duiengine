@@ -62,7 +62,7 @@ protected:
     // Tracking flag
     BOOL m_bTrackFlag;
 
-    CStringA m_strWindowCaption;
+    CDuiStringA m_strWindowCaption;
     SIZE m_sizeDefault;
     CRect m_rcNC;
 

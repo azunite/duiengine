@@ -80,7 +80,7 @@ void DefaultLogger::logEvent(LPCTSTR message, LoggingLevel level /* = Standard *
     if (etm)
     {
         // clear sting stream
-        CString strbuf;
+        CDuiStringT strbuf;
 
         strbuf.Format(_T("%04d/%02d/%02d %02d:%02d:%02d "),1900+etm->tm_year,etm->tm_mon+1,etm->tm_mday,etm->tm_hour,etm->tm_min,etm->tm_sec);
         // write event type code

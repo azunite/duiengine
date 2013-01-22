@@ -74,12 +74,12 @@ BOOL DuiSkinPool::Init(LPCSTR lpszXml)
 int DuiSkinPool::LoadSkins(LPCSTR strOwnerName)
 {
     int nLoaded=0;
-    CStringA strSkinName, strTypeName;
+    CDuiStringA strSkinName, strTypeName;
 
     TiXmlElement *pXmlSkin=m_pXmlSkinDesc->FirstChildElement();
     while(pXmlSkin)
     {
-        CStringA strOwner= pXmlSkin->Attribute("owner");
+        CDuiStringA strOwner= pXmlSkin->Attribute("owner");
         if(strOwner==strOwnerName)
         {
             strSkinName = pXmlSkin->Attribute("name");
@@ -118,7 +118,7 @@ int DuiSkinPool::FreeSkins( LPCSTR strOwnerName )
     POSITION pos=m_mapNamedObj->GetStartPosition();
     while(pos)
     {
-        CDuiMap<CStringA,DuiSkinPtr>::CPair *p=m_mapNamedObj->GetNext(pos);
+        CDuiMap<CDuiStringA,DuiSkinPtr>::CPair *p=m_mapNamedObj->GetNext(pos);
         if(p->m_value->GetOwner()==strOwnerName)
         {
             OnKeyRemoved(p->m_value);

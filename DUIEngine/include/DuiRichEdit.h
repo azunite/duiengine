@@ -263,7 +263,7 @@ protected:
 
     HRESULT OnTxNotify(DWORD iNotify,LPVOID pv);
 
-    virtual HRESULT DefAttributeProc(const CStringA & strAttribName,const CStringA & strValue, BOOL bLoading);
+    virtual HRESULT DefAttributeProc(const CDuiStringA & strAttribName,const CDuiStringA & strValue, BOOL bLoading);
 
     void OnLButtonDown(UINT nFlags, CPoint point);
 
@@ -289,7 +289,7 @@ protected:
 
     LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
 
-    LRESULT OnSetTextColor(const CStringA &  strValue,BOOL bLoading);
+    LRESULT OnSetTextColor(const CDuiStringA &  strValue,BOOL bLoading);
 protected:
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_CREATE(OnCreate)

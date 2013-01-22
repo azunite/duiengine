@@ -41,7 +41,7 @@ public:
 
 protected:
 
-    CString m_strTitle;
+    CDuiStringT m_strTitle;
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_TSTRING_ATTRIBUTE("title", m_strTitle, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()

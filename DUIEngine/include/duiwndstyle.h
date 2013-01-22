@@ -26,7 +26,7 @@ class DUI_EXP DuiStyle : public CDuiObject
 public:
     DuiStyle();
 
-    CStringA m_strClassName;
+    CDuiStringA m_strClassName;
 
     COLORREF m_crBg;
     COLORREF m_crBgHover;
@@ -46,7 +46,7 @@ public:
     BOOL m_bDotted;
 
     LPCTSTR m_lpCursorName;
-    CStringA m_strSkinName,m_strNcSkinName;
+    CDuiStringA m_strSkinName,m_strNcSkinName;
 
     // Get class name
     LPCSTR GetName();
@@ -85,7 +85,7 @@ protected:
 
 #include "DuiSingletonMap.h"
 
-class DUI_EXP DuiStylePool :public DuiSingletonMap<DuiStylePool,DuiStyle,CStringA>
+class DUI_EXP DuiStylePool :public DuiSingletonMap<DuiStylePool,DuiStyle,CDuiStringA>
 {
 public:
     // Get style object from pool by class name

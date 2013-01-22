@@ -863,18 +863,17 @@ static CDuiString<wchar_t> CvtW2W(const CDuiString<wchar_t> &str,unsigned int cp
 
 }//end of namespace DuiEngine
 
-#ifndef NO_DUISTR
 
-typedef DuiEngine::CDuiString<char> CStringA;
-typedef DuiEngine::CDuiString<wchar_t> CStringW;
+typedef DuiEngine::CDuiString<char> CDuiStringA;
+typedef DuiEngine::CDuiString<wchar_t> CDuiStringW;
 
 #ifdef UNICODE
-typedef  CStringW CString;
+typedef  CDuiStringW CDuiStringT;
 #else
-typedef  CStringA CString;
+typedef  CDuiStringA CDuiStringT;
 #endif // UNICODE
 
-typedef CString CStringT;
+#ifndef NO_DUISTR
 
 #define CA2W DuiEngine::CDuiStrCpCvt::CvtA2W
 #define CW2A DuiEngine::CDuiStrCpCvt::CvtW2A

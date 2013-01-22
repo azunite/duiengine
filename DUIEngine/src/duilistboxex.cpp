@@ -113,7 +113,7 @@ int CDuiListBoxEx::InsertItem(int iItem,CDuiItemPanel *pItemObj,DWORD dwData/*=0
 
 int CDuiListBoxEx::InsertItem(int iItem,LPCWSTR pszXml,DWORD dwData/*=0*/)
 {
-    CStringA strUtf8=CW2A(pszXml,CP_UTF8);
+    CDuiStringA strUtf8=CW2A(pszXml,CP_UTF8);
     TiXmlDocument xmlDoc;
     xmlDoc.Parse(strUtf8);
     if(xmlDoc.Error()) return NULL;
@@ -124,7 +124,7 @@ int CDuiListBoxEx::InsertItem(int iItem,LPCWSTR pszXml,DWORD dwData/*=0*/)
 
 CDuiPanel * CDuiListBoxEx::InsertPanelItem(int iItem,LPCWSTR pszXml,DWORD dwData/*=0*/)
 {
-    CStringA strUtf8=CW2A(pszXml,CP_UTF8);
+    CDuiStringA strUtf8=CW2A(pszXml,CP_UTF8);
     TiXmlDocument xmlDoc;
     xmlDoc.Parse(strUtf8);
     if(xmlDoc.Error()) return NULL;
@@ -607,7 +607,7 @@ void CDuiListBoxEx::OnDestroy()
     __super::OnDestroy();
 }
 
-BOOL CDuiListBoxEx::OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CString &strTip)
+BOOL CDuiListBoxEx::OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip)
 {
     if(m_iHoverItem==-1)
         return __super::OnUpdateToolTip(hCurTipHost,hNewTipHost,rcTip,strTip);

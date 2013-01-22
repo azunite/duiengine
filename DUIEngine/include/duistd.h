@@ -56,7 +56,7 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #include "wtl.mini/duigdi.h"
 #endif
 
-#include "wtl.mini/duistr.h" //注意：如果CString已经定义，可以定义NO_DUISTR来防止命名冲突
+#include "wtl.mini/duistr.h" //注意：如果CDuiStringT已经定义，可以定义NO_DUISTR来防止命名冲突
 #include "wtl.mini/duicoll.h"
 
 #include "DuiAttrCrack.h"

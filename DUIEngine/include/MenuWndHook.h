@@ -52,7 +52,7 @@ protected:
 
     static CDuiMap<HWND, CMenuWndHook*> m_WndMenuMap;
     static HHOOK m_hMenuHook;
-    static CStringA	m_strSkinName;
+    static CDuiStringA	m_strSkinName;
 };
 
 }//namespace DuiEngine

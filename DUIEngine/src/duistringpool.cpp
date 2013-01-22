@@ -16,7 +16,7 @@ namespace DuiEngine
 template<> DuiStringPool* Singleton<DuiStringPool>::ms_Singleton	= 0;
 
 
-BOOL DuiStringPool::BuildString(CString &strContainer)
+BOOL DuiStringPool::BuildString(CDuiStringT &strContainer)
 {
     BOOL bRet=FALSE;
     int nSubStringStart=-1;
@@ -30,7 +30,7 @@ BOOL DuiStringPool::BuildString(CString &strContainer)
         int nID = ::StrToInt((LPCTSTR)strContainer + nSubStringStart + 4);
         if (0 >= nID)
             break;
-        CString strNewSub=GetKeyObject((UINT)nID);
+        CDuiStringT strNewSub=GetKeyObject((UINT)nID);
         strContainer = strContainer.Left(nSubStringStart)
                        + strNewSub
                        + strContainer.Mid(nSubStringEnd);
@@ -77,9 +77,9 @@ BOOL DuiStringPool::Init(UINT uResID)
             continue;
 
         uStringID = (UINT)(ULONG)::StrToIntA(lpszStringID);
-        CStringA str=pXmlChild->GetText();
+        CDuiStringA str=pXmlChild->GetText();
         if(str.IsEmpty()) str=pXmlChild->Attribute("text");
-        AddKeyObject(uStringID,CString(CA2T(str, CP_UTF8)));
+        AddKeyObject(uStringID,CDuiStringT(CA2T(str, CP_UTF8)));
     }
 
     return TRUE;

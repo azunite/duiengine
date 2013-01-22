@@ -5,7 +5,7 @@
 namespace DuiEngine
 {
 
-class DUI_EXP DuiCSS :public DuiSingletonMap<DuiCSS,TiXmlElement *,CStringA>
+class DUI_EXP DuiCSS :public DuiSingletonMap<DuiCSS,TiXmlElement *,CDuiStringA>
 {
 public:
     DuiCSS():m_pXmlDoc(NULL)

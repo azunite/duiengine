@@ -122,7 +122,7 @@ int CDuiListBox::GetText(int nIndex, LPTSTR lpszBuffer) const
     return nRet;
 }
 
-int CDuiListBox::GetText(int nIndex, CString& strText) const
+int CDuiListBox::GetText(int nIndex, CDuiStringT& strText) const
 {
     int nRet = GetTextLen(nIndex);
 

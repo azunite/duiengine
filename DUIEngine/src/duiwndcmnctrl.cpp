@@ -378,7 +378,7 @@ void CDuiProgress::OnPaint(CDCHandle dc)
 {
     DuiDCPaint DuiDC;
     CPen penFrame;
-    CString strPercent;
+    CDuiStringT strPercent;
     double dPos = 0;
 
     BeforePaint(dc, DuiDC);

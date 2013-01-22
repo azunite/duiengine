@@ -102,7 +102,7 @@ BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
         return FALSE;
     }
 
-    CStringA strValue;
+    CDuiStringA strValue;
 
     m_dwDlgStyle =CSimpleWnd::GetStyle();
     m_dwDlgExStyle  = CSimpleWnd::GetExStyle();
@@ -124,9 +124,9 @@ BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
         m_sizeDefault.cy = 0;
         pXmlRootElem->Attribute("width", (int *)&m_sizeDefault.cx);
         pXmlRootElem->Attribute("height", (int *)&m_sizeDefault.cy);
-        CStringA strNC=pXmlRootElem->Attribute("ncRect");
+        CDuiStringA strNC=pXmlRootElem->Attribute("ncRect");
         sscanf(strNC,"%d,%d,%d,%d",&m_rcNC.left,&m_rcNC.top,&m_rcNC.right,&m_rcNC.bottom);
-        CStringA strMin = pXmlRootElem->Attribute("minsize");
+        CDuiStringA strMin = pXmlRootElem->Attribute("minsize");
         sscanf(strMin,"%d,%d",&m_szMin.cx, &m_szMin.cy);
 
         m_bTranslucent=FALSE;
@@ -581,7 +581,7 @@ LRESULT CDuiHostWnd::OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
             HDUIWND hNewTipHost=0;
             CRect rcTip;
-            CString strTip;
+            CDuiStringT strTip;
             BOOL bUpdate=pHover->OnUpdateToolTip(m_pTipCtrl->m_dwHostID,hNewTipHost,rcTip,strTip);
             if(bUpdate)
             {

@@ -30,8 +30,8 @@ public:
 	BOOL Init(HINSTANCE hInst,UINT uID,LPCTSTR pszType=_T("ZIP"));
 protected:
 	BOOL LoadSkin();
-	CString GetFilePath(UINT uID,LPCSTR pszType);
-	CDuiMap<DuiResID,CString> m_mapFiles;
+	CDuiStringT GetFilePath(UINT uID,LPCSTR pszType);
+	CDuiMap<DuiResID,CDuiStringT> m_mapFiles;
 
 	CZipArchive m_zipFile;
 };

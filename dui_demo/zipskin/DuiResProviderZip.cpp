@@ -13,7 +13,7 @@ namespace DuiEngine{
 
 	HBITMAP DuiResProviderZip::LoadBitmap( LPCSTR strType,UINT uID )
 	{
-		CString strPath=GetFilePath(uID,strType);
+		CDuiStringT strPath=GetFilePath(uID,strType);
 		if(strPath.IsEmpty()) return NULL;
 		CZipFile zf;
 		if(!m_zipFile.GetFile(strPath,zf)) return NULL;
@@ -41,7 +41,7 @@ namespace DuiEngine{
 
 	HICON DuiResProviderZip::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
 	{
-		CString strPath=GetFilePath(uID,strType);
+		CDuiStringT strPath=GetFilePath(uID,strType);
 		if(strPath.IsEmpty()) return NULL;
 		CZipFile zf;
 		if(!m_zipFile.GetFile(strPath,zf)) return NULL;
@@ -59,7 +59,7 @@ namespace DuiEngine{
 
 	CDuiImgBase * DuiResProviderZip::LoadImage( LPCSTR strType,UINT uID)
 	{
-		CString strPath=GetFilePath(uID,strType);
+		CDuiStringT strPath=GetFilePath(uID,strType);
 		if(strPath.IsEmpty()) return NULL;
 		CZipFile zf;
 		if(!m_zipFile.GetFile(strPath,zf)) return NULL;
@@ -80,17 +80,17 @@ namespace DuiEngine{
 		return LoadSkin();
 	}
 
-	CString DuiResProviderZip::GetFilePath( UINT uID,LPCSTR pszType )
+	CDuiStringT DuiResProviderZip::GetFilePath( UINT uID,LPCSTR pszType )
 	{
 		DuiResID resID(pszType,uID);
-		CDuiMap<DuiResID,CString>::CPair *p = m_mapFiles.Lookup(resID);
+		CDuiMap<DuiResID,CDuiStringT>::CPair *p = m_mapFiles.Lookup(resID);
 		if(!p) return _T("");
 		return p->m_value;
 	}
 
 	size_t DuiResProviderZip::GetRawBufferSize( LPCSTR strType,UINT uID )
 	{
-		CString strPath=GetFilePath(uID,strType);
+		CDuiStringT strPath=GetFilePath(uID,strType);
 		if(strPath.IsEmpty()) return FALSE;
 		ZIP_FIND_DATA zfd;
 		HANDLE hf=m_zipFile.FindFirstFile(strPath,&zfd);
@@ -101,7 +101,7 @@ namespace DuiEngine{
 
 	BOOL DuiResProviderZip::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
 	{
-		CString strPath=GetFilePath(uID,strType);
+		CDuiStringT strPath=GetFilePath(uID,strType);
 		if(strPath.IsEmpty()) return FALSE;
 		CZipFile zf;
 		if(!m_zipFile.GetFile(strPath,zf)) return NULL;
@@ -117,7 +117,7 @@ namespace DuiEngine{
 	BOOL DuiResProviderZip::HasResource( LPCSTR strType,UINT uID )
 	{
 		DuiResID resID(strType,uID);
-		CDuiMap<DuiResID,CString>::CPair *p = m_mapFiles.Lookup(resID);
+		CDuiMap<DuiResID,CDuiStringT>::CPair *p = m_mapFiles.Lookup(resID);
 		return p!=NULL;
 	}
 
@@ -128,20 +128,20 @@ namespace DuiEngine{
 		if(!bIdx) return FALSE;
 
 		TiXmlDocument xmlDoc;
-		CStringA strFileName;
-		CStringA xmlBuf((char*)zf.GetData(),zf.GetSize());
+		CDuiStringA strFileName;
+		CDuiStringA xmlBuf((char*)zf.GetData(),zf.GetSize());
 		xmlDoc.Parse(xmlBuf);
 		if(xmlDoc.Error()) return FALSE;
 		TiXmlElement *pXmlElem = xmlDoc.RootElement();
 		while(pXmlElem)
 		{
-			CStringA strValue = pXmlElem->Value();
+			CDuiStringA strValue = pXmlElem->Value();
 			if(strValue=="resid")
 			{
 				DuiResID id(pXmlElem->Attribute("type"));
 				pXmlElem->Attribute("id",&(int)id.nID);
-				CStringA strFile = pXmlElem->Attribute("file");
-				CStringW strFileW=CA2W(strFile,CP_UTF8);
+				CDuiStringA strFile = pXmlElem->Attribute("file");
+				CDuiStringW strFileW=CA2W(strFile,CP_UTF8);
 				m_mapFiles[id]=CW2T(strFileW,CP_ACP);
 			}
 			pXmlElem=pXmlElem->NextSiblingElement();

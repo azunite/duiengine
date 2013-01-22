@@ -42,10 +42,10 @@ public:
 
     BOOL Init(LPCSTR pszPath);
 protected:
-    CStringA GetRes( LPCSTR strType,UINT uID );
+    CDuiStringA GetRes( LPCSTR strType,UINT uID );
 
-    CStringA m_strPath;
-    CDuiMap<DuiResID,CStringA> m_mapFiles;
+    CDuiStringA m_strPath;
+    CDuiMap<DuiResID,CDuiStringA> m_mapFiles;
 };
 
 }//namespace DuiEngine

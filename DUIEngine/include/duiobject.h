@@ -90,34 +90,34 @@ public:
         return TRUE;
     }
 
-    virtual HRESULT SetAttribute(const CStringA &  strAttribName, const CStringA &  strValue, BOOL bLoading)
+    virtual HRESULT SetAttribute(const CDuiStringA &  strAttribName, const CDuiStringA &  strValue, BOOL bLoading)
     {
         return DefAttributeProc(strAttribName,strValue,bLoading);
     }
 
-    virtual HRESULT SetAttributeW(const CStringA &  strAttribName, const CStringW &  strValue, BOOL bLoading)
+    virtual HRESULT SetAttributeW(const CDuiStringA &  strAttribName, const CDuiStringW &  strValue, BOOL bLoading)
     {
-        CStringA strValueUTF8=CW2A(strValue,CP_UTF8);
+        CDuiStringA strValueUTF8=CW2A(strValue,CP_UTF8);
         return SetAttribute(strAttribName,strValueUTF8,bLoading);
     }
 
-    virtual HRESULT DefAttributeProc(const CStringA & strAttribName,const CStringA & strValue, BOOL bLoading)
+    virtual HRESULT DefAttributeProc(const CDuiStringA & strAttribName,const CDuiStringA & strValue, BOOL bLoading)
     {
         return E_FAIL;
     }
     //tolua_end
 protected:
     virtual void OnAttributeFinish(TiXmlElement* pXmlElem) {}
-    virtual void OnAttributeChanged(const CStringA & strAttrName,BOOL bLoading,HRESULT hRet) {}
+    virtual void OnAttributeChanged(const CDuiStringA & strAttrName,BOOL bLoading,HRESULT hRet) {}
     //************************************
     // Method:    LoadTemplateAttribute
     // Function:  从类属性模板载入属性
     // Access:    protected
     // Returns:   void
-    // Parameter: CStringA strTemplate
+    // Parameter: CDuiStringA strTemplate
     // remark: 使用属性baseClass来支持嵌套
     //************************************
-    void LoadTemplateAttribute(CStringA strTemplate)
+    void LoadTemplateAttribute(CDuiStringA strTemplate)
     {
         if(!DuiCSS::getSingleton().HasKey(strTemplate)) return;
         TiXmlElement *pObjDefAttr=DuiCSS::getSingleton().GetKeyObject(strTemplate);
@@ -165,7 +165,7 @@ protected:
     }
 
 #ifdef	_DEBUG
-    CStringA m_strXml;
+    CDuiStringA m_strXml;
 #endif//_DEBUG
     //tolua_begin
 };

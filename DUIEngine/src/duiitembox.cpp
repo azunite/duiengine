@@ -19,7 +19,7 @@ CDuiItemBox::CDuiItemBox():m_nItemWid(100),m_nItemHei(100),m_nSepHei(5),m_nSepWi
 CDuiPanel* CDuiItemBox::InsertItem(LPCWSTR pszXml,int iItem/*=-1*/,BOOL bEnsureVisible/*=FALSE*/)
 {
     TiXmlDocument xmlDoc;
-    CStringA strXml=CW2A(pszXml,CP_UTF8);;
+    CDuiStringA strXml=CW2A(pszXml,CP_UTF8);;
 
     xmlDoc.Parse(strXml);
     if(xmlDoc.Error()) return NULL;

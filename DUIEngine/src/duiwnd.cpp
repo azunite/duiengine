@@ -126,7 +126,7 @@ LPCTSTR CDuiWindow::GetInnerText()
 }
 
 // Get tooltip text
-BOOL CDuiWindow::OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CString &strTip)
+BOOL CDuiWindow::OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip)
 {
     if(m_hDuiWnd==hCurTipHost) return FALSE;
     hNewTipHost=m_hDuiWnd;
@@ -603,7 +603,7 @@ BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
     if (2 != m_dlgpos.nCount && 4 != m_dlgpos.nCount)
     {
         int nValue = 0;
-        CStringA strValue;
+        CDuiStringA strValue;
         strValue = pTiXmlElem->Attribute("width", &nValue);
         if (0 == nValue && "full" == strValue)
         {
@@ -768,7 +768,7 @@ BOOL CDuiWindow::RedrawRegion(CDCHandle& dc, CRgn& rgn)
     return FALSE;
 }
 
-void CDuiWindow::OnAttributeChanged( const CStringA & strAttrName,BOOL bLoading,HRESULT hRet )
+void CDuiWindow::OnAttributeChanged( const CDuiStringA & strAttrName,BOOL bLoading,HRESULT hRet )
 {
     if(!bLoading && hRet==S_OK)
     {
@@ -1355,7 +1355,7 @@ BOOL CDuiWindow::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
     return bRet;
 }
 
-HRESULT CDuiWindow::OnAttributeName(const CStringA& strValue, BOOL bLoading)
+HRESULT CDuiWindow::OnAttributeName(const CDuiStringA& strValue, BOOL bLoading)
 {
     if(m_uCmdID==0)
     {
@@ -1364,7 +1364,7 @@ HRESULT CDuiWindow::OnAttributeName(const CStringA& strValue, BOOL bLoading)
     return S_FALSE;
 }
 
-HRESULT CDuiWindow::OnAttributePosition(const CStringA& strValue, BOOL bLoading)
+HRESULT CDuiWindow::OnAttributePosition(const CDuiStringA& strValue, BOOL bLoading)
 {
     if (strValue.IsEmpty()) return E_FAIL;
 

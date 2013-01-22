@@ -14,7 +14,7 @@ namespace DuiEngine
 
 typedef struct tagLBITEM
 {
-    CString		strText;
+    CDuiStringT		strText;
     int			nImage;
     DWORD		dwData;
     LPARAM      lParam;
@@ -63,7 +63,7 @@ public:
 
     int GetText(int nIndex, LPTSTR lpszBuffer) const;
 
-    int GetText(int nIndex, CString& strText) const;
+    int GetText(int nIndex, CDuiStringT& strText) const;
 
     int GetTextLen(int nIndex) const;
 

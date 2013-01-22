@@ -10,7 +10,7 @@ namespace DuiEngine
 
 struct CBITEM
 {
-	CString strText;
+	CDuiStringT strText;
 	int iIcon;
 	LPARAM lParam;
 };

@@ -3,7 +3,7 @@
 namespace DuiEngine
 {
 
-template<class TClass,class TObj,class TKey=CStringA>
+template<class TClass,class TObj,class TKey=CDuiStringA>
 class DUI_EXP DuiSingletonMap :public Singleton<TClass>
 {
 public:

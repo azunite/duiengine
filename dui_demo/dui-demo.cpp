@@ -73,7 +73,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	*lpInsertPos = '\0';   
 
 	DefaultLogger loger;
-	loger.setLogFilename(CA2T(CStringA(szCurrentDir)+"\\dui-demo.log")); 
+	loger.setLogFilename(CA2T(CDuiStringA(szCurrentDir)+"\\dui-demo.log")); 
 	pDuiSystem->SetLogger(&loger);
 	pDuiSystem->InitName2ID(IDR_NAME2ID,"XML2");//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 
@@ -103,7 +103,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		{
 			//从ZIP文件加载皮肤
 			DuiResProviderZip *zipSkin=new DuiResProviderZip;
-			CString strZip=CA2T(szCurrentDir)+_T("\\def_skin.zip");
+			CDuiStringT strZip=CA2T(szCurrentDir)+_T("\\def_skin.zip");
 			if(!zipSkin->Init(strZip))
 			{ 
 				DUIASSERT(0);

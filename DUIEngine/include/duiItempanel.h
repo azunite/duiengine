@@ -70,7 +70,7 @@ public:
     void SetItemData(DWORD dwData);
     DWORD GetItemData();
 
-    BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CString &strTip);
+    BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip);
 
 protected:
     CDuiWindow * m_pFrmHost;

@@ -63,7 +63,7 @@ public:
     static ULONG Hash( INARGTYPE resid )
     {
         ULONG_PTR uRet=0;
-        CStringA strType=resid.szType;
+        CDuiStringA strType=resid.szType;
         strType.MakeLower();
         for(int i=0; i<strType.GetLength(); i++)
         {

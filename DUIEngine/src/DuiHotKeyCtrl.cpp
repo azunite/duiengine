@@ -59,7 +59,7 @@ void CDuiHotKeyCtrl::OnPaint( CDCHandle dc )
     ALPHAINFO alphaBack;
     if(GetContainer()->IsTranslucent())
         CGdiAlpha::AlphaBackup(dc,&rcClient,alphaBack);
-    CStringA str=FormatHotkey();
+    CDuiStringA str=FormatHotkey();
     DrawTextA(dc,str,str.GetLength(),&rcClient,DT_LEFT|DT_VCENTER|DT_SINGLELINE);
     if(GetContainer()->IsTranslucent())
         CGdiAlpha::AlphaRestore(dc,alphaBack);
@@ -68,7 +68,7 @@ void CDuiHotKeyCtrl::OnPaint( CDCHandle dc )
 
 void CDuiHotKeyCtrl::UpdateCaret()
 {
-    CStringA str=FormatHotkey();
+    CDuiStringA str=FormatHotkey();
     CDCHandle dc=GetDC(GetContainer()->GetHostHwnd());
     HFONT hOldFond=dc.SelectFont(m_hTxtFont);
     SIZE szTxt;
@@ -101,9 +101,9 @@ void CDuiHotKeyCtrl::OnKillDuiFocus()
 
 }
 
-CStringA CDuiHotKeyCtrl::GetKeyName(WORD vk)
+CDuiStringA CDuiHotKeyCtrl::GetKeyName(WORD vk)
 {
-    CStringA str;
+    CDuiStringA str;
     switch(vk)
     {
     case VK_ESCAPE:
@@ -143,7 +143,7 @@ CStringA CDuiHotKeyCtrl::GetKeyName(WORD vk)
         if((vk>='0' && m_wVK<='9')||(vk>='A' && vk<='Z'))
             str=(char)vk;
         else if(vk>=VK_F1 && vk<=VK_F9)
-            str=CStringA('F')+char(m_wVK-VK_F1+'1');
+            str=CDuiStringA('F')+char(m_wVK-VK_F1+'1');
         else if(vk==VK_F10)
             str+="F10";
         else if(vk==VK_F11)
@@ -175,10 +175,10 @@ CStringA CDuiHotKeyCtrl::GetKeyName(WORD vk)
     return str;
 }
 
-CStringA CDuiHotKeyCtrl::FormatHotkey()
+CDuiStringA CDuiHotKeyCtrl::FormatHotkey()
 {
     if(m_wModifier==0 && m_wVK==0) return "нч";
-    CStringA str="";
+    CDuiStringA str="";
     if(m_wModifier == HOTKEYF_ALT) str="Alt+";
     if(m_wModifier == HOTKEYF_CONTROL) str="Ctrl+";
     if(m_wModifier == HOTKEYF_SHIFT) str="Shift+";
@@ -217,7 +217,7 @@ void CDuiHotKeyCtrl::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
         m_wVK=0;
         m_wModifier=m_wInvalidModifier;
     }
-    CStringA strKey=GetKeyName(nChar);
+    CDuiStringA strKey=GetKeyName(nChar);
     if(!strKey.IsEmpty())
     {
         //

@@ -830,7 +830,7 @@ BOOL CDuiRichEdit::SetSaveSelection( BOOL fSaveSelection )
     return fResult;
 }
 
-HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStringA & strValue, BOOL bLoading)
+HRESULT CDuiRichEdit::DefAttributeProc(const CDuiStringA & strAttribName,const CDuiStringA & strValue, BOOL bLoading)
 {
     HRESULT hRet=S_FALSE;
     DWORD dwBit=0,dwMask=0;
@@ -920,7 +920,7 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CStringA & strAttribName,const CStr
     //password char
     else if(strAttribName=="passwordchar")
     {
-        CString strValueT=CA2T(strValue,CP_UTF8);
+        CDuiStringT strValueT=CA2T(strValue,CP_UTF8);
         m_chPasswordChar=strValueT[0];
     }
     //align
@@ -1165,7 +1165,7 @@ void CDuiRichEdit::SetSel(DWORD dwSelection, BOOL bNoScroll)
         DuiSendMessage(EM_SCROLLCARET, 0, 0L);
 }
 
-LRESULT CDuiRichEdit::OnSetTextColor( const CStringA &  strValue,BOOL bLoading )
+LRESULT CDuiRichEdit::OnSetTextColor( const CDuiStringA &  strValue,BOOL bLoading )
 {
     m_style.m_crText=CDuiObject::HexStringToColor(strValue);
     if(!bLoading)
