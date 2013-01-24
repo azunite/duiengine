@@ -439,8 +439,12 @@ void CDuiListBoxEx::OnLButtonDown(UINT nFlags,CPoint pt)
         }
     }
     m_iHoverItem=HitTest(pt);
+	if(m_iHoverItem!=m_iSelItem && !m_bHotTrack)
+	{
+		NotifySelChange(m_iSelItem,m_iHoverItem,WM_LBUTTONDOWN);
+	}
 
-    if(m_iHoverItem!=-1)
+	if(m_iHoverItem!=-1)
     {
         //pt 已经在HitTest中被修改过
         m_arrItems[m_iHoverItem]->DoFrameEvent(WM_LBUTTONDOWN,nFlags,MAKELPARAM(pt.x,pt.y));
@@ -465,7 +469,7 @@ void CDuiListBoxEx::OnLButtonUp(UINT nFlags,CPoint pt)
         m_arrItems[m_iHoverItem]->DoFrameEvent(WM_LBUTTONUP,nFlags,MAKELPARAM(pt.x,pt.y));
     }
 
-    if(m_iHoverItem!=m_iSelItem || m_bHotTrack)
+    if(m_iHoverItem!=m_iSelItem && m_bHotTrack)
         NotifySelChange(m_iSelItem,m_iHoverItem,WM_LBUTTONUP);
 
 }

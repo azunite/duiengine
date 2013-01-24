@@ -41,6 +41,20 @@ void CDuiItemPanel::OnFinalRelease()
 LRESULT CDuiItemPanel::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
     AddRef();
+
+	if(!IsDisabled() && m_pBgSkin && m_pBgSkin->GetStates()>1)
+	{
+		switch(uMsg)
+		{
+		case WM_MOUSEHOVER: 
+			ModifyState(DuiWndState_Hover,0,TRUE);
+			break;
+		case WM_MOUSELEAVE: 
+			ModifyState(0,DuiWndState_Hover,TRUE);
+			break;
+		}
+	}
+
     LRESULT lRet=__super::DoFrameEvent(uMsg,wParam,lParam);
     if(IsMsgHandled())
     {
@@ -111,14 +125,12 @@ BOOL CDuiItemPanel::OnReleaseDuiCapture()
 {
     if(!__super::OnReleaseDuiCapture()) return FALSE;
     m_pItemContainer->OnItemSetCapture(this,FALSE);
-// 	m_pFrmHost->DuiSendMessage(UM_ONITEMSETCAPTURE,0);
     return TRUE;
 }
 
 HDUIWND CDuiItemPanel::OnSetDuiCapture(HDUIWND hDuiWNd)
 {
     m_pItemContainer->OnItemSetCapture(this,TRUE);
-// 	m_pFrmHost->DuiSendMessage(UM_ONITEMSETCAPTURE,(WPARAM)this);
     return __super::OnSetDuiCapture(hDuiWNd);
 }
 
@@ -223,6 +235,45 @@ BOOL CDuiItemPanel::OnUpdateToolTip( HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CR
         rcTip.OffsetRect(rcItem.TopLeft());
     }
     return bRet;
+}
+
+LRESULT CDuiItemPanel::OnEraseBkgnd( CDCHandle dc )
+{
+	CRect rcClient;
+	GetClient(&rcClient);
+	if (!m_pBgSkin)
+	{
+		COLORREF crBg = m_style.m_crBg;
+
+		if (DuiWndState_Hover == (GetState() & DuiWndState_Hover) && CLR_INVALID != m_style.m_crBgHover)
+		{
+			crBg = m_style.m_crBgHover;
+		}
+
+		if (CLR_INVALID != crBg)
+			CGdiAlpha::FillSolidRect(dc,&rcClient, crBg);
+	}
+	else
+	{
+		int nState=0;
+		if(NeedRedrawWhenStateChange())
+		{
+			if(GetState()&DuiWndState_Disable)
+			{
+				nState=3;
+			}
+			else if(GetState()&DuiWndState_Check || GetState()&DuiWndState_PushDown)
+			{
+				nState=2;
+			}else if(GetState()&DuiWndState_Hover)
+			{
+				nState=1;
+			}
+			if(nState>=m_pBgSkin->GetStates()) nState=0;
+		}
+		m_pBgSkin->Draw(dc, rcClient, nState);
+	}
+	return TRUE;
 }
 
 }//namespace DuiEngine
