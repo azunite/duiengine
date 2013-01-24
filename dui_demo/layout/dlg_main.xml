@@ -81,7 +81,7 @@
           <button class="normalbtn" tabstop="1"  name="测试" pos="20,50,200,80">reposition</button>
         </tab>
         <tab id="117" title="duilistbox">
-          <listboxex name="mylist" pos="10,0,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088" itemskin="tabskin_default">
+          <listboxex name="mylist" pos="10,0,-10,-10" itemheight="30" crbg="ff0000" itemskin="skin_webbtn_forward">
             <items>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
@@ -128,41 +128,41 @@
           </listboxex>
         
       </tab>
-        <tab id="118" title="duitreebox">
-          <treebox pos="10,0,-10,-10" name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10">
-            <!--             <switch /> -->
-            <item>
-              <text pos="10,5" crtext="ff0000">red test</text>
-              <text>normal text</text>
-              <button class="normalbtn" pos="300,3,-10,-3">button</button>
-              <item>
-                <text pos="10,5" crtext="ff0000">red test</text>
-                <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
-              </item>
-              <item>
-                <text pos="10,5" crtext="ff0000">red test</text>
-                <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
-                <item>
-                  <text pos="10,5" crtext="ff0000">red test</text>
-                  <text>normal text</text>
-                  <button class="normalbtn" pos="300,3,-10,-3">button</button>
-                  <item>
-                    <text pos="10,5" crtext="ff0000">red test</text>
-                    <text>normal text</text>
-                    <button class="normalbtn" pos="300,3,-10,-3">button</button>
-                  </item>
-                </item>
-              </item>
-              <item>
-                <text pos="10,5" crtext="ff0000">red test</text>
-                <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
-              </item>
-            </item>
-          </treebox>
-        </tab>
+<!--         <tab id="118" title="duitreebox"> -->
+<!--           <treebox pos="10,0,-10,-10" name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10"> -->
+<!--             <!--             <switch /> --> -->
+<!--             <item> -->
+<!--               <text pos="10,5" crtext="ff0000">red test</text> -->
+<!--               <text>normal text</text> -->
+<!--               <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+<!--               <item> -->
+<!--                 <text pos="10,5" crtext="ff0000">red test</text> -->
+<!--                 <text>normal text</text> -->
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+<!--               </item> -->
+<!--               <item> -->
+<!--                 <text pos="10,5" crtext="ff0000">red test</text> -->
+<!--                 <text>normal text</text> -->
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+<!--                 <item> -->
+<!--                   <text pos="10,5" crtext="ff0000">red test</text> -->
+<!--                   <text>normal text</text> -->
+<!--                   <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+<!--                   <item> -->
+<!--                     <text pos="10,5" crtext="ff0000">red test</text> -->
+<!--                     <text>normal text</text> -->
+<!--                     <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+<!--                   </item> -->
+<!--                 </item> -->
+<!--               </item> -->
+<!--               <item> -->
+<!--                 <text pos="10,5" crtext="ff0000">red test</text> -->
+<!--                 <text>normal text</text> -->
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+<!--               </item> -->
+<!--             </item> -->
+<!--           </treebox> -->
+<!--         </tab> -->
         <tab id="119" title="duitreectrl">
      			<treectrl pos="10,0,-10,-10"  name="mytree1" itemhei="30" iconskin="TreeIcon" checkbox="1">
 					<item text="组织机构" img="0" selimg="1">

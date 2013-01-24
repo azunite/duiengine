@@ -95,6 +95,10 @@ HDC CDuiItemPanel::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
     CRect rcInvalid=rc;
     rcInvalid.OffsetRect(rcItem.TopLeft());
     HDC hdc=m_pFrmHost->GetDuiDC(rcInvalid,gdcFlags);
+	if(gdcFlags & OLEDC_PAINTBKGND)
+	{//调用frmhost的GetDuiDC时，不会绘制frmHost的背景。注意此外只画背景，不画前景,因为itempanel就是前景
+		m_pFrmHost->DuiSendMessage(WM_ERASEBKGND, (WPARAM)hdc);
+	}
     OffsetViewportOrgEx(hdc,rcItem.left,rcItem.top,NULL);
     return hdc;
 }
