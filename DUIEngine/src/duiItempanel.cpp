@@ -241,43 +241,4 @@ BOOL CDuiItemPanel::OnUpdateToolTip( HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CR
     return bRet;
 }
 
-LRESULT CDuiItemPanel::OnEraseBkgnd( CDCHandle dc )
-{
-	CRect rcClient;
-	GetClient(&rcClient);
-	if (!m_pBgSkin)
-	{
-		COLORREF crBg = m_style.m_crBg;
-
-		if (DuiWndState_Hover == (GetState() & DuiWndState_Hover) && CLR_INVALID != m_style.m_crBgHover)
-		{
-			crBg = m_style.m_crBgHover;
-		}
-
-		if (CLR_INVALID != crBg)
-			CGdiAlpha::FillSolidRect(dc,&rcClient, crBg);
-	}
-	else
-	{
-		int nState=0;
-		if(NeedRedrawWhenStateChange())
-		{
-			if(GetState()&DuiWndState_Disable)
-			{
-				nState=3;
-			}
-			else if(GetState()&DuiWndState_Check || GetState()&DuiWndState_PushDown)
-			{
-				nState=2;
-			}else if(GetState()&DuiWndState_Hover)
-			{
-				nState=1;
-			}
-			if(nState>=m_pBgSkin->GetStates()) nState=0;
-		}
-		m_pBgSkin->Draw(dc, rcClient, nState);
-	}
-	return TRUE;
-}
-
 }//namespace DuiEngine

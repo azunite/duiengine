@@ -284,12 +284,17 @@ void CDuiListBoxEx::OnPaint(CDCHandle dc)
     int iFirstVisible=m_ptOrgin.y/m_nItemHei;
     int nPageItems=(m_rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
 
+	CRect rcClip,rcInter;
+	int nClip=dc.GetClipBox(&rcClip);
+
     for(int iItem = iFirstVisible; iItem<GetItemCount() && iItem <iFirstVisible+nPageItems; iItem++)
     {
         CRect rcItem(0,0,m_rcClient.Width(),m_nItemHei);
         rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrgin.y);
         rcItem.OffsetRect(m_rcClient.TopLeft());
-        DrawItem(dc,rcItem,iItem);
+		rcInter.IntersectRect(&rcClip,&rcItem);
+		if(nClip==NULLREGION || !rcInter.IsRectEmpty())
+			DrawItem(dc,rcItem,iItem);
     }
 
     AfterPaint(dc,duiDC);

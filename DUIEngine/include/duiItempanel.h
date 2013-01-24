@@ -72,14 +72,7 @@ public:
 
     BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip);
 
-
-	LRESULT OnEraseBkgnd(CDCHandle dc);
 protected:
-
-	DUIWIN_BEGIN_MSG_MAP()
-		MSG_WM_ERASEBKGND(OnEraseBkgnd)
-	DUIWIN_END_MSG_MAP()
-
     CDuiWindow * m_pFrmHost;
     CDuiItemContainer * m_pItemContainer;
     COLORREF m_crBk, m_crSelBk;

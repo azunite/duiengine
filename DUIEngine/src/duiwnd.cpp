@@ -912,7 +912,20 @@ BOOL CDuiWindow::OnEraseBkgnd(CDCHandle dc)
     }
     else
     {
-        m_pBgSkin->Draw(dc, rcClient, NeedRedrawWhenStateChange()?(IIF_STATE4(GetState(), 0, 1, 2, 3)):0);
+		int nState=0;
+		if(GetState()&DuiWndState_Disable)
+		{
+			nState=3;
+		}
+		else if(GetState()&DuiWndState_Check || GetState()&DuiWndState_PushDown)
+		{
+			nState=2;
+		}else if(GetState()&DuiWndState_Hover)
+		{
+			nState=1;
+		}
+		if(nState>=m_pBgSkin->GetStates()) nState=0;
+		m_pBgSkin->Draw(dc, rcClient, nState); 
     }
     return TRUE;
 }
