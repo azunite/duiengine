@@ -29,7 +29,6 @@ CDuiWindow::CDuiWindow()
     , m_lSpecifyWidth(0)
     , m_lSpecifyHeight(0)
     , m_dwState(DuiWndState_Normal)
-    , m_uVAlign(0)
     , m_bMsgTransparent(FALSE)
     , m_bVisible(TRUE)
     , m_nSepSpace(2)
@@ -64,9 +63,9 @@ void CDuiWindow::OnFinalRelease()
 // Method Define
 
 // Get align
-UINT CDuiWindow::GetAlign()
+UINT CDuiWindow::GetTextAlign()
 {
-    return m_uVAlign ;
+    return m_style.GetTextAlign() ;
 }
 
 // Get position type
@@ -999,7 +998,7 @@ void CDuiWindow::OnPaint(CDCHandle dc)
 
     BeforePaint(dc, DuiDC);
 
-    DuiDrawText(dc,m_strInnerText, m_strInnerText.GetLength(), DuiDC.rcClient, m_style.m_nTextAlign|(m_style.m_bDotted?DT_END_ELLIPSIS:0));
+    DuiDrawText(dc,m_strInnerText, m_strInnerText.GetLength(), DuiDC.rcClient, GetTextAlign());
 
     AfterPaint(dc, DuiDC);
 
@@ -1090,9 +1089,9 @@ void CDuiWindow::OnCalcChildPos(CDuiWindow *pDuiWndChild)
             pPrevSibling->GetRect(&rcSibling);
             WndPos.x=rcSibling.right+m_nSepSpace;
             WndPos.y=rcSibling.top;
-            if(pDuiWndChild->GetAlign() & VAlign_Middle)
+            if(pDuiWndChild->GetTextAlign() & DT_VCENTER)
                 WndPos.y+=(rcSibling.Height()-sz.cy)/2;
-            else if(pDuiWndChild->GetAlign() & VAlign_Bottom)
+            else if(pDuiWndChild->GetTextAlign() & DT_BOTTOM)
                 WndPos.y+=rcSibling.Height()-sz.cy;
         }
     }
@@ -1198,7 +1197,7 @@ LRESULT CDuiWindow::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
 
         rcTest.DeflateRect(m_style.m_nMarginX, m_style.m_nMarginY);
 
-        int nTestDrawMode = m_style.m_nTextAlign & ~(DT_CENTER | DT_RIGHT | DT_VCENTER | DT_BOTTOM);
+        int nTestDrawMode = GetTextAlign() & ~(DT_CENTER | DT_RIGHT | DT_VCENTER | DT_BOTTOM);
 
         if (nTestDrawMode & DT_WORDBREAK)
             rcTest.bottom = 0x7FFF;

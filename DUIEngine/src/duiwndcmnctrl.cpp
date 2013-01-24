@@ -92,12 +92,12 @@ void CDuiLink::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT 
         DrawText(hdc,pszBuf,cchText,&rc,DT_LEFT|DT_CALCRECT);
         m_rcText=rc;
         m_rcText.right=min(rc.right,pRect->right);
-        if(m_style.m_nTextAlign&DT_VCENTER)
+        if(GetTextAlign()&DT_VCENTER)
         {
             m_rcText.top=pRect->top+ (pRect->bottom-pRect->top-rc.Height())/2;
             m_rcText.bottom=m_rcText.top+rc.Height();
         }
-        else if(m_style.m_nTextAlign&DT_BOTTOM)
+        else if(GetTextAlign()&DT_BOTTOM)
         {
             m_rcText.bottom=m_rcText.bottom;
             m_rcText.top=m_rcText.bottom-rc.Height();
@@ -1017,12 +1017,12 @@ void CDuiGroup::OnPaint(CDCHandle dc)
     CRect rcText=m_rcWindow;
     rcText.left+=GROUP_HEADER,rcText.right-=GROUP_HEADER;
     rcText.bottom=rcText.top+szFnt.cy+2;
-    if(m_style.m_nTextAlign & DT_CENTER)
+    if(GetTextAlign() & DT_CENTER)
     {
         rcText.left+=(rcText.Width()-szFnt.cx)/2;
         rcText.right=rcText.left+szFnt.cx;
     }
-    else if(m_style.m_nTextAlign & DT_RIGHT)
+    else if(GetTextAlign() & DT_RIGHT)
     {
         rcText.left=rcText.right-szFnt.cx;
     }

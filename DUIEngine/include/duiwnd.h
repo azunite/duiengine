@@ -137,11 +137,6 @@ public:
 
         Position_Mask       = 0x0300UL,
 
-        // Specify by "valign" attribute, only using at  panel control (Vert-Align)
-        Align_Mask				= 0xF000UL,
-        VAlign_Top				= 0x0000UL, // valign = top
-        VAlign_Middle			= 0x1000UL, // valign = middle
-        VAlign_Bottom			= 0x2000UL, // valign = bottom
     };
 
     struct DUIDLG_POSITION_ITEM
@@ -189,7 +184,6 @@ protected:
     LONG m_lSpecifyWidth;
     LONG m_lSpecifyHeight;
     DWORD m_dwState;
-    UINT m_uVAlign;
     CDuiStringT m_strLinkUrl;
     BOOL m_bMsgTransparent;		//不处理用户操作标志
     BOOL m_bVisible;
@@ -213,7 +207,7 @@ public:
     // Method Define
 
     // Get align
-    UINT GetAlign();	//tolua_export
+    UINT GetTextAlign();	//tolua_export
     // Get position type
     DWORD GetPositionType();//tolua_export
 
@@ -538,11 +532,6 @@ protected:
 	DUIWIN_UINT_ATTRIBUTE("state", m_dwState, FALSE)
     DUIWIN_TSTRING_ATTRIBUTE("href", m_strLinkUrl, FALSE)
     DUIWIN_TSTRING_ATTRIBUTE("tip", m_strToolTipText, FALSE)
-    DUIWIN_ENUM_ATTRIBUTE("valign", UINT, TRUE)
-    DUIWIN_ENUM_VALUE("top", VAlign_Top)
-    DUIWIN_ENUM_VALUE("middle", VAlign_Middle)
-    DUIWIN_ENUM_VALUE("bottom", VAlign_Bottom)
-    DUIWIN_ENUM_END(m_uVAlign)
     DUIWIN_CUSTOM_ATTRIBUTE("pos", OnAttributePosition)
     DUIWIN_INT_ATTRIBUTE("show", m_bVisible,FALSE)
     DUIWIN_INT_ATTRIBUTE("msgtransparent", m_bMsgTransparent, FALSE)

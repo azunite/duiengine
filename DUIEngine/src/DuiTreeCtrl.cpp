@@ -622,7 +622,7 @@ void CDuiTreeCtrl::CalaItemWidth(LPTVITEM pItem)
 
 	hftOld = dcTest.SelectFont(hftTest);
 
-	int nTestDrawMode = m_style.m_nTextAlign & ~(DT_CENTER | DT_RIGHT | DT_VCENTER | DT_BOTTOM);
+	int nTestDrawMode = GetTextAlign() & ~(DT_CENTER | DT_RIGHT | DT_VCENTER | DT_BOTTOM);
 
 	DuiDrawText(dcTest,pItem->strText, pItem->strText.GetLength(), rcTest, nTestDrawMode | DT_CALCRECT);
 

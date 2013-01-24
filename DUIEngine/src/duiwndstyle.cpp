@@ -14,8 +14,9 @@ namespace DuiEngine
 {
 
 DuiStyle::DuiStyle()
-    : m_uAlign(0)
-    , m_nTextAlign(DT_VCENTER | DT_SINGLELINE)
+    : m_uAlign(Align_Left)
+	, m_uVAlign(VAlign_Middle)
+    , m_nTextAlign(0)
     , m_crBg(CLR_INVALID)
     , m_crBgHover(CLR_INVALID)
     , m_crText(CLR_INVALID)
@@ -38,6 +39,24 @@ DuiStyle::DuiStyle()
 LPCSTR DuiStyle::GetName()
 {
     return m_strClassName;
+}
+
+UINT DuiStyle::GetTextAlign()
+{
+	if(m_nTextAlign) return m_nTextAlign;
+	UINT uRet=0;
+	switch(m_uAlign)
+	{
+	case Align_Center: uRet |= DT_CENTER;break;
+	case Align_Right: uRet|= DT_RIGHT;break;
+	}
+	switch(m_uVAlign)
+	{
+	case VAlign_Middle:uRet |= DT_VCENTER|DT_SINGLELINE;break;
+	case VAlign_Bottom:uRet|= DT_BOTTOM|DT_SINGLELINE;break;
+	}
+	if(m_bDotted) uRet|=DT_END_ELLIPSIS;
+	return uRet;
 }
 
 
