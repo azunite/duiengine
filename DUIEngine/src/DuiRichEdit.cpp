@@ -920,7 +920,7 @@ HRESULT CDuiRichEdit::DefAttributeProc(const CDuiStringA & strAttribName,const C
     //password char
     else if(strAttribName=="passwordchar")
     {
-        CDuiStringT strValueT=CA2T(strValue,CP_UTF8);
+        CDuiStringT strValueT=DUI_CA2T(strValue,CP_UTF8);
         m_chPasswordChar=strValueT[0];
     }
     //align

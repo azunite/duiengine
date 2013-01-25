@@ -207,8 +207,8 @@ BOOL DuiResProviderFiles::Init( LPCSTR pszPath )
             DuiResID id(pXmlElem->Attribute("type"));
             pXmlElem->Attribute("id",&(int)id.nID);
             CDuiStringA strFile = pXmlElem->Attribute("file");
-            CDuiStringW strFileW=CA2W(strFile,CP_UTF8);
-            strFile=CW2A(strFileW);
+            CDuiStringW strFileW=DUI_CA2W(strFile,CP_UTF8);
+            strFile=DUI_CW2A(strFileW);
             if(!m_strPath.IsEmpty()) strFile.Format("%s\\%s",(LPCSTR)m_strPath,(LPCSTR)strFile);
             m_mapFiles[id]=strFile;
         }

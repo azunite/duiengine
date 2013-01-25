@@ -97,7 +97,7 @@ public:
 
     virtual HRESULT SetAttributeW(const CDuiStringA &  strAttribName, const CDuiStringW &  strValue, BOOL bLoading)
     {
-        CDuiStringA strValueUTF8=CW2A(strValue,CP_UTF8);
+        CDuiStringA strValueUTF8=DUI_CW2A(strValue,CP_UTF8);
         return SetAttribute(strAttribName,strValueUTF8,bLoading);
     }
 

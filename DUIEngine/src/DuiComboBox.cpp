@@ -82,7 +82,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 		while(pItem)
 		{
 			CBITEM cbi={_T(""),0,0};
-			cbi.strText=CA2T(pItem->Attribute("text"),CP_UTF8);
+			cbi.strText=DUI_CA2T(pItem->Attribute("text"),CP_UTF8);
 			pItem->Attribute("icon",&cbi.iIcon);
 			const char *pszData=pItem->Attribute("data");
 			if(pszData) cbi.lParam=atoi(pszData);

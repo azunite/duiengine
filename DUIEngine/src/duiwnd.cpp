@@ -582,7 +582,7 @@ BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
     }
 
     {
-        m_strInnerText = CA2T(pTiXmlElem->GetText(), CP_UTF8);
+        m_strInnerText = DUI_CA2T(pTiXmlElem->GetText(), CP_UTF8);
         if (!m_strInnerText.IsEmpty()) DuiStringPool::getSingleton().BuildString(m_strInnerText);
     }
 

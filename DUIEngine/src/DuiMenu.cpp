@@ -319,7 +319,7 @@ void CDuiMenu::BuildMenu( HMENU menuPopup,TiXmlElement *pTiXmlMenu )
             pTiXmlItem->Attribute("radio",&bRadio);
             pTiXmlItem->Attribute("disable",&bDisable);
             pTiXmlItem->Attribute("icon",&pdmmi->itemInfo.iIcon);
-            pdmmi->itemInfo.strText=CA2T(pTiXmlItem->GetText(),CP_UTF8);
+            pdmmi->itemInfo.strText=DUI_CA2T(pTiXmlItem->GetText(),CP_UTF8);
 
             if(!pTiXmlItem->FirstChildElement())
             {

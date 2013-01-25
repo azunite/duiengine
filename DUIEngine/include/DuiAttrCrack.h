@@ -153,7 +153,7 @@ public:                                                             \
 #define DUIWIN_WSTRING_ATTRIBUTE(attribname, varname, allredraw)      \
 	if (attribname == strAttribName)                            \
 		{                                                           \
-		varname = CA2W(strValue, CP_UTF8);;                                     \
+		varname = DUI_CA2W(strValue, CP_UTF8);;                                     \
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \
@@ -163,7 +163,7 @@ public:                                                             \
 #define DUIWIN_TSTRING_ATTRIBUTE(attribname, varname, allredraw)     \
 	if (attribname == strAttribName)                            \
 		{                                                           \
-		varname = CA2T(strValue, CP_UTF8);                      \
+		varname = DUI_CA2T(strValue, CP_UTF8);                      \
 		DuiStringPool::getSingleton().BuildString(varname);						\
 		hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
@@ -196,7 +196,7 @@ public:                                                             \
 			{\
 			DWORD dwValue = CDuiObject::HexStringToULong(strValue,nPos);  \
 			CDuiStringA strFace=strValue.Right(strValue.GetLength()-nPos-1);\
-			CDuiStringT strFaceT=CA2T(strFace,CP_UTF8);\
+			CDuiStringT strFaceT=DUI_CA2T(strFace,CP_UTF8);\
 			varname = DuiFontPool::getSingleton().GetFont(LOWORD(dwValue),strFaceT);    \
 			}else\
 			{\

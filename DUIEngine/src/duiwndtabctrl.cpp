@@ -423,7 +423,7 @@ BOOL CDuiTabCtrl::LoadChildren( TiXmlElement* pTiXmlChildElem )
 
 BOOL CDuiTabCtrl::InsertItem( LPCWSTR lpContent ,int iInsert/*=-1*/)
 {
-    CDuiStringA utf8_xml=CW2A(lpContent,CP_UTF8);
+    CDuiStringA utf8_xml=DUI_CW2A(lpContent,CP_UTF8);
     TiXmlDocument * doc = new TiXmlDocument();
     doc->Parse( utf8_xml );
 

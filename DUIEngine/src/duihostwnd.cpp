@@ -159,7 +159,7 @@ BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
     }
     ModifyStyle(0,m_dwDlgStyle);
     ModifyStyleEx(0,m_dwDlgExStyle);
-    SetWindowText(CA2T(m_strWindowCaption,CP_UTF8));
+    SetWindowText(DUI_CA2T(m_strWindowCaption,CP_UTF8));
     if(!m_strWindowCaption.IsEmpty())
     {
         DuiSkinPool::getSingleton().LoadSkins(m_strWindowCaption);	//load skin only used in the host window
@@ -586,7 +586,7 @@ LRESULT CDuiHostWnd::OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
             if(bUpdate)
             {
                 m_pTipCtrl->m_dwHostID=hNewTipHost;
-                m_pTipCtrl->UpdateTip(rcTip,CT2A(strTip));
+                m_pTipCtrl->UpdateTip(rcTip,DUI_CT2A(strTip));
             }
         }
     }

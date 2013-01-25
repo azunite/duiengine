@@ -79,7 +79,7 @@ BOOL DuiStringPool::Init(UINT uResID)
         uStringID = (UINT)(ULONG)::StrToIntA(lpszStringID);
         CDuiStringA str=pXmlChild->GetText();
         if(str.IsEmpty()) str=pXmlChild->Attribute("text");
-        AddKeyObject(uStringID,CDuiStringT(CA2T(str, CP_UTF8)));
+        AddKeyObject(uStringID,CDuiStringT(DUI_CA2T(str, CP_UTF8)));
     }
 
     return TRUE;

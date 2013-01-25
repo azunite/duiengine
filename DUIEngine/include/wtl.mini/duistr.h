@@ -873,23 +873,20 @@ typedef  CDuiStringW CDuiStringT;
 typedef  CDuiStringA CDuiStringT;
 #endif // UNICODE
 
-#ifndef NO_DUISTR
-
-#define CA2W DuiEngine::CDuiStrCpCvt::CvtA2W
-#define CW2A DuiEngine::CDuiStrCpCvt::CvtW2A
-#define CA2A DuiEngine::CDuiStrCpCvt::CvtA2A
-#define CW2W DuiEngine::CDuiStrCpCvt::CvtW2W
+#define DUI_CA2W CDuiStrCpCvt::CvtA2W
+#define DUI_CW2A CDuiStrCpCvt::CvtW2A
+#define DUI_CA2A CDuiStrCpCvt::CvtA2A
+#define DUI_CW2W CDuiStrCpCvt::CvtW2W
 
 #ifdef UNICODE
-#define CA2T CA2W
-#define CT2A CW2A
-#define CW2T CW2W
-#define CT2W CW2W
+#define DUI_CA2T DUI_CA2W
+#define DUI_CT2A DUI_CW2A
+#define DUI_CW2T DUI_CW2W
+#define DUI_CT2W DUI_CW2W
 #else
-#define CA2T CA2A
-#define CT2A CA2A
-#define CW2T CW2A
-#define CT2W CA2W
+#define DUI_CA2T DUI_CA2A
+#define DUI_CT2A DUI_CA2A
+#define DUI_CW2T DUI_CW2A
+#define DUI_CT2W DUI_CA2W
 #endif // UNICODE
 
-#endif //NO_DUISTR

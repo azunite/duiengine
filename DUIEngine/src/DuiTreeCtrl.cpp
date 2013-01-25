@@ -384,7 +384,7 @@ void CDuiTreeCtrl::LoadItemAttribute(TiXmlElement *pTiXmlItem, LPTVITEM pItem)
 	for (TiXmlAttribute *pAttrib = pTiXmlItem->FirstAttribute(); NULL != pAttrib; pAttrib = pAttrib->Next())
 	{
 		if ( !_stricmp(pAttrib->Name(), "text"))
-			pItem->strText = CA2T(pAttrib->Value(), CP_UTF8); 
+			pItem->strText = DUI_CA2T(pAttrib->Value(), CP_UTF8); 
 		else if ( !_stricmp(pAttrib->Name(), "img"))
 			pItem->nImage = atoi(pAttrib->Value());
 		else if ( !_stricmp(pAttrib->Name(), "selimg"))

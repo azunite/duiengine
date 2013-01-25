@@ -314,7 +314,7 @@ void CDuiListBox::LoadItemAttribute(TiXmlElement *pTiXmlItem, LPLBITEM pItem)
         else if ( !_stricmp(pAttrib->Name(), "data"))
             pItem->dwData = atol(pAttrib->Value());
     }
-    pItem->strText =  CA2T(pTiXmlItem->GetText(), CP_UTF8);
+    pItem->strText =  DUI_CA2T(pTiXmlItem->GetText(), CP_UTF8);
     DuiStringPool::getSingleton().BuildString(pItem->strText);
 }
 
