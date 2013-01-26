@@ -19,50 +19,56 @@ namespace DuiEngine
 {
 
 
-CDuiImageList::CDuiImageList():m_lSubImageWidth(0),m_bTile(FALSE)
+CDuiImageList::CDuiImageList():m_lSubImageWidth(0),m_nStates(0),m_bTile(FALSE)
 {
 
-}
-
-void CDuiImageList::SetPropTile(BOOL bTile)
-{
-    m_bTile=bTile;
 }
 
 void CDuiImageList::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha)
 {
-    SIZE sz=GetSkinSize();
     if(m_pDuiImg)
-    {
-        ExtentBlt(m_pDuiImg,m_bTile,dc,rcDraw.left,rcDraw.top,rcDraw.Width(),rcDraw.Height(),dwState*sz.cx,0,sz.cx,sz.cy,byAlpha);
-    }
+	{
+		SIZE sz=GetSkinSize();
+		ExtentBlt(m_pDuiImg,m_bTile,dc,rcDraw.left,rcDraw.top,rcDraw.Width(),rcDraw.Height(),dwState*sz.cx,0,sz.cx,sz.cy,byAlpha);
+	}
 }
 
 SIZE CDuiImageList::GetSkinSize()
 {
     SIZE ret = {0, 0};
-
     if(m_pDuiImg) m_pDuiImg->GetImageSize(ret);
-
-    if (0 != m_lSubImageWidth)
-        ret.cx = m_lSubImageWidth;
-
+    ret.cx = m_lSubImageWidth;
     return ret;
 }
 
 BOOL CDuiImageList::IgnoreState()
 {
-    return (0 == m_lSubImageWidth);
+    return GetStates()==1;
 }
 
 int CDuiImageList::GetStates()
 {
-    if(0 == m_lSubImageWidth)
-        return 1;
-    else
-        return m_pDuiImg->GetWidth()/m_lSubImageWidth;
+	return m_nStates;
 }
 
+void CDuiImageList::OnAttributeFinish( TiXmlElement* pXmlElem )
+{
+	__super::OnAttributeFinish(pXmlElem);
+
+	DUIASSERT(m_pDuiImg);
+	if(0 != m_lSubImageWidth)
+	{
+		if(0== m_nStates) //定义了子图宽度，没有定义子图数量
+			m_nStates=m_pDuiImg->GetWidth()/m_lSubImageWidth;
+	}else if(0 != m_nStates)
+	{//定义了子图数量，没有定义子图宽度
+		m_lSubImageWidth = m_pDuiImg->GetWidth()/m_nStates;
+	}else
+	{//两者都没有定义
+		m_nStates=1;
+		m_lSubImageWidth=m_pDuiImg->GetWidth();
+	}
+}
 
 CDuiSkinImgFrame::CDuiSkinImgFrame()
     : m_crBg(CLR_INVALID)
@@ -76,18 +82,16 @@ CDuiSkinImgFrame::CDuiSkinImgFrame()
 
 void CDuiSkinImgFrame::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha)
 {
-    SIZE sz;
     if(!m_pDuiImg) return;
-    m_pDuiImg->GetImageSize(sz);
-    int nWid=m_lSubImageWidth;
-    if(nWid==0) nWid=sz.cx;
-    CRect rcSour(dwState*nWid,0,(dwState+1)*nWid,sz.cy);
+	SIZE sz=GetSkinSize();
+    CRect rcSour(dwState*sz.cx,0,(dwState+1)*sz.cx,sz.cy);
 
     FrameDraw(dc, m_pDuiImg , rcSour,rcDraw, CRect(m_lSkinParamLeft, m_lSkinParamTop,m_lSkinParamRight,m_lSkinParamBottom), m_crBg, m_uDrawPart,m_bTile,byAlpha);
 }
 
 void CDuiSkinImgFrame::OnAttributeFinish(TiXmlElement* pXmlElem)
 {
+	__super::OnAttributeFinish(pXmlElem);
     if(m_lSkinParamRight==-1) m_lSkinParamRight=m_lSkinParamLeft;
     if(m_lSkinParamBottom==-1) m_lSkinParamBottom=m_lSkinParamTop;
 }

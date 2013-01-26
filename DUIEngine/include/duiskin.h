@@ -39,7 +39,6 @@ class DUI_EXP CDuiImageList: public CDuiSkinBase
 public:
     CDuiImageList();
 
-    void SetPropTile(BOOL bTile);
     virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha);
 
     virtual SIZE GetSkinSize();
@@ -47,11 +46,15 @@ public:
     virtual BOOL IgnoreState();
     virtual int GetStates();
 protected:
+	virtual void OnAttributeFinish(TiXmlElement* pXmlElem);
+
     LONG m_lSubImageWidth;
+	int  m_nStates;
     BOOL m_bTile;
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_INT_ATTRIBUTE("subwidth", m_lSubImageWidth, TRUE)
     DUIWIN_INT_ATTRIBUTE("tile", m_bTile, TRUE)
+	DUIWIN_INT_ATTRIBUTE("states",m_nStates,TRUE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 };
 
@@ -64,10 +67,10 @@ public:
 
     virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha);
 
-    virtual void OnAttributeFinish(TiXmlElement* pXmlElem);
-    void SetMargin(int nLeft,int nTop,int nRight,int nBottom);
-
+	void SetMargin(int nLeft,int nTop,int nRight,int nBottom);
 protected:
+	virtual void OnAttributeFinish(TiXmlElement* pXmlElem);
+
     LONG m_lSkinParamLeft;
     LONG m_lSkinParamTop;
     LONG m_lSkinParamRight;

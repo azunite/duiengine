@@ -1,3 +1,9 @@
+2013年1月26日
+1、将字符串内码转换宏如CA2T等加上前缀DUI_，避免与ATL冲突。
+2、为CSkinImgList对象增加属性states，代表在图中有多少个子图，用于替代来的的subwidth属性，两个属性可以单独使用，也可以同时使用。
+3、检查系统中OnAttributeFinish虚函数的调用，补上在部分调用中没有调用基类接口的问题。
+4、检查demo及template工程，保证编译通过。
+
 2013年1月8日（重要更新）
 1、实现DUI版本CString。
 2、从ATL中提取map,array,list集合实现CDuiMap,CDuiArray,CDuiList。

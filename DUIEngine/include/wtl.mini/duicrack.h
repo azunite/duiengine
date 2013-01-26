@@ -55,7 +55,6 @@ public: \
 		{ \
 		case 0:
 
-
 #define END_MSG_MAP() \
 	break; \
 		default: \

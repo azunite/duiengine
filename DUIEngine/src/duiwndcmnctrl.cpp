@@ -113,6 +113,7 @@ void CDuiLink::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT 
 
 void CDuiLink::OnAttributeFinish( TiXmlElement* pXmlElem )
 {
+	__super::OnAttributeFinish(pXmlElem);
     if(m_strToolTipText.IsEmpty()) m_strToolTipText=m_strLinkUrl;
 }
 

@@ -141,8 +141,8 @@ namespace DuiEngine{
 				DuiResID id(pXmlElem->Attribute("type"));
 				pXmlElem->Attribute("id",&(int)id.nID);
 				CDuiStringA strFile = pXmlElem->Attribute("file");
-				CDuiStringW strFileW=CA2W(strFile,CP_UTF8);
-				m_mapFiles[id]=CW2T(strFileW,CP_ACP);
+				CDuiStringW strFileW=DUI_CA2W(strFile,CP_UTF8);
+				m_mapFiles[id]=DUI_CW2T(strFileW,CP_ACP);
 			}
 			pXmlElem=pXmlElem->NextSiblingElement();
 		}

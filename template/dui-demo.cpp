@@ -21,7 +21,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 	DuiSystem duiSystem(hInstance);
 	DefaultLogger loger;
-	loger.setLogFilename(CA2T(CStringA(szCurrentDir)+"\\dui-demo.log"));
+	loger.setLogFilename(DUI_CA2T(CDuiStringA(szCurrentDir)+"\\dui-demo.log"));
 	duiSystem.SetLogger(&loger);
 
 	duiSystem.logEvent(_T("demo started"));
@@ -41,7 +41,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	duiSystem.SetResProvider(new DuiResProviderPE(hInstance));
 #endif 
 	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义
-	DuiString::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
+	DuiStringPool::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
 	DuiFontPool::getSingleton().SetDefaultFont(_T("宋体"), -12); // 设置字体
 	DuiSkinPool::getSingleton().Init(IDR_DUI_SKIN_DEF); // 加载皮肤
 	DuiStylePool::getSingleton().Init(IDR_DUI_STYLE_DEF); // 加载风格

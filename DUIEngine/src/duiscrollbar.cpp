@@ -135,6 +135,7 @@ end:
 
 void CDuiScrollBar::OnAttributeFinish(TiXmlElement* pXmlElem)
 {
+	__super::OnAttributeFinish(pXmlElem);
     DUIASSERT(m_pSkin);
     if(m_uAllowSize==-1)
     {
