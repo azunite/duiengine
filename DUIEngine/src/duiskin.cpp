@@ -72,11 +72,8 @@ void CDuiImageList::OnAttributeFinish( TiXmlElement* pXmlElem )
 
 CDuiSkinImgFrame::CDuiSkinImgFrame()
     : m_crBg(CLR_INVALID)
-    , m_lSkinParamLeft(0)
-    , m_lSkinParamTop(0)
-    , m_lSkinParamRight(-1)
-    , m_lSkinParamBottom(-1)
     , m_uDrawPart(Frame_Part_All)
+	, m_rcMargin(0,0,-1,-1)
 {
 }
 
@@ -86,22 +83,35 @@ void CDuiSkinImgFrame::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlp
 	SIZE sz=GetSkinSize();
     CRect rcSour(dwState*sz.cx,0,(dwState+1)*sz.cx,sz.cy);
 
-    FrameDraw(dc, m_pDuiImg , rcSour,rcDraw, CRect(m_lSkinParamLeft, m_lSkinParamTop,m_lSkinParamRight,m_lSkinParamBottom), m_crBg, m_uDrawPart,m_bTile,byAlpha);
+    FrameDraw(dc, m_pDuiImg , rcSour,rcDraw, m_rcMargin, m_crBg, m_uDrawPart,m_bTile,byAlpha);
 }
 
 void CDuiSkinImgFrame::OnAttributeFinish(TiXmlElement* pXmlElem)
 {
 	__super::OnAttributeFinish(pXmlElem);
-    if(m_lSkinParamRight==-1) m_lSkinParamRight=m_lSkinParamLeft;
-    if(m_lSkinParamBottom==-1) m_lSkinParamBottom=m_lSkinParamTop;
+	if(m_rcMargin.right==-1)
+	{
+		DUIASSERT(m_lSubImageWidth>=m_rcMargin.left);
+		if(m_lSubImageWidth>m_rcMargin.left*2)
+			m_rcMargin.right=m_rcMargin.left;
+		else
+			m_rcMargin.right=0;
+	}
+	if(m_rcMargin.bottom==-1)
+	{
+		DUIASSERT(m_pDuiImg);
+		int nHei=m_pDuiImg->GetHeight();
+		DUIASSERT(nHei>=m_rcMargin.top);
+		if(nHei>m_rcMargin.top*2)
+			m_rcMargin.bottom=m_rcMargin.top;
+		else
+			m_rcMargin.bottom=0;
+	}
 }
 
 void CDuiSkinImgFrame::SetMargin(int nLeft,int nTop,int nRight,int nBottom)
 {
-    m_lSkinParamLeft=nLeft;
-    m_lSkinParamRight=nRight;
-    m_lSkinParamTop=nTop;
-    m_lSkinParamBottom=nBottom;
+	m_rcMargin.SetRect(nLeft,nTop,nRight,nBottom);
 }
 
 CDuiSkinButton::CDuiSkinButton()

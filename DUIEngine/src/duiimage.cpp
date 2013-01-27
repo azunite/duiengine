@@ -295,6 +295,8 @@ int CDuiImgX::GetHeight()
 BOOL CDuiImgX::BitBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,BYTE byAlpha/*=0xFF*/)
 {
     if(IsEmpty()) return FALSE;
+	if(nWid==0 || nHei==0) return TRUE;
+
     Gdiplus::Graphics graphics(hdc);
     Gdiplus::ImageAttributes *pImgAttr=NULL;
     if(byAlpha!=0xFF)

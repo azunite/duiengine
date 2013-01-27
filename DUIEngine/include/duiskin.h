@@ -71,19 +71,16 @@ public:
 protected:
 	virtual void OnAttributeFinish(TiXmlElement* pXmlElem);
 
-    LONG m_lSkinParamLeft;
-    LONG m_lSkinParamTop;
-    LONG m_lSkinParamRight;
-    LONG m_lSkinParamBottom;
+	CRect m_rcMargin;
     COLORREF m_crBg;
     UINT m_uDrawPart;
 public:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_COLOR_ATTRIBUTE("crbg", m_crBg, TRUE)
-    DUIWIN_INT_ATTRIBUTE("left", m_lSkinParamLeft, TRUE)
-    DUIWIN_INT_ATTRIBUTE("top", m_lSkinParamTop, TRUE)
-    DUIWIN_INT_ATTRIBUTE("right", m_lSkinParamRight, TRUE)
-    DUIWIN_INT_ATTRIBUTE("bottom", m_lSkinParamBottom, TRUE)
+    DUIWIN_INT_ATTRIBUTE("left", m_rcMargin.left, TRUE)
+    DUIWIN_INT_ATTRIBUTE("top", m_rcMargin.top, TRUE)
+    DUIWIN_INT_ATTRIBUTE("right", m_rcMargin.right, TRUE)
+    DUIWIN_INT_ATTRIBUTE("bottom", m_rcMargin.bottom, TRUE)
     DUIWIN_ENUM_ATTRIBUTE("part", UINT, TRUE)
     DUIWIN_ENUM_VALUE("all", Frame_Part_All)
     DUIWIN_ENUM_VALUE("top", (Frame_Part_All & ~Frame_Part_Bottom))
