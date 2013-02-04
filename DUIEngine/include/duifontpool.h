@@ -89,9 +89,9 @@ class DUI_EXP DuiFontPool :public DuiSingletonMap<DuiFontPool,HFONT,FontKey>
 public:
     DuiFontPool();
 
-    HFONT GetFont(WORD uKey,CDuiStringT strFaceName=_T(""));
+    HFONT GetFont(WORD uKey,LPCTSTR strFaceName=_T(""));
 
-    HFONT GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding = 0,CDuiStringT strFaceName=_T(""));
+    HFONT GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding = 0,LPCTSTR strFaceName=_T(""));
     void SetDefaultFont(LPCTSTR lpszFaceName, LONG lSize);
 protected:
     static void OnKeyRemoved(const HFONT & obj)

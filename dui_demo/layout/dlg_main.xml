@@ -56,14 +56,7 @@
               <item text="combobox.item6" icon="0" data="100"/>                          
             </items>
           </combobox>          
-          <listboxex name="mylist2" pos="-100,10,-10,-10" itemheight="30" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
-            <items>
-              <item>
-                <text pos="10,5" crtext="ff0000">red test afeaafeiafeja afeiafeji</text>
-              </item>
-            </items>
-          </listboxex>
-          <realwnd name="realwnd_edit1" id="1309" wndclass="edit" pos="-200,10,-110,40"/>
+          <realwnd name="realwnd_edit1" id="1309" wndclass="edit" pos="-200,50,-110,80"/>
         </tab>
         <tab id="114" title="richedit">
           <richedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,0,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left" hscrollbar="1" autohscroll="1">richedit test 2012 中文字体</richedit>
@@ -86,43 +79,43 @@
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" id="20" pos="300,3,-10,-3" tip="list item tip">button</button>
+<!--                 <button class="normalbtn" id="20" pos="300,3,-10,-3" tip="list item tip">button</button> -->
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" id="21" pos="300,3,-10,-3"  tip="list item tip2">button</button>
+<!--                 <button class="normalbtn" id="21" pos="300,3,-10,-3"  tip="list item tip2">button</button> -->
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
                 <scrollbar pos="300,3,-10,-3" vertical="0" skin="sb_common" min="0" max="100" page="10" value="5"/>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <button class="normalbtn" pos="300,3,-10,-3">button</button>
+<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
               </item>
             </items>
           </listboxex>

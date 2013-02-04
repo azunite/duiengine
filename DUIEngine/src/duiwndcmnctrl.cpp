@@ -165,11 +165,16 @@ void CDuiLink::OnMouseHover( WPARAM wParam, CPoint pt )
 // Usage: <button id=xx>inner text example</button>
 //
 
+CDuiButton::CDuiButton() :m_bTabStop(FALSE),m_pSkin(NULL)
+{
+
+}
+
 void CDuiButton::OnPaint(CDCHandle dc)
 {
-    if (m_pBgSkin)
+    if (m_pSkin)
     {
-        m_pBgSkin->Draw(dc, m_rcWindow, IIF_STATE4(GetState(), 0, 1, 2, 3));
+        m_pSkin->Draw(dc, m_rcWindow, IIF_STATE4(GetState(), 0, 1, 2, 3));
     }
 
     __super::OnPaint(dc);
@@ -946,7 +951,7 @@ void CDuiRadioBox::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
 
 //////////////////////////////////////////////////////////////////////////
 // CDuiToggle
-CDuiToggle::CDuiToggle():m_bToggled(FALSE)
+CDuiToggle::CDuiToggle():m_bToggled(FALSE),m_pSkin(NULL)
 {
 
 }
@@ -964,12 +969,12 @@ BOOL CDuiToggle::GetToggle()
 
 void CDuiToggle::OnPaint(CDCHandle dc)
 {
-    DUIASSERT(m_pBgSkin);
+    DUIASSERT(m_pSkin);
     DWORD nState=0;
     if(GetState()&DuiWndState_Hover) nState=2;
     else if(GetState()&DuiWndState_Check) nState=3;
     if(m_bToggled) nState+=3;
-    m_pBgSkin->Draw(dc,m_rcWindow,nState);
+    m_pSkin->Draw(dc,m_rcWindow,nState);
 }
 
 void CDuiToggle::OnLButtonUp(UINT nFlags,CPoint pt)
@@ -982,10 +987,10 @@ LRESULT CDuiToggle::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
 {
     __super::OnCalcSize(bCalcValidRects, pSize);
 
-    if (m_pBgSkin && m_dlgpos.nCount==2)	// 如果设置的pos参数是2个则重新计算矩形大小
+    if (m_pSkin && m_dlgpos.nCount==2)	// 如果设置的pos参数是2个则重新计算矩形大小
     {
         SIZE sizeImage;
-        sizeImage = m_pBgSkin->GetSkinSize();
+        sizeImage = m_pSkin->GetSkinSize();
 
         if (sizeImage.cx)
             pSize->cx = sizeImage.cx;

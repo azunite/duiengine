@@ -21,7 +21,7 @@ DuiFontPool::DuiFontPool()
     SetKeyObject(FontKey(DUIF_DEFAULTFONT),_CreateDefaultGUIFont());
 }
 
-HFONT DuiFontPool::GetFont(WORD uKey,CDuiStringT strFaceName)
+HFONT DuiFontPool::GetFont(WORD uKey,LPCTSTR strFaceName)
 {
     HFONT hftRet=0;
     FontKey key(uKey,strFaceName);
@@ -41,7 +41,7 @@ HFONT DuiFontPool::GetFont(WORD uKey,CDuiStringT strFaceName)
     return hftRet;
 }
 
-HFONT DuiFontPool::GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding /*= 0*/,CDuiStringT strFaceName/*=""*/)
+HFONT DuiFontPool::GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdding /*= 0*/,LPCTSTR strFaceName/*=""*/)
 {
     return GetFont(DUIF_MAKEKEY(bBold, bUnderline, bItalic, chAdding),strFaceName);
 }

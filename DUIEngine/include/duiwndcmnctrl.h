@@ -105,12 +105,8 @@ class DUI_EXP CDuiButton : public CDuiWindow
 {
     DUIOBJ_DECLARE_CLASS_NAME(CDuiButton, "button")
 public:
-    CDuiButton():m_bTabStop(FALSE)
-    {
-
-    }
+    CDuiButton();
 protected:
-    BOOL m_bTabStop;
 
     virtual BOOL NeedRedrawWhenStateChange()
     {
@@ -139,9 +135,12 @@ protected:
 
     void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
+	BOOL m_bTabStop;
+	CDuiSkinBase *m_pSkin;
 public:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_INT_ATTRIBUTE("tabstop", m_bTabStop, FALSE)
+	DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()
@@ -539,6 +538,7 @@ protected:
     LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_INT_ATTRIBUTE("toggled", m_bToggled, TRUE)
+    DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, TRUE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()
@@ -548,6 +548,7 @@ protected:
     DUIWIN_END_MSG_MAP()
 protected:
     BOOL m_bToggled;
+	CDuiSkinBase *m_pSkin;
 };
 
 //<group crline1="b8d5e2" crline2="999999">group text</>
