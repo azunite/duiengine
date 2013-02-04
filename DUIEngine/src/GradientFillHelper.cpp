@@ -1,25 +1,11 @@
 #include "duistd.h"
 #include "GradientFillHelper.h"
+#include <Wingdi.h>
+#pragma comment(lib,"msimg32.lib")
 
 namespace DuiEngine
 {
 
-
-typedef BOOL (WINAPI * FnGradientFill)(HDC, PTRIVERTEX, ULONG, PVOID, ULONG, ULONG);
-
-BOOL GradientFill2(HDC hDC, PTRIVERTEX pVertices, DWORD nVertices, PVOID pMeshElements, ULONG nMeshElements, ULONG dwMode)
-{
-    HMODULE hMod = ::LoadLibrary(_T("msimg32.dll"));
-    if (hMod)
-    {
-        FnGradientFill pfnGradientFill = (FnGradientFill)::GetProcAddress(hMod, "GradientFill");
-        if (pfnGradientFill)
-            pfnGradientFill(hDC, pVertices, nVertices, pMeshElements, nMeshElements, dwMode);
-        ::FreeLibrary(hMod);
-    }
-
-    return TRUE;
-}
 
 void GradientFillRectV(HDC hdc, CRect &rcFill, FRG_PARAM params[], int nCount)
 {
@@ -42,11 +28,7 @@ void GradientFillRectV(HDC hdc, CRect &rcFill, FRG_PARAM params[], int nCount)
         vert[1].Green   = GetGValue(params[i].crColor) << 8;
         vert[1].Blue    = GetBValue(params[i].crColor) << 8;
 
-        HMODULE hMod = ::LoadLibrary(_T("msimg32.dll"));
-        if (hMod)
-        {
-            GradientFill2(hdc, vert, 2, &gRect, 1, GRADIENT_FILL_RECT_V);
-        }
+        GradientFill(hdc, vert, 2, &gRect, 1, GRADIENT_FILL_RECT_V);
     }
 }
 
@@ -70,7 +52,7 @@ void GradientFillRectH(HDC hdc, CRect &rcFill, FRG_PARAM params[], int nCount)
         vert[1].Red     = GetRValue(params[i].crColor) << 8;
         vert[1].Green   = GetGValue(params[i].crColor) << 8;
         vert[1].Blue    = GetBValue(params[i].crColor) << 8;
-        GradientFill2(hdc, vert, 2, &gRect, 1, GRADIENT_FILL_RECT_H);
+        GradientFill(hdc, vert, 2, &gRect, 1, GRADIENT_FILL_RECT_H);
     }
 }
 
