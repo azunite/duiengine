@@ -157,4 +157,61 @@ void DuiSystem::logEvent(LoggingLevel level , LPCTSTR pszFormat, ...)
     m_pLogger->logEvent(szBuffer,level);
 }
 
+BOOL DuiSystem::Init( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/ )
+{
+	TiXmlDocument xmlDoc;
+	if(!LoadXmlDocment(&xmlDoc,uXmlResID,pszType)) return FALSE;
+	//set default font
+	TiXmlElement *pXmlFont=xmlDoc.RootElement()->FirstChildElement("font");
+	if(pXmlFont)
+	{
+		int nSize=12;
+		pXmlFont->Attribute("size",&nSize);
+		DuiFontPool::getSingleton().SetDefaultFont(DUI_CA2T(pXmlFont->Attribute("face")),nSize);
+	}
+	//load string table
+	TiXmlElement *pXmlStrTable=xmlDoc.RootElement()->FirstChildElement("string");
+	if(pXmlStrTable)
+	{
+		DuiStringPool::getSingleton().Init(pXmlStrTable);
+	}
+	//load style table
+	TiXmlElement *pXmlStyles=xmlDoc.RootElement()->FirstChildElement("style");
+	if(pXmlStrTable)
+	{
+		DuiStylePool::getSingleton().Init(pXmlStyles);
+	}
+	//load skin
+	TiXmlElement *pXmlSkins=xmlDoc.RootElement()->FirstChildElement("skins");
+	if(pXmlStrTable)
+	{
+		DuiSkinPool::getSingleton().Init(pXmlSkins);
+	}
+	//load objattr
+	TiXmlElement *pXmlObjAttr=xmlDoc.RootElement()->FirstChildElement("objattr");
+	if(pXmlStrTable)
+	{
+		DuiCSS::getSingleton().Init(pXmlObjAttr);
+	}
+	return TRUE;
+}
+
+BOOL DuiSystem::LoadXmlDocment(TiXmlDocument *pXmlDoc, UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/ )
+{
+	DUIASSERT(GetResProvider());
+	DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
+	if(!pRes) return FALSE;
+
+	DWORD dwSize=pRes->GetRawBufferSize(pszType,uXmlResID);
+	if(dwSize==0) return FALSE;
+
+	CMyBuffer<char> strXml;
+	strXml.Allocate(dwSize);
+	pRes->GetRawBuffer(pszType,uXmlResID,strXml,dwSize);
+
+	pXmlDoc->Parse(strXml, NULL, TIXML_ENCODING_UTF8);
+
+	return !pXmlDoc->Error();
+}
+
 }//namespace DuiEngine

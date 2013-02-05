@@ -42,47 +42,33 @@ BOOL DuiStringPool::BuildString(CDuiStringT &strContainer)
 
 BOOL DuiStringPool::Init(UINT uResID)
 {
-    DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
-    if(!pRes) return FALSE;
+	TiXmlDocument xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,uResID)) return FALSE;
+	return Init(xmlDoc.RootElement());
+}
 
-    DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
-    if(dwSize==0) return FALSE;
+BOOL DuiStringPool::Init( TiXmlElement *pXmlStringRootElem )
+{
+	if (strcmp(pXmlStringRootElem->Value(), "string") != 0)
+	{
+		DUIASSERT(FALSE);
+		return FALSE;
+	}
+	LPCSTR lpszStringID = NULL;
+	UINT uStringID = 0;
 
-    CMyBuffer<char> strXml;
-    strXml.Allocate(dwSize);
-    pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
+	for (TiXmlElement* pXmlChild = pXmlStringRootElem->FirstChildElement("s"); NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement("s"))
+	{
+		lpszStringID = pXmlChild->Attribute("id");
+		if (!lpszStringID)
+			continue;
 
-    TiXmlDocument xmlDoc;
-
-    xmlDoc.Parse(strXml, NULL, TIXML_ENCODING_UTF8);
-
-    if (xmlDoc.Error())
-        return FALSE;
-
-    LPCSTR lpszStringID = NULL;
-    UINT uStringID = 0;
-
-    TiXmlElement *pXmlStringRootElem = xmlDoc.RootElement();
-
-    if (!pXmlStringRootElem)
-        return FALSE;
-
-    if (strcmp(pXmlStringRootElem->Value(), "string") != 0)
-        return FALSE;
-
-    for (TiXmlElement* pXmlChild = pXmlStringRootElem->FirstChildElement("s"); NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement("s"))
-    {
-        lpszStringID = pXmlChild->Attribute("id");
-        if (!lpszStringID)
-            continue;
-
-        uStringID = (UINT)(ULONG)::StrToIntA(lpszStringID);
-        CDuiStringA str=pXmlChild->GetText();
-        if(str.IsEmpty()) str=pXmlChild->Attribute("text");
-        AddKeyObject(uStringID,CDuiStringT(DUI_CA2T(str, CP_UTF8)));
-    }
-
-    return TRUE;
+		uStringID = (UINT)(ULONG)::StrToIntA(lpszStringID);
+		CDuiStringA str=pXmlChild->GetText();
+		if(str.IsEmpty()) str=pXmlChild->Attribute("text");
+		AddKeyObject(uStringID,CDuiStringT(DUI_CA2T(str, CP_UTF8)));
+	}
+	return TRUE;
 }
 
 LPCTSTR DuiStringPool::Get( UINT uID )

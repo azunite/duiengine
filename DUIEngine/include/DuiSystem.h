@@ -22,6 +22,7 @@ namespace DuiEngine
 class DUI_EXP DuiSystem :
     public Singleton<DuiSystem>
 {
+	friend class CSimpleWnd;
     class CNamedID
     {
     public:
@@ -48,17 +49,10 @@ public:
     DuiSystem(HINSTANCE hInst,LPCTSTR pszHostClassName=_T("DuiHostWnd"));
     ~DuiSystem(void);
 
-    void LockSharePtr( void * pObj );
-    void * GetSharePtr();
-    void * ReleaseSharePtr();
 
     HINSTANCE GetInstance()
     {
         return m_hInst;
-    }
-    ATOM GetHostWndAtom()
-    {
-        return m_atomWnd;
     }
 
     DuiResProviderBase * SetResProvider(DuiResProviderBase *pNewResProvider)
@@ -91,11 +85,24 @@ public:
 
     size_t InitName2ID(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 
-    HANDLE GetExecutableHeap()
-    {
-        return m_hHeapExecutable;
-    }
+	BOOL Init(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
+
+	BOOL LoadXmlDocment(TiXmlDocument *pXmlDoc,UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 protected:
+	void LockSharePtr( void * pObj );
+	void * GetSharePtr();
+	void * ReleaseSharePtr();
+
+	ATOM GetHostWndAtom()
+	{
+		return m_atomWnd;
+	}
+
+	HANDLE GetExecutableHeap()
+	{
+		return m_hHeapExecutable;
+	}
+
     void createSingletons();
     void destroySingletons();
     void * m_p;

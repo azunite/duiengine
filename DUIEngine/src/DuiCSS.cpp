@@ -11,33 +11,28 @@ template<> DuiCSS *Singleton<DuiCSS>::ms_Singleton =0;
 
 BOOL DuiCSS::Init(UINT uXmlID)
 {
-    DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
-    if(!pRes) return FALSE;
-    DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uXmlID);
-    if(dwSize==0) return FALSE;
+	TiXmlDocument xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,uXmlID)) return FALSE;
+	return Init(xmlDoc.RootElement());
+}
 
-    CMyBuffer<char> strXml;
-    strXml.Allocate(dwSize);
-    pRes->GetRawBuffer(DUIRES_XML_TYPE,uXmlID,strXml,dwSize);
+BOOL DuiCSS::Init( TiXmlElement *pTiXml )
+{
+	if (strcmp(pTiXml->Value(), "objattr") != 0)
+	{
+		DUIASSERT(FALSE);
+		return FALSE;
+	}
 
-    TiXmlDocument *pXmlDoc=new TiXmlDocument;
-    if(!pXmlDoc) return FALSE;
-    pXmlDoc->Parse(strXml);
-    if(pXmlDoc->Error())
-    {
-        delete pXmlDoc;
-        return FALSE;
-    }
+	m_pXmlRoot=(TiXmlElement *)pTiXml->Clone();
 
-
-    TiXmlElement *pObjAttr=pXmlDoc->RootElement();
-    while(pObjAttr)
-    {
-        AddKeyObject(pObjAttr->Value(),pObjAttr);
-        pObjAttr=pObjAttr->NextSiblingElement();
-    }
-    m_pXmlDoc=pXmlDoc;
-    return TRUE;
+	TiXmlElement *pObjAttr=m_pXmlRoot->FirstChildElement();
+	while(pObjAttr)
+	{
+		AddKeyObject(pObjAttr->Value(),pObjAttr);
+		pObjAttr=pObjAttr->NextSiblingElement();
+	}
+	return TRUE;
 }
 
 

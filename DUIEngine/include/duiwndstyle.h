@@ -114,11 +114,9 @@ public:
     // Get style object from pool by class name
     static BOOL GetStyle(LPCSTR lpszName,DuiStyle& style);
 
-    static BOOL Init(UINT uResID);
+    BOOL Init(UINT uResID);
 
-    static BOOL Init(LPCSTR lpszXml);
-protected:
-    void _LoadStylePool(TiXmlElement *pXmlStyleRootElem);
+	BOOL Init(TiXmlElement *pXmlStyleRootElem);
 };
 
 }//namespace DuiEngine

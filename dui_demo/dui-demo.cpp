@@ -115,13 +115,15 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		break;
 	}
 
-	// 以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义
-	BOOL bOK=DuiStringPool::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
-	DuiFontPool::getSingleton().SetDefaultFont(DuiStringPool::getSingleton().Get(IDS_APP_FONT), -12); // 设置字体,必须在style加载前设置。
-	bOK=DuiSkinPool::getSingleton().Init(IDR_DUI_SKIN_DEF); // 加载皮肤
-	bOK=DuiStylePool::getSingleton().Init(IDR_DUI_STYLE_DEF); // 加载风格
-	bOK=DuiCSS::getSingleton().Init(IDR_DUI_OBJATTR_DEF);//加载类默认属性
+// 2013前版本使用的系统初始化代码，新版本使用DuiSystem::Init来处理。
+//	以下 Load xx 的语句是必须的，否则皮肤将不能显示。这部分资源属性皮肤级别，不同的皮肤可以有不同的定义
+// 	BOOL bOK=DuiStringPool::getSingleton().Init(IDR_DUI_STRING_DEF); // 加载字符串
+// 	DuiFontPool::getSingleton().SetDefaultFont(DuiStringPool::getSingleton().Get(IDS_APP_FONT), -12); // 设置字体,必须在style加载前设置。
+// 	bOK=DuiSkinPool::getSingleton().Init(IDR_DUI_SKIN_DEF); // 加载皮肤
+// 	bOK=DuiStylePool::getSingleton().Init(IDR_DUI_STYLE_DEF); // 加载风格
+// 	bOK=DuiCSS::getSingleton().Init(IDR_DUI_OBJATTR_DEF);//加载类默认属性
 
+	BOOL bOK=pDuiSystem->Init(IDR_DUI_INIT); //初始化DUI系统,原来的系统初始化方式依然可以使用。
 
 	CMenuWndHook::InstallHook(hInstance,"skin_menuborder");
 	int nRet = 0; 

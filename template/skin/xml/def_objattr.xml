@@ -1,3 +1,4 @@
+<objattr>
 <button class="normalbtn"/>
 <check skin="btncheckbox"/>
 <radio skin="btnRadio"/>
@@ -8,3 +9,4 @@
 <scrollview baseClass="divex"/>
 <duilistbox baseClass="divex"/>
 <treectrl baseClass="divex"/>
+</objattr>

@@ -76,44 +76,23 @@ BOOL DuiStylePool::GetStyle(LPCSTR lpszName, DuiStyle& style)
 
 BOOL DuiStylePool::Init(UINT uResID)
 {
-    DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
-    if(!pRes) return FALSE;
-    DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
-    if(dwSize==0) return FALSE;
-
-    CMyBuffer<char> strXml;
-    strXml.Allocate(dwSize);
-    pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
-
-    return Init(strXml);
-}
-
-BOOL DuiStylePool::Init(LPCSTR lpszXml)
-{
-    TiXmlDocument xmlDoc;
-
-    xmlDoc.Parse(lpszXml, NULL, TIXML_ENCODING_UTF8);
-
-    if (xmlDoc.Error())
-        return FALSE;
-
-    getSingleton()._LoadStylePool(xmlDoc.RootElement());
-
-    return TRUE;
+	TiXmlDocument xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,uResID)) return FALSE;
+	return Init(xmlDoc.RootElement());
 }
 
 // Load style-pool from xml tree
-void DuiStylePool::_LoadStylePool(TiXmlElement *pXmlStyleRootElem)
+BOOL DuiStylePool::Init(TiXmlElement *pXmlStyleRootElem)
 {
-    RemoveAll();
-
-    LPCSTR lpszClassName = NULL;
-
-    if (!pXmlStyleRootElem)
-        return;
+	DUIASSERT(pXmlStyleRootElem);
 
     if (strcmp(pXmlStyleRootElem->Value(), "style") != 0)
-        return;
+	{
+		DUIASSERT(FALSE);
+		return FALSE;
+	}
+
+	LPCSTR lpszClassName = NULL;
 
     for (TiXmlElement* pXmlChild = pXmlStyleRootElem->FirstChildElement("class"); NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement("class"))
     {
@@ -123,6 +102,7 @@ void DuiStylePool::_LoadStylePool(TiXmlElement *pXmlStyleRootElem)
 
         GetKeyObject(lpszClassName).Load(pXmlChild);
     }
+	return TRUE;
 }
 
 }//namespace DuiEngine

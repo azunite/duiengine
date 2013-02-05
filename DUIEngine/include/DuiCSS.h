@@ -8,17 +8,19 @@ namespace DuiEngine
 class DUI_EXP DuiCSS :public DuiSingletonMap<DuiCSS,TiXmlElement *,CDuiStringA>
 {
 public:
-    DuiCSS():m_pXmlDoc(NULL)
+    DuiCSS():m_pXmlRoot(NULL)
     {
     }
     virtual ~DuiCSS()
     {
-        if(m_pXmlDoc) delete m_pXmlDoc;
+        if(m_pXmlRoot) delete m_pXmlRoot;
     }
 
     BOOL Init(UINT uXmlID);
+	BOOL Init(TiXmlElement *pTiXml);
 protected:
     TiXmlDocument	*m_pXmlDoc;
+	TiXmlElement	*m_pXmlRoot;
 };
 
 }//namespace DuiEngine

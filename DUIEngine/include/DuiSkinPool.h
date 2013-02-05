@@ -91,19 +91,15 @@ public:
 
     BOOL Init(UINT uResID);
 
-    BOOL Init(LPCSTR lpszXml);
+	BOOL Init(TiXmlElement *pXmlSkinRootElem);
 
     CDuiSkinBase* GetSkin(LPCSTR strSkinName);
 
     int LoadSkins(LPCSTR  pszOwnerName);
 
     int FreeSkins(LPCSTR  pszOwnerName);
-
-
 protected:
     static void OnKeyRemoved(const DuiSkinPtr & obj);
-
-    BOOL _InitSkins(TiXmlElement *pXmlSkinRootElem);
 
     TiXmlElement * m_pXmlSkinDesc;
 };

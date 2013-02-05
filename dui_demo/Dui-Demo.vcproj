@@ -543,6 +543,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\layout\init.xml"
+				>
+			</File>
+			<File
 				RelativePath=".\layout\menu_test.xml"
 				>
 			</File>

@@ -49,7 +49,9 @@ HFONT DuiFontPool::GetFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, char chAdd
 void DuiFontPool::SetDefaultFont(LPCTSTR lpszFaceName, LONG lSize)
 {
     _tcscpy_s(m_szDefFontFace,_countof(m_szDefFontFace),lpszFaceName);
-    m_lFontSize = lSize;
+    m_lFontSize = -abs(lSize);
+
+	DUIASSERT(GetCount()==1);//初始化前才可以调用该接口
 
     HFONT hftOld = GetKeyObject(FontKey(DUIF_DEFAULTFONT));
 

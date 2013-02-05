@@ -46,29 +46,21 @@ DuiSkinPool::~DuiSkinPool()
 
 BOOL DuiSkinPool::Init(UINT uResID)
 {
-    DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
-    if(!pRes) return FALSE;
-
-    DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
-    if(dwSize==0) return FALSE;
-
-    CMyBuffer<char> strXml;
-    strXml.Allocate(dwSize);
-    pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
-
-    return Init(strXml);
+	TiXmlDocument xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,uResID)) return FALSE;
+	return Init(xmlDoc.RootElement());
 }
 
-BOOL DuiSkinPool::Init(LPCSTR lpszXml)
+BOOL DuiSkinPool::Init(TiXmlElement *pXmlSkinRootElem)
 {
-    TiXmlDocument xmlDoc;
-
-    xmlDoc.Parse(lpszXml, NULL, TIXML_ENCODING_UTF8);
-
-    if (xmlDoc.Error())
-        return FALSE;
-
-    return _InitSkins(xmlDoc.RootElement());
+	if (strcmp(pXmlSkinRootElem->Value(), "skins") != 0)
+	{
+		DUIASSERT(FALSE);
+		return FALSE;
+	}
+	m_pXmlSkinDesc=pXmlSkinRootElem->Clone()->ToElement();
+	LoadSkins("");
+	return TRUE;
 }
 
 int DuiSkinPool::LoadSkins(LPCSTR strOwnerName)
@@ -133,15 +125,6 @@ CDuiSkinBase* DuiSkinPool::GetSkin(LPCSTR strSkinName)
 {
     if(!HasKey(strSkinName)) return NULL;
     return GetKeyObject(strSkinName);
-}
-
-BOOL DuiSkinPool::_InitSkins(TiXmlElement *pXmlSkinRootElem)
-{
-    if (strcmp(pXmlSkinRootElem->Value(), "skins") != 0)
-        return FALSE;
-    m_pXmlSkinDesc=pXmlSkinRootElem->Clone()->ToElement();
-    LoadSkins("");
-    return TRUE;
 }
 
 void DuiSkinPool::OnKeyRemoved(const DuiSkinPtr & obj )
