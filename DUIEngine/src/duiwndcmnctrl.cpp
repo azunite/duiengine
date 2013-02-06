@@ -280,7 +280,12 @@ BOOL CDuiImageWnd::SetIcon( int nSubID )
     return TRUE;
 }
 
-CDuiAnimateImgWnd::CDuiAnimateImgWnd():m_pSkin(NULL),m_iCurFrame(0),m_nSpeed(50),m_bAutoStart(TRUE)
+CDuiAnimateImgWnd::CDuiAnimateImgWnd()
+:m_pSkin(NULL)
+,m_iCurFrame(0)
+,m_nSpeed(50)
+,m_bAutoStart(TRUE)
+,m_bPlaying(FALSE)
 {
     m_bMsgTransparent=TRUE;
 }
@@ -325,11 +330,20 @@ void CDuiAnimateImgWnd::OnDuiTimer(char cID)
 
 void CDuiAnimateImgWnd::Start()
 {
-    SetDuiTimer(1,m_nSpeed);
+    if(!m_bPlaying)
+	{
+		SetDuiTimer(1,m_nSpeed);
+		m_bPlaying=TRUE;
+	}
+	
 }
 void CDuiAnimateImgWnd::Stop()
 {
-    KillDuiTimer(1);
+	if(m_bPlaying)
+	{
+	   KillDuiTimer(1);
+	   m_bPlaying=FALSE;
+	}
 }
 
 void CDuiAnimateImgWnd::OnDestroy()

@@ -203,7 +203,10 @@ public:
     void OnDuiTimer(char cID);
 
     void Start();
+
     void Stop();
+
+	BOOL IsPlaying(){return m_bPlaying;}
 
     void OnDestroy();
 
@@ -227,6 +230,7 @@ protected:
     int			  m_nSpeed;
     int			  m_iCurFrame;
     BOOL		  m_bAutoStart;
+	BOOL		  m_bPlaying;
 };
 //////////////////////////////////////////////////////////////////////////
 // Progress Control

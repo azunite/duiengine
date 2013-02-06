@@ -474,7 +474,7 @@ void CDuiListBoxEx::OnLButtonUp(UINT nFlags,CPoint pt)
         m_arrItems[m_iHoverItem]->DoFrameEvent(WM_LBUTTONUP,nFlags,MAKELPARAM(pt.x,pt.y));
     }
 
-    if(m_iHoverItem!=m_iSelItem && m_bHotTrack)
+    if(m_bHotTrack)
         NotifySelChange(m_iSelItem,m_iHoverItem,WM_LBUTTONUP);
 
 }

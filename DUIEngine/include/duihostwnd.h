@@ -124,7 +124,7 @@ protected:
 
     void OnDuiTimer(char cTimerID);
 
-    BOOL DrawCaret(CPoint pt,BOOL bUpdate=FALSE);
+    void DrawCaret(CPoint pt,BOOL bUpdate=FALSE);
 
     LRESULT OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
