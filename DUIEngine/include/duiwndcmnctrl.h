@@ -245,21 +245,27 @@ class DUI_EXP CDuiProgress : public CDuiWindow
 public:
     CDuiProgress();
 
+    BOOL SetValue(int nValue);
 
-    LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
+	int GetValue(){return m_nValue;}
 
-    void OnPaint(CDCHandle dc);
+	void SetRange(int nMin,int nMax);
 
-    BOOL SetValue(DWORD dwValue);
+	void GetRange(int *pMin,int *pMax);
 
-    DWORD GetValue();
-
+	BOOL IsVertical(){return m_bVertical;}
 protected:
-    DWORD m_dwMinValue;
-    DWORD m_dwMaxValue;
-    DWORD m_dwValue;
-    DWORD m_dwRight;
+	LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
+
+	void OnPaint(CDCHandle dc);
+
+    int m_nMinValue;
+    int m_nMaxValue;
+    int m_nValue;
+
     BOOL m_bShowPercent;
+	BOOL	m_bVertical;
+
     CDuiSkinBase *m_pSkinBg;
     CDuiSkinBase *m_pSkinPos;
 
@@ -271,10 +277,10 @@ protected:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_SKIN_ATTRIBUTE("bgskin", m_pSkinBg, TRUE)
     DUIWIN_SKIN_ATTRIBUTE("posskin", m_pSkinPos, TRUE)
-    DUIWIN_DWORD_ATTRIBUTE("min", m_dwMinValue, FALSE)
-    DUIWIN_DWORD_ATTRIBUTE("max", m_dwMaxValue, FALSE)
-    DUIWIN_DWORD_ATTRIBUTE("value", m_dwValue, FALSE)
-    DUIWIN_DWORD_ATTRIBUTE("right", m_dwRight, FALSE)
+    DUIWIN_INT_ATTRIBUTE("min", m_nMinValue, FALSE)
+    DUIWIN_INT_ATTRIBUTE("max", m_nMaxValue, FALSE)
+    DUIWIN_INT_ATTRIBUTE("value", m_nValue, FALSE)
+    DUIWIN_UINT_ATTRIBUTE("vertical", m_bVertical, FALSE)
     DUIWIN_UINT_ATTRIBUTE("showpercent", m_bShowPercent, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 };

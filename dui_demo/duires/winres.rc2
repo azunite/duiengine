@@ -45,5 +45,6 @@ DEFINE_IMGX(IDR_TREE_CHECKBOX,	501,	"skins\\TreeCheckBox.png")
 DEFINE_IMGX(IDR_TREE_ICON,	502,	"skins\\TreeIcon.png")
 DEFINE_IMGX(IDP_ICON3,	503,	"skins\\icon3.png")
 DEFINE_IMGX(IDP_SLIDETHUMB,	505,	"skins\\slider.png")
-DEFINE_IMGX(IDP_SHADOWNC,	510,	"skins\\bk_shadow.png")
+DEFINE_IMGX(IDP_PROG_BAR,	506,	"skins\\mini_progress_bar.png")
+DEFINE_IMGX(IDP_PROG_BG,	507,	"skins\\mini_progress_bg.png")
 /*----------------------------RES_BUILDER:end------------------------------------->*/

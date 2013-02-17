@@ -55,7 +55,7 @@ protected:
 		DUI_NOTIFY_ID_COMMAND(3, OnRestore)
 		DUI_NOTIFY_ID_COMMAND(5, OnMinimize)
 	DUI_NOTIFY_MAP_END()	
-
+//*
 	BEGIN_MSG_MAP_EX(CMainDlg)
 		CHAIN_MSG_MAP(CWHRoundRectFrameHelper<CMainDlg>)
 		MSG_WM_CREATE(OnCreate)
@@ -66,7 +66,7 @@ protected:
 		CHAIN_MSG_MAP(CDuiHostWnd)
 		REFLECT_NOTIFICATIONS_EX()
 	END_MSG_MAP()
-
+//*/
 private:
 	CUIHander *    m_pUiHandler; 
 };

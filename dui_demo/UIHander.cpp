@@ -114,6 +114,12 @@ void CUIHander::OnIECtrl()
 
 void CUIHander::OnDuiMenu()
 {
+	CDuiAnimateImgWnd *pAni=(CDuiAnimateImgWnd*)m_pMainDlg->FindChildByCmdID(ani_test);
+	if(pAni->IsPlaying())
+		pAni->Stop();
+	else
+		pAni->Start();
+	return;
 	CPoint pt; 
 	GetCursorPos(&pt);
 	CDuiMenu menu;  

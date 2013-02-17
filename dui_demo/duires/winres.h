@@ -17,4 +17,6 @@
 #define	mytree1		65544
 #define	IDC_SLIDERTEST		65545
 #define	btn_test		65546
+#define	ani_test		65547
+#define	IDC_PROGTEST		65548
 /*----------------------------RES_BUILDER:end------------------------------------->*/

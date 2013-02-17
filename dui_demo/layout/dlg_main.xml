@@ -1,4 +1,4 @@
-﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="1" translucent="0"  nomaxsize="0">
+﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="1" translucent="1"  nomaxsize="0">
 	<body>
     <dlg id="100" pos="0,0,-0,-0" class="cls_dlg_frame">
       <caption id="101" pos="0,0,-0,29">
@@ -9,8 +9,9 @@
         <imgbtn id="5" name="btn_minimize" skin="btn_sys_minimize" pos="-121,0" animate="0" />
       </caption>
 
-      <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10">
+      <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="0">
         <tab id="113" title="miscellaneous" sep="5">
+          <animateimg name="ani_test" pos="20,100" skin="icons"/>
           <img id="1139" pos="300,200,400,300" skin="icons" tip="img tip" msgtransparent="0"/>
           <check id="1300" pos="40,20" crtext="ff0000" state="4">test1</check>
           <check id="1301" pos="40,70">test2</check>
@@ -24,7 +25,8 @@
           <img skin="icons" name="testimg" fun="test image remark"/>
           <button id="1360" class="normalbtn" pos="10,200,150,230">dui menu</button>
           <hotkey id="1340" pos="350,20,450,45" class="cls_edit"/>
-          <sliderbar name="IDC_SLIDERTEST" pos="100,100,-10,120" thumbskin="slidethumb" interheight="6" crbg="0095FF" crsel="E47100" value="20"/>
+          <progress name="IDC_PROGTEST" pos="200,100,-10,110" bgskin="prog_bg" posskin="prog_bar" thumbskin="slidethumb" value="20" min="0" max="100"/>
+          <sliderbar name="IDC_SLIDERTEST" pos="200,130,-10,140" bgskin="prog_bg" posskin="prog_bar" thumbskin="slidethumb" value="20" min="0" max="100"/>
           <combobox id="1310" pos="100,40,300,64" dropdown="0" dropheight="250" class="cls_edit" font="8300" dotted="0" cursel="0" itempanel="1">
             <liststyle  class="cls_edit" crbg="FF0000" itemheight="50" id_text="1" id_icon="2" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
               <template>
@@ -56,7 +58,7 @@
               <item text="combobox.item6" icon="0" data="100"/>                          
             </items>
           </combobox>          
-          <realwnd name="realwnd_edit1" id="1309" wndclass="edit" pos="-200,50,-110,80"/>
+<!--           <realwnd name="realwnd_edit1" id="1309" wndclass="edit" pos="-200,50,-110,80" rem="半透明窗口时不能使用realwnd，除了窗口不能显示外，还会干扰宿主窗口的timer消息"/> -->
         </tab>
         <tab id="114" title="richedit">
           <richedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,0,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left" hscrollbar="1" autohscroll="1">richedit test 2012 中文字体</richedit>

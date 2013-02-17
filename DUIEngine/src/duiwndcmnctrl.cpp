@@ -366,13 +366,13 @@ BOOL CDuiAnimateImgWnd::Load(TiXmlElement* pTiXmlElem)
 //
 
 CDuiProgress::CDuiProgress()
-    : m_dwMinValue(0)
-    , m_dwMaxValue(0)
-    , m_dwValue(0)
-    , m_dwRight(0)
+    : m_nMinValue(0)
+    , m_nMaxValue(100)
+    , m_nValue(0)
     , m_bShowPercent(FALSE)
     , m_pSkinBg(NULL)
     , m_pSkinPos(NULL)
+	, m_bVertical(FALSE)
 {
 
 }
@@ -380,149 +380,97 @@ CDuiProgress::CDuiProgress()
 
 LRESULT CDuiProgress::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
 {
-    __super::OnCalcSize(bCalcValidRects, pSize);
-
-    if (m_pSkinBg)
+	if(m_dlgpos.nCount==4) //指定了4个坐标时由基类计算大小
+		CDuiWindow::OnCalcSize(bCalcValidRects, pSize);
+	else 
     {
         SIZE sizeBg = m_pSkinBg->GetSkinSize();
-
-        pSize->cy = sizeBg.cy;
-
-        return TRUE;
+		if(IsVertical())
+		{
+			pSize->cx = sizeBg.cx + 2 * m_style.m_nMarginX;
+			if(m_uPositionType & SizeY_Specify)
+				pSize->cy=m_lSpecifyHeight;
+			else
+				pSize->cy = sizeBg.cy +2 * m_style.m_nMarginY;
+		}else
+		{
+			pSize->cy = sizeBg.cy + 2 * m_style.m_nMarginY;
+			if(m_uPositionType & SizeX_Specify)
+				pSize->cx=m_lSpecifyWidth;
+			else
+				pSize->cx = sizeBg.cx +2 * m_style.m_nMarginX;
+		}
     }
 
-    return TRUE;
+    return 0;
 }
 
 void CDuiProgress::OnPaint(CDCHandle dc)
 {
     DuiDCPaint DuiDC;
-    CPen penFrame;
-    CDuiStringT strPercent;
-    double dPos = 0;
 
     BeforePaint(dc, DuiDC);
 
-    penFrame.CreatePen(
-        PS_SOLID,
-        1,
-        RGB(0x70, 0x70, 0x70)
-    );
+	DUIASSERT(m_pSkinBg && m_pSkinPos);
+	
+	CSize szBg=m_pSkinBg->GetSkinSize();
+	CSize szValue=m_pSkinPos->GetSkinSize();
+	
+	m_pSkinBg->Draw(dc, DuiDC.rcClient, DuiWndState_Normal);
+	CRect rcValue=DuiDC.rcClient;
 
-    HPEN hpenOld = dc.SelectPen(penFrame);
+	if(IsVertical())
+	{
+		rcValue.bottom=rcValue.top+rcValue.Height()*(m_nValue-m_nMinValue)/(m_nMaxValue-m_nMinValue);
+		int nMargin=(szBg.cx-szValue.cx)/2;
+		rcValue.left += nMargin;
+		rcValue.right -= nMargin;
+	}
+	else
+	{
+		rcValue.right=rcValue.left+rcValue.Width()*(m_nValue-m_nMinValue)/(m_nMaxValue-m_nMinValue);
+		int nMargin=(szBg.cy-szValue.cy)/2;
+		rcValue.top += nMargin;
+		rcValue.bottom -= nMargin;
+	}
+	if(m_nValue>m_nMinValue)
+	{
+		m_pSkinPos->Draw(dc, rcValue, DuiWndState_Normal);
+	}
 
-    if (m_pSkinBg)
-    {
-        m_pSkinBg->Draw(dc, m_rcWindow, DuiWndState_Normal);
-    }
-    else
-    {
-        CGdiAlpha::RoundRect(dc,m_rcWindow, CPoint(2, 2));
-    }
 
-    if (m_dwMaxValue == m_dwMinValue)
-    {
-        dPos = 0;
-    }
-    else
-    {
-        if (m_dwMaxValue < m_dwMinValue)
-        {
-            DWORD dwTemp = m_dwMaxValue;
-            m_dwMaxValue = m_dwMinValue;
-            m_dwMinValue = dwTemp;
-        }
-
-        if (m_dwValue < m_dwMinValue)
-        {
-            m_dwValue = m_dwMinValue;
-        }
-        else if (m_dwValue > m_dwMaxValue)
-        {
-            m_dwValue = m_dwMaxValue;
-        }
-
-        dPos = (double)(m_dwValue - m_dwMinValue) / (double)(m_dwMaxValue - m_dwMinValue);
-    }
-
-    if (m_bShowPercent)
-    {
-        strPercent.Format(_T("%d%%"), (int)(dPos * 100));
-        CGdiAlpha::DrawText(dc,strPercent, strPercent.GetLength(), m_rcWindow, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-    }
-
-    CRect rcPosBar = m_rcWindow;
-
-    if (m_pSkinPos)
-    {
-        if (dPos > 0)
-        {
-            SIZE sizePosBar = m_pSkinPos->GetSkinSize();
-
-            rcPosBar.DeflateRect(2, (m_rcWindow.Height() - sizePosBar.cy) / 2);
-            m_pSkinPos->SetWidth(rcPosBar.Width());
-            LONG lOldWidth = rcPosBar.Width();
-            rcPosBar.right = rcPosBar.left + (LONG)(rcPosBar.Width() * dPos);
-
-            if (m_dwRight > 0 && (DWORD)rcPosBar.Width() < (DWORD)(lOldWidth - m_dwRight))
-            {
-                m_pSkinPos->SetAttribute("part", "left", TRUE);
-            }
-            else
-            {
-                m_pSkinPos->SetAttribute("part", "all", TRUE);
-            }
-
-            m_pSkinPos->Draw(dc, rcPosBar, DuiWndState_Normal);
-        }
-    }
-    else
-    {
-        rcPosBar.DeflateRect(2, 2);
-        rcPosBar.right = rcPosBar.left + (LONG)(rcPosBar.Width() * dPos);
-
-        CGdiAlpha::RoundRect(dc,rcPosBar, CPoint(2, 2));
-
-        CGdiAlpha::FillSolidRect(dc,rcPosBar, RGB(66, 97, 144));
-    }
-
-    dc.SelectPen(hpenOld);
-
-    if (m_bShowPercent)
-    {
-        CRgn rgnClipOld, rgnClip;
-        rgnClip.CreateRectRgnIndirect(rcPosBar);
-        dc.GetClipRgn(rgnClipOld);
-        dc.SelectClipRgn(rgnClip);
-
-        if (CLR_INVALID == m_style.m_crBg)
-            dc.SetTextColor(RGB(0xFF, 0xFF, 0xFF));
-        else
-            dc.SetTextColor(m_style.m_crBg);
-
-        CGdiAlpha::DrawText(dc,strPercent, strPercent.GetLength(), m_rcWindow, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-
-        dc.SetTextColor(m_style.m_crText);
-        dc.SelectClipRgn(rgnClipOld);
-    }
-
+	if (m_bShowPercent && !IsVertical())
+	{
+		CDuiStringT strPercent;
+		strPercent.Format(_T("%d%%"), (int)((m_nValue-m_nMinValue) * 100/(m_nMaxValue-m_nMinValue)));
+		CGdiAlpha::DrawText(dc,strPercent, strPercent.GetLength(), m_rcWindow, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	}
     AfterPaint(dc, DuiDC);
 }
 
-BOOL CDuiProgress::SetValue(DWORD dwValue)
+BOOL CDuiProgress::SetValue(int dwValue)
 {
-    if(dwValue>=m_dwMinValue && dwValue<=m_dwMaxValue)
-    {
-        m_dwValue=dwValue;
-        NotifyInvalidate();
-        return TRUE;
-    }
-    return FALSE;
+    if(dwValue<m_nMinValue || dwValue>m_nMaxValue) return FALSE;
+	m_nValue=dwValue;
+	
+	NotifyInvalidate();
+	return TRUE;
 }
 
-DWORD CDuiProgress::GetValue()
+void CDuiProgress::SetRange( int nMin,int nMax )
 {
-    return m_dwValue;
+	DUIASSERT(nMax>nMin);
+	m_nMaxValue=nMax;
+	m_nMinValue=nMin;
+	if(m_nValue>m_nMaxValue) m_nValue=m_nMaxValue;
+	if(m_nValue<nMin) m_nValue=m_nMinValue;
+	NotifyInvalidate();
+}
+
+void CDuiProgress::GetRange( int *pMin,int *pMax )
+{
+	if(pMin) *pMin=m_nMinValue;
+	if(pMax) *pMax=m_nMaxValue;
 }
 
 //////////////////////////////////////////////////////////////////////////
