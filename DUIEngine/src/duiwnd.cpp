@@ -599,12 +599,12 @@ BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
     if(!m_bVisible || (m_pParent && !m_pParent->IsVisible(TRUE)))
         ModifyState(DuiWndState_Invisible, 0);
 
-    if (2 != m_dlgpos.nCount && 4 != m_dlgpos.nCount)
+    if (4 != m_dlgpos.nCount)
     {
         int nValue = 0;
         CDuiStringA strValue;
         strValue = pTiXmlElem->Attribute("width", &nValue);
-        if (0 == nValue && "full" == strValue)
+        if (0 == nValue && "full" == strValue && 0 == m_dlgpos.nCount)
         {
             m_rcWindow.right = 0;
             m_uPositionType = (m_uPositionType & ~SizeX_Mask) | SizeX_FitParent;

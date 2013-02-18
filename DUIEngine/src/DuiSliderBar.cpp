@@ -53,7 +53,7 @@ CRect CDuiSliderBar::GetPartRect(UINT uSBCode)
 	int nLength = IsVertical()? rcClient.Height():rcClient.Width();
 	int nHei=IsVertical()? rcClient.Width():rcClient.Height();
 	int nRailWid=IsVertical()? m_pSkinBg->GetSkinSize().cx:m_pSkinBg->GetSkinSize().cy;
-	int nRailLength=nLength-(IsVertical()?szThumb.cx:szThumb.cy);
+	int nRailLength=nLength-(IsVertical()?szThumb.cy:szThumb.cx);
 	if(nRailWid>nHei) nRailWid=nHei;
 
 	CRect rcRet(0,0,nLength,nHei);
@@ -84,10 +84,10 @@ CRect CDuiSliderBar::GetPartRect(UINT uSBCode)
     case SC_THUMB:
         {
 			int nPos=(m_nValue-m_nMinValue)*nRailLength/(m_nMaxValue-m_nMinValue);
-			rcRet.left += nPos;
 			CSize szThumb=m_pSkinThumb->GetSkinSize();
 			if(!IsVertical())
 			{
+				rcRet.left += nPos;
 				//rcRet.left-=szThumb.cx/2-szThumb.cx/2;left不需要变化了
 				rcRet.right=rcRet.left+szThumb.cx;
 				int nMargin=(rcClient.Height()-szThumb.cy)/2;
@@ -98,11 +98,12 @@ CRect CDuiSliderBar::GetPartRect(UINT uSBCode)
 				}else
 				{
 					rcRet.top=0;
-					rcRet.bottom=nRailWid;
+					rcRet.bottom=rcClient.Height();
 				}
 			}
 			else
 			{
+				rcRet.top += nPos;
 				//rcRet.top-=szThumb.cy/2-szThumb.cy/2;
 				rcRet.bottom=rcRet.top+szThumb.cy;
 				int nMargin=(rcClient.Width()-szThumb.cx)/2;
@@ -113,7 +114,7 @@ CRect CDuiSliderBar::GetPartRect(UINT uSBCode)
 				}else
 				{
 					rcRet.left=0;
-					rcRet.right=nRailWid;
+					rcRet.right=rcClient.Width();
 				}
 			}
 			
@@ -167,6 +168,7 @@ void CDuiSliderBar::OnLButtonUp(UINT nFlags, CPoint point)
 		m_pSkinThumb->Draw(hdc, rcThumb, IIF_STATE4(DuiWndState_Hover, 0, 1, 2, 3), 0xFF);
 		ReleaseDuiDC(hdc);
     }
+	OnMouseMove(nFlags,point);
 }
 
 void CDuiSliderBar::OnLButtonDown(UINT nFlags, CPoint point) 
