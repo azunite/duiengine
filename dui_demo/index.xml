@@ -7,6 +7,7 @@
 <resid type="XML" id_name="IDR_DUI_MAIN_DIALOG"  id="105" layer="1" file="layout\dlg_main.xml"  />
 <resid type="XML" id_name="IDR_MENU_TEST"  id="201" file="layout\menu_test.xml"  />
 <resid type="XML" id_name="IDR_DUI_INIT"  id="301" file="layout\init.xml"  />
+<resid type="XML" id_name="IDR_DUI_MSGBOX"  id="302" file="layout\dlg_msgbox.xml"  />
 
 <resid type="IMGX" id_name="IDP_MAIN_DLG_FRAME"   id="1"    file="skins\dlg_bg_frame.png"  />
 

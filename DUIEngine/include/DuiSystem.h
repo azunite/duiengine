@@ -13,6 +13,7 @@
 #include "DuiWindowManager.h"
 #include "DuiWndFactoryManager.h"
 #include "DuiLogger.h"
+#include "DuiMessageBox.h"
 
 namespace DuiEngine
 {
@@ -23,6 +24,7 @@ class DUI_EXP DuiSystem :
     public Singleton<DuiSystem>
 {
 	friend class CSimpleWnd;
+	friend int DUI_EXP DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType );
     class CNamedID
     {
     public:
@@ -88,7 +90,10 @@ public:
 	BOOL Init(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 
 	BOOL LoadXmlDocment(TiXmlDocument *pXmlDoc,UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
+
+	BOOL SetMsgBoxTemplate(UINT uXmlResID,LPCSTR pszType=DUIRES_XML_TYPE);
 protected:
+	TiXmlElement * GetMsgBoxTemplate(){return m_pTiXmlMsgBoxTempl;}
 	void LockSharePtr( void * pObj );
 	void * GetSharePtr();
 	void * ReleaseSharePtr();
@@ -120,6 +125,7 @@ protected:
     CNamedID *m_pBuf;
     int		  m_nCount;
 
+	TiXmlElement *m_pTiXmlMsgBoxTempl;
 };
 
 }//namespace DuiEngine

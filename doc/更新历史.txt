@@ -1,3 +1,7 @@
+2013年2月18日
+1、增加DuiMessageBox接口，用于替换系统的MessageBox。
+2、改写CDuiSliderBar控件。
+3、修改CDuiProgress及IconWnd。
 2013年2月5日
 1、代码优化，将从XML中初始化系统的过程整合到一次函数调用中。
 2、为DuiCSS的XML增加一个父结点：objattr，原来版本更新时需要增加该结点。

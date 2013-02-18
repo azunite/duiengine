@@ -69,7 +69,7 @@ void CDuiStatic::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UIN
             i+=p2-p1;
             p1=p2;
         }
-        if(!(uFormat & DT_CALCRECT))
+        if(uFormat & DT_CALCRECT)
         {
             pRect->bottom=pt.y+nLineHei;
         }
@@ -710,6 +710,7 @@ void CDuiCheckBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 CDuiIconWnd::CDuiIconWnd()
     : m_uResID(-1)
     , m_nSize(16)
+	, m_uResIDCurrent(-1)
 {
 
 }

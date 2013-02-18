@@ -124,6 +124,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 // 	bOK=DuiCSS::getSingleton().Init(IDR_DUI_OBJATTR_DEF);//加载类默认属性
 
 	BOOL bOK=pDuiSystem->Init(IDR_DUI_INIT); //初始化DUI系统,原来的系统初始化方式依然可以使用。
+	pDuiSystem->SetMsgBoxTemplate(IDR_DUI_MSGBOX);
 
 	CMenuWndHook::InstallHook(hInstance,"skin_menuborder");
 	int nRet = 0; 

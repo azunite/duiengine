@@ -539,6 +539,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\layout\dlg_msgbox.xml"
+				>
+			</File>
+			<File
 				RelativePath=".\index.xml"
 				>
 			</File>

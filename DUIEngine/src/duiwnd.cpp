@@ -139,24 +139,17 @@ HRESULT CDuiWindow::SetInnerText(LPCTSTR lpszText)
 {
     m_strInnerText = lpszText;
 
-    if ((m_uPositionType & SizeX_FitContent | SizeY_FitContent) || CLR_INVALID == m_style.m_crBg)
-    {
-        if ((m_uPositionType & (SizeX_FitContent | SizeY_FitContent)) && (4 != m_dlgpos.nCount))
-        {
-            SIZE sizeRet = {0, 0};
+	if ((m_uPositionType & (SizeX_FitContent | SizeY_FitContent)) && (4 != m_dlgpos.nCount))
+	{
+		SIZE sizeRet = {0, 0};
 
-            DuiSendMessage(WM_CALCSIZE, FALSE, (LPARAM)&sizeRet);
+		DuiSendMessage(WM_CALCSIZE, FALSE, (LPARAM)&sizeRet);
 
-            if (m_uPositionType & SizeX_FitContent)
-                m_rcWindow.right = m_rcWindow.left + sizeRet.cx;
-            if (m_uPositionType & SizeY_FitContent)
-                m_rcWindow.bottom = m_rcWindow.top + sizeRet.cy;
-        }
+		m_rcWindow.right = m_rcWindow.left + sizeRet.cx;
+		m_rcWindow.bottom = m_rcWindow.top + sizeRet.cy;
+	}
 
-        return S_OK;
-    }
-    else
-        return S_FALSE;
+	return S_OK;
 }
 
 VOID CDuiWindow::TestMainThread()

@@ -102,86 +102,86 @@ BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
         return FALSE;
     }
 
-    CDuiStringA strValue;
-
-    m_dwDlgStyle =CSimpleWnd::GetStyle();
-    m_dwDlgExStyle  = CSimpleWnd::GetExStyle();
-
-    DuiSendMessage(WM_DESTROY);
-
-
     TiXmlElement *pXmlRootElem = xmlDoc.RootElement();
 
-    strValue = pXmlRootElem->Value();
-    if (strValue != "layer")
-    {
-        return FALSE;
-    }
+    if (strcmp(pXmlRootElem->Value(),"layer")!=0) return FALSE;
 
-    {
-        m_strWindowCaption = pXmlRootElem->Attribute("title");
-        m_sizeDefault.cx = 0;
-        m_sizeDefault.cy = 0;
-        pXmlRootElem->Attribute("width", (int *)&m_sizeDefault.cx);
-        pXmlRootElem->Attribute("height", (int *)&m_sizeDefault.cy);
-        CDuiStringA strNC=pXmlRootElem->Attribute("ncRect");
-        sscanf(strNC,"%d,%d,%d,%d",&m_rcNC.left,&m_rcNC.top,&m_rcNC.right,&m_rcNC.bottom);
-        CDuiStringA strMin = pXmlRootElem->Attribute("minsize");
-        sscanf(strMin,"%d,%d",&m_szMin.cx, &m_szMin.cy);
+	return SetXml(pXmlRootElem);
+}
 
-        m_bTranslucent=FALSE;
-        pXmlRootElem->Attribute("translucent",&m_bTranslucent);
+BOOL CDuiHostWnd::SetXml(TiXmlElement *pXmlRootElem )
+{
+	m_dwDlgStyle =CSimpleWnd::GetStyle();
+	m_dwDlgExStyle  = CSimpleWnd::GetExStyle();
 
-        if(m_bTranslucent)
-        {
-            m_dwDlgExStyle |= WS_EX_LAYERED;
-        }
-
-        BOOL bValue = FALSE;
-
-        pXmlRootElem->Attribute("appwin", &bValue);
-        if (bValue)
-        {
-            m_dwDlgExStyle |= WS_EX_APPWINDOW;
-            m_dwDlgStyle |= WS_SYSMENU;
-        }
+	DuiSendMessage(WM_DESTROY);
 
 
-        m_bResizable = FALSE;
+	{
+		m_strWindowCaption = pXmlRootElem->Attribute("title");
+		m_sizeDefault.cx = 0;
+		m_sizeDefault.cy = 0;
+		pXmlRootElem->Attribute("width", (int *)&m_sizeDefault.cx);
+		pXmlRootElem->Attribute("height", (int *)&m_sizeDefault.cy);
+		CDuiStringA strNC=pXmlRootElem->Attribute("ncRect");
+		sscanf(strNC,"%d,%d,%d,%d",&m_rcNC.left,&m_rcNC.top,&m_rcNC.right,&m_rcNC.bottom);
+		CDuiStringA strMin = pXmlRootElem->Attribute("minsize");
+		sscanf(strMin,"%d,%d",&m_szMin.cx, &m_szMin.cy);
 
-        pXmlRootElem->Attribute("resize", &m_bResizable);
+		m_bTranslucent=FALSE;
+		pXmlRootElem->Attribute("translucent",&m_bTranslucent);
 
-        if (m_bResizable)
-        {
-            m_dwDlgStyle |= WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_THICKFRAME;
-        }
+		if(m_bTranslucent)
+		{
+			m_dwDlgExStyle |= WS_EX_LAYERED;
+		}
 
-    }
-    ModifyStyle(0,m_dwDlgStyle);
-    ModifyStyleEx(0,m_dwDlgExStyle);
-    SetWindowText(DUI_CA2T(m_strWindowCaption,CP_UTF8));
-    if(!m_strWindowCaption.IsEmpty())
-    {
-        DuiSkinPool::getSingleton().LoadSkins(m_strWindowCaption);	//load skin only used in the host window
-    }
+		BOOL bValue = FALSE;
 
-    CDuiPanel::Load(pXmlRootElem->FirstChildElement("body"));
-    SetAttribute("pos", "0,0,-0,-0", TRUE);
+		pXmlRootElem->Attribute("appwin", &bValue);
+		if (bValue)
+		{
+			m_dwDlgExStyle |= WS_EX_APPWINDOW;
+			m_dwDlgStyle |= WS_SYSMENU;
+		}
 
 
-    SetWindowPos(NULL,0,0,m_sizeDefault.cx,m_sizeDefault.cy,SWP_NOZORDER|SWP_NOMOVE);
+		m_bResizable = FALSE;
 
-    DuiSendMessage(WM_SHOWWINDOW,1);
+		pXmlRootElem->Attribute("resize", &m_bResizable);
 
-    _Redraw();
+		if (m_bResizable)
+		{
+			m_dwDlgStyle |= WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_THICKFRAME;
+		}
 
-    RedrawRegion(CDCHandle(m_memDC),CRgn());
+	}
+	ModifyStyle(0,m_dwDlgStyle);
+	ModifyStyleEx(0,m_dwDlgExStyle);
+	SetWindowText(DUI_CA2T(m_strWindowCaption,CP_UTF8));
+	if(!m_strWindowCaption.IsEmpty())
+	{
+		DuiSkinPool::getSingleton().LoadSkins(m_strWindowCaption);	//load skin only used in the host window
+	}
 
-    if(m_bTranslucent) SetDuiTimer(TIMER_TRANSLUCENT,10);
-    else KillDuiTimer(TIMER_TRANSLUCENT);
+	CDuiPanel::Load(pXmlRootElem->FirstChildElement("body"));
+
+	SetAttribute("pos", "0,0,-0,-0", TRUE);
+
+
+	SetWindowPos(NULL,0,0,m_sizeDefault.cx,m_sizeDefault.cy,SWP_NOZORDER|SWP_NOMOVE);
+
+	DuiSendMessage(WM_SHOWWINDOW,1);
+
+	_Redraw();
+
+	RedrawRegion(CDCHandle(m_memDC),CRgn());
+
+	if(m_bTranslucent) SetDuiTimer(TIMER_TRANSLUCENT,10);
+	else KillDuiTimer(TIMER_TRANSLUCENT);
 
 	m_bLayoutInited=TRUE;
-    return TRUE;
+	return TRUE;
 }
 
 UINT_PTR CDuiHostWnd::DoModal(HWND hWndParent/* = NULL*/, LPRECT rect /*= NULL*/)
@@ -205,19 +205,19 @@ UINT_PTR CDuiHostWnd::DoModal(HWND hWndParent/* = NULL*/, LPRECT rect /*= NULL*/
 
     CRect rc;
     if(rect) rc=*rect;
-    HWND hWnd = Create(hWndParent, rc.left,rc.top,rc.Width(),rc.Height());
-    if (!hWnd)
+	if(!IsWindow()) Create(hWndParent, rc.left,rc.top,rc.Width(),rc.Height());
+    if (!IsWindow())
     {
         ::EnableWindow(hWndParent, TRUE);
         return 0;
     }
 
-    HWND hWndLastActive = DuiThreadActiveWndManager::SetActive(hWnd);
+    HWND hWndLastActive = DuiThreadActiveWndManager::SetActive(m_hWnd);
 
     if (!rect)
         CenterWindow();
 
-    ::SetWindowPos(hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
+    ::SetWindowPos(m_hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
 
     _ModalMessageLoop();
 

@@ -114,12 +114,6 @@ void CUIHander::OnIECtrl()
 
 void CUIHander::OnDuiMenu()
 {
-	CDuiAnimateImgWnd *pAni=(CDuiAnimateImgWnd*)m_pMainDlg->FindChildByCmdID(ani_test);
-	if(pAni->IsPlaying())
-		pAni->Stop();
-	else
-		pAni->Start();
-	return;
 	CPoint pt; 
 	GetCursorPos(&pt);
 	CDuiMenu menu;  
@@ -138,7 +132,9 @@ void CUIHander::OnDuiMenu()
 void CUIHander::OnCommand( UINT uNotifyCode, int nID, HWND wndCtl )
 {
 // 	ATLTRACE(L"\nOnCommand nID=%d",nID);  
-
+	TCHAR szBuf[100];
+	_stprintf(szBuf,_T("Menu Command ID=%d\\nSecond Line\\nSecond Line\\nSecond Line\\nSecond Line"),nID);
+	DuiMessageBox(NULL,szBuf,_T("tip"),MB_YESNOCANCEL|MB_ICONWARNING);
 }
 
 

@@ -1,0 +1,31 @@
+﻿<layer title="mesagebox" width="200" height="100" appwin="0" resize="0" translucent="1"  nomaxsize="1">
+	<body frame_size="40,30,10,80" min_size="300,100">
+    <dlg id="100" pos="0,0,-0,-0" class="cls_dlg_frame">
+      <caption id="101" pos="0,0,-0,29">
+        <text pos="11,9" class="cls_txt_red" id="65404">title</text>
+        <imgbtn id="1" skin="btn_sys_close"    pos="-45,0" tip="close"/>
+      </caption>
+
+      <dlg pos="5,30,-5,-50">
+        <icon id="65405" pos="0,0,32,32"/>
+        <text id="65403" pos="35,0" crtext="0000FF" multilines="1"/>
+      </dlg>
+      <dlg pos="0,-50,-0,-0" id="65400">
+        <button pos="|-50,10,|50,-10" id="65410" class="normalbtn">button1</button>
+      </dlg>
+      <dlg pos="0,-50,-0,-0" id="65401">
+        <button pos="|-100,10,|-10,-10" id="65410" class="normalbtn">button1</button>
+        <button pos="|10,10,|100,-10" id="65411" class="normalbtn">button2</button>
+      </dlg>
+      <dlg pos="0,-50,-0,-0" id="65402">
+        <button pos="|-140,10,|-50,-10" id="65410" class="normalbtn">button1</button>
+        <button pos="|-45,10,|45,-10" id="65411" class="normalbtn">button2</button>
+        <button pos="|50,10,|140,-10" id="65412" class="normalbtn">button3</button>
+      </dlg>
+    </dlg>
+	</body>
+</layer>
+
+
+
+

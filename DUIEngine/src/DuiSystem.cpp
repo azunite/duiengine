@@ -17,6 +17,7 @@ DuiSystem::DuiSystem(HINSTANCE hInst,LPCTSTR pszHostClassName/*=_T("DuiHostWnd")
     ,m_pResProvider(NULL)
     ,m_pLogger(NULL)
     ,m_pBuf(NULL),m_nCount(0)
+	,m_pTiXmlMsgBoxTempl(NULL)
 {
     InitializeCriticalSection(&m_cs);
     m_atomWnd=CSimpleWnd::RegisterSimpleWnd(hInst,pszHostClassName);
@@ -35,6 +36,11 @@ DuiSystem::~DuiSystem(void)
     if(m_pBuf && m_nCount) delete []m_pBuf;
     m_nCount=0;
     m_pBuf=NULL;
+	if(m_pTiXmlMsgBoxTempl)
+	{
+		delete m_pTiXmlMsgBoxTempl;
+		m_pTiXmlMsgBoxTempl=NULL;
+	}
     HeapDestroy(m_hHeapExecutable);
 }
 
@@ -212,6 +218,22 @@ BOOL DuiSystem::LoadXmlDocment(TiXmlDocument *pXmlDoc, UINT uXmlResID ,LPCSTR ps
 	pXmlDoc->Parse(strXml, NULL, TIXML_ENCODING_UTF8);
 
 	return !pXmlDoc->Error();
+}
+
+BOOL DuiSystem::SetMsgBoxTemplate( UINT uXmlResID,LPCSTR pszType/*=DUIRES_XML_TYPE*/ )
+{
+	DUIASSERT(m_pTiXmlMsgBoxTempl==NULL);
+	TiXmlDocument xmlDoc;
+	if(!LoadXmlDocment(&xmlDoc,uXmlResID,pszType)) return FALSE;
+	if(strcmp("layer",xmlDoc.RootElement()->Value())!=0) return FALSE;
+
+	TiXmlElement *pXmlBody=(TiXmlElement*) xmlDoc.RootElement()->FirstChildElement("body");
+	
+	if(!pXmlBody->Attribute("frame_size") && !pXmlBody->Attribute("min_size")) return FALSE;
+
+	m_pTiXmlMsgBoxTempl=(TiXmlElement*)xmlDoc.RootElement()->Clone();
+
+	return TRUE;
 }
 
 }//namespace DuiEngine

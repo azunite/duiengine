@@ -398,6 +398,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiMessageBox.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\duirealwnd.cpp"
 				>
 			</File>
@@ -641,6 +645,10 @@
 			</File>
 			<File
 				RelativePath=".\include\DuiMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiMessageBox.h"
 				>
 			</File>
 			<File

@@ -48,6 +48,8 @@ public:
 
     BOOL SetXml(LPCSTR lpszXml);
 
+	BOOL SetXml(TiXmlElement *pXmlEle);
+
 	BOOL IsLayoutInited();
 
     UINT_PTR DoModal(HWND hWndParent = NULL, LPRECT rect = NULL);
