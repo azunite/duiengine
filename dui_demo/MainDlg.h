@@ -7,7 +7,7 @@
 #include "wtlhelper/whwindow.h"
 
 class CMainDlg : public CDuiHostWnd
-	,public CWHRoundRectFrameHelper<CMainDlg>
+// 	,public CWHRoundRectFrameHelper<CMainDlg>
 {
 public:
 	CMainDlg();
@@ -57,7 +57,7 @@ protected:
 	DUI_NOTIFY_MAP_END()	
 //*
 	BEGIN_MSG_MAP_EX(CMainDlg)
-		CHAIN_MSG_MAP(CWHRoundRectFrameHelper<CMainDlg>)
+// 		CHAIN_MSG_MAP(CWHRoundRectFrameHelper<CMainDlg>)
 		MSG_WM_CREATE(OnCreate)
 		MSG_WM_CLOSE(OnClose)
 		MSG_WM_SIZE(OnSize)
