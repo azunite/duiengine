@@ -48,18 +48,18 @@ class DUI_EXP CDuiStatic : public CDuiWindow
 {
     DUIOBJ_DECLARE_CLASS_NAME(CDuiStatic, "text")
 public:
-    CDuiStatic():m_nMultiLines(0),m_nLineInter(5)
+    CDuiStatic():m_bMultiLines(0),m_nLineInter(5)
     {
         m_bMsgTransparent=TRUE;
     }
     virtual void DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat);
 
 protected:
-    int m_nMultiLines;
+    int m_bMultiLines;
     int m_nLineInter;
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_INT_ATTRIBUTE("multilines", m_nMultiLines, FALSE)
+    DUIWIN_INT_ATTRIBUTE("multilines", m_bMultiLines, FALSE)
     DUIWIN_INT_ATTRIBUTE("interhei", m_nLineInter, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 };

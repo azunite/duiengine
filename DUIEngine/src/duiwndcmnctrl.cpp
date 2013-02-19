@@ -21,7 +21,7 @@ namespace DuiEngine
 //
 void CDuiStatic::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat)
 {
-    if(!m_nMultiLines)
+    if(!m_bMultiLines)
     {
         __super::DuiDrawText(hdc,pszBuf,cchText,pRect,uFormat);
     }
@@ -35,6 +35,8 @@ void CDuiStatic::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UIN
         GetTextExtentPoint(hdc,_T("A"),1,&szChar);
         int nLineHei=szChar.cy;
         const TCHAR *ELLIPSIS_DOTS = _T("...");
+		int nRight=pRect->right;
+		pRect->right=pRect->left;
         while(i<cchText)
         {
             LPTSTR p2=CharNext(p1);
@@ -49,7 +51,7 @@ void CDuiStatic::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UIN
                 continue;
             }
             GetTextExtentPoint(hdc,p1,p2-p1,&szChar);
-            if(pt.x+szChar.cx > pRect->right)
+            if(pt.x+szChar.cx > nRight)
             {
                 pt.y+=nLineHei+m_nLineInter;
                 pt.x=pRect->left;
@@ -58,14 +60,10 @@ void CDuiStatic::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UIN
             }
             if(!(uFormat & DT_CALCRECT))
             {
-                if (nLine > 0 && nLine == m_nMultiLines && (pt.x+szChar.cx) > (pRect->right-30))
-                {
-                    CGdiAlpha::TextOut(hdc,pt.x,pt.y,ELLIPSIS_DOTS,lstrlen(ELLIPSIS_DOTS));
-                    return;
-                }
                 CGdiAlpha::TextOut(hdc,pt.x,pt.y,p1,p2-p1);
             }
             pt.x+=szChar.cx;
+			if(pt.x>pRect->right && uFormat & DT_CALCRECT) pRect->right=pt.x;
             i+=p2-p1;
             p1=p2;
         }
@@ -747,8 +745,14 @@ void CDuiIconWnd::OnPaint(CDCHandle dc)
 
 LRESULT CDuiIconWnd::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
 {
-    pSize->cx = m_nSize;
-    pSize->cy = m_nSize;
+	if(m_dlgpos.nCount!=4)
+	{
+		pSize->cx = m_nSize;
+		pSize->cy = m_nSize;
+	}else
+	{
+		__super::OnCalcSize(bCalcValidRects,pSize);
+	}
 
     return TRUE;
 }

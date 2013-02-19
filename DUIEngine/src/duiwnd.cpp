@@ -1207,6 +1207,8 @@ LRESULT CDuiWindow::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
 
         if (nTestDrawMode & DT_WORDBREAK)
             rcTest.bottom = 0x7FFF;
+		if(m_nMaxWidth!=-1) //指定了最大宽度时，采用这个最大值计算
+			rcTest.right=rcTest.left+m_nMaxWidth;
 
         DuiDrawText(dcTest,m_strInnerText, m_strInnerText.GetLength(), rcTest, nTestDrawMode | DT_CALCRECT);
 

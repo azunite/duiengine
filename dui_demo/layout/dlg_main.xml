@@ -198,8 +198,8 @@
         </tab>
       </tabctrl>
 
-      <img pos="100,100" skin="bmpmask"/>
-      <icon pos="100,120" src="500" size="16"/>
+<!--       <img pos="100,100" skin="bmpmask"/> -->
+<!--       <icon pos="100,120" src="500" size="16"/> -->
     </dlg>
 	</body>
 </layer>

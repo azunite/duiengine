@@ -1,5 +1,5 @@
-﻿<layer title="mesagebox" width="200" height="100" appwin="0" resize="0" translucent="1"  nomaxsize="1">
-	<body frame_size="40,30,10,80" min_size="300,100">
+﻿<layer title="mesagebox" width="200" height="100" appwin="0" frame_size="40,30,10,80" minsize="300,100" resize="0" translucent="1"  nomaxsize="1">
+	<body>
     <dlg id="100" pos="0,0,-0,-0" class="cls_dlg_frame">
       <caption id="101" pos="0,0,-0,29">
         <text pos="11,9" class="cls_txt_red" id="65404">title</text>
@@ -8,7 +8,7 @@
 
       <dlg pos="5,30,-5,-50">
         <icon id="65405" pos="0,0,32,32"/>
-        <text id="65403" pos="35,0" crtext="0000FF" multilines="1"/>
+        <text id="65403" pos="35,0" crtext="0000FF" multilines="1" maxwidth="300"/>
       </dlg>
       <dlg pos="0,-50,-0,-0" id="65400">
         <button pos="|-50,10,|50,-10" id="65410" class="normalbtn">button1</button>

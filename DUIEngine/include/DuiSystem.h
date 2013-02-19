@@ -24,7 +24,7 @@ class DUI_EXP DuiSystem :
     public Singleton<DuiSystem>
 {
 	friend class CSimpleWnd;
-	friend int DUI_EXP DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType );
+	friend class CDuiMessageBox;
     class CNamedID
     {
     public:

@@ -229,7 +229,7 @@ BOOL DuiSystem::SetMsgBoxTemplate( UINT uXmlResID,LPCSTR pszType/*=DUIRES_XML_TY
 
 	TiXmlElement *pXmlBody=(TiXmlElement*) xmlDoc.RootElement()->FirstChildElement("body");
 	
-	if(!pXmlBody->Attribute("frame_size") && !pXmlBody->Attribute("min_size")) return FALSE;
+	if(!xmlDoc.RootElement()->Attribute("frame_size") && !xmlDoc.RootElement()->Attribute("minsize")) return FALSE;
 
 	m_pTiXmlMsgBoxTempl=(TiXmlElement*)xmlDoc.RootElement()->Clone();
 
