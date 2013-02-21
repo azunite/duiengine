@@ -516,6 +516,7 @@ LRESULT CDuiRichEdit::OnCreate( LPVOID )
         m_pTxtHost=NULL;
         return 1;
     }
+	OnTxInPlaceActivate(NULL);
     SetWindowText(GetInnerText());
     return 0;
 }
@@ -524,6 +525,7 @@ void CDuiRichEdit::OnDestroy()
 {
     __super::OnDestroy();
 
+	OnTxInPlaceDeactivate();
     if(m_pTxtHost)
     {
         m_pTxtHost->Release();
@@ -572,7 +574,10 @@ void CDuiRichEdit::OnSetDuiFocus()
     __super::OnSetDuiFocus();
     if(m_pTxtHost)
     {
-        OnTxInPlaceActivate(NULL);
+// 		CRect rcClient;
+// 		GetClient(&rcClient);
+//         OnTxInPlaceActivate(&rcClient);
+		m_pTxtHost->GetTextService()->OnTxUIActivate();
         m_pTxtHost->GetTextService()->TxSendMessage(WM_SETFOCUS, 0, 0, 0);
     }
 }
@@ -582,8 +587,8 @@ void CDuiRichEdit::OnKillDuiFocus()
     __super::OnKillDuiFocus();
     if(m_pTxtHost)
     {
-        OnTxInPlaceActivate(NULL);
-        m_pTxtHost->GetTextService()->TxSendMessage(WM_KILLFOCUS, 0, 0, 0);
+		m_pTxtHost->GetTextService()->OnTxUIDeactivate();
+		m_pTxtHost->GetTextService()->TxSendMessage(WM_KILLFOCUS, 0, 0, 0);
         m_pTxtHost->TxShowCaret(FALSE);
     }
 }
