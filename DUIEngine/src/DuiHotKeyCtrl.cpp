@@ -59,8 +59,8 @@ void CDuiHotKeyCtrl::OnPaint( CDCHandle dc )
     ALPHAINFO alphaBack;
     if(GetContainer()->IsTranslucent())
         CGdiAlpha::AlphaBackup(dc,&rcClient,alphaBack);
-    CDuiStringA str=FormatHotkey();
-    DrawTextA(dc,str,str.GetLength(),&rcClient,DT_LEFT|DT_VCENTER|DT_SINGLELINE);
+    CDuiStringT str=FormatHotkey();
+    DrawText(dc,str,str.GetLength(),&rcClient,DT_LEFT|DT_VCENTER|DT_SINGLELINE);
     if(GetContainer()->IsTranslucent())
         CGdiAlpha::AlphaRestore(dc,alphaBack);
     AfterPaint(dc,duiDC);
@@ -68,11 +68,11 @@ void CDuiHotKeyCtrl::OnPaint( CDCHandle dc )
 
 void CDuiHotKeyCtrl::UpdateCaret()
 {
-    CDuiStringA str=FormatHotkey();
+    CDuiStringT str=FormatHotkey();
     CDCHandle dc=GetDC(GetContainer()->GetHostHwnd());
     HFONT hOldFond=dc.SelectFont(m_hTxtFont);
     SIZE szTxt;
-    GetTextExtentPointA(dc,str,str.GetLength(),&szTxt);
+    GetTextExtentPoint(dc,str,str.GetLength(),&szTxt);
     dc.SelectFont(hOldFond);
     ReleaseDC(GetContainer()->GetHostHwnd(),dc);
 
@@ -101,55 +101,55 @@ void CDuiHotKeyCtrl::OnKillDuiFocus()
 
 }
 
-CDuiStringA CDuiHotKeyCtrl::GetKeyName(WORD vk)
+CDuiStringT CDuiHotKeyCtrl::GetKeyName(WORD vk)
 {
-    CDuiStringA str;
+    CDuiStringT str;
     switch(vk)
     {
     case VK_ESCAPE:
-        str="ESC";
+        str=_T("ESC");
         break;
     case VK_RETURN:
-        str="Enter";
+        str=_T("Enter");
         break;
     case VK_UP:
-        str="Up";
+        str=_T("Up");
         break;
     case VK_DOWN:
-        str="Down";
+        str=_T("Down");
         break;
     case VK_LEFT:
-        str="Left";
+        str=_T("Left");
         break;
     case VK_RIGHT:
-        str="Right";
+        str=_T("Right");
         break;
     case VK_HOME:
-        str="Home";
+        str=_T("Home");
         break;
     case VK_END:
-        str="End";
+        str=_T("End");
         break;
     case VK_PRIOR:
-        str="PageUp";
+        str=_T("PageUp");
         break;
     case VK_NEXT:
-        str="PageDown";
+        str=_T("PageDown");
         break;
     case VK_INSERT:
-        str="Insert";
+        str=_T("Insert");
         break;
     default:
         if((vk>='0' && m_wVK<='9')||(vk>='A' && vk<='Z'))
-            str=(char)vk;
+            str=(TCHAR)vk;
         else if(vk>=VK_F1 && vk<=VK_F9)
-            str=CDuiStringA('F')+char(m_wVK-VK_F1+'1');
+            str=CDuiStringT(_T('F'))+TCHAR(m_wVK-VK_F1+'1');
         else if(vk==VK_F10)
-            str+="F10";
+            str+=_T("F10");
         else if(vk==VK_F11)
-            str+="F11";
+            str+=_T("F11");
         else if(vk==VK_F12)
-            str+="F12";
+            str+=_T("F12");
         else
         {
             char c=MapVirtualKeyA(vk,2);
@@ -166,7 +166,7 @@ CDuiStringA CDuiHotKeyCtrl::GetKeyName(WORD vk)
             case '.':
             case '/':
             case '`':
-                str+=c;
+                str+=TCHAR(c);
                 break;
             }
         }
@@ -175,17 +175,17 @@ CDuiStringA CDuiHotKeyCtrl::GetKeyName(WORD vk)
     return str;
 }
 
-CDuiStringA CDuiHotKeyCtrl::FormatHotkey()
+CDuiStringT CDuiHotKeyCtrl::FormatHotkey()
 {
-    if(m_wModifier==0 && m_wVK==0) return "нч";
-    CDuiStringA str="";
-    if(m_wModifier == HOTKEYF_ALT) str="Alt+";
-    if(m_wModifier == HOTKEYF_CONTROL) str="Ctrl+";
-    if(m_wModifier == HOTKEYF_SHIFT) str="Shift+";
-    if(m_wModifier == (HOTKEYF_ALT|HOTKEYF_SHIFT)) str="Shift+Alt+";
-    if(m_wModifier == (HOTKEYF_ALT|HOTKEYF_CONTROL)) str="Ctrl+Alt+";
-    if(m_wModifier == (HOTKEYF_CONTROL|HOTKEYF_SHIFT)) str="Ctrl+Shift+";
-    if(m_wModifier == (HOTKEYF_ALT|HOTKEYF_CONTROL|HOTKEYF_SHIFT)) str="Ctrl+Shift+Alt+";
+    if(m_wModifier==0 && m_wVK==0) return _T("нч");
+    CDuiStringT str;
+    if(m_wModifier == HOTKEYF_ALT) str=_T("Alt+");
+    if(m_wModifier == HOTKEYF_CONTROL) str=_T("Ctrl+");
+    if(m_wModifier == HOTKEYF_SHIFT) str=_T("Shift+");
+    if(m_wModifier == (HOTKEYF_ALT|HOTKEYF_SHIFT)) str=_T("Shift+Alt+");
+    if(m_wModifier == (HOTKEYF_ALT|HOTKEYF_CONTROL)) str=_T("Ctrl+Alt+");
+    if(m_wModifier == (HOTKEYF_CONTROL|HOTKEYF_SHIFT)) str=_T("Ctrl+Shift+");
+    if(m_wModifier == (HOTKEYF_ALT|HOTKEYF_CONTROL|HOTKEYF_SHIFT)) str=_T("Ctrl+Shift+Alt+");
     str+=GetKeyName(m_wVK);
     return str;
 }
@@ -217,7 +217,7 @@ void CDuiHotKeyCtrl::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
         m_wVK=0;
         m_wModifier=m_wInvalidModifier;
     }
-    CDuiStringA strKey=GetKeyName(nChar);
+    CDuiStringT strKey=GetKeyName(nChar);
     if(!strKey.IsEmpty())
     {
         //

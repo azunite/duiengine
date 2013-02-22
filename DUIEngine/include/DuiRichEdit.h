@@ -16,7 +16,7 @@ public:
     CDuiTextHost(void);
     ~CDuiTextHost(void);
 
-    BOOL Init(CDuiRichEdit* pDuiRichEdit,LPCWSTR pszText);
+    BOOL Init(CDuiRichEdit* pDuiRichEdit);
 
     ITextServices * GetTextService()
     {
@@ -257,10 +257,6 @@ protected:
 
     HRESULT InitDefaultParaFormat(PARAFORMAT2* ppf);
 
-    HRESULT OnTxInPlaceDeactivate();
-
-    HRESULT OnTxInPlaceActivate( LPCRECT prcClient );
-
     HRESULT OnTxNotify(DWORD iNotify,LPVOID pv);
 
     virtual HRESULT DefAttributeProc(const CDuiStringA & strAttribName,const CDuiStringA & strValue, BOOL bLoading);
@@ -290,6 +286,7 @@ protected:
     LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
 
     LRESULT OnSetTextColor(const CDuiStringA &  strValue,BOOL bLoading);
+
 protected:
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_CREATE(OnCreate)

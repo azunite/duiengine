@@ -13,7 +13,7 @@ public:
     BOOL Create(HWND hOwner);
 
     void RelayEvent(const MSG *pMsg);
-    void UpdateTip(CRect rc,LPCSTR pszTip,BOOL bText=TRUE);
+    void UpdateTip(CRect rc,LPCTSTR pszTip,BOOL bText=TRUE);
     void SetDelayTime(DWORD dwType,UINT iTime);
 
     void ShowTip(BOOL bShow);
@@ -32,7 +32,7 @@ protected:
 protected:
     int			m_nDelay;
     int			m_nShowSpan;
-    CDuiStringA	m_strTip;
+    CDuiStringT	m_strTip;
     BOOL		m_bTextTip;
     BOOL        m_bSetDelayTimer;
     CRect		m_rcTarget;

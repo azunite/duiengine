@@ -539,7 +539,6 @@ void CDuiHostWnd::OnDuiTimer( char cTimerID )
     else if(cTimerID==TIMER_CARET)
     {
 		DUIASSERT(m_bCaretShowing);
-		DUITRACE(_T("\nTimer:TIMER_CARET"));
         DrawCaret(m_ptCaret,TRUE);
 		m_bCaretActive=!m_bCaretActive;
     }
@@ -589,7 +588,7 @@ LRESULT CDuiHostWnd::OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
             if(bUpdate)
             {
                 m_pTipCtrl->m_dwHostID=hNewTipHost;
-                m_pTipCtrl->UpdateTip(rcTip,DUI_CT2A(strTip));
+                m_pTipCtrl->UpdateTip(rcTip,strTip);
             }
         }
     }
@@ -673,7 +672,10 @@ HDC CDuiHostWnd::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
         m_memDC.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
         m_memDC.SetBkMode(TRANSPARENT);
         m_memDC.SetTextColor(0);
-		if(m_bCaretActive && m_bTranslucent)	DrawCaret(m_ptCaret,FALSE);//clear old caret
+		if(m_bCaretActive && m_bTranslucent)
+		{
+			DrawCaret(m_ptCaret,FALSE);//clear old caret
+		}
         CRgn rgnRc;
         rgnRc.CreateRectRgnIndirect(&rc);
         m_memDC.SelectClipRgn(rgnRc);
@@ -684,7 +686,10 @@ HDC CDuiHostWnd::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
 void CDuiHostWnd::OnReleaseDuiDC(HDC hdcSour,CRect &rc,DWORD gdcFlags)
 {
     if(gdcFlags & OLEDC_NODRAW) return;
-	if(m_bCaretActive && m_bTranslucent)	DrawCaret(m_ptCaret,FALSE);//restore old caret
+	if(m_bCaretActive && m_bTranslucent)//	DrawCaret(m_ptCaret,FALSE);//restore old caret
+	{
+		DrawCaret(m_ptCaret,FALSE);//clear old caret
+	}
     CDCHandle dc=GetDC();
     UpdateHost(dc,rc);
     ReleaseDC(dc);
@@ -798,6 +803,8 @@ BOOL CDuiHostWnd::DuiCreateCaret( HBITMAP hBmp,int nWidth,int nHeight )
 
 BOOL CDuiHostWnd::DuiShowCaret( BOOL bShow )
 {
+	if(!m_hBmpCaret) return FALSE;	//caret has not been created.
+
 	DUITRACE(_T("\nDuiShowCaret:bShow=%d"),bShow);
     m_bCaretShowing=bShow;
     if(!m_bTranslucent)
@@ -829,6 +836,7 @@ BOOL CDuiHostWnd::DuiShowCaret( BOOL bShow )
 BOOL CDuiHostWnd::DuiSetCaretPos( int x,int y )
 {
     if(!SetCaretPos(x,y)) return FALSE;
+	DUITRACE(_T("\nDuiSetCaretPos:(%d,%d)"),x,y);
     if(m_bTranslucent)
     {
         if(m_bCaretShowing && m_bCaretActive)

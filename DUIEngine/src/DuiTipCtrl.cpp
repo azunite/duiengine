@@ -64,7 +64,7 @@ void CDuiTipCtrl::RelayEvent( const MSG *pMsg )
     }
 }
 
-void CDuiTipCtrl::UpdateTip(CRect rc, LPCSTR pszTip,BOOL bText/*=TRUE*/ )
+void CDuiTipCtrl::UpdateTip(CRect rc, LPCTSTR pszTip,BOOL bText/*=TRUE*/ )
 {
     m_rcTarget=rc;
     m_bTextTip=bText;
@@ -87,14 +87,14 @@ void CDuiTipCtrl::ShowTip(BOOL bShow)
         //m_dwHostID=0;
         ShowWindow(SW_HIDE);
         m_rcTarget.SetRect(0,0,0,0);
-        m_strTip="";
+        m_strTip=_T("");
     }
     else if(!m_strTip.IsEmpty())
     {
         HDC hdc=::GetDC(NULL);
         CRect rcText(0,0,500,1000);
         HFONT oldFont=(HFONT)SelectObject(hdc,m_font);
-        DrawTextA(hdc,m_strTip,-1,&rcText,DT_CALCRECT|DT_LEFT|DT_WORDBREAK);
+        DrawText(hdc,m_strTip,-1,&rcText,DT_CALCRECT|DT_LEFT|DT_WORDBREAK);
         SelectObject(hdc,oldFont);
         ::ReleaseDC(NULL,hdc);
         SetWindowPos(HWND_TOPMOST,0,0,rcText.right+2*MARGIN_TIP,rcText.bottom+2*MARGIN_TIP,SWP_NOMOVE|SWP_NOSENDCHANGING|SWP_SHOWWINDOW|SWP_NOACTIVATE);
@@ -131,7 +131,7 @@ void CDuiTipCtrl::OnPaint( CDCHandle dc )
     rc.DeflateRect(MARGIN_TIP,MARGIN_TIP);
     dcPaint.SetBkMode(TRANSPARENT);
     HFONT hOldFont=(HFONT)dcPaint.SelectFont(m_font);
-    ::DrawTextA(dcPaint,m_strTip,-1,&rc,DT_WORDBREAK);
+    ::DrawText(dcPaint,m_strTip,-1,&rc,DT_WORDBREAK);
     dcPaint.SelectFont(hOldFont);
 }
 
