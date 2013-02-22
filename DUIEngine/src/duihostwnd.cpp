@@ -803,8 +803,6 @@ BOOL CDuiHostWnd::DuiCreateCaret( HBITMAP hBmp,int nWidth,int nHeight )
 
 BOOL CDuiHostWnd::DuiShowCaret( BOOL bShow )
 {
-	if(!m_hBmpCaret) return FALSE;	//caret has not been created.
-
 	DUITRACE(_T("\nDuiShowCaret:bShow=%d"),bShow);
     m_bCaretShowing=bShow;
     if(!m_bTranslucent)
