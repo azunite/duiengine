@@ -177,6 +177,8 @@ protected:
     DUIMSG		*m_pCurMsg;
 
     UINT m_uCmdID;
+	CDuiStringA	m_strName;
+
     CRect m_rcWindow;
     UINT m_uPositionType;
     DuiStyle m_style;
@@ -262,10 +264,11 @@ public:
     // Get Command ID
     UINT GetCmdID();//tolua_export
     void SetCmdID(UINT uNewID);//tolua_export
-    ULONG_PTR GetCmdData();//tolua_export
 
+	ULONG_PTR GetCmdData();//tolua_export
     ULONG_PTR SetCmdData(ULONG_PTR uData);//tolua_export
 
+	LPCSTR GetName(){ return m_strName.IsEmpty()?NULL:(LPCSTR)m_strName;}
     //************************************
     // Method:    SetDuiTimer
     // Function:  利用窗口定时器来设置一个ID为0-127的DUI定时器
@@ -356,8 +359,24 @@ public:
 
     DuiStyle& GetStyle();
 
+	
+    //************************************
+    // Method:    FindChildByCmdID, 通过ID查找对应的子窗口
+    // Access:    public 
+    // Returns:   CDuiWindow*
+    // Qualifier:
+    // Parameter: UINT uCmdID
+    //************************************
     CDuiWindow* FindChildByCmdID(UINT uCmdID);//tolua_export
 
+	//************************************
+	// Method:    FindChildByName，通过名字查找子窗口
+	// Access:    public 
+	// Returns:   CDuiWindow*
+	// Qualifier:
+	// Parameter: LPCSTR pszName
+	//************************************
+	CDuiWindow* FindChildByName(LPCSTR pszName);//tolua_export
 
     // 从XML创建子窗口
     // LPCSTR utf8Xml: utf8 编码的XML串

@@ -1,3 +1,7 @@
+2013年2月26日
+1、为duiwindow增加接口LPCSTR GetName();及FindChildByName(LPCSTR);
+2、将DuiMessageBox模板中原来采用的固定ID替换成固定name
+
 2013年2月18日
 1、增加DuiMessageBox接口，用于替换系统的MessageBox。
 2、改写CDuiSliderBar控件。

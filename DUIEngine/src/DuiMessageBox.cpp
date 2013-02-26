@@ -23,82 +23,82 @@ namespace DuiEngine
 		{
 		case MB_ABORTRETRYIGNORE:
 			{
-				FindChildByCmdID(IDC_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
-				FindChildByCmdID(IDC_MSGBOX_BTN2PANEL)->SetVisible(FALSE);
-				CDuiWindow *pBtnPanel=FindChildByCmdID(IDC_MSGBOX_BTN3PANEL);
+				FindChildByName(NAME_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN2PANEL)->SetVisible(FALSE);
+				CDuiWindow *pBtnPanel=FindChildByName(NAME_MSGBOX_BTN3PANEL);
 				pBtnPanel->SetVisible(TRUE);
-				CDuiWindow *pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN1);
+				CDuiWindow *pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN1);
 				pBtn->SetInnerText(_T("中止"));pBtn->SetCmdID(IDABORT);
-				pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN2);
+				pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN2);
 				pBtn->SetInnerText(_T("重试"));pBtn->SetCmdID(IDRETRY);
-				pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN3);
+				pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN3);
 				pBtn->SetInnerText(_T("忽略"));pBtn->SetCmdID(IDIGNORE);
 			}
 			break;
 		case MB_YESNOCANCEL:
 			{
-				FindChildByCmdID(IDC_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
-				FindChildByCmdID(IDC_MSGBOX_BTN2PANEL)->SetVisible(FALSE);
-				CDuiWindow *pBtnPanel=FindChildByCmdID(IDC_MSGBOX_BTN3PANEL);
+				FindChildByName(NAME_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN2PANEL)->SetVisible(FALSE);
+				CDuiWindow *pBtnPanel=FindChildByName(NAME_MSGBOX_BTN3PANEL);
 				pBtnPanel->SetVisible(TRUE);
-				CDuiWindow *pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN1);
+				CDuiWindow *pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN1);
 				pBtn->SetInnerText(_T("是"));pBtn->SetCmdID(IDYES);
-				pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN2);
+				pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN2);
 				pBtn->SetInnerText(_T("否"));pBtn->SetCmdID(IDNO);
-				pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN3);
+				pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN3);
 				pBtn->SetInnerText(_T("取消"));pBtn->SetCmdID(IDCANCEL);
 			}
 			break;
 		case MB_OKCANCEL:
 			{
-				FindChildByCmdID(IDC_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
-				FindChildByCmdID(IDC_MSGBOX_BTN3PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN3PANEL)->SetVisible(FALSE);
 
-				CDuiWindow *pBtnPanel=FindChildByCmdID(IDC_MSGBOX_BTN2PANEL);
+				CDuiWindow *pBtnPanel=FindChildByName(NAME_MSGBOX_BTN2PANEL);
 				pBtnPanel->SetVisible(TRUE);
 
-				CDuiWindow *pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN1);
+				CDuiWindow *pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN1);
 				pBtn->SetInnerText(_T("确定"));	pBtn->SetCmdID(IDOK);
-				pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN2);
+				pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN2);
 				pBtn->SetInnerText(_T("取消"));	pBtn->SetCmdID(IDCANCEL);
 			}
 			break;
 		case MB_YESNO:
 			{
-				FindChildByCmdID(IDC_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
-				FindChildByCmdID(IDC_MSGBOX_BTN3PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN3PANEL)->SetVisible(FALSE);
 
-				CDuiWindow *pBtnPanel=FindChildByCmdID(IDC_MSGBOX_BTN2PANEL);
+				CDuiWindow *pBtnPanel=FindChildByName(NAME_MSGBOX_BTN2PANEL);
 				pBtnPanel->SetVisible(TRUE);
 
-				CDuiWindow *pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN1);
+				CDuiWindow *pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN1);
 				pBtn->SetInnerText(_T("是"));	pBtn->SetCmdID(IDYES);
-				pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN2);
+				pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN2);
 				pBtn->SetInnerText(_T("否"));	pBtn->SetCmdID(IDNO);
 			}
 			break;
 		case MB_RETRYCANCEL:
 			{
-				FindChildByCmdID(IDC_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
-				FindChildByCmdID(IDC_MSGBOX_BTN3PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN1PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN3PANEL)->SetVisible(FALSE);
 
-				CDuiWindow *pBtnPanel=FindChildByCmdID(IDC_MSGBOX_BTN2PANEL);
+				CDuiWindow *pBtnPanel=FindChildByName(NAME_MSGBOX_BTN2PANEL);
 				pBtnPanel->SetVisible(TRUE);
 
-				CDuiWindow *pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN1);
+				CDuiWindow *pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN1);
 				pBtn->SetInnerText(_T("重试"));	pBtn->SetCmdID(IDRETRY);
-				pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN2);
+				pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN2);
 				pBtn->SetInnerText(_T("取消"));	pBtn->SetCmdID(IDCANCEL);
 			}
 			break;
 		case MB_OK:
 			{
-				FindChildByCmdID(IDC_MSGBOX_BTN2PANEL)->SetVisible(FALSE);
-				FindChildByCmdID(IDC_MSGBOX_BTN3PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN2PANEL)->SetVisible(FALSE);
+				FindChildByName(NAME_MSGBOX_BTN3PANEL)->SetVisible(FALSE);
 
-				CDuiWindow *pBtnPanel=FindChildByCmdID(IDC_MSGBOX_BTN1PANEL);
+				CDuiWindow *pBtnPanel=FindChildByName(NAME_MSGBOX_BTN1PANEL);
 				pBtnPanel->SetVisible(TRUE);
-				CDuiWindow *pBtn=pBtnPanel->FindChildByCmdID(IDC_MSGBOX_BTN1);
+				CDuiWindow *pBtn=pBtnPanel->FindChildByName(NAME_MSGBOX_BTN1);
 				pBtn->SetInnerText(_T("确定"));	pBtn->SetCmdID(IDOK);
 			}
 			break;
@@ -113,11 +113,11 @@ namespace DuiEngine
 		const char *pszMinAttr=pXmlTempl->Attribute("minsize");
 		sscanf(pszMinAttr,"%d,%d",&szMin.cx,&szMin.cy);
 
-		CDuiWindow * pTitle= FindChildByCmdID(IDC_MSGBOX_TITLE);
+		CDuiWindow * pTitle= FindChildByName(NAME_MSGBOX_TITLE);
 		DUIASSERT(pTitle);
 		pTitle->SetInnerText(lpCaption?lpCaption:_T("提示"));
 
-		CDuiWindow * pMsg= FindChildByCmdID(IDC_MSGBOX_TEXT);
+		CDuiWindow * pMsg= FindChildByName(NAME_MSGBOX_TEXT);
 		DUIASSERT(pMsg);
 		pMsg->SetInnerText(lpText);
 
@@ -137,7 +137,7 @@ namespace DuiEngine
 
 	BOOL CDuiMessageBox::SetIcon( UINT uType )
 	{
-		CDuiIconWnd *pIcon=(CDuiIconWnd *)FindChildByCmdID(IDC_MSGBOX_ICON);
+		CDuiIconWnd *pIcon=(CDuiIconWnd *)FindChildByName(NAME_MSGBOX_ICON);
 		if(!pIcon) return FALSE;
 		switch(uType&0xF0)
 		{

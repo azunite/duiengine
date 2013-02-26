@@ -547,6 +547,22 @@ CDuiWindow* CDuiWindow::FindChildByCmdID(UINT uCmdID)
     return NULL;
 }
 
+CDuiWindow* CDuiWindow::FindChildByName( LPCSTR pszName )
+{
+	if(!pszName) return NULL;
+
+	CDuiWindow *pChild = m_pFirstChild;
+	while(pChild)
+	{
+		if (!pChild->m_strName.IsEmpty() && strcmp(pChild->m_strName, pszName)==0)
+			return pChild;
+		CDuiWindow *pChildFind=pChild->FindChildByName(pszName);
+		if(pChildFind) return pChildFind;
+		pChild=pChild->m_pNextSibling;
+	}
+	return NULL;
+}
+
 BOOL CDuiWindow::LoadChildren(TiXmlElement* pTiXmlChildElem)
 {
     for (TiXmlElement* pXmlChild = pTiXmlChildElem; NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement())
@@ -1364,6 +1380,7 @@ BOOL CDuiWindow::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 HRESULT CDuiWindow::OnAttributeName(const CDuiStringA& strValue, BOOL bLoading)
 {
+	m_strName=strValue;
     if(m_uCmdID==0)
     {
         m_uCmdID=DuiSystem::getSingleton().Name2ID(strValue);
