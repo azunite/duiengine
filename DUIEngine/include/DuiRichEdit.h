@@ -167,6 +167,7 @@ protected:
     void RevokeDragDrop(void);
 
     BOOL fRegisteredForDrop;
+	BOOL m_fUiActive	; // Whether control is inplace active
 
     ULONG	cRefs;					// Reference Count
     ITextServices	*pserv;		    // pointer to Text Services object
@@ -340,7 +341,6 @@ protected:
     UINT	m_fWordWrap			:1;	// Whether control should word wrap
     UINT	m_fRich				:1;	// Whether control is rich text
     UINT	m_fSaveSelection		:1;	// Whether to save the selection when inactive
-    UINT	m_fInplaceActive		:1; // Whether control is inplace active
     UINT	m_fTransparent		:1; // Whether control is transparent
     UINT	m_fVertical			:1;	// Whether control is layout following vertical
     UINT	m_fAllowBeep		:1;	// Whether message beep is allowed in the control
