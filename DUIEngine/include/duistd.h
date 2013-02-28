@@ -32,13 +32,9 @@
 #include <CommCtrl.h>
 #include <Shlwapi.h>
 #include <OleCtl.h>
-#include <assert.h>
 #include <tchar.h>
 
 
-#define DUIASSERT(x) assert(x)
-void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
-#define DUITRACE DuiTrace
 
 #include "..\dependencies\tinyxml\tinyxml.h"
 
@@ -48,6 +44,7 @@ void DUI_EXP DuiTrace(LPCTSTR pstrFormat, ...);
 #pragma comment(lib,"tinyxml.lib")
 #endif//DEBUG
 
+#include "DuiUtilities.h"
 
 #ifndef NO_DUITYPES
 #define _WTYPES_NS DuiEngine

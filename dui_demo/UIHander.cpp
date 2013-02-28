@@ -26,6 +26,11 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 
 void CUIHander::OnAttrReposition()
 {
+// 	CDuiFlashCtrl * pFlash=(CDuiFlashCtrl *)m_pMainDlg->FindChildByName("ctrl_flash");
+// 	if(pFlash)
+// 	{
+// 		pFlash->Play(L"E:\\dui.work\\x-framework\\bin\\Construction.swf");
+// 	}
 	m_pMainDlg->FindChildByCmdID(²âÊÔ)->SetAttribute("pos","|-100,|-15,|100,|15");
 }
 

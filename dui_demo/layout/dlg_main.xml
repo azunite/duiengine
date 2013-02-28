@@ -9,7 +9,7 @@
         <imgbtn id="5" name="btn_minimize" skin="btn_sys_minimize" pos="-121,0" animate="0" />
       </caption>
 
-      <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="0">
+      <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10">
         <tab id="113" title="miscellaneous" sep="5">
           <animateimg name="ani_test" pos="20,100" skin="icons"/>
           <img id="1139" pos="300,200,400,300" skin="icons" tip="img tip" msgtransparent="0"/>
@@ -182,11 +182,13 @@
         <tab id="120" title="splitwnd">
           <splitrow id="1180" pos="10,0,-10,-10" skinsep="skin_split_horz" sepsize="6">
             <pane idealsize="250" minsize="30" priority="0" crbg="FF0000">
+              <flash pos="0,0,-0,-0" name="ctrl_flash" url="http://player.ku6.com/refer/Z8kgmuUYqXdnwv8L/v.swf" delayinit="1"/>
               <text pos="|-50,|-20">pane1 priority=2</text>
             </pane>
             <pane idealsize="400" minsize="30" priority="1">
               <splitcol id="1180" pos="0,0,-0,-0" skinsep="skin_split_vert" sepsize="6">
                 <pane idealsize="200" minsize="30" priority="0" crbg="000088">
+<!--                   <mediaplayer pos="0,0,-0,-0" name="ctrl_media" url="E:\dui.work\x-framework\bin\fullscreen.wmv" delayinit="1"/> -->
                   <text pos="|-50,|-20">pane2.1 priority=0</text>
                 </pane>
                 <pane idealsize="400" minsize="30" priority="1" crbg="008800">

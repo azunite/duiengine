@@ -53,7 +53,9 @@ void DuiWindowFactoryManager::AddStandardWindowFactory()
     AddKeyObject(CDuiHotKeyCtrl::GetClassName(),new TplDuiWindowFactory<CDuiHotKeyCtrl>(TRUE));
     AddKeyObject(CDuiCaption::GetClassName(),new TplDuiWindowFactory<CDuiCaption>(TRUE));
     AddKeyObject(CDuiSliderBar::GetClassName(),new TplDuiWindowFactory<CDuiSliderBar>(TRUE));
-
+	AddKeyObject(CDuiActiveX::GetClassName(),new TplDuiWindowFactory<CDuiActiveX>(TRUE));
+	AddKeyObject(CDuiFlashCtrl::GetClassName(),new TplDuiWindowFactory<CDuiFlashCtrl>(TRUE));
+	AddKeyObject(CDuiMediaPlayer::GetClassName(),new TplDuiWindowFactory<CDuiMediaPlayer>(TRUE));
 }
 
 void DuiWindowFactoryManager::OnWndFactoryRemoved( const CDuiWindowFactoryPtr & obj )

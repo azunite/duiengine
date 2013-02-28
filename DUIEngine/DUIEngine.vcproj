@@ -502,6 +502,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiUtilities.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\DuiWindowManager.cpp"
 				>
 			</File>
@@ -549,6 +553,22 @@
 				RelativePath=".\src\SimpleWnd.cpp"
 				>
 			</File>
+			<Filter
+				Name="activex"
+				>
+				<File
+					RelativePath=".\src\activex\DuiActiveX.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\activex\DuiAxHost.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\activex\DuiBStr.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -560,15 +580,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\DuiCaption.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duicolor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DuiComboBox.h"
 				>
 			</File>
 			<File
@@ -588,23 +600,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\DuiDropDownList.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duifontpool.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duiframe.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\duihostwnd.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DuiHotKeyCtrl.h"
 				>
 			</File>
 			<File
@@ -620,35 +620,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\duiimgpool.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duiitembox.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duiItempanel.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\duilistbox.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duilistboxex.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\DuiLogger.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DuiMenu.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DuiMessageBox.h"
 				>
 			</File>
 			<File
@@ -661,10 +637,6 @@
 			</File>
 			<File
 				RelativePath=".\include\duiobject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duirealwnd.h"
 				>
 			</File>
 			<File
@@ -684,22 +656,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\DuiRichEdit.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duiscrollbar.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DUISingleton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DuiSingletonMap.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duiskin.h"
 				>
 			</File>
@@ -708,23 +664,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\DuiSkinPool.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DuiSliderBar.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DuiSplitWnd.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duistd.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duistringpool.h"
 				>
 			</File>
 			<File
@@ -744,11 +684,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\duitreebox.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\DuiTreeCtrl.h"
+				RelativePath=".\include\DuiUtilities.h"
 				>
 			</File>
 			<File
@@ -757,10 +693,6 @@
 			</File>
 			<File
 				RelativePath=".\include\duiwnd.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duiwndcmnctrl.h"
 				>
 			</File>
 			<File
@@ -781,10 +713,6 @@
 			</File>
 			<File
 				RelativePath=".\include\duiwndstyle.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\duiwndtabctrl.h"
 				>
 			</File>
 			<File
@@ -836,6 +764,130 @@
 				</File>
 				<File
 					RelativePath=".\include\wtl.mini\duistr.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="activex"
+				>
+				<File
+					RelativePath=".\include\activex\DuiActiveX.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\activex\DuiAxHost.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\activex\DuiBStr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\activex\DuiComPtr.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="controls"
+				>
+				<File
+					RelativePath=".\include\DuiCaption.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiComboBox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiDropDownList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiHotKeyCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duiitembox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duilistbox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duilistboxex.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiMenu.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiMessageBox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duirealwnd.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiRichEdit.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duiscrollbar.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiSliderBar.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiSplitWnd.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duitreebox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiTreeCtrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duiwndcmnctrl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duiwndtabctrl.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="singltons"
+				>
+				<File
+					RelativePath=".\include\duifontpool.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duiimgpool.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DUISingleton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiSingletonMap.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiSkinPool.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\duistringpool.h"
 					>
 				</File>
 			</Filter>

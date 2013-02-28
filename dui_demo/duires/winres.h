@@ -19,4 +19,6 @@
 #define	btn_test		65546
 #define	ani_test		65547
 #define	IDC_PROGTEST		65548
+#define	ctrl_flash		65549
+#define	ctrl_media		65550
 /*----------------------------RES_BUILDER:end------------------------------------->*/

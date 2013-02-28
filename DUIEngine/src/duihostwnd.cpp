@@ -375,9 +375,9 @@ void CDuiHostWnd::OnPrint(CDCHandle dc, UINT uFlags)
         {
             rgnUpdate.Attach(m_rgnInvalidate.Detach());
         }
-		if(m_bCaretActive && m_bTranslucent) DrawCaret(m_ptCaret,FALSE);//clear old caret 
+		if(m_bCaretActive) DrawCaret(m_ptCaret,FALSE);//clear old caret 
         RedrawRegion(CDCHandle(m_memDC), rgnUpdate);
-		if(m_bCaretActive && m_bTranslucent) DrawCaret(m_ptCaret,FALSE);//redraw caret 
+		if(m_bCaretActive) DrawCaret(m_ptCaret,FALSE);//redraw caret 
         m_memDC.SelectClipRgn(NULL);
 
         m_memDC.SelectFont(hftOld);
@@ -546,7 +546,6 @@ void CDuiHostWnd::OnDuiTimer( char cTimerID )
 
 void CDuiHostWnd::DrawCaret(CPoint pt,BOOL bUpdate/*=FALSE*/)
 {
-    DUIASSERT(m_bTranslucent);
     BITMAP bm;
     GetObject(m_hBmpCaret,sizeof(bm),&bm);
 
@@ -559,12 +558,20 @@ void CDuiHostWnd::DrawCaret(CPoint pt,BOOL bUpdate/*=FALSE*/)
 
 	if(bUpdate)
     {
-        CRect rc;
-        GetWindowRect(&rc);
-        BLENDFUNCTION bf= {AC_SRC_OVER,0,0xFF,AC_SRC_ALPHA};
-        CDCHandle dc=GetDC();
-        UpdateLayeredWindow(m_hWnd,dc,&rc.TopLeft(),&rc.Size(),m_memDC,&CPoint(0,0),0,&bf,ULW_ALPHA);
-        ReleaseDC(dc);
+		if(m_bTranslucent)
+		{
+			CRect rc;
+			GetWindowRect(&rc);
+			BLENDFUNCTION bf= {AC_SRC_OVER,0,0xFF,AC_SRC_ALPHA};
+			CDCHandle dc=GetDC();
+			UpdateLayeredWindow(m_hWnd,dc,&rc.TopLeft(),&rc.Size(),m_memDC,&CPoint(0,0),0,&bf,ULW_ALPHA);
+			ReleaseDC(dc);
+		}else
+		{
+			CDCHandle dc=GetDC();
+			dc.BitBlt(pt.x,pt.y,bm.bmWidth,bm.bmHeight,m_memDC,pt.x,pt.y,SRCCOPY);
+			ReleaseDC(dc);
+		}
     }
 }
 
@@ -672,7 +679,7 @@ HDC CDuiHostWnd::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
         m_memDC.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
         m_memDC.SetBkMode(TRANSPARENT);
         m_memDC.SetTextColor(0);
-		if(m_bCaretActive && m_bTranslucent)
+		if(m_bCaretActive)
 		{
 			DrawCaret(m_ptCaret,FALSE);//clear old caret
 		}
@@ -686,7 +693,7 @@ HDC CDuiHostWnd::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
 void CDuiHostWnd::OnReleaseDuiDC(HDC hdcSour,CRect &rc,DWORD gdcFlags)
 {
     if(gdcFlags & OLEDC_NODRAW) return;
-	if(m_bCaretActive && m_bTranslucent)//	DrawCaret(m_ptCaret,FALSE);//restore old caret
+	if(m_bCaretActive)
 	{
 		DrawCaret(m_ptCaret,FALSE);//clear old caret
 	}
@@ -767,67 +774,57 @@ BOOL CDuiHostWnd::IsTranslucent()
 
 BOOL CDuiHostWnd::DuiCreateCaret( HBITMAP hBmp,int nWidth,int nHeight )
 {
-    BOOL bRet=::CreateCaret(m_hWnd,hBmp,nWidth,nHeight);
-    if(bRet && m_bTranslucent)
-    {
-        CDCHandle dc=GetDC();
-        if(m_hBmpCaret)
-        {
-            DeleteObject(m_hBmpCaret);
-            m_hBmpCaret=NULL;
-        }
-        m_hBmpCaret=CreateCompatibleBitmap(dc,nWidth,nHeight);
-        CDCHandle memdc1,memdc2;
-        memdc1.CreateCompatibleDC(dc);
-        memdc1.SelectBitmap(m_hBmpCaret);
-        if(hBmp)
-        {
-            //以拉伸方式创建一个插入符位图
-            memdc2.CreateCompatibleDC(dc);
-            memdc2.SelectBitmap(hBmp);
-            BITMAP bm;
-            GetObject(hBmp,sizeof(bm),&bm);
-            StretchBlt(memdc1,0,0,nWidth,nHeight,memdc2,0,0,bm.bmWidth,bm.bmHeight,SRCCOPY);
-            memdc2.DeleteDC();
-        }
-        else
-        {
-            //创建一个黑色插入符的位图
-            memdc1.FillSolidRect(0,0,nWidth,nHeight,0);
-        }
-        memdc1.DeleteDC();
-        ReleaseDC(dc);
-    }
-    return bRet;
+	::CreateCaret(m_hWnd,hBmp,nWidth,nHeight);
+	CDCHandle dc=GetDC();
+	if(m_hBmpCaret)
+	{
+		DeleteObject(m_hBmpCaret);
+		m_hBmpCaret=NULL;
+	}
+	m_hBmpCaret=CreateCompatibleBitmap(dc,nWidth,nHeight);
+	CDCHandle memdc1,memdc2;
+	memdc1.CreateCompatibleDC(dc);
+	memdc1.SelectBitmap(m_hBmpCaret);
+	if(hBmp)
+	{
+		//以拉伸方式创建一个插入符位图
+		memdc2.CreateCompatibleDC(dc);
+		memdc2.SelectBitmap(hBmp);
+		BITMAP bm;
+		GetObject(hBmp,sizeof(bm),&bm);
+		StretchBlt(memdc1,0,0,nWidth,nHeight,memdc2,0,0,bm.bmWidth,bm.bmHeight,SRCCOPY);
+		memdc2.DeleteDC();
+	}
+	else
+	{
+		//创建一个黑色插入符的位图
+		memdc1.FillSolidRect(0,0,nWidth,nHeight,0);
+	}
+	memdc1.DeleteDC();
+	ReleaseDC(dc);
+    return TRUE;
 }
 
 BOOL CDuiHostWnd::DuiShowCaret( BOOL bShow )
 {
 	DUITRACE(_T("\nDuiShowCaret:bShow=%d"),bShow);
     m_bCaretShowing=bShow;
-    if(!m_bTranslucent)
-    {
-		if(bShow) ::ShowCaret(m_hWnd);
-        else ::HideCaret(m_hWnd);
-    }
-    else
-    {
-        if(bShow)
-        {
-            SetDuiTimer(TIMER_CARET,GetCaretBlinkTime());
-			if(!m_bCaretActive)
-			{
-				DrawCaret(m_ptCaret,TRUE);
-				m_bCaretActive=TRUE;
-			}
-        }
-        else
-        {
-            KillDuiTimer(TIMER_CARET);
-            if(m_bCaretActive)	DrawCaret(m_ptCaret,TRUE);
-            m_bCaretActive=FALSE;
-        }
-    }
+
+	if(bShow)
+	{
+		SetDuiTimer(TIMER_CARET,GetCaretBlinkTime());
+		if(!m_bCaretActive)
+		{
+			DrawCaret(m_ptCaret,TRUE);
+			m_bCaretActive=TRUE;
+		}
+	}
+	else
+	{
+		KillDuiTimer(TIMER_CARET);
+		if(m_bCaretActive)	DrawCaret(m_ptCaret,TRUE);
+		m_bCaretActive=FALSE;
+	}
     return TRUE;
 }
 
@@ -835,20 +832,17 @@ BOOL CDuiHostWnd::DuiSetCaretPos( int x,int y )
 {
     if(!SetCaretPos(x,y)) return FALSE;
 	DUITRACE(_T("\nDuiSetCaretPos:(%d,%d)"),x,y);
-    if(m_bTranslucent)
-    {
-        if(m_bCaretShowing && m_bCaretActive)
-        {
-            //clear old caret
-            DrawCaret(m_ptCaret);
-        }
-        m_ptCaret=CPoint(x,y);
-        if(m_bCaretShowing && m_bCaretActive)
-        {
-            //draw new caret
-            DrawCaret(m_ptCaret);
-        }
-    }
+	if(m_bCaretShowing && m_bCaretActive)
+	{
+		//clear old caret
+		DrawCaret(m_ptCaret,FALSE);
+	}
+	m_ptCaret=CPoint(x,y);
+	if(m_bCaretShowing && m_bCaretActive)
+	{
+		//draw new caret
+		DrawCaret(m_ptCaret,TRUE);
+	}
     return TRUE;
 }
 
