@@ -693,6 +693,7 @@ HDC CDuiHostWnd::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
 void CDuiHostWnd::OnReleaseDuiDC(HDC hdcSour,CRect &rc,DWORD gdcFlags)
 {
     if(gdcFlags & OLEDC_NODRAW) return;
+	m_memDC.SelectClipRgn(NULL);
 	if(m_bCaretActive)
 	{
 		DrawCaret(m_ptCaret,FALSE);//clear old caret
@@ -822,10 +823,13 @@ BOOL CDuiHostWnd::DuiShowCaret( BOOL bShow )
 	else
 	{
 		KillDuiTimer(TIMER_CARET);
-		if(m_bCaretActive)	DrawCaret(m_ptCaret,TRUE);
+		if(m_bCaretActive)
+		{
+			DrawCaret(m_ptCaret,TRUE);
+		}
 		m_bCaretActive=FALSE;
 	}
-    return TRUE;
+   return TRUE;
 }
 
 BOOL CDuiHostWnd::DuiSetCaretPos( int x,int y )

@@ -21,4 +21,5 @@
 #define	IDC_PROGTEST		65548
 #define	ctrl_flash		65549
 #define	ctrl_media		65550
+#define	ctrl_hk2		65551
 /*----------------------------RES_BUILDER:end------------------------------------->*/
