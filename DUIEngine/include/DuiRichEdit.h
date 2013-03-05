@@ -163,10 +163,6 @@ protected:
     //@cmember Returns HIMETRIC size of the control bar.
     virtual HRESULT		TxGetSelectionBarWidth (LONG *plSelBarWidth);
 protected:
-    void RegisterDragDrop(void);
-    void RevokeDragDrop(void);
-
-    BOOL fRegisteredForDrop;
 	BOOL m_fUiActive	; // Whether control is inplace active
 
     ULONG	cRefs;					// Reference Count

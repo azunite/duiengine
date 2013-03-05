@@ -13,6 +13,8 @@ public:
 protected:
 	LRESULT OnInitDialog(HWND hWnd, LPARAM lParam);
 
+	void OnDestory();
+
 	void OnAttrReposition();
 	void OnRepEditSel();
 	void OnIECtrl();
@@ -38,6 +40,7 @@ protected:
 	BEGIN_MSG_MAP_EX(CUIHander)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
 		MSG_WM_INITDIALOG(OnInitDialog)
+		MSG_WM_DESTROY(OnDestory)
 		MSG_WM_COMMAND(OnCommand)
 	END_MSG_MAP()
 

@@ -4,6 +4,102 @@
 #include "MainDlg.h"
 #include "skinole/ImageOle.h"
 
+class CTestDropTarget:public IDropTarget
+{
+public:
+	CTestDropTarget()
+	{
+		nRef=1;
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// IUnknown
+	virtual HRESULT STDMETHODCALLTYPE QueryInterface( 
+		/* [in] */ REFIID riid,
+		/* [iid_is][out] */ __RPC__deref_out void __RPC_FAR *__RPC_FAR *ppvObject)
+	{
+		HRESULT hr=S_FALSE;
+		if(riid==__uuidof(IUnknown))
+			*ppvObject=(IUnknown*) this,hr=S_OK;
+		else if(riid==__uuidof(IDropTarget))
+			*ppvObject=(IDropTarget*)this,hr=S_OK;
+		return hr;
+
+	}
+
+	virtual ULONG STDMETHODCALLTYPE AddRef( void){return ++nRef;}
+
+	virtual ULONG STDMETHODCALLTYPE Release( void) { 
+		nRef--;
+		if(nRef==0) delete this;
+		return nRef;
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	// IDropTarget
+
+	virtual HRESULT STDMETHODCALLTYPE DragEnter( 
+		/* [unique][in] */ __RPC__in_opt IDataObject *pDataObj,
+		/* [in] */ DWORD grfKeyState,
+		/* [in] */ POINTL pt,
+		/* [out][in] */ __RPC__inout DWORD *pdwEffect)
+	{
+		*pdwEffect=DROPEFFECT_LINK;
+		return S_OK;
+	}
+
+	virtual HRESULT STDMETHODCALLTYPE DragOver( 
+		/* [in] */ DWORD grfKeyState,
+		/* [in] */ POINTL pt,
+		/* [out][in] */ __RPC__inout DWORD *pdwEffect)
+	{
+		*pdwEffect=DROPEFFECT_LINK;
+		return S_OK;
+	}
+
+	virtual HRESULT STDMETHODCALLTYPE DragLeave( void)
+	{
+		return S_OK;
+	}
+
+	virtual HRESULT STDMETHODCALLTYPE Drop( 
+		/* [unique][in] */ __RPC__in_opt IDataObject *pDataObj,
+		/* [in] */ DWORD grfKeyState,
+		/* [in] */ POINTL pt,
+		/* [out][in] */ __RPC__inout DWORD *pdwEffect)
+	{
+		FORMATETC format =
+		{
+			CF_HDROP, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL
+		};
+		STGMEDIUM medium;
+		if(FAILED(pDataObj->GetData(&format, &medium)))
+		{
+			return S_FALSE;
+		}
+
+		HDROP hdrop = static_cast<HDROP>(GlobalLock(medium.hGlobal));
+
+		if(!hdrop)
+		{
+			return S_FALSE;
+		}
+
+		bool success = false;
+		TCHAR filename[MAX_PATH];
+		success=DragQueryFile(hdrop, 0, filename, MAX_PATH);
+		DragFinish(hdrop);
+		GlobalUnlock(medium.hGlobal);
+
+		if(success) DuiMessageBox(NULL,filename,NULL,MB_OK);
+
+		*pdwEffect=DROPEFFECT_LINK;
+		return S_OK;
+	}
+protected:
+	int nRef;
+};
+
 CUIHander::CUIHander(CMainDlg * pMainDlg) : m_pMainDlg(pMainDlg)
 {
 }
@@ -14,6 +110,10 @@ CUIHander::~CUIHander(void)
 
 LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 {
+	HRESULT hr=::RegisterDragDrop(hWnd,m_pMainDlg->GetDropTarget());
+
+	CDuiWindow *pSlider=m_pMainDlg->FindChildByName("IDC_SLIDERTEST");
+	m_pMainDlg->RegisterDragDrop(pSlider->GetDuiHwnd(),new CTestDropTarget);
 	SetMsgHandled(FALSE); 
 	//演示在程序初始化的时候通过如用户配置文件设置PANE的大小.
 // 	CDuiSplitWnd *pSplit=(CDuiSplitWnd*)m_pMainDlg->FindChildByCmdID(1180);
@@ -22,6 +122,12 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 // 	pEdit->DuiSendMessage(EM_SETEVENTMASK,0,ENM_CHANGE);
 
     return 0; 
+}
+
+void CUIHander::OnDestory()
+{
+	::RevokeDragDrop(m_pMainDlg->m_hWnd);
+	SetMsgHandled(FALSE); 
 }
 
 void CUIHander::OnAttrReposition()
@@ -179,3 +285,4 @@ LRESULT CUIHander::OnListBtnClick( LPNMHDR pNHdr )
 
 	return S_OK;
 }
+

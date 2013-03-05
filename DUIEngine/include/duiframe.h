@@ -8,6 +8,7 @@
 #pragma  once
 
 #include "duiwndpanel.h"
+#include "DuiFrameDropTarget.h"
 
 namespace DuiEngine
 {
@@ -17,6 +18,12 @@ class DUI_EXP CDuiFrame : public CDuiPanel
 {
 public:
     CDuiFrame();
+
+	virtual BOOL RegisterDragDrop(HDUIWND hDuiWnd,IDropTarget *pDropTarget);
+
+	virtual BOOL RevokeDragDrop(HDUIWND hDuiWnd);
+
+	IDropTarget * GetDropTarget(){return &m_dropTarget;}
 
     virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
@@ -52,6 +59,8 @@ protected:
     HDUIWND m_hHover;
     BOOL	m_bNcHover;
     HDUIWND m_hFocus;
+
+	CDuiFrameDropTarget m_dropTarget;
 };
 
 }//namespace DuiEngine

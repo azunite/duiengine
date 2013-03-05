@@ -15,7 +15,7 @@ namespace DuiEngine
 #define WM_NCMOUSELAST  WM_NCMBUTTONDBLCLK
 
 
-CDuiFrame::CDuiFrame():m_hCapture(NULL),m_hHover(NULL),m_hFocus(NULL),m_bNcHover(FALSE)
+CDuiFrame::CDuiFrame():m_hCapture(NULL),m_hHover(NULL),m_hFocus(NULL),m_bNcHover(FALSE),m_dropTarget(this)
 {
 }
 
@@ -312,6 +312,16 @@ CDuiWindow * CDuiFrame::GetNextKeyHostWnd(CDuiWindow *pCurWnd,CDuiWindow *pFirst
         return GetNextKeyHostWnd(pParent,pFirst);
     else
         return NULL;
+}
+
+BOOL CDuiFrame::RegisterDragDrop( HDUIWND hDuiWnd,IDropTarget *pDropTarget )
+{
+	return m_dropTarget.RegisterDragDrop(hDuiWnd,pDropTarget);
+}
+
+BOOL CDuiFrame::RevokeDragDrop( HDUIWND hDuiWnd )
+{
+	return m_dropTarget.RevokeDragDrop(hDuiWnd);
 }
 
 }//namespace DuiEngine

@@ -354,6 +354,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiFrameDropTarget.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\duihostwnd.cpp"
 				>
 			</File>
@@ -601,6 +605,10 @@
 			</File>
 			<File
 				RelativePath=".\include\duiframe.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiFrameDropTarget.h"
 				>
 			</File>
 			<File

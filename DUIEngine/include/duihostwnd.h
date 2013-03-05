@@ -17,6 +17,7 @@
 #include "duirealwnd.h"
 
 #include "SimpleWnd.h"
+#include "DuiFrameDropTarget.h"
 
 #pragma warning(disable: 4996)
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,6 +88,7 @@ protected:
     CRgn m_rgnInvalidate;
 
     CMemDC	m_memDC;
+
 protected:
     virtual BOOL OnIdle(int nCount);
 

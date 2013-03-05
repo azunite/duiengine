@@ -8,6 +8,9 @@ class DUI_EXP CDuiContainer
 {
     friend class CDuiWindow;
 public:
+	virtual BOOL RegisterDragDrop(HDUIWND hDuiWnd,IDropTarget *pDropTarget)=NULL;
+
+	virtual BOOL RevokeDragDrop(HDUIWND hDuiWnd)=NULL;
 
     virtual LRESULT OnDuiNotify(LPNMHDR pHdr)=NULL;
 

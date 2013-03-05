@@ -29,7 +29,7 @@ public:
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
 {
-	HRESULT hRes = CoInitialize(NULL);
+	HRESULT hRes = OleInitialize(NULL);
 	DUIASSERT(SUCCEEDED(hRes));
  
 	//////////////////////////////////////////////////////////////////////////
@@ -151,6 +151,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 	delete pDuiSystem;
 
-	CoUninitialize();
+	OleUninitialize();
 	return nRet;
 }
