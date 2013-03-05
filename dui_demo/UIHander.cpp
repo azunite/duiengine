@@ -9,7 +9,7 @@ class CTestDropTarget:public IDropTarget
 public:
 	CTestDropTarget()
 	{
-		nRef=1;
+		nRef=0;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
