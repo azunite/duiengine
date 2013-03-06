@@ -364,7 +364,7 @@ template<class _Elem,class _Traits=char_traits<_Elem>>
             typedef const XCHAR * PCXSTR;
             typedef _Traits StrTraits;
 
-            CDuiString() : m_pstr(NULL),m_nLength(0)
+            CDuiString() : m_pstr((_Elem *)strNull),m_nLength(0)
 {
 }
 
@@ -373,14 +373,14 @@ CDuiString(const _Elem ch) : m_pstr(NULL),m_nLength(0)
     Assign(&ch,1);
 }
 
-CDuiString(const _Elem * lpsz, int nLen=-1) : m_pstr(NULL),m_nLength(0)
+CDuiString(const _Elem * lpsz, int nLen=-1) : m_pstr((_Elem *)strNull),m_nLength(0)
 {
-    if(nLen==-1) nLen=_Traits::length(lpsz);
+    if(nLen==-1 && lpsz) nLen=_Traits::length(lpsz);
     DUIASSERT(!_Traits::IsBadStringPtr(lpsz,nLen) || lpsz==NULL);
     Assign(lpsz, nLen);
 }
 
-CDuiString(const CDuiString& src) : m_pstr(NULL),m_nLength(0)
+CDuiString(const CDuiString& src) : m_pstr((_Elem *)strNull),m_nLength(0)
 {
     Assign(src.m_pstr,src.GetLength());
 }

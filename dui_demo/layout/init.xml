@@ -92,7 +92,7 @@
     <check skin="btncheckbox"/>
     <radio skin="btnRadio"/>
     <imgbtn class="linkimage"/>
-    <tabctrl tabskin="tabskin_default" crtext="000000" align="top" tabwidth="94" tabheight="38" tabspacing="0" tabpos="10"/>
+    <tabctrl tabskin="tabskin_default" crtext="000000" align="top" tabwidth="70" tabheight="38" tabspacing="0" tabpos="10" dotted="1"/>
     <divex sbskin="sb_common" sbwid="16"/>
     <edit baseClass="divex" transparent="1"/>
     <scrollview baseClass="divex"/>

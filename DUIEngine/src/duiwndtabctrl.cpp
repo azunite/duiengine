@@ -520,17 +520,19 @@ void CDuiTabCtrl::DrawItem( CDCHandle dc,const CRect &rcItem,int iItem,DWORD dwS
     else
     {
         CRect rcText=rcItem;
-        UINT align=DT_VCENTER|DT_SINGLELINE|DT_CENTER;
+		UINT alignStyle=m_style.GetTextAlign();
+        UINT align=alignStyle;
         if(m_ptText.x==-1 && m_ptText.y!=-1)
         {
             rcText.top+=m_ptText.y;
-            align=DT_SINGLELINE|DT_CENTER;
+            align=alignStyle&(DT_CENTER|DT_RIGHT|DT_END_ELLIPSIS);
         }
         else if(m_ptText.x!=-1 && m_ptText.y==-1)
         {
             rcText.left+=m_ptText.x;
-            align=DT_VCENTER|DT_SINGLELINE;
+			align=alignStyle&(DT_VCENTER|DT_BOTTOM|DT_SINGLELINE|DT_END_ELLIPSIS);
         }
+		
         CGdiAlpha::DrawText(dc,GetItem(iItem)->GetTitle(),-1,&rcText,align);
     }
 }

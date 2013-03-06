@@ -14,7 +14,7 @@ namespace DuiEngine
 {
 
 DuiStyle::DuiStyle()
-    : m_uAlign(Align_Left)
+    : m_uAlign(Align_Center)
 	, m_uVAlign(VAlign_Middle)
     , m_nTextAlign(0)
     , m_crBg(CLR_INVALID)
