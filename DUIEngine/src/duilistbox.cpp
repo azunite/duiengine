@@ -45,17 +45,6 @@ int CDuiListBox::GetCount() const
     return m_arrItems.GetCount();
 }
 
-BOOL CDuiListBox::SetCount(DWORD *pData,int nItems)
-{
-    DeleteAll();
-
-    for(int i=0; i < nItems; i++)
-        this->InsertString(-1, NULL, -1, pData?pData[i]:0, NULL);
-
-    NotifyInvalidate();
-    return TRUE;
-}
-
 int CDuiListBox::GetCurSel() const
 {
     return m_iSelItem;
@@ -95,20 +84,20 @@ BOOL CDuiListBox::SetTopIndex(int nIndex)
     return TRUE;
 }
 
-DWORD CDuiListBox::GetItemData(int nIndex) const
+LPARAM CDuiListBox::GetItemData(int nIndex) const
 {
     if (nIndex < 0 || nIndex >= GetCount())
         return 0;
 
-    return m_arrItems[nIndex]->dwData;
+    return m_arrItems[nIndex]->lParam;
 }
 
-BOOL CDuiListBox::SetItemData(int nIndex, DWORD dwItemData)
+BOOL CDuiListBox::SetItemData(int nIndex, LPARAM lParam)
 {
     if (nIndex < 0 || nIndex >= GetCount())
         return FALSE;
 
-    m_arrItems[nIndex]->dwData = dwItemData;
+    m_arrItems[nIndex]->lParam = lParam;
     return TRUE;
 }
 
@@ -193,19 +182,18 @@ BOOL CDuiListBox::DeleteString(int nIndex)
     return TRUE;
 }
 
-int CDuiListBox::AddString(LPCTSTR lpszItem, int nImage, DWORD dwData, LPARAM lParam)
+int CDuiListBox::AddString(LPCTSTR lpszItem, int nImage, LPARAM lParam)
 {
-    return InsertString(-1, lpszItem, nImage, dwData, lParam);
+    return InsertString(-1, lpszItem, nImage,  lParam);
 }
 
-int CDuiListBox::InsertString(int nIndex, LPCTSTR lpszItem, int nImage, DWORD dwData, LPARAM lParam)
+int CDuiListBox::InsertString(int nIndex, LPCTSTR lpszItem, int nImage,  LPARAM lParam)
 {
     DUIASSERT(lpszItem);
 
     LPLBITEM pItem = new LBITEM;
     pItem->strText = lpszItem;
     pItem->nImage = nImage;
-    pItem->dwData = dwData;
     pItem->lParam = lParam;
 
     return InsertItem(nIndex, pItem);
@@ -259,27 +247,10 @@ BOOL CDuiListBox::Load(TiXmlElement* pTiXmlElem)
     if (nChildSrc == -1)
         return TRUE;
 
-    DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
-    if(!pRes) return FALSE;
+	TiXmlDocument xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,nChildSrc,DUIRES_XML_TYPE)) return FALSE;
 
-    DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,nChildSrc);
-    if(dwSize==0) return FALSE;
-
-    CMyBuffer<char> strXml;
-    strXml.Allocate(dwSize);
-    pRes->GetRawBuffer(DUIRES_XML_TYPE,nChildSrc,strXml,dwSize);
-
-    TiXmlDocument xmlDoc;
-    {
-        xmlDoc.Parse(strXml, NULL, TIXML_ENCODING_UTF8);
-    }
-    if (xmlDoc.Error())
-    {
-        DUIASSERT(FALSE);
-        return FALSE;
-    }
-
-    TiXmlElement *pSubTiElement = xmlDoc.RootElement();
+	TiXmlElement *pSubTiElement = xmlDoc.RootElement();
     return LoadChildren(pSubTiElement);
 }
 
@@ -312,7 +283,7 @@ void CDuiListBox::LoadItemAttribute(TiXmlElement *pTiXmlItem, LPLBITEM pItem)
         if ( !_stricmp(pAttrib->Name(), "img"))
             pItem->nImage = atoi(pAttrib->Value());
         else if ( !_stricmp(pAttrib->Name(), "data"))
-            pItem->dwData = atol(pAttrib->Value());
+            pItem->lParam = atol(pAttrib->Value());
     }
     pItem->strText =  DUI_CA2T(pTiXmlItem->GetText(), CP_UTF8);
     DuiStringPool::getSingleton().BuildString(pItem->strText);
@@ -507,6 +478,8 @@ void CDuiListBox::OnSize(UINT nType,CSize size)
 void CDuiListBox::OnLButtonDown(UINT nFlags,CPoint pt)
 {
     m_iHoverItem = HitTest(pt);
+	if(m_iHoverItem!=m_iSelItem && !m_bHotTrack)
+		NotifySelChange(m_iSelItem,m_iHoverItem,WM_LBUTTONDOWN);
 }
 
 void CDuiListBox::OnLButtonUp(UINT nFlags,CPoint pt)

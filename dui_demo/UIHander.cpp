@@ -114,6 +114,13 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 
 	CDuiWindow *pSlider=m_pMainDlg->FindChildByName("IDC_SLIDERTEST");
 	m_pMainDlg->RegisterDragDrop(pSlider->GetDuiHwnd(),new CTestDropTarget);
+
+	//初始化虚拟列表
+	CDuiListBoxEx *pList2=(CDuiListBoxEx*)m_pMainDlg->FindChildByName("mylist2");
+	if(pList2)
+	{
+		pList2->SetItemCount(100);
+	}
 	SetMsgHandled(FALSE); 
 	//演示在程序初始化的时候通过如用户配置文件设置PANE的大小.
 // 	CDuiSplitWnd *pSplit=(CDuiSplitWnd*)m_pMainDlg->FindChildByCmdID(1180);
@@ -132,11 +139,6 @@ void CUIHander::OnDestory()
 
 void CUIHander::OnAttrReposition()
 {
-// 	CDuiFlashCtrl * pFlash=(CDuiFlashCtrl *)m_pMainDlg->FindChildByName("ctrl_flash");
-// 	if(pFlash)
-// 	{
-// 		pFlash->Play(L"E:\\dui.work\\x-framework\\bin\\Construction.swf");
-// 	}
 	m_pMainDlg->FindChildByCmdID(测试)->SetAttribute("pos","|-100,|-15,|100,|15");
 }
 
@@ -159,13 +161,6 @@ void CUIHander::OnRepEditSel()
 // 			RichEdit_InsertSkin(pEdit,pSkin);
 		}
 	}
-//	pEdit->SetDefaultTextColor(RGB(0,128,128));
-// 	pEdit->SetAttribute("crtext","00CCCC");
-// 	pEdit->SetSel(MAKELONG(5,5));
-// 	pEdit->ReplaceSel(L"repsel");
-// 	TCHAR szBuf[100]={0};
-// 	pEdit->GetWindowText(szBuf,100);
-
 
 }
 
@@ -202,7 +197,8 @@ LRESULT CUIHander::OnComboListItemNotify( LPNMHDR pNHdr )
 		CDuiComboBox *pCombobox=(CDuiComboBox*)m_pMainDlg->FindChildByCmdID(1310);
 		CDuiListBoxEx *pListBox=(CDuiListBoxEx*)pItemNHdr->pHostDuiWin;
 		int iItem=pListBox->GetItemObjIndex(pItemNHdr->pItem);
-		pCombobox->DeleteItem(iItem); 
+		pCombobox->DeleteItem(iItem);
+		pCombobox->GetDropDownList()->UpdateItems(); 
 	}
 	return S_OK;
 }
@@ -283,6 +279,15 @@ LRESULT CUIHander::OnListBtnClick( LPNMHDR pNHdr )
 {
 	DUINMITEMNOTIFY *pNHdrEx=(DUINMITEMNOTIFY*)pNHdr;
 
+	return S_OK;
+}
+
+LRESULT CUIHander::OnListPredraw( LPNMHDR pNHdr )
+{
+	LPDUINMGETLBDISPINFO lpNHdrEx=(LPDUINMGETLBDISPINFO)pNHdr;
+	CDuiStringT str;
+	str.Format(_T("item:%d"),lpNHdrEx->nListItemID);
+	lpNHdrEx->pItem->FindChildByName("idx")->SetInnerText(str);
 	return S_OK;
 }
 

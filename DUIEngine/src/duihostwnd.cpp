@@ -672,7 +672,7 @@ HWND CDuiHostWnd::GetHostHwnd()
     return m_hWnd;
 }
 
-HDC CDuiHostWnd::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
+HDC CDuiHostWnd::OnGetDuiDC(const CRect & rc,DWORD gdcFlags)
 {
     if(!(gdcFlags & OLEDC_NODRAW))
     {
@@ -690,7 +690,7 @@ HDC CDuiHostWnd::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
     return m_memDC;
 }
 
-void CDuiHostWnd::OnReleaseDuiDC(HDC hdcSour,CRect &rc,DWORD gdcFlags)
+void CDuiHostWnd::OnReleaseDuiDC(HDC hdcSour,const CRect &rc,DWORD gdcFlags)
 {
     if(gdcFlags & OLEDC_NODRAW) return;
 	m_memDC.SelectClipRgn(NULL);
@@ -703,7 +703,7 @@ void CDuiHostWnd::OnReleaseDuiDC(HDC hdcSour,CRect &rc,DWORD gdcFlags)
     ReleaseDC(dc);
 }
 
-void CDuiHostWnd::UpdateHost(CDCHandle dc, CRect &rcInvalid )
+void CDuiHostWnd::UpdateHost(CDCHandle dc, const CRect &rcInvalid )
 {
 	if(m_bTranslucent)
 	{

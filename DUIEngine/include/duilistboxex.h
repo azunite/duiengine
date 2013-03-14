@@ -27,12 +27,10 @@ public:
     void DeleteAllItems(BOOL bUpdate=TRUE);
 
     void DeleteItem(int iItem);
-    int InsertItem(int iItem,CDuiItemPanel *pItemObj,DWORD dwData=0);
+
+    int InsertItem(int iItem,TiXmlElement *pXmlItem,DWORD dwData=0);
 
     int InsertItem(int iItem,LPCWSTR pszXml,DWORD dwData=0);
-
-
-    CDuiPanel * InsertPanelItem(int iItem,LPCWSTR pszXml,DWORD dwData=0);
 
     void SetCurSel(int iItem);
 
@@ -42,13 +40,21 @@ public:
 
     int GetItemObjIndex(CDuiPanel *pItemObj);
 
-    CDuiPanel * GetDuiItem(int iItem);
-    CDuiPanel * GetDuiItem(CDuiPanel *pItem);
+    CDuiPanel * GetItemPanel(int iItem);
 
-    DWORD GetItemData(int iItem);
+    LPARAM GetItemData(int iItem);
 
 
-    BOOL SetItemCount(DWORD *pData,int nItems);
+    //************************************
+    // Method:    SetItemCount
+    // FullName:  DuiEngine::CDuiListBoxEx::SetItemCount
+    // Access:    public 
+    // Returns:   BOOL
+    // Qualifier:
+    // Parameter: int nItems 条目数量
+    // Parameter: LPCTSTR pszXmlTemplate 显示时使用的XML模板，为空时使用XML脚本中指定的template子节点数据
+    //************************************
+    BOOL SetItemCount(int nItems,LPCTSTR pszXmlTemplate=NULL);
 
     int GetItemCount() ;
 
@@ -63,7 +69,13 @@ public:
     int HitTest(CPoint &pt);
 
     virtual BOOL Load(TiXmlElement* pTiXmlElem);
+
+	BOOL IsVirtual(){return m_bVirtual;}
 protected:
+	void UpdatePanelsIndex(UINT nFirst=0,UINT nLast=-1);
+
+	CRect	GetItemRect(int iItem);
+
     virtual void OnItemSetCapture(CDuiItemPanel *pItem,BOOL bCapture);
     virtual BOOL OnItemGetRect(CDuiItemPanel *pItem,CRect &rcItem);
 
@@ -71,9 +83,9 @@ protected:
 
     void OnPaint(CDCHandle dc);
 
-    LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
+	void OnSize(UINT nType, CSize size);
 
-    void DrawItem(CDCHandle & dc, CRect & rc, int iItem);
+    virtual void OnDrawItem(CDCHandle & dc, CRect & rc, int iItem);
 
     virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
     // Get tooltip Info
@@ -81,13 +93,7 @@ protected:
 
     void NotifySelChange(int nOldSel,int nNewSel,UINT uMsg);
 
-    void OnLButtonDown(UINT nFlags,CPoint pt);
-
-    void OnLButtonUp(UINT nFlags,CPoint pt);
-
-    void OnLButtonDbClick(UINT nFlags,CPoint pt);
-
-    void OnMouseMove(UINT nFlags,CPoint pt);
+	LRESULT OnMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
     void OnMouseLeave();
 
@@ -103,38 +109,33 @@ protected:
 protected:
     CDuiArray<CDuiItemPanel *> m_arrItems;
 
-    int		m_nItemHei;
     int		m_iSelItem;
     int		m_iHoverItem;
     int		m_iScrollSpeed;
-    BOOL	m_bHotTrack;
 
-    TiXmlElement *m_pItemTemplate;	//模板项
+	CDuiItemPanel	* m_pTemplPanel;	//虚拟列表使用的DUI模板
+	int		m_nItems;					//虚拟列表中记录列表项
+	TiXmlElement	* m_pXmlTempl;		//列表模板XML
     CDuiItemPanel	*	m_pCapturedFrame;
-    COLORREF m_crItemBg, m_crItemBg2, m_crItemSelBg;
     CDuiSkinBase * m_pItemSkin;
+	int		m_nItemHei;
+	BOOL	m_bVirtual;
 public:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_INT_ATTRIBUTE("scrollspeed", m_iScrollSpeed, FALSE)
-    DUIWIN_INT_ATTRIBUTE("itemheight", m_nItemHei, FALSE)
-    DUIWIN_SKIN_ATTRIBUTE("itemskin", m_pItemSkin, TRUE)
-    DUIWIN_COLOR_ATTRIBUTE("critembg",m_crItemBg,FALSE)
-    DUIWIN_COLOR_ATTRIBUTE("critembg2", m_crItemBg2, FALSE)
-    DUIWIN_COLOR_ATTRIBUTE("critemselbg",m_crItemSelBg,FALSE)
-    DUIWIN_INT_ATTRIBUTE("hottrack",m_bHotTrack,FALSE)
+		DUIWIN_INT_ATTRIBUTE("scrollspeed", m_iScrollSpeed, FALSE)
+		DUIWIN_INT_ATTRIBUTE("itemheight", m_nItemHei, FALSE)
+		DUIWIN_INT_ATTRIBUTE("virtual", m_bVirtual, TRUE)
+		DUIWIN_SKIN_ATTRIBUTE("itemskin", m_pItemSkin, TRUE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_DESTROY(OnDestroy)
     MSG_WM_PAINT(OnPaint)
-    MSG_WM_NCCALCSIZE(OnNcCalcSize)
-    MSG_WM_LBUTTONDOWN(OnLButtonDown)
-    MSG_WM_LBUTTONDBLCLK(OnLButtonDbClick)
-    MSG_WM_LBUTTONUP(OnLButtonUp)
-    MSG_WM_MOUSEMOVE(OnMouseMove)
     MSG_WM_MOUSELEAVE(OnMouseLeave)
     MSG_WM_KEYDOWN(OnKeyDown)
     MSG_WM_CHAR(OnChar)
+	MSG_WM_SIZE(OnSize)
+	MESSAGE_RANGE_HANDLER_EX(WM_MOUSEFIRST,WM_MBUTTONDBLCLK,OnMouseEvent)
     DUIWIN_END_MSG_MAP()
 };
 

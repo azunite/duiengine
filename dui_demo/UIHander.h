@@ -33,6 +33,8 @@ protected:
 
 	LRESULT OnComboListItemNotify(LPNMHDR pNHdr);
 
+	LRESULT OnListPredraw(LPNMHDR pNHdr);
+
 	void OnCommand(UINT uNotifyCode, int nID, HWND wndCtl);
 
 	LRESULT OnListBtnClick(LPNMHDR pNHdr);
@@ -58,6 +60,7 @@ protected:
 		DUI_NOTIFY_ID_COMMAND(1202, OnWebkit_Refresh)
 		DUI_NOTIFY_ID_COMMAND(1204, OnWebkit_Go)
 		DUI_NOTIFY_HANDLER(mylist,DUINM_LBITEMNOTIFY,OnListBtnClick)
+		DUI_NOTIFY_HANDLER(mylist2,DUINM_GETLBDISPINFO,OnListPredraw)
 	DUI_NOTIFY_MAP_END()	
 private:
 	CMainDlg * m_pMainDlg; 

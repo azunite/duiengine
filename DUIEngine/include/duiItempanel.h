@@ -35,9 +35,9 @@ public:
 
     virtual CRect GetContainerRect();
 
-    virtual HDC OnGetDuiDC(CRect & rc ,DWORD gdcFlags);
+    virtual HDC OnGetDuiDC(const CRect & rc ,DWORD gdcFlags);
 
-    virtual void OnReleaseDuiDC(HDC hdc,CRect &rc,DWORD gdcFlags);
+    virtual void OnReleaseDuiDC(HDC hdc,const CRect &rc,DWORD gdcFlags);
 
     virtual void OnRedraw(const CRect &rc);
 
@@ -67,16 +67,19 @@ public:
 
     CRect GetItemRect();
     void SetItemCapture(BOOL bCapture);
-    void SetItemData(DWORD dwData);
-    DWORD GetItemData();
+    void SetItemData(LPARAM dwData);
+    LPARAM GetItemData();
 
     BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip);
 
+	LPARAM GetItemIndex(){return m_lpItemIndex;}
+	void SetItemIndex(LPARAM lp){m_lpItemIndex=lp;}
 protected:
     CDuiWindow * m_pFrmHost;
     CDuiItemContainer * m_pItemContainer;
     COLORREF m_crBk, m_crSelBk;
-    DWORD		m_dwData;
+    LPARAM		m_dwData;
+	LPARAM		m_lpItemIndex;
 };
 
 

@@ -74,6 +74,7 @@ public:
 	void DropDown();
 	void CloseUp();
 
+	CDuiDropDownListBase *GetDropDownList(){return m_pListBox;}
 protected:
 
 	HWND GetHostHwnd();

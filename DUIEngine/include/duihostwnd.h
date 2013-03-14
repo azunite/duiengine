@@ -149,10 +149,10 @@ protected:
     HWND GetHostHwnd();
 
     /*virtual */
-    HDC OnGetDuiDC(CRect & rc,DWORD gdcFlags);
+    HDC OnGetDuiDC(const CRect & rc,DWORD gdcFlags);
 
     /*virtual */
-    void OnReleaseDuiDC(HDC hdcSour,CRect &rc,DWORD gdcFlags);
+    void OnReleaseDuiDC(HDC hdcSour,const CRect &rc,DWORD gdcFlags);
 
     /*virtual */
     void OnRedraw(const CRect &rc);
@@ -201,7 +201,7 @@ protected:
 
     LRESULT OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
-    void UpdateHost(CDCHandle dc,CRect &rc);
+    void UpdateHost(CDCHandle dc,const CRect &rc);
 protected:
     DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
     DUI_NOTIFY_ID_COMMAND(IDCANCEL, OnCancel)

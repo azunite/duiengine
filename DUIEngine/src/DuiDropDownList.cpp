@@ -183,10 +183,10 @@ void CDuiDropDownListEx::UpdateItems(const CRect * prcOwner)
 
         bShowTop = FixPosition(prcOwner, nDropHeight);
     }
-    m_pListBox->SetItemCount(NULL,nItems);
+    m_pListBox->SetItemCount(nItems);
     for(int i=0; i<nItems; i++)
     {
-        CDuiPanel *pPanel=m_pListBox->GetDuiItem(i);
+        CDuiPanel *pPanel=m_pListBox->GetItemPanel(i);
         if(m_nTextID!=-1)
         {
             CDuiWindow *pText=pPanel->FindChildByCmdID(m_nTextID);

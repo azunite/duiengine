@@ -23,6 +23,7 @@ CDuiItemPanel::CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml,CDuiItemC
     ,m_dwData(0)
     ,m_crBk(CLR_INVALID)
     ,m_crSelBk(RGB(0,0,128))
+	, m_lpItemIndex(-1)
 {
     DUIASSERT(m_pFrmHost);
     if(!m_pItemContainer) m_pItemContainer=dynamic_cast<CDuiItemContainer*>(m_pFrmHost);
@@ -89,7 +90,7 @@ CRect CDuiItemPanel::GetContainerRect()
     return m_rcWindow;
 }
 
-HDC CDuiItemPanel::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
+HDC CDuiItemPanel::OnGetDuiDC(const CRect & rc,DWORD gdcFlags)
 {
     CRect rcItem=GetItemRect();
     CRect rcInvalid=rc;
@@ -103,7 +104,7 @@ HDC CDuiItemPanel::OnGetDuiDC(CRect & rc,DWORD gdcFlags)
     return hdc;
 }
 
-void CDuiItemPanel::OnReleaseDuiDC(HDC hdc,CRect &rc,DWORD gdcFlags)
+void CDuiItemPanel::OnReleaseDuiDC(HDC hdc,const CRect &rc,DWORD gdcFlags)
 {
     CRect rcItem=GetItemRect();
     OffsetViewportOrgEx(hdc,-rcItem.left,-rcItem.top,NULL);
@@ -117,11 +118,11 @@ void CDuiItemPanel::OnRedraw(const CRect &rc)
     CRect rcItem=GetItemRect();
     if(!rcItem.IsRectNull() && m_pFrmHost->IsVisible(TRUE))
     {
-        CDCHandle dc=GetDuiDC((const LPRECT)&rc,OLEDC_PAINTBKGND);
+        CDCHandle dc=OnGetDuiDC(rc,OLEDC_PAINTBKGND);
         CRgn rgn;
         rgn.CreateRectRgnIndirect(&rc);
         RedrawRegion(dc,rgn);
-        ReleaseDuiDC(dc);
+        OnReleaseDuiDC(dc,rc,OLEDC_PAINTBKGND);
     }
 }
 
@@ -213,11 +214,12 @@ void CDuiItemPanel::SetItemCapture(BOOL bCapture)
     m_pItemContainer->OnItemSetCapture(this,bCapture);
 }
 
-void CDuiItemPanel::SetItemData(DWORD dwData)
+void CDuiItemPanel::SetItemData(LPARAM dwData)
 {
     m_dwData=dwData;
 }
-DWORD CDuiItemPanel::GetItemData()
+
+LPARAM CDuiItemPanel::GetItemData()
 {
     return m_dwData;
 }

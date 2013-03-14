@@ -6,6 +6,8 @@
 #include "MainDlg.h"
 #include "UIHander.h"
 
+
+
 #include <dwmapi.h>
 #pragma comment(lib,"dwmapi.lib")
 

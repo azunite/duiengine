@@ -29,12 +29,12 @@
           <progress name="IDC_PROGTEST" pos="200,100,-10,110" bgskin="prog_bg" posskin="prog_bar" thumbskin="slidethumb" value="20" min="0" max="100"/>
           <sliderbar name="IDC_SLIDERTEST" pos="200,130" width="100" bgskin="prog_bg" posskin="prog_bar" thumbskin="slidethumb" value="20" min="0" max="100"/>
           <combobox id="1310" pos="100,40,300,64" dropdown="0" dropheight="250" class="cls_edit" font="8300" dotted="0" cursel="0" itempanel="1">
-            <liststyle  class="cls_edit" crbg="FF0000" itemheight="50" id_text="1" id_icon="2" critembg="FFFFFF" critembg2="CCCCCC" critemselbg="000088">
-              <template>
+            <liststyle  class="cls_edit" crbg="FF0000" itemheight="50" id_text="1" id_icon="2">
+              <template skin="skin_webbtn_forward">
                 <text id="1" pos="5,2" crtext="ff0000"/>
                 <button id="3" pos="0,20,100,40" class="normalbtn" tip="delete cur item">delete</button>
-                <link id="4" pos="100,0" maxwidth="20" class="cls_btn_weblink" dotted="1" href="www.yy.com">link test</link>
-                 <img id="2" pos1="1,2" skin="icons" msgtransparent="0"/>
+                <link id="4" pos="100,5" maxwidth="50" class="cls_btn_weblink" dotted="1" href="www.yy.com">link test</link>
+                <img id="2" pos="150,2" skin="icons" msgtransparent="0"/>
              </template>
             </liststyle>
             <editstyle crtext="000000" align="left" crbg="000088"/>
@@ -47,8 +47,8 @@
               <item text="combobox.item6" icon="6" data="100"/>
             </items>
           </combobox>
-	        <combobox name="IDC_CB_TEST" pos="100,70,300,94" dropdown="1" dropheight="250" class="cls_edit" dotted="0" animtime=20>
-            <liststyle class="cls_edit"  iconskin="icon3" itemheight="30" crtext="000000" crseltext="FFFFFF" critembg="FFFFFF" critemselbg="000088" hottrack="1"/>
+	        <combobox name="IDC_CB_TEST" pos="100,70,300,94" dropdown="1" dropheight="250" class="cls_edit" dotted="0" animtime=200>
+            <liststyle class="cls_edit"  iconskin="icon3" itemheight="30" crtext="000000" crseltext="FFFFFF" critembg="FFFFFF" critemselbg="000088"/>
             <editstyle inset="5,0,5,0" crtext="000000" align="left" crbg="FFFFFF"/>
             <items>
              <item text="combobox.item1" icon="1" data="100"/>
@@ -63,7 +63,6 @@
         </tab>
         <tab id="114" title="richedit">
           <richedit id="1140" show="1" number="0" class="cls_edit" font="0004:隶书" inset="30,0,0,0" wordwrap="1"  crbg="FFFFFF"   pos="10,10,-10,|0" multilines="1" wantreturn="1" vscrollbar="1" autovscroll="1" crtext="ff0000" align="left" hscrollbar="1" autohscroll="1">richedit test 2012 中文字体</richedit>
-
           <check id="1142" pos="10,|10">check 1</check>
           <check id="1143" pos="100,|10">check 2</check>
           <button name="IDC_REPSEL"  pos="200,|10,300,|35" class="normalbtn">repsel</button>
@@ -77,53 +76,63 @@
           <button class="normalbtn" tabstop="1"  name="测试" pos="20,50,200,80">reposition</button>
         </tab>
         <tab id="117" title="duilistbox">
-          <listboxex name="mylist" pos="10,0,-10,-10" itemheight="30" crbg="ff0000" itemskin="skin_webbtn_forward">
+          <text pos="10,0">一般列表</text>
+          <listboxex name="mylist" pos="10,30,|-5,-10" itemheight="30" crbg="ff0000" itemskin="skin_webbtn_forward">
             <items>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-<!--                 <button class="normalbtn" id="20" pos="300,3,-10,-3" tip="list item tip">button</button> -->
+                <button class="normalbtn" id="20" pos="200,3,-10,-3" tip="list item tip">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-<!--                 <button class="normalbtn" id="21" pos="300,3,-10,-3"  tip="list item tip2">button</button> -->
+                <button class="normalbtn" id="21" pos="200,3,-10,-3"  tip="list item tip2">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-                <scrollbar pos="300,3,-10,-3" vertical="0" skin="sb_common" min="0" max="100" page="10" value="5"/>
-<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+                <scrollbar pos="200,3,-10,-3" vertical="0" skin="sb_common" min="0" max="100" page="10" value="5"/>
+                <button class="normalbtn" pos="200,3,-10,-3">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+                <button class="normalbtn" pos="200,3,-10,-3">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+                <button class="normalbtn" pos="200,3,-10,-3">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+                <button class="normalbtn" pos="200,3,-10,-3">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+                <button class="normalbtn" pos="200,3,-10,-3">button</button>
               </item>
               <item>
                 <text pos="10,5" crtext="ff0000">red test</text>
                 <text>normal text</text>
-<!--                 <button class="normalbtn" pos="300,3,-10,-3">button</button> -->
+                <button class="normalbtn" pos="200,3,-10,-3">button</button>
               </item>
             </items>
           </listboxex>
-        
-      </tab>
+          <text pos="|10,0">虚拟列表</text>
+          <listboxex name="mylist2" pos="|5,30,-10,-10" itemheight="30" class="cls_edit" virtual="1">
+            <template skin="skin_webbtn_forward">
+              <text pos="10,5" crtext="ff0000">red test</text>
+              <text name="idx"></text>
+              <button class="normalbtn" pos="110,3,-10,-3">button</button>
+              <link id="4" pos="0,0" maxwidth="50" class="cls_btn_weblink" dotted="1" href="www.yy.com">link test</link>
+            </template>
+          </listboxex>
+
+        </tab>
         <tab id="118" title="duitreebox">
           <treebox pos="10,0,-10,-10" name="mytree" itemhei="30" critembg="FFFFFF" critemselbg="000088" indent="10">
             <item>

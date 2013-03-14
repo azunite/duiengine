@@ -20,9 +20,9 @@ public:
 
     virtual CRect GetContainerRect()=NULL;
 
-    virtual HDC OnGetDuiDC(CRect & rc,DWORD gdcFlags)=NULL;
+    virtual HDC OnGetDuiDC(const CRect & rc,DWORD gdcFlags)=NULL;
 
-    virtual void OnReleaseDuiDC(HDC hdc,CRect &rc,DWORD gdcFlags)=NULL;
+    virtual void OnReleaseDuiDC(HDC hdc,const CRect &rc,DWORD gdcFlags)=NULL;
 
     virtual void OnRedraw(const CRect &rc)=NULL;
 

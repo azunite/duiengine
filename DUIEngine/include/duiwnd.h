@@ -429,9 +429,10 @@ public:
     // Returns:   HDC
     // Parameter: LPRECT pRc - DC范围
     // Parameter: DWORD gdcFlags 同OLEDCFLAGS
+	// Parameter: BOOL bClientDC 限制在client区域
     // remark: 使用ReleaseDuiDC释放
     //************************************
-    HDC GetDuiDC(const LPRECT pRc=NULL,DWORD gdcFlags=0);
+    HDC GetDuiDC(const LPRECT pRc=NULL,DWORD gdcFlags=0,BOOL bClientDC=TRUE);
 
 
     //************************************

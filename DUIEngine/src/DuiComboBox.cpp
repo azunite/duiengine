@@ -97,6 +97,7 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 	if(pTiListStyle)
 	{
 		m_pXmlListStyle=pTiListStyle->Clone()->ToElement();
+		m_pXmlListStyle->SetAttribute("virtual",0);//强制list不使用虚拟列表
 	}
 
 	DUIASSERT(m_pSkinBtn);
@@ -270,7 +271,7 @@ LRESULT CDuiComboBox::DuiNotify(LPNMHDR pnms)
 		if(pnms->code==DUINM_LBSELCHANGED && m_pListBox)
 		{//select item changed
 			DUINMLBSELCHANGE *pnmclk = (DUINMLBSELCHANGE *)pnms;
-			if(pnmclk->uMsg==WM_LBUTTONUP)
+			if(pnmclk->uMsg==WM_LBUTTONDOWN || pnmclk->uMsg==WM_LBUTTONUP)
 			{
 				CloseUp();
 				SetCurSel(pnmclk->nNewSel);

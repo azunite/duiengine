@@ -22,4 +22,5 @@
 #define	ctrl_flash		65549
 #define	ctrl_media		65550
 #define	ctrl_hk2		65551
+#define	idx		65552
 /*----------------------------RES_BUILDER:end------------------------------------->*/

@@ -83,7 +83,6 @@ class CDuiWindow;
 
 // Command Notify
 #define DUINM_COMMAND  1
-#define EVENT_COMMAND	"OnCommand"
 typedef struct _DUINMCOMMAND
 {
     NMHDR       hdr;

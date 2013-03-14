@@ -16,13 +16,11 @@ typedef struct tagLBITEM
 {
     CDuiStringT		strText;
     int			nImage;
-    DWORD		dwData;
     LPARAM      lParam;
 
     tagLBITEM()
     {
         nImage = -1;
-        dwData = 0;
         lParam = NULL;
     }
 
@@ -42,8 +40,6 @@ public:
 
     inline int GetCount() const;
 
-    BOOL SetCount(DWORD *pData,int nItems);
-
     inline int GetCurSel() const;
 
     BOOL SetCurSel(int nIndex);
@@ -57,9 +53,9 @@ public:
         return m_nItemHei;
     }
 
-    DWORD GetItemData(int nIndex) const;
+    LPARAM GetItemData(int nIndex) const;
 
-    BOOL SetItemData(int nIndex, DWORD dwItemData);
+    BOOL SetItemData(int nIndex, LPARAM lParam);
 
     int GetText(int nIndex, LPTSTR lpszBuffer) const;
 
@@ -75,9 +71,9 @@ public:
 
     BOOL DeleteString(int nIndex);
 
-    int AddString(LPCTSTR lpszItem, int nImage = -1, DWORD dwData = 0, LPARAM lParam = NULL);
+    int AddString(LPCTSTR lpszItem, int nImage = -1, LPARAM lParam = 0);
 
-    int InsertString(int nIndex, LPCTSTR lpszItem, int nImage = -1, DWORD dwData = 0, LPARAM lParam = NULL);
+    int InsertString(int nIndex, LPCTSTR lpszItem, int nImage = -1, LPARAM lParam = 0);
 
     void EnsureVisible(int nIndex);
 

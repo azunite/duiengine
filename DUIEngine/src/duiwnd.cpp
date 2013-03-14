@@ -261,8 +261,8 @@ DWORD CDuiWindow::ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate
 
     TestMainThread();
 
+	m_dwState &= ~dwStateRemove;
     m_dwState |= dwStateAdd;
-    m_dwState &= ~dwStateRemove;
 
     OnStateChanged(dwOldState,m_dwState);
     if(bUpdate && NeedRedrawWhenStateChange()) NotifyInvalidate();
@@ -1036,7 +1036,7 @@ void CDuiWindow::OnNcPaint(CDCHandle dc)
     if(m_style.m_nMarginX!=0 || m_style.m_nMarginY!=0)
     {
         BOOL bGetDC = dc==0;
-        if(bGetDC) dc=GetDuiDC(&m_rcWindow,OLEDC_OFFSCREEN);//不自动画背景
+        if(bGetDC) dc=GetDuiDC(&m_rcWindow,OLEDC_OFFSCREEN,FALSE);//不自动画背景
         int nSavedDC=dc.SaveDC();
 
         CRect rcClient;
@@ -1438,15 +1438,18 @@ void CDuiWindow::OnKillDuiFocus()
     NotifyInvalidate();
 }
 
-HDC CDuiWindow::GetDuiDC(const LPRECT pRc/*=NULL*/,DWORD gdcFlags/*=0*/)
+HDC CDuiWindow::GetDuiDC(const LPRECT pRc/*=NULL*/,DWORD gdcFlags/*=0*/,BOOL bClientDC/*=TRUE*/)
 {
     DUIASSERT(m_gdcFlags==-1);
-    m_rcGetDC=m_rcWindow;
+	if(bClientDC)
+		GetClient(&m_rcGetDC);
+    else
+		m_rcGetDC=m_rcWindow;
     m_gdcFlags=gdcFlags;
     BOOL bClip=FALSE;
     if(pRc)
     {
-        m_rcGetDC.IntersectRect(pRc,&m_rcWindow);
+        m_rcGetDC.IntersectRect(pRc,&m_rcGetDC);
         bClip=!m_rcGetDC.EqualRect(pRc);
     }
     HDC hdc=GetContainer()->OnGetDuiDC(m_rcGetDC,gdcFlags);

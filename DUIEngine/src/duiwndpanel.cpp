@@ -333,7 +333,7 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
             if(m_HitInfo.uSbCode==SB_LINEUP || m_HitInfo.uSbCode== SB_LINEDOWN)
             {
                 CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
-                HDC hdc=GetDuiDC(&rc,OLEDC_PAINTBKGND);
+                HDC hdc=GetDuiDC(&rc,OLEDC_PAINTBKGND,FALSE);
                 m_pSkinSb->Draw(hdc,rc,MAKESBSTATE(m_HitInfo.uSbCode,DuiWndState_PushDown,m_HitInfo.bVertical));
                 ReleaseDuiDC(hdc);
             }
@@ -348,7 +348,7 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
             m_nDragPos=m_HitInfo.bVertical?m_siVer.nPos:m_siHoz.nPos;
 
             CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
-            HDC hdc=GetDuiDC(&rcSlide,OLEDC_PAINTBKGND);
+            HDC hdc=GetDuiDC(&rcSlide,OLEDC_PAINTBKGND,FALSE);
             m_pSkinSb->Draw(hdc,rcSlide,MAKESBSTATE(SB_THUMBTRACK,DuiWndState_PushDown,m_HitInfo.bVertical));
             ReleaseDuiDC(hdc);
         }
@@ -367,7 +367,7 @@ void CDuiPanelEx::OnNcLButtonUp(UINT nFlags,CPoint pt)
         CRect rcRail=GetScrollBarRect(m_HitInfo.bVertical);
         if(m_HitInfo.bVertical) rcRail.DeflateRect(0,m_nSbArrowSize);
         else rcRail.DeflateRect(m_nSbArrowSize,0);
-        HDC hdc=GetDuiDC(&rcRail,OLEDC_PAINTBKGND);
+        HDC hdc=GetDuiDC(&rcRail,OLEDC_PAINTBKGND,FALSE);
         m_pSkinSb->Draw(hdc,rcRail,MAKESBSTATE(SB_PAGEDOWN,DuiWndState_Normal,m_HitInfo.bVertical));
         psi->nTrackPos=-1;
         CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
@@ -379,7 +379,7 @@ void CDuiPanelEx::OnNcLButtonUp(UINT nFlags,CPoint pt)
         if(m_HitInfo.uSbCode==SB_LINEUP||m_HitInfo.uSbCode==SB_LINEDOWN)
         {
             CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
-            HDC hdc=GetDuiDC(&rc,OLEDC_PAINTBKGND);
+            HDC hdc=GetDuiDC(&rc,OLEDC_PAINTBKGND,FALSE);
             m_pSkinSb->Draw(hdc,rc,MAKESBSTATE(m_HitInfo.uSbCode,DuiWndState_Normal,m_HitInfo.bVertical));
             ReleaseDuiDC(hdc);
         }
@@ -437,7 +437,7 @@ void CDuiPanelEx::OnNcMouseMove(UINT nFlags, CPoint point)
             rcSlide.OffsetRect(nDragLen,0);
         }
 
-        HDC hdc=GetDuiDC(&rcRail,OLEDC_PAINTBKGND);
+        HDC hdc=GetDuiDC(&rcRail,OLEDC_PAINTBKGND,FALSE);
         m_pSkinSb->Draw(hdc,rcRail,MAKESBSTATE(SB_PAGEUP,DuiWndState_Normal,m_HitInfo.bVertical));
         m_pSkinSb->Draw(hdc,rcSlide,MAKESBSTATE(SB_THUMBTRACK,DuiWndState_PushDown,m_HitInfo.bVertical));
         ReleaseDuiDC(hdc);
@@ -456,14 +456,14 @@ void CDuiPanelEx::OnNcMouseMove(UINT nFlags, CPoint point)
             if(m_HitInfo.uSbCode!=WORD(-1) && IsScrollBarEnable(m_HitInfo.bVertical))
             {
                 CRect rc=GetSbPartRect(m_HitInfo.bVertical,m_HitInfo.uSbCode);
-                HDC hdc=GetDuiDC(&rc,OLEDC_PAINTBKGND);
+                HDC hdc=GetDuiDC(&rc,OLEDC_PAINTBKGND,FALSE);
                 m_pSkinSb->Draw(hdc,rc,MAKESBSTATE(m_HitInfo.uSbCode,DuiWndState_Normal,m_HitInfo.bVertical));
                 ReleaseDuiDC(hdc);
             }
             if(uHit.uSbCode!=WORD(-1) && IsScrollBarEnable(uHit.bVertical))
             {
                 CRect rc=GetSbPartRect(uHit.bVertical,uHit.uSbCode);
-                CDCHandle dc=GetDuiDC(&rc,OLEDC_PAINTBKGND);
+                CDCHandle dc=GetDuiDC(&rc,OLEDC_PAINTBKGND,FALSE);
                 m_pSkinSb->Draw(dc,rc,MAKESBSTATE(uHit.uSbCode,DuiWndState_Hover,uHit.bVertical));
                 ReleaseDuiDC(dc);
             }
@@ -546,7 +546,7 @@ BOOL CDuiPanelEx::OnScroll(BOOL bVertical,UINT uCode,int nPos)
             CRect rcRail=GetScrollBarRect(bVertical);
             if(bVertical) rcRail.DeflateRect(0,m_nSbArrowSize);
             else rcRail.DeflateRect(m_nSbArrowSize,0);
-            HDC hdc=GetDuiDC(&rcRail,OLEDC_PAINTBKGND);
+            HDC hdc=GetDuiDC(&rcRail,OLEDC_PAINTBKGND,FALSE);
             m_pSkinSb->Draw(hdc,rcRail,MAKESBSTATE(SB_PAGEDOWN,DuiWndState_Normal,bVertical));
             psi->nTrackPos=-1;
             CRect rcSlide=GetSbPartRect(bVertical,SB_THUMBTRACK);
@@ -747,6 +747,9 @@ BOOL CDuiScrollView::OnScroll(BOOL bVertical,UINT uCode,int nPos)
 
         if(ptOrigin!=m_ptOrgin)
             SetViewOrigin(ptOrigin);
+
+ 		if(uCode==SB_THUMBTRACK)
+			::UpdateWindow(GetContainer()->GetHostHwnd());
     }
     return bRet;
 }
