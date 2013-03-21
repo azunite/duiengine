@@ -211,12 +211,12 @@ public: \
 			return TRUE; \
 	}
 
-// void OnEnable(BOOL bEnable)
-#define MSG_WM_ENABLE(func) \
+// void OnEnable(BOOL bEnable,UINT uStatus)
+#define MSG_WM_ENABLE_EX(func) \
 	if (uMsg == WM_ENABLE) \
 	{ \
 		SetMsgHandled(TRUE); \
-		func((BOOL)wParam); \
+		func((BOOL)wParam,lParam); \
 		lResult = 0; \
 		if(IsMsgHandled()) \
 			return TRUE; \

@@ -25,6 +25,7 @@ namespace DuiEngine
 
 /////////////////////////////////////////////////////////////////////////
 enum {NormalShow=0,ParentShow=1};	//提供WM_SHOWWINDOW消息识别是父窗口显示还是要显示本窗口
+enum {NormalEnable=0,ParentEnable=1};	//提供WM_ENABLE消息识别是父窗口可用还是直接操作当前窗口
 
 typedef struct tagDUIWNDPOS
 {
@@ -190,7 +191,8 @@ protected:
     DWORD m_dwState;
     CDuiStringT m_strLinkUrl;
     BOOL m_bMsgTransparent;		//不处理用户操作标志
-    BOOL m_bVisible;
+    BOOL m_bVisible;			//可见状态
+	BOOL m_bDisable;			//禁用状态
     CDuiStringT m_strToolTipText;
     int	 m_nSepSpace;	//自动排版的水平空格
     BOOL m_bClipClient;
@@ -341,7 +343,7 @@ public:
     BOOL IsVisible(BOOL bCheckParent = FALSE);//tolua_export
     void SetVisible(BOOL bVisible,BOOL bUpdate=FALSE);//tolua_export
 
-    void EnableWindow( BOOL bEnable);//tolua_export
+    void EnableWindow( BOOL bEnable,BOOL bUpdate=FALSE);//tolua_export
 
     void SetCheck(BOOL bCheck);//tolua_export
 
@@ -551,7 +553,7 @@ protected:
     DUIWIN_CHAIN_ATTRIBUTE(m_style)					//支持对style中的属性定制
     DUIWIN_INT_ATTRIBUTE("id", m_uCmdID, FALSE)
     DUIWIN_INT_ATTRIBUTE("data", m_uData, 0 )
-	DUIWIN_UINT_ATTRIBUTE("state", m_dwState, FALSE)
+	DUIWIN_CUSTOM_ATTRIBUTE("state", OnAttributeState)
     DUIWIN_TSTRING_ATTRIBUTE("href", m_strLinkUrl, FALSE)
     DUIWIN_TSTRING_ATTRIBUTE("tip", m_strToolTipText, FALSE)
     DUIWIN_CUSTOM_ATTRIBUTE("pos", OnAttributePosition)
@@ -648,6 +650,8 @@ protected:
 
     void OnShowWindow(BOOL bShow, UINT nStatus);
 
+	void OnEnable(BOOL bEnable,UINT nStatus);
+
     void OnLButtonDown(UINT nFlags,CPoint pt);
 
     void OnLButtonUp(UINT nFlags,CPoint pt);
@@ -665,6 +669,7 @@ protected:
 
     HRESULT OnAttributePosition(const CDuiStringA& strValue, BOOL bLoading);
     HRESULT OnAttributeName(const CDuiStringA& strValue, BOOL bLoading);
+    HRESULT OnAttributeState(const CDuiStringA& strValue, BOOL bLoading);
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_ERASEBKGND(OnEraseBkgnd)
@@ -675,6 +680,7 @@ protected:
     MSG_WM_DUIWINPOSCHANGED(OnWindowPosChanged)
     MSG_WM_CALCSIZE(OnCalcSize)
     MSG_WM_SHOWWINDOW(OnShowWindow)
+	MSG_WM_ENABLE_EX(OnEnable)
     MSG_WM_CALCWNDPOS(OnCalcChildPos)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
     MSG_WM_LBUTTONUP(OnLButtonUp)

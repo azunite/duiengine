@@ -71,6 +71,10 @@ BOOL CDuiFrame::OnReleaseDuiCapture()
 
 HDUIWND CDuiFrame::OnSetDuiCapture(HDUIWND hDuiWnd)
 {
+	CDuiWindow *pWnd=DuiWindowManager::GetWindow(hDuiWnd);
+	DUIASSERT(pWnd);
+	if(pWnd->IsDisabled(TRUE)) return 0;
+
     HDUIWND hRet=m_hCapture;
     m_hCapture=hDuiWnd;
     return hRet;
@@ -131,14 +135,14 @@ void CDuiFrame::OnFrameMouseMove(UINT uFlag,CPoint pt)
                 if(m_bNcHover) pOldHover->DuiSendMessage(WM_NCMOUSELEAVE);
                 pOldHover->DuiSendMessage(WM_MOUSELEAVE);
             }
-            if(pHover)
+            if(pHover && !pHover->IsDisabled(TRUE))
             {
                 m_bNcHover=pHover->OnDuiNcHitTest(pt);
                 if(m_bNcHover) pHover->DuiSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
                 pHover->DuiSendMessage(WM_MOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
             }
         }
-        else if(pHover)
+        else if(pHover && !pHover->IsDisabled(TRUE))
         {
             BOOL bNcHover=pHover->OnDuiNcHitTest(pt);
             if(bNcHover!=m_bNcHover)
@@ -154,7 +158,8 @@ void CDuiFrame::OnFrameMouseMove(UINT uFlag,CPoint pt)
                 }
             }
         }
-        if(pHover) pHover->DuiSendMessage(m_bNcHover?WM_NCMOUSEMOVE:WM_MOUSEMOVE,uFlag,MAKELPARAM(pt.x,pt.y));
+        if(pHover && !pHover->IsDisabled(TRUE))
+			pHover->DuiSendMessage(m_bNcHover?WM_NCMOUSEMOVE:WM_MOUSEMOVE,uFlag,MAKELPARAM(pt.x,pt.y));
     }
 }
 
@@ -168,7 +173,8 @@ void CDuiFrame::OnFrameMouseLeave()
     else if(m_hHover)
     {
         CDuiWindow *pHover=DuiWindowManager::GetWindow(m_hHover);
-        if(pHover) pHover->DuiSendMessage(m_bNcHover?WM_NCMOUSELEAVE:WM_MOUSELEAVE);
+        if(pHover && !pHover->IsDisabled(TRUE))
+			pHover->DuiSendMessage(m_bNcHover?WM_NCMOUSELEAVE:WM_MOUSELEAVE);
     }
     m_hHover=NULL;
 }

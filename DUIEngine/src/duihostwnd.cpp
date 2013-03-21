@@ -171,6 +171,7 @@ BOOL CDuiHostWnd::SetXml(TiXmlElement *pXmlRootElem )
 
 	SetWindowPos(NULL,0,0,m_sizeDefault.cx,m_sizeDefault.cy,SWP_NOZORDER|SWP_NOMOVE);
 
+	DuiSendMessage(WM_ENABLE,1);
 	DuiSendMessage(WM_SHOWWINDOW,1);
 
 	_Redraw();

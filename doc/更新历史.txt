@@ -1,3 +1,6 @@
+2013年3月21日
+1、完善对于在XML中指定state的值的支持。可以使用它直接指定不可见及禁用状态。
+
 2013年3月14日
 1、修改CDuiListboxEx，为控件增加virtual属性，当使用virtual属性时，所有条目的显示共享一个CDuiItemPanel，减少内存占用。
 2、修改了Richedit在失去焦点时可能导致的显示异常。

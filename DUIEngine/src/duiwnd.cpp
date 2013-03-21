@@ -31,6 +31,7 @@ CDuiWindow::CDuiWindow()
     , m_dwState(DuiWndState_Normal)
     , m_bMsgTransparent(FALSE)
     , m_bVisible(TRUE)
+	, m_bDisable(FALSE)
     , m_nSepSpace(2)
     , m_nMaxWidth(-1)
     , m_bUpdateLocked(FALSE)
@@ -440,20 +441,8 @@ BOOL CDuiWindow::IsChecked()
 
 BOOL CDuiWindow::IsDisabled(BOOL bCheckParent /*= FALSE*/)
 {
-    BOOL bDisable = (DuiWndState_Disable == (m_dwState & DuiWndState_Disable));
-
-    if (bCheckParent && !bDisable)
-    {
-        CDuiWindow *pWndParent = this;
-
-        while (pWndParent = pWndParent->GetParent())
-        {
-            if (pWndParent->IsDisabled())
-                return TRUE;
-        }
-    }
-
-    return bDisable;
+	if(bCheckParent) return m_dwState & DuiWndState_Disable;
+	else return m_bDisable;
 }
 
 BOOL CDuiWindow::IsVisible(BOOL bCheckParent /*= FALSE*/)
@@ -468,12 +457,10 @@ void CDuiWindow::SetVisible(BOOL bVisible,BOOL bUpdate/*=FALSE*/)
     if(bUpdate) NotifyInvalidate();
 }
 
-void CDuiWindow::EnableWindow( BOOL bEnable)
+void CDuiWindow::EnableWindow( BOOL bEnable,BOOL bUpdate)
 {
-    if (bEnable)
-        ModifyState(0, DuiWndState_Disable,TRUE);
-    else
-        ModifyState(DuiWndState_Disable, DuiWndState_Hover,TRUE);
+	DuiSendMessage(WM_ENABLE,bEnable);
+	if(bUpdate) NotifyInvalidate();
 }
 
 void CDuiWindow::SetCheck(BOOL bCheck)
@@ -1316,12 +1303,45 @@ void CDuiWindow::OnShowWindow(BOOL bShow, UINT nStatus)
     while(pChild)
     {
         pChild->DuiSendMessage(WM_SHOWWINDOW,bShow,ParentShow);
-        pChild=pChild->m_pNextSibling;
+		pChild=pChild->GetDuiWindow(GDUI_NEXTSIBLING);
     }
     if(!IsVisible(TRUE) && m_hDuiWnd == GetContainer()->GetDuiFocus())
     {
         GetContainer()->OnSetDuiFocus(NULL);
     }
+}
+
+
+void CDuiWindow::OnEnable( BOOL bEnable,UINT nStatus )
+{
+	if(nStatus == ParentEnable)
+	{
+		if(bEnable && IsDisabled(FALSE)) bEnable=FALSE;
+	}
+	else
+	{
+		m_bDisable=!bEnable;
+	}
+	if(bEnable && m_pParent)
+	{
+		bEnable=!m_pParent->IsDisabled(TRUE);
+	}
+
+	if (bEnable)
+		ModifyState(0, DuiWndState_Disable);
+	else
+		ModifyState(DuiWndState_Disable, DuiWndState_Hover);
+
+	CDuiWindow *pChild=m_pFirstChild;
+	while(pChild)
+	{
+		pChild->DuiSendMessage(WM_ENABLE,bEnable,ParentEnable);
+		pChild=pChild->GetDuiWindow(GDUI_NEXTSIBLING);
+	}
+	if(IsDisabled(TRUE) && m_hDuiWnd == GetContainer()->GetDuiFocus())
+	{
+		GetContainer()->OnSetDuiFocus(NULL);
+	}
 }
 
 void CDuiWindow::OnLButtonDown(UINT nFlags,CPoint pt)
@@ -1386,6 +1406,16 @@ HRESULT CDuiWindow::OnAttributeName(const CDuiStringA& strValue, BOOL bLoading)
         m_uCmdID=DuiSystem::getSingleton().Name2ID(strValue);
     }
     return S_FALSE;
+}
+
+HRESULT CDuiWindow::OnAttributeState( const CDuiStringA& strValue, BOOL bLoading )
+{
+	int nState=0;
+	::StrToIntExA(strValue,STIF_SUPPORT_HEX,&nState);
+	m_dwState=nState;
+	if(m_dwState & DuiWndState_Invisible) m_bVisible=FALSE;
+	if(m_dwState & DuiWndState_Disable) m_bDisable=TRUE;
+	return S_FALSE;
 }
 
 HRESULT CDuiWindow::OnAttributePosition(const CDuiStringA& strValue, BOOL bLoading)
