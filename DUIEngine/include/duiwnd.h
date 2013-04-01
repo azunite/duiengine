@@ -271,8 +271,8 @@ public:
     UINT GetCmdID();//tolua_export
     void SetCmdID(UINT uNewID);//tolua_export
 
-	ULONG_PTR GetCmdData();//tolua_export
-    ULONG_PTR SetCmdData(ULONG_PTR uData);//tolua_export
+	ULONG_PTR GetUserData();//tolua_export
+    ULONG_PTR SetUserData(ULONG_PTR uData);//tolua_export
 
 	LPCSTR GetName(){ return m_strName.IsEmpty()?NULL:(LPCSTR)m_strName;}
     //************************************

@@ -193,7 +193,7 @@ void CDuiButton::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
         nms.hdr.hwndFrom = NULL;
         nms.hdr.idFrom = GetCmdID();
         nms.uItemID = GetCmdID();
-        nms.uItemData = GetCmdData();
+        nms.uItemData = GetUserData();
         DuiNotify((LPNMHDR)&nms);
     }
 }
@@ -691,7 +691,7 @@ void CDuiCheckBox::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
             nms.hdr.hwndFrom = NULL;
             nms.hdr.idFrom = GetCmdID();
             nms.uItemID = GetCmdID();
-            nms.uItemData = GetCmdData();
+            nms.uItemData = GetUserData();
             DuiNotify((LPNMHDR)&nms);
         }
     }
@@ -901,7 +901,7 @@ void CDuiRadioBox::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
                 nms.hdr.hwndFrom = NULL;
                 nms.hdr.idFrom = GetCmdID();
                 nms.uItemID = GetCmdID();
-                nms.uItemData = GetCmdData();
+                nms.uItemData = GetUserData();
                 DuiNotify((LPNMHDR)&nms);
             }
         }

@@ -9,6 +9,8 @@ class CUIHander
 public:
 	CUIHander(CMainDlg *pMainDlg);
 	~CUIHander(void);
+	
+	bool Evt_Test( const EventArgs& args );
 
 protected:
 	LRESULT OnInitDialog(HWND hWnd, LPARAM lParam);
@@ -39,7 +41,6 @@ protected:
 
 	LRESULT OnListBtnClick(LPNMHDR pNHdr);
 
-	bool Evt_Test( const EventArgs& args );
 
 	BEGIN_MSG_MAP_EX(CUIHander)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)

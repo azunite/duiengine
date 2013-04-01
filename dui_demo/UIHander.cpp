@@ -108,9 +108,22 @@ CUIHander::~CUIHander(void)
 {
 }
 
+
+bool Evt_Test2(const EventArgs& args)
+{
+	CUIHander * p=(CUIHander*)args.m_pSender->GetUserData();
+	args.m_pSender->unsubscribeEvent(DUINM_COMMAND,Subscriber(Evt_Test2));
+	args.m_pSender->subscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,p));
+	DuiMessageBox(NULL,_T("这个msgbox是在全局函数中使用event的obsever显示的"),_T("事件测试"),MB_OK|MB_ICONWARNING);
+	return true;
+}
+
 bool CUIHander::Evt_Test( const EventArgs& args )
 {
-	DuiMessageBox(NULL,_T("这个msgbox是使用event的obsever显示的"),_T("事件测试"),MB_OK|MB_ICONWARNING);
+	args.m_pSender->subscribeEvent(DUINM_COMMAND,Subscriber(Evt_Test2));
+	args.m_pSender->unsubscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,this));
+	args.m_pSender->SetUserData((ULONG_PTR)this);
+	DuiMessageBox(NULL,_T("这个msgbox是在类成员函数中使用event的obsever显示的"),_T("事件测试"),MB_OK|MB_ICONWARNING);
 	return true;
 }
 

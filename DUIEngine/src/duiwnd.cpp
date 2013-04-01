@@ -282,12 +282,12 @@ void CDuiWindow::SetCmdID(UINT uNewID)
     m_uCmdID=uNewID;
 }
 
-ULONG_PTR CDuiWindow::GetCmdData()
+ULONG_PTR CDuiWindow::GetUserData()
 {
     return m_uData;
 }
 
-ULONG_PTR CDuiWindow::SetCmdData(ULONG_PTR uData)
+ULONG_PTR CDuiWindow::SetUserData(ULONG_PTR uData)
 {
     ULONG_PTR uOld=m_uData;
     m_uData=uData;
@@ -1374,7 +1374,7 @@ void CDuiWindow::OnLButtonUp(UINT nFlags,CPoint pt)
         nms.hdr.hwndFrom = NULL;
         nms.hdr.idFrom = GetCmdID();
         nms.uItemID = GetCmdID();
-        nms.uItemData = GetCmdData();
+        nms.uItemData = GetUserData();
         DuiNotify((LPNMHDR)&nms);
     }
 }

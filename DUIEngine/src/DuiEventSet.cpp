@@ -28,8 +28,6 @@ namespace DuiEngine
 		{
 			if(m_evtSlots[i]->Equal(slot))
 			{
-				delete m_evtSlots[i];
-				m_evtSlots.RemoveAt(i);
 				return i;
 			}
 		}
