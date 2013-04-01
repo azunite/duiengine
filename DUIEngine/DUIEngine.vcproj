@@ -346,6 +346,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiEventSet.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\duifontpool.cpp"
 				>
 			</File>
@@ -601,6 +605,14 @@
 			</File>
 			<File
 				RelativePath=".\include\DuiDefaultLogger.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiEventSet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiEventSubscriber.h"
 				>
 			</File>
 			<File

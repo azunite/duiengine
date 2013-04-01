@@ -39,6 +39,8 @@ protected:
 
 	LRESULT OnListBtnClick(LPNMHDR pNHdr);
 
+	bool Evt_Test( const EventArgs& args );
+
 	BEGIN_MSG_MAP_EX(CUIHander)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
 		MSG_WM_INITDIALOG(OnInitDialog)

@@ -47,6 +47,7 @@ CDuiWindow::CDuiWindow()
     , m_nSaveDC(0)
     , m_gdcFlags(-1)
 {
+	addEvent(DUINM_COMMAND);
 }
 
 CDuiWindow::~CDuiWindow()
@@ -830,7 +831,11 @@ void CDuiWindow::BringWindowToTop()
 
 LRESULT CDuiWindow::DuiNotify(LPNMHDR pnms)
 {
-    if(GetOwner()) return GetOwner()->DuiNotify(pnms);
+	EventArgs args(pnms,this);
+	FireEvent(pnms->code,args);
+	if(args.handled != 0) return 0;
+
+	if(GetOwner()) return GetOwner()->DuiNotify(pnms);
     return GetContainer()->OnDuiNotify(pnms);
 }
 
@@ -1369,7 +1374,6 @@ void CDuiWindow::OnLButtonUp(UINT nFlags,CPoint pt)
         nms.hdr.hwndFrom = NULL;
         nms.hdr.idFrom = GetCmdID();
         nms.uItemID = GetCmdID();
-        nms.szItemClass = GetObjectClass();
         nms.uItemData = GetCmdData();
         DuiNotify((LPNMHDR)&nms);
     }

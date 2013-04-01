@@ -108,6 +108,12 @@ CUIHander::~CUIHander(void)
 {
 }
 
+bool CUIHander::Evt_Test( const EventArgs& args )
+{
+	DuiMessageBox(NULL,_T("这个msgbox是使用event的obsever显示的"),_T("事件测试"),MB_OK|MB_ICONWARNING);
+	return true;
+}
+
 LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 {
 	HRESULT hr=::RegisterDragDrop(hWnd,m_pMainDlg->GetDropTarget());
@@ -121,6 +127,9 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 	{
 		pList2->SetItemCount(100);
 	}
+	CDuiWindow *pTst=m_pMainDlg->FindChildByCmdID(btn_tstevt);
+	pTst->subscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,this));
+
 	SetMsgHandled(FALSE); 
 	//演示在程序初始化的时候通过如用户配置文件设置PANE的大小.
 // 	CDuiSplitWnd *pSplit=(CDuiSplitWnd*)m_pMainDlg->FindChildByCmdID(1180);

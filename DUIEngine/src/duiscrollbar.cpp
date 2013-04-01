@@ -24,6 +24,7 @@ CDuiScrollBar::CDuiScrollBar()
 {
     memset(&m_si,0,sizeof(SCROLLINFO));
     m_si.nTrackPos=-1;
+	addEvent(DUINM_SCROLL);
 }
 
 CDuiScrollBar::~CDuiScrollBar()

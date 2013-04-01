@@ -996,7 +996,6 @@ void CDuiTreeCtrl::ItemLButtonUp(HSTREEITEM hItem, UINT nFlags,CPoint pt)
 			nms.hdr.hwndFrom = NULL;
 			nms.hdr.idFrom = GetCmdID();
 			nms.uItemID = GetCmdID();
-			nms.szItemClass = GetObjectClass();
 			nms.uItemData = hItem; 
 			DuiNotify((LPNMHDR)&nms);
 		}

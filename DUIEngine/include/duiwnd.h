@@ -18,6 +18,7 @@
 #include "duiwndnotify.h"
 #include "gdialpha.h"
 #include "duiref.h"
+#include "DuiEventSet.h"
 #include <OCIdl.h>
 
 namespace DuiEngine
@@ -112,6 +113,7 @@ typedef enum tagGDUI_CODE
 
 //tolua_begin
 class DUI_EXP CDuiWindow : public CDuiObject
+	, public CDuiEventSet
     , public CDuiRef
 {
     //tolua_end

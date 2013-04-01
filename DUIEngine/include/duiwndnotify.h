@@ -87,7 +87,6 @@ typedef struct _DUINMCOMMAND
 {
     NMHDR       hdr;
     UINT        uItemID;
-    LPCSTR      szItemClass;
     ULONG_PTR   uItemData;
 } DUINMCOMMAND, *LPDUINMCOMMAND;
 
@@ -146,24 +145,6 @@ typedef struct _DUINMTABITEMHOVER
 
 #define DUINM_TAB_ITEMLEAVE 12
 typedef DUINMTABITEMHOVER DUINMTABITEMLEAVE, *LPDUINMTABITEMLEAVE;
-
-// Dropdown Change Notify
-#define DUINM_DROPDOWN_SELCHANGED 13
-
-typedef struct _DUINMDROPDOWNSELCHANGED
-{
-    NMHDR			hdr;
-    UINT        uItemID;
-    int				nIndex;
-} DUINMDROPDOWNSELCHANGED, *LPDUINMDROPDOWNSELCHANGED;
-
-// void OnDropdownSelChanged(int nIndex)
-#define DUI_NOTIFY_DROPDOWN_SELCHANGED(itemid, func)                                  \
-	if (DUINM_DROPDOWN_SELCHANGED == uCode && itemid == ((LPDUINMDROPDOWNSELCHANGED)pnmh)->uItemID)  \
-{                                                                       \
-	func(((LPDUINMDROPDOWNSELCHANGED)pnmh)->nIndex);                                                             \
-	return TRUE;                                                        \
-}
 
 class CDuiScrollBar;
 #define DUINM_SCROLL	14
@@ -246,7 +227,17 @@ typedef struct tagDUINMGETTBDISPINFO
     CDuiWindow *	pHostDuiWin;
 } DUINMGETTBDISPINFO, *LPDUINMGETTBDISPINFO;
 
-#define DUINM_TBSELCHANGED	21
+#define DUINM_TBSELCHANGING	21
+typedef struct tagDUINMTBSELCHANGING
+{
+	NMHDR       hdr;
+	HSTREEITEM hNewSel;
+	HSTREEITEM hOldSel;
+	BOOL		bCancel;
+} DUINMTBSELCHANGING, *LPDUINMTBSELCHANGING;
+
+
+#define DUINM_TBSELCHANGED	22
 typedef struct tagDUINMTBSELCHANGED
 {
     NMHDR       hdr;

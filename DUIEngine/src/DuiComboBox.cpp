@@ -61,6 +61,9 @@ CDuiComboBox::CDuiComboBox(void)
 ,m_bItemPanel(FALSE)
 ,m_iAnimTime(200)
 {
+	addEvent(DUINM_LBSELCHANGED);
+	addEvent(DUINM_LBSELCHANGING);
+	addEvent(DUINM_RICHEDIT_NOTIFY);
 }
 
 CDuiComboBox::~CDuiComboBox(void)
@@ -302,7 +305,11 @@ int CDuiComboBox::SetCurSel( int iSel )
 		{
 			m_iCurSel=-1;
 			if(m_pEdit)
+			{
+				m_pEdit->setMutedState(true);
 				m_pEdit->SetWindowText(NULL);
+				m_pEdit->setMutedState(false);
+			}
 			else
 				SetInnerText(NULL);
 		}else
@@ -311,7 +318,11 @@ int CDuiComboBox::SetCurSel( int iSel )
 			{
 				m_iCurSel=iSel;
 				if(m_pEdit)
+				{
+					m_pEdit->setMutedState(true);
 					m_pEdit->SetWindowText(m_arrCbItem[iSel].strText);
+					m_pEdit->setMutedState(false);
+				}
 				else
 					SetInnerText(m_arrCbItem[iSel].strText);
 			}else
@@ -319,6 +330,7 @@ int CDuiComboBox::SetCurSel( int iSel )
 				return CB_ERR;
 			}
 		}
+
 		NotifyInvalidate();
 	}
 	return m_iCurSel;

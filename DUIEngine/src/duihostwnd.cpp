@@ -621,7 +621,6 @@ LRESULT CDuiHostWnd::OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 nms.hdr.hwndFrom = NULL;
                 nms.hdr.idFrom = uCmdID;
                 nms.uItemID = uCmdID;
-                nms.szItemClass = pWnd->GetClassName();
 
                 return OnDuiNotify((LPNMHDR)&nms);
             }

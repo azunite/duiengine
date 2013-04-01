@@ -14,6 +14,7 @@ CDuiSliderBar::CDuiSliderBar()
     , m_uHtPrev(-1)
 	, m_pSkinThumb(NULL)
 {
+	addEvent(DUINM_SLIDER);
 }
 
 CDuiSliderBar::~CDuiSliderBar()

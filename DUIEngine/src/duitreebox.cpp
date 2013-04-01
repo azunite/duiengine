@@ -35,7 +35,11 @@ CDuiTreeBox::CDuiTreeBox()
     , m_nVisibleItems(0)
     , m_pTiXmlSwitch(NULL)
 {
-
+	addEvent(DUINM_LBITEMNOTIFY);
+	addEvent(DUINM_ITEMMOUSEEVENT);
+	addEvent(DUINM_GETTBDISPINFO);
+	addEvent(DUINM_TBSELCHANGING);
+	addEvent(DUINM_TBSELCHANGED);
 }
 
 CDuiTreeBox::~CDuiTreeBox()
@@ -519,25 +523,37 @@ void CDuiTreeBox::OnLButtonDown(UINT nFlags,CPoint pt)
 
     if(m_hHoverItem!=m_hSelItem)
     {
-        DUINMTBSELCHANGED nms;
-        nms.hdr.code=DUINM_TBSELCHANGED;
-        nms.hdr.hwndFrom=NULL;
-        nms.hdr.idFrom=GetCmdID();
-        nms.hOldSel=m_hSelItem;
-        nms.hNewSel=m_hHoverItem;
+		DUINMTBSELCHANGING nms2;
+		nms2.hdr.code=DUINM_TBSELCHANGING;
+		nms2.hdr.hwndFrom=NULL;
+		nms2.hdr.idFrom=GetCmdID();
+		nms2.hOldSel=m_hSelItem;
+		nms2.hNewSel=m_hHoverItem;
+		nms2.bCancel=FALSE;
+		DuiNotify((LPNMHDR)&nms2);
 
-        if(m_hSelItem)
-        {
-            CSTree<CDuiTreeItem*>::GetItem(m_hSelItem)->ModifyItemState(0,DuiWndState_Check);
-            RedrawItem(m_hSelItem);
-        }
-        m_hSelItem=m_hHoverItem;
-        if(m_hSelItem)
-        {
-            CSTree<CDuiTreeItem*>::GetItem(m_hSelItem)->ModifyItemState(DuiWndState_Check,0);
-            RedrawItem(m_hSelItem);
-        }
-        DuiNotify((LPNMHDR)&nms);
+		if(!nms2.bCancel)
+		{
+			DUINMTBSELCHANGED nms;
+			nms.hdr.code=DUINM_TBSELCHANGED;
+			nms.hdr.hwndFrom=NULL;
+			nms.hdr.idFrom=GetCmdID();
+			nms.hOldSel=m_hSelItem;
+			nms.hNewSel=m_hHoverItem;
+
+			if(m_hSelItem)
+			{
+				CSTree<CDuiTreeItem*>::GetItem(m_hSelItem)->ModifyItemState(0,DuiWndState_Check);
+				RedrawItem(m_hSelItem);
+			}
+			m_hSelItem=m_hHoverItem;
+			if(m_hSelItem)
+			{
+				CSTree<CDuiTreeItem*>::GetItem(m_hSelItem)->ModifyItemState(DuiWndState_Check,0);
+				RedrawItem(m_hSelItem);
+			}
+			DuiNotify((LPNMHDR)&nms);
+		}
     }
     if(m_hHoverItem)
     {

@@ -104,7 +104,10 @@ CDuiTabCtrl::CDuiTabCtrl() : m_nCurrentPage(0)
     , m_nAnimateSteps(0)
     , m_ptText(-1,-1)
 {
-
+	addEvent(DUINM_TAB_SELCHANGING);
+	addEvent(DUINM_TAB_SELCHANGED);
+	addEvent(DUINM_TAB_ITEMHOVER);
+	addEvent(DUINM_TAB_ITEMLEAVE);
 }
 
 void CDuiTabCtrl::OnPaint( CDCHandle dc )

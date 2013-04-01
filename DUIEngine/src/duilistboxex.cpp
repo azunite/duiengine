@@ -30,6 +30,11 @@ CDuiListBoxEx::CDuiListBoxEx()
 	, m_pXmlTempl(NULL)
 	, m_bVirtual(FALSE)
 {
+	addEvent(DUINM_LBITEMNOTIFY);
+	addEvent(DUINM_ITEMMOUSEEVENT);
+	addEvent(DUINM_GETLBDISPINFO);
+	addEvent(DUINM_LBSELCHANGING);
+	addEvent(DUINM_LBSELCHANGED);
 }
 
 CDuiListBoxEx::~CDuiListBoxEx()
