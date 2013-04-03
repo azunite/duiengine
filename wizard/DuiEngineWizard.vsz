@@ -1,6 +1,6 @@
 VSWIZARD 7.0
 Wizard=VsWizard.VsWizardEngine.9.0
 
-Param="WIZARD_NAME = DuiEngine.Wizard"
-Param="ABSOLUTE_PATH = C:\Program Files\Microsoft Visual Studio 9.0\VC\vcprojects\DuiEngineWizard"
+Param="WIZARD_NAME = DuiEngineWizard"
+Param="RELATIVE_PATH = vcprojects"
 Param="FALLBACK_LCID = 2052"
