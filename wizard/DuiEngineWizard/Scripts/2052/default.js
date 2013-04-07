@@ -120,14 +120,18 @@ function AddConfig(proj, strProjectName)
 		CLTool.AdditionalIncludeDirectories = '$(DUIENGINEPATH)\\duiengine\\include;';//%(AdditionalIncludeDirectories)';
 		CLTool.PreprocessorDefinitions = 'WIN32;_WINDOWS;STRICT;_DEBUG;'; //%(PreprocessorDefinitions)';
 		CLTool.RuntimeLibrary = 1; // 0=MT, 1=MTd, 2=MTD (DLL), 3=MTDd
-
+		CLTool.BrowseInformation = browseInfoOption.brAllInfo;// FR
+		CLTool.Optimization = optimizeOption.optimizeDisabled;// Od
+		CLTool.DebugInformationFormat = debugOption.debugEditAndContinue;//Edit and continue
+		
 		var LinkTool = config.Tools('VCLinkerTool');
 		// TODO: ÃÌº”¡¥Ω”∆˜…Ë÷√
 		LinkTool.GenerateDebugInformation = true;
 		LinkTool.LinkIncremental = linkIncrementalYes;
 		LinkTool.SuppressStartupBanner = true;  // nologo
+		LinkTool.GenerateDebugInformation = true;
 		LinkTool.AdditionalLibraryDirectories = '$(DUIENGINEPATH)\\lib;$(DUIENGINEPATH)\\duiengine\\dependencies\\lib';
-
+		
 		var ResTool = config.Tools('VCResourceCompilerTool');
 		//resource
 		ResTool.AdditionalIncludeDirectories='$(DUIENGINEPATH)\\duiengine\\include;';
