@@ -50,7 +50,10 @@ protected:
     virtual void OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
     virtual void OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
+
     virtual void OnFrameKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
+
+	virtual void OnActivate(UINT nState);
 
     static CDuiWindow * GetNextKeyHostWnd(CDuiWindow *pCurWnd,CDuiWindow *pFirst);
 
@@ -59,6 +62,7 @@ protected:
     HDUIWND m_hHover;
     BOOL	m_bNcHover;
     HDUIWND m_hFocus;
+	HDUIWND m_hFocusBackup;//窗口失活时备份当前焦点窗口。
 
 	CDuiFrameDropTarget m_dropTarget;
 };

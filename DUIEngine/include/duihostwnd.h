@@ -136,6 +136,8 @@ protected:
 
     BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 
+	void OnActivate(UINT nState, BOOL bMinimized, HWND wndOther);
+
     //////////////////////////////////////////////////////////////////////////
     // CDuiContainer
 
@@ -220,6 +222,7 @@ protected:
     MSG_WM_LBUTTONDBLCLK(OnLButtonDblClk)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
     MSG_WM_MOUSEWHEEL(OnMouseWheel)
+	MSG_WM_ACTIVATE(OnActivate)
     MESSAGE_RANGE_HANDLER_EX(WM_MOUSEFIRST, WM_MOUSELAST, OnMouseEvent)
     MESSAGE_RANGE_HANDLER_EX(WM_KEYFIRST, WM_KEYLAST, OnKeyEvent)
 

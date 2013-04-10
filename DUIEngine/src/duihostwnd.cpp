@@ -644,6 +644,12 @@ BOOL CDuiHostWnd::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
     return DoFrameEvent(WM_MOUSEWHEEL,MAKEWPARAM(nFlags,zDelta),MAKELPARAM(pt.x,pt.y))!=0;
 }
 
+
+void CDuiHostWnd::OnActivate( UINT nState, BOOL bMinimized, HWND wndOther )
+{
+	DoFrameEvent(WM_ACTIVATE,MAKEWPARAM(nState,bMinimized),(LPARAM)wndOther);
+}
+
 LRESULT CDuiHostWnd::OnDuiNotify(LPNMHDR pHdr)
 {
     if(pHdr->code==DUINM_REALWND_CREATE) return (LRESULT)OnRealWndCreate(((LPDUINMREALWNDCMN)pHdr)->pRealWnd);

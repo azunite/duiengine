@@ -15,7 +15,13 @@ namespace DuiEngine
 #define WM_NCMOUSELAST  WM_NCMBUTTONDBLCLK
 
 
-CDuiFrame::CDuiFrame():m_hCapture(NULL),m_hHover(NULL),m_hFocus(NULL),m_bNcHover(FALSE),m_dropTarget(this)
+CDuiFrame::CDuiFrame()
+	:m_hCapture(NULL)
+	,m_hHover(NULL)
+	,m_hFocus(NULL)
+	,m_hFocusBackup(NULL)
+	,m_bNcHover(FALSE)
+	,m_dropTarget(this)
 {
 }
 
@@ -48,6 +54,9 @@ LRESULT CDuiFrame::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
     case WM_KEYDOWN:
         OnFrameKeyDown((UINT)wParam,(UINT)lParam & 0xFFFF, (UINT)((lParam & 0xFFFF0000) >> 16));
         break;
+	case WM_ACTIVATE:
+		OnActivate(LOWORD(wParam));
+		break;
     default:
         if(uMsg>=WM_KEYFIRST && uMsg<=WM_KEYLAST)
             OnFrameKeyEvent(uMsg,wParam,lParam);
@@ -328,6 +337,25 @@ BOOL CDuiFrame::RegisterDragDrop( HDUIWND hDuiWnd,IDropTarget *pDropTarget )
 BOOL CDuiFrame::RevokeDragDrop( HDUIWND hDuiWnd )
 {
 	return m_dropTarget.RevokeDragDrop(hDuiWnd);
+}
+
+void CDuiFrame::OnActivate( UINT nState )
+{
+	if(nState==WA_INACTIVE)
+	{
+		if(m_hFocus)
+		{
+			m_hFocusBackup=m_hFocus;
+			OnSetDuiFocus(NULL);
+		}
+	}else if(nState==WA_ACTIVE)
+	{
+		if(m_hFocusBackup)
+		{
+			OnSetDuiFocus(m_hFocusBackup);
+			m_hFocusBackup=NULL;
+		}
+	}
 }
 
 }//namespace DuiEngine
