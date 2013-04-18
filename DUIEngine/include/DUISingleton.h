@@ -12,7 +12,7 @@
 namespace DuiEngine
 {
 
-template <typename T> class DUI_EXP Singleton
+template <typename T> class Singleton
 {
 protected:
     static    T* ms_Singleton;

@@ -4,7 +4,7 @@ namespace DuiEngine
 {
 
 template<class TClass,class TObj,class TKey=CDuiStringA>
-class DUI_EXP DuiSingletonMap :public Singleton<TClass>
+class DuiSingletonMap :public Singleton<TClass>
 {
 public:
     DuiSingletonMap(void (*funOnKeyRemoved)(const TObj &)=NULL):m_pFunOnKeyRemoved(funOnKeyRemoved)
