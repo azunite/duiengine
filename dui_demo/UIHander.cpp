@@ -108,22 +108,22 @@ CUIHander::~CUIHander(void)
 {
 }
 
-
-bool Evt_Test2(const EventArgs& args)
+bool Evt_Test2(CDuiWindow * pSender, LPNMHDR pNmhdr)
 {
-	CUIHander * p=(CUIHander*)args.m_pSender->GetUserData();
-	args.m_pSender->unsubscribeEvent(DUINM_COMMAND,Subscriber(Evt_Test2));
-	args.m_pSender->subscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,p));
-	DuiMessageBox(NULL,_T("这个msgbox是在全局函数中使用event的obsever显示的"),_T("事件测试"),MB_OK|MB_ICONWARNING);
+	pSender->GetUserData();
+// 	CUIHander * p=(CUIHander *)pSender->GetUserData();
+// 	pSender->unsubscribeEvent(DUINM_COMMAND,Subscriber(Evt_Test2));
+// 	pSender->subscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,p));
+// 	DuiMessageBox(NULL,_T("这个msgbox是在全局函数中使用event的obsever显示的"),_T("事件测试"),MB_OK|MB_ICONWARNING);
 	return true;
 }
 
-bool CUIHander::Evt_Test( const EventArgs& args )
+bool CUIHander::Evt_Test(CDuiWindow * pSender, LPNMHDR pNmhdr)
 {
-	args.m_pSender->subscribeEvent(DUINM_COMMAND,Subscriber(Evt_Test2));
-	args.m_pSender->unsubscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,this));
-	args.m_pSender->SetUserData((ULONG_PTR)this);
-	DuiMessageBox(NULL,_T("这个msgbox是在类成员函数中使用event的obsever显示的"),_T("事件测试"),MB_OK|MB_ICONWARNING);
+// 	pSender->subscribeEvent(DUINM_COMMAND,Subscriber(Evt_Test2));
+// 	pSender->unsubscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,this));
+// 	pSender->SetUserData((ULONG_PTR)this);
+// 	DuiMessageBox(NULL,_T("这个msgbox是在类成员函数中使用event的obsever显示的"),_T("事件测试"),MB_OK|MB_ICONWARNING);
 	return true;
 }
 
@@ -141,7 +141,8 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 		pList2->SetItemCount(100);
 	}
 	CDuiWindow *pTst=m_pMainDlg->FindChildByCmdID(btn_tstevt);
-	pTst->subscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,this));
+// 	pTst->subscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,this));
+	DuiSystem::getSingleton().GetScriptModule()->subscribeEvent(pTst,DUINM_COMMAND,"onEvtTstClick");
 
 	SetMsgHandled(FALSE); 
 	//演示在程序初始化的时候通过如用户配置文件设置PANE的大小.
@@ -162,6 +163,12 @@ void CUIHander::OnDestory()
 void CUIHander::OnAttrReposition()
 {
 	m_pMainDlg->FindChildByCmdID(测试)->SetAttribute("pos","|-100,|-15,|100,|15");
+	CDuiWindow *pHost=m_pMainDlg->FindChildByCmdID(116);
+
+	DuiSystem::getSingleton().GetScriptModule()->executeScriptFile("..\\dui_demo\\lua\\test.lua");
+	lua_State *L=(lua_State *)DuiSystem::getSingleton().GetScriptModule()->GetScriptEngine();
+	lua_function<void> funTst(L,"test");
+	funTst(pHost);
 }
 
 

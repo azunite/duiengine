@@ -43,7 +43,7 @@ namespace DuiEngine
 		{
 			// execute all subscribers, updating the 'handled' state as we go
 			for (UINT i=0; i<m_evtSlots.GetCount(); i++)
-				if ((*m_evtSlots[i])(args))
+				if ((*m_evtSlots[i])(args.m_pSender,args.m_pnms))
 					++args.handled;
 		}
 

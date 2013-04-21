@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
-			UseOfATL="1"
+			UseOfATL="0"
 			CharacterSet="1"
 			>
 			<Tool
@@ -200,7 +200,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
+				AdditionalIncludeDirectories=".\include;.\dependencies"
 				PreprocessorDefinitions="WIN32;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -673,6 +673,10 @@
 			</File>
 			<File
 				RelativePath=".\include\duiresproviderbase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiScriptModule.h"
 				>
 			</File>
 			<File

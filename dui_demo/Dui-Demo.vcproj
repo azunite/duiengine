@@ -240,7 +240,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies;..\duiengine\dependencies\eastl\include"
+				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies;&quot;..\scriptModule\luaScriptModule\lua-5.1&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;DLL_DUI"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -265,9 +265,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="luaScriptModule_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_Dll_d.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib;..\duiengine\dependencies\lib"
+				AdditionalLibraryDirectories="..\lib;..\duiengine\dependencies\lib;..\scriptModule\luaScriptModule\Debug;&quot;..\scriptModule\luaScriptModule\tolua++-1.0.93\lib&quot;"
 				DelayLoadDLLs=""
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -334,7 +335,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies;..\duiengine\dependencies\eastl\include"
+				AdditionalIncludeDirectories="..\duiengine\include;..\duiengine\dependencies;&quot;..\scriptModule\luaScriptModule\lua-5.1&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;DLL_DUI"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -357,9 +358,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="luaScriptModule.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_DLL.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\lib;..\duiengine\dependencies\lib"
+				AdditionalLibraryDirectories="..\lib;..\duiengine\dependencies\lib;..\scriptModule\luaScriptModule\Release;&quot;..\scriptModule\luaScriptModule\tolua++-1.0.93\lib&quot;"
 				GenerateManifest="true"
 				GenerateDebugInformation="true"
 				AssemblyDebug="1"
@@ -454,6 +456,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
+			<File
+				RelativePath=".\lua_call.hpp"
+				>
+			</File>
 			<File
 				RelativePath=".\MainDlg.h"
 				>
@@ -628,6 +634,15 @@
 			>
 			<File
 				RelativePath=".\wtlhelper\whwindow.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="lua"
+			Filter="lua"
+			>
+			<File
+				RelativePath=".\lua\test.lua"
 				>
 			</File>
 		</Filter>

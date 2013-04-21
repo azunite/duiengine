@@ -11,6 +11,19 @@
 #include <duiwndnotify.h>
 #include <DuiCSS.h>
 
+#ifdef DLL_DUI	//DLL version duiengine support lua
+#include "..\scriptModule\luaScriptModule\luaScriptModule\luaScriptModule.h"
+#include "..\\scriptModule\\luaScriptModule\\lua_call.hpp"
+
+#ifdef _DEBUG
+#pragma comment(lib,"..\\scriptModule\\luaScriptModule\\lua-5.1\\lib\\lua_d.lib")
+#else
+#pragma comment(lib,"..\\scriptModule\\luaScriptModule\\lua-5.1\\lib\\lua.lib")
+#endif
+
+#endif
+
+
 #include "resource.h"	//APP资源
 #include "duires/res.h" //包含DUI资源定义
 

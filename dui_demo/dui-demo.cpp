@@ -35,6 +35,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	//////////////////////////////////////////////////////////////////////////
 	//<--资源类型选择 
 	DuiSystem * pDuiModeSel = new DuiSystem(hInstance);
+	DuiSystem::getSingletonPtr();
+
 	DuiResProviderZip *pResModeSel= new DuiResProviderZip;
 	pResModeSel->Init(hInstance,IDR_ZIP_MODESEL,_T("ZIP"));
 	pDuiModeSel->SetResProvider(pResModeSel);
@@ -125,6 +127,12 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 
 	BOOL bOK=pDuiSystem->Init(IDR_DUI_INIT); //初始化DUI系统,原来的系统初始化方式依然可以使用。
 	pDuiSystem->SetMsgBoxTemplate(IDR_DUI_MSGBOX);
+
+#ifdef DLL_DUI
+	CLuaScriptModule scriptLua;
+	scriptLua.executeScriptFile("..\\dui_demo\\lua\\test.lua");
+	pDuiSystem->SetScriptModule(&scriptLua);
+#endif
 
 	CMenuWndHook::InstallHook(hInstance,"skin_menuborder");
 	int nRet = 0; 

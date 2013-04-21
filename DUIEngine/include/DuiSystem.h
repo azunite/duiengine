@@ -14,6 +14,7 @@
 #include "DuiWndFactoryManager.h"
 #include "DuiLogger.h"
 #include "DuiMessageBox.h"
+#include "DuiScriptModule.h"
 
 namespace DuiEngine
 {
@@ -79,6 +80,18 @@ public:
         return m_pLogger;
     }
 
+	IScriptModule * GetScriptModule()
+	{
+		return m_pScriptModule;
+	}
+
+	IScriptModule * SetScriptModule(IScriptModule *pScriptModule)
+	{
+		IScriptModule *pRet=m_pScriptModule;
+		m_pScriptModule=pScriptModule;
+		return pRet;
+	}
+
     void logEvent(LPCTSTR message, LoggingLevel level = Standard);
 
     void logEvent(LoggingLevel level , LPCTSTR format, ...);
@@ -118,6 +131,7 @@ protected:
     ATOM			m_atomWnd;
 
     DuiResProviderBase	* m_pResProvider;
+	IScriptModule		* m_pScriptModule;
     DuiLogger * m_pLogger;
     HINSTANCE m_hInst;
 

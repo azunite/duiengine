@@ -40,7 +40,7 @@ public:
     UINT handled;
 };
 
-enum _SLOTTYPE{SLOT_FUN,SLOT_MEMBER};
+enum _SLOTTYPE{SLOT_FUN,SLOT_MEMBER,SLOT_USER};
 /*!
 \brief
     Defines abstract interface which will be used when constructing various
@@ -51,7 +51,7 @@ class DUI_EXP SlotFunctorBase
 {
 public:
     virtual ~SlotFunctorBase() {};
-    virtual bool operator()(const EventArgs& args) = 0;
+    virtual bool operator()(CDuiWindow * pSender,LPNMHDR pNmhdr) = 0;
 	virtual SlotFunctorBase* Clone() const =0;
 	virtual bool Equal(const SlotFunctorBase & sour)const  =0;
 	virtual UINT GetSlotType() const  =0;
@@ -65,15 +65,15 @@ class DUI_EXP FreeFunctionSlot : public SlotFunctorBase
 {
 public:
     //! Slot function type.
-    typedef bool (SlotFunction)(const EventArgs&);
+    typedef bool (SlotFunction)(CDuiWindow * ,LPNMHDR );
 
     FreeFunctionSlot(SlotFunction* func) :
         d_function(func)
     {}
 
-    virtual bool operator()(const EventArgs& args)
+    virtual bool operator()(CDuiWindow * pSender,LPNMHDR pNmhdr)
     {
-        return d_function(args);
+        return d_function(pSender,pNmhdr);
     }
 
 	virtual SlotFunctorBase* Clone() const 
@@ -105,16 +105,16 @@ class MemberFunctionSlot : public SlotFunctorBase
 {
 public:
     //! Member function slot type.
-    typedef bool(T::*MemberFunctionType)(const EventArgs&);
+    typedef bool(T::*MemberFunctionType)(CDuiWindow * ,LPNMHDR );
 
     MemberFunctionSlot(MemberFunctionType func, T* obj) :
         d_function(func),
         d_object(obj)
     {}
 
-    virtual bool operator()(const EventArgs& args)
+    virtual bool operator()(CDuiWindow * pSender,LPNMHDR pNmhdr)
     {
-        return (d_object->*d_function)(args);
+        return (d_object->*d_function)(pSender,pNmhdr);
     }
 
 	virtual SlotFunctorBase* Clone() const 
@@ -138,12 +138,12 @@ private:
 };
 
 template <class T>
-MemberFunctionSlot<T> Subscriber( bool (T::* pFn)(const EventArgs &), T* pObject)
+MemberFunctionSlot<T> Subscriber( bool (T::* pFn)(CDuiWindow * ,LPNMHDR ), T* pObject)
 {
 	return MemberFunctionSlot<T>(pFn,pObject);
 }
 
-inline FreeFunctionSlot Subscriber(bool (*pFn)(const EventArgs &))
+inline FreeFunctionSlot Subscriber(bool (*pFn)(CDuiWindow * ,LPNMHDR ))
 {
 	return FreeFunctionSlot(pFn); 
 }

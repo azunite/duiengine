@@ -10,7 +10,7 @@ public:
 	CUIHander(CMainDlg *pMainDlg);
 	~CUIHander(void);
 	
-	bool Evt_Test( const EventArgs& args );
+	bool Evt_Test(CDuiWindow * pSender, LPNMHDR pNmhdr);
 
 protected:
 	LRESULT OnInitDialog(HWND hWnd, LPARAM lParam);

@@ -16,6 +16,7 @@ DuiSystem::DuiSystem(HINSTANCE hInst,LPCTSTR pszHostClassName/*=_T("DuiHostWnd")
     ,m_p(NULL)
     ,m_pResProvider(NULL)
     ,m_pLogger(NULL)
+	,m_pScriptModule(NULL)
     ,m_pBuf(NULL),m_nCount(0)
 	,m_pTiXmlMsgBoxTempl(NULL)
 {
