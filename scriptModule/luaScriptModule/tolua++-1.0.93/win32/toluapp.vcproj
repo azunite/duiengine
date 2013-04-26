@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Lua_d.lib"
+				AdditionalDependencies="Lua_static_d.lib"
 				OutputFile="..\bin\tolua++_d.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;..\..\lua-5.1\lib&quot;"
@@ -141,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="lua.lib"
+				AdditionalDependencies="lua_static.lib"
 				OutputFile="..\bin\tolua++.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\..\lua-5.1\lib&quot;"

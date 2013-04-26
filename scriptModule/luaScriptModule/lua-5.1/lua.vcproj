@@ -46,6 +46,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
+				BrowseInformation="1"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -172,6 +173,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
+				BrowseInformation="1"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -187,6 +189,8 @@
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="lib\$(ProjectName)_d.dll"
+				GenerateDebugInformation="true"
+				AssemblyDebug="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
