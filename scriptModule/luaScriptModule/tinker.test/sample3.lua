@@ -3,7 +3,7 @@ print(g_test._test)
 
 --print("active window is:"..g_test:getwnd())
 
-g_test:setwnd(g_test:getwnd())
+--g_test:setwnd(g_test:getwnd())
 
 -- const char* test::is_test() 함수의 결과를 출력한다.
 print(g_test:is_test())
@@ -82,6 +82,16 @@ objinfo(temp)
 print("objinfo(a)")
 objinfo(a)
 
-function lua_getwnd()
-	return g_test:getwnd();
+function lua_getwnd(a)
+	return a:getwnd();
+end
+
+function lua_tststr()
+	g_test:show2(L"abcdefg");
+	return g_test:show(L"abc");
+end
+
+function lua_tststr2(s)
+	
+	return g_test:show2(s);
 end

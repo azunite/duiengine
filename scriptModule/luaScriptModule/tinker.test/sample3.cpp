@@ -50,10 +50,43 @@ public:
 	{
 		HWND hNewWnd=hWnd;
 	}
+
+	void Show(char *psz)
+	{
+		OutputDebugStringW((wchar_t*)psz);
+	}
+
+	void Show2(LPWSTR psz)
+	{
+		OutputDebugStringW(psz);
+	}
 	int _test;
 };
 
 test g_test(11);
+}
+
+wchar_t * toWide(char * str,UINT cp)
+{
+	static wchar_t buf[1024];
+	int nSize=MultiByteToWideChar(CP_UTF8,0,str,-1,buf,1024);
+	if(nSize == 0) return NULL;
+	buf[nSize]=0;
+	return buf;
+}
+
+int utf82w(lua_State* L)
+{
+	size_t n = 0;
+	char* str = (char*)luaL_checklstring(L, -1, &n);
+	if(!str)   return 0;
+	int nSize=MultiByteToWideChar(CP_UTF8,0,str,n,NULL,0);
+	wchar_t *wstr=new wchar_t[nSize+1];
+	MultiByteToWideChar(CP_UTF8,0,str,n,wstr,nSize+1);
+	wstr[nSize]=0;
+	lua_pushlstring(L, (char*)wstr, 2*nSize+2);
+	delete []wstr;
+	return 1;
 }
 
 int main()
@@ -65,6 +98,8 @@ int main()
 	luaopen_base(L);
 	// Lua 문자열 함수들을 로드한다.- string 사용
 	luaopen_string(L);
+
+	//lua_register(L, "L", utf82w);
 
 	// base 클래스를 Lua 에 추가한다.
 	lua_tinker::class_add<NS::base>(L, "base");
@@ -87,6 +122,10 @@ int main()
 	lua_tinker::class_mem<NS::test>(L, "_test", &NS::test::_test);
 	lua_tinker::class_def<NS::test>(L, "getwnd", &NS::test::GetWnd);
 	lua_tinker::class_def<NS::test>(L, "setwnd", &NS::test::SetWnd);
+	lua_tinker::class_def<NS::test>(L, "show", &NS::test::Show);
+	lua_tinker::class_def<NS::test>(L, "show2", &NS::test::Show2);
+	lua_tinker::def(L, "L", toWide);
+
 
 	// Lua 전역 변수호 g_test 의 포인터를 등록한다.
 	lua_tinker::set(L, "g_test", &NS::g_test);
@@ -94,7 +133,11 @@ int main()
 	// sample3.lua 파일을 로드/실행한다.
 	lua_tinker::dofile(L, "sample3.lua");
 
-	HWND hWnd=lua_tinker::call<HWND>(L,"lua_getwnd");
+	NS::test a(0);
+	HWND hWnd=lua_tinker::call<HWND>(L,"lua_getwnd",&a);
+
+	lua_tinker::call<void>(L,"lua_tststr");
+	lua_tinker::call<void>(L,"lua_tststr2",L"efghi");
 
 	// 프로그램 종료
 	lua_close(L);
