@@ -1,0 +1,30 @@
+//DuiSystem
+$#include <DuiSystem.h>
+
+class DuiSystem //: public Singleton<DuiSystem>
+{
+    HINSTANCE GetInstance();
+
+    DuiResProviderBase * SetResProvider(DuiResProviderBase *pNewResProvider);
+    DuiResProviderBase * GetResProvider();
+
+    DuiLogger *SetLogger(DuiLogger *pLogger);
+    DuiLogger * GetLogger();
+
+    void logEvent(LPCTSTR message, LoggingLevel level = Standard);
+
+    UINT Name2ID(LPCSTR strName);
+
+    size_t InitName2ID(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
+
+	BOOL Init(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
+
+	BOOL SetMsgBoxTemplate(UINT uXmlResID,LPCSTR pszType=DUIRES_XML_TYPE);
+
+	IScriptModule * GetScriptModule();
+
+	IScriptModule * SetScriptModule(IScriptModule *pScriptModule);
+
+	static DuiSystem* getSingletonPtr( void );
+	
+};

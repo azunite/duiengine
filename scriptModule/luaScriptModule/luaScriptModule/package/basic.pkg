@@ -1,0 +1,252 @@
+//非基本数据类型的重定义
+typedef unsigned long       DWORD;
+typedef unsigned int		UINT;
+typedef int                 BOOL;
+typedef unsigned char       BYTE;
+typedef unsigned short      WORD;
+typedef unsigned int        WPARAM;
+typedef unsigned int        LPARAM;
+typedef long				LRESULT;
+typedef const char *		LPCSTR;
+typedef char *				LPSTR;
+typedef long				LONG;
+typedef unsigned long		size_t;
+typedef void *				LPVOID;
+typedef unsigned int		UINT_PTR;
+
+enum MSGBOX_BTN
+{
+	MB_OK =0,
+	MB_OKCANCEL,
+	MB_ABORTRETRYIGNORE,
+	MB_YESNOCANCEL,
+	MB_YESNO,
+	MB_RETRYCANCEL,
+	MB_CANCELTRYCONTINUE
+};
+
+enum MSGBOX_ICON{
+	MB_ICONHAND= 0x10,
+	MB_ICONQUESTION =0x20,
+	MB_ICONEXCLAMATION=0x30,
+	MB_ICONASTERISK=0x40
+};
+
+struct SIZE
+{
+    LONG        cx;
+    LONG        cy;
+};
+
+struct POINT
+{
+	LONG x;
+	LONG y;
+};
+
+struct RECT
+{
+    LONG    left;
+    LONG    top;
+    LONG    right;
+    LONG    bottom;
+};
+
+typedef struct tagNMHDR
+{
+    HWND      hwndFrom;
+    UINT_PTR  idFrom;
+    UINT      code;         // NM_ code
+}   NMHDR;
+
+$#include <wtl.mini/duimisc.h>
+
+namespace DuiEngine
+{
+
+
+///////////////////////////////////////////////////////////////////////////////
+// CSize - Wrapper for Windows SIZE structure.
+
+class CSize : public SIZE
+{
+public:
+// Constructors
+    CSize();
+
+    CSize(int initCX, int initCY);
+
+    CSize(SIZE initSize);
+
+    CSize(POINT initPt);
+
+    CSize(DWORD dwSize);
+
+// Operations
+    BOOL operator ==(SIZE size) const;
+
+    void SetSize(int CX, int CY);
+
+// Operators returning CSize values
+    CSize operator +(SIZE size) const;
+
+    CSize operator -(SIZE size) const;
+
+    CSize operator -() const;
+
+// Operators returning CPoint values
+    CPoint operator +(POINT point) const;
+    CPoint operator -(POINT point) const;
+
+// Operators returning CRect values
+    CRect operator +(const RECT* lpRect) const;
+    CRect operator -(const RECT* lpRect) const;
+    
+    LONG        cx;
+    LONG        cy;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+// CPoint - Wrapper for Windows POINT structure.
+
+class CPoint : public POINT
+{
+public:
+// Constructors
+    CPoint();
+
+    CPoint(int initX, int initY);
+
+    CPoint(POINT initPt);
+
+    CPoint(SIZE initSize);
+
+    CPoint(DWORD dwPoint);
+
+// Operations
+    void Offset(int xOffset, int yOffset);
+
+    void Offset(POINT point);
+
+    void Offset(SIZE size);
+
+    BOOL operator ==(POINT point) const;
+
+    void SetPoint(int X, int Y);
+
+// Operators returning CPoint values
+    CPoint operator +(SIZE size) const;
+    CPoint operator -(SIZE size) const;
+
+    CPoint operator -() const;
+
+    CPoint operator +(POINT point) const;
+
+// Operators returning CSize values
+    CSize operator -(POINT point) const;
+
+	LONG x;
+	LONG y;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+// CRect - Wrapper for Windows RECT structure.
+
+class CRect : public RECT
+{
+public:
+// Constructors
+    CRect();
+
+    CRect(int l, int t, int r, int b);
+
+    CRect(const RECT& srcRect);
+
+    CRect(POINT point, SIZE size);
+
+    CRect(POINT topLeft, POINT bottomRight);
+
+// Attributes (in addition to RECT members)
+    int Width() const;
+
+    int Height() const;
+
+    CSize Size() const;
+
+    CPoint& TopLeft();
+
+    CPoint& BottomRight();
+
+    const CPoint& TopLeft() const;
+
+    const CPoint& BottomRight() const;
+
+    CPoint CenterPoint() const;
+
+    BOOL IsRectEmpty() const;
+
+    BOOL IsRectNull() const;
+
+    BOOL PtInRect(POINT point) const;
+
+// Operations
+    void SetRect(int x1, int y1, int x2, int y2);
+
+    void SetRect(POINT topLeft, POINT bottomRight);
+
+    void SetRectEmpty();
+
+    void InflateRect(int x, int y);
+
+    void InflateRect(SIZE size);
+
+    void InflateRect(int l, int t, int r, int b);
+
+    void DeflateRect(int x, int y);
+
+    void DeflateRect(SIZE size);
+
+    void DeflateRect(int l, int t, int r, int b);
+
+    void OffsetRect(int x, int y);
+    
+    void OffsetRect(SIZE size);
+
+    void OffsetRect(POINT point);
+
+    void NormalizeRect();
+
+    // absolute position of rectangle
+    void MoveToY(int y);
+
+    void MoveToX(int x);
+
+    void MoveToXY(int x, int y);
+
+    void MoveToXY(POINT pt);
+
+// Additional Operations
+    BOOL operator ==(const RECT& rect) const;
+
+// Operators returning CRect values
+    CRect operator +(POINT pt) const;
+
+    CRect operator -(POINT pt) const;
+
+    CRect operator +(SIZE size) const;
+
+    CRect operator -(SIZE size) const;
+
+    CRect MulDiv(int nMultiplier, int nDivisor) const;
+    
+    LONG    left;
+    LONG    top;
+    LONG    right;
+    LONG    bottom;
+
+};
+
+}; // namespace DuiEngine
+

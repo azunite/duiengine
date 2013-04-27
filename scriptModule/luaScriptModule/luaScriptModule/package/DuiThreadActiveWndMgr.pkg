@@ -1,0 +1,6 @@
+class DuiThreadActiveWndManager: public DuiSingletonMap<DuiThreadActiveWndManager,HWND,DWORD>
+{
+    static HWND SetActive(HWND hWnd);
+
+    static HWND GetActive();
+};

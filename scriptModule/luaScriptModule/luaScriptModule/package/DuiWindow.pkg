@@ -1,0 +1,45 @@
+//-------------------------------------------------------------------//
+// class CDuiWindow
+//-------------------------------------------------------------------//
+$#include <duiwnd.h>
+
+class CDuiWindow
+{
+	CDuiWindow();
+	~CDuiWindow();
+
+    CDuiWindow *GetParent();
+
+    void SetParent(CDuiWindow *pParent);
+
+    CDuiWindow *GetTopLevelParent();
+
+    BOOL DestroyChild(CDuiWindow *pChild);
+
+    int GetChildrenCount();
+
+    CDuiWindow * GetChild(UINT uCmdID);
+    
+	//************************************
+    // Method:    FindChildByCmdID, 通过ID查找对应的子窗口
+    // Access:    public 
+    // Returns:   CDuiWindow*
+    // Qualifier:
+    // Parameter: UINT uCmdID
+    //************************************
+    CDuiWindow* FindChildByCmdID(UINT uCmdID);
+
+	//************************************
+	// Method:    FindChildByName，通过名字查找子窗口
+	// Access:    public 
+	// Returns:   CDuiWindow*
+	// Qualifier:
+	// Parameter: LPCSTR pszName
+	//************************************
+	CDuiWindow* FindChildByName(const char * pszName);
+
+    // 从XML创建子窗口
+    // LPCSTR utf8Xml: utf8 编码的XML串
+    // return : 顶层的最后一个窗口
+    CDuiWindow *LoadXmlChildren(const char * utf8Xml);
+};

@@ -1,0 +1,13 @@
+$#include <DuiResProviderBase.h>
+
+class DuiResProviderBase
+{
+public:
+    virtual BOOL HasResource(const char * strType,UINT uID);
+    virtual HICON   LoadIcon(const char * strType,UINT uID,int cx=0,int cy=0);
+    virtual HBITMAP	LoadBitmap(const char * strType,UINT uID);
+    virtual CDuiImgBase * LoadImage(const char * strType,UINT uID);
+    virtual size_t GetRawBufferSize(const char * strType,UINT uID);
+    virtual BOOL GetRawBuffer(const char * strType,UINT uID,void * pBuf,size_t size);
+    CDuiImgDecoder *GetImageDecoder();
+};

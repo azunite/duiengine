@@ -1,0 +1,28 @@
+$#include <DuiImgBase.h>
+
+class CDuiImgBase //: public CDuiRef
+{
+public:
+    virtual BOOL LoadFromResource(HINSTANCE hInst,const char * pszType,UINT uID);
+    virtual BOOL LoadFromFile(const char * pszPath);
+    virtual BOOL LoadFromMemory(LPVOID pBuf,DWORD dwSize);
+
+    virtual BOOL GetImageSize(SIZE & sz);
+    virtual int GetWidth();
+    virtual int GetHeight();
+    virtual BOOL IsEmpty();
+    virtual BOOL BitBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,BYTE byAlpha=0xFF);
+    virtual BOOL StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
+    virtual BOOL TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
+    //virtual void SetAttributes(TiXmlElement *pTiXmlEle) {}
+};
+
+class CDuiImgDecoder
+{
+public:
+    virtual CDuiImgBase * CreateDuiImage(LPCSTR pszType);
+
+    virtual void DestoryDuiImage(CDuiImgBase* pImg);
+
+    virtual LPCSTR GetSupportTypes();
+};
