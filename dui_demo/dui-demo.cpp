@@ -13,7 +13,7 @@
 
 
 #ifdef _DEBUG
-// #include <vld.h>//使用Vitural Leaker Detector来检测内存泄漏，可以从http://vld.codeplex.com/ 下载
+#include <vld.h>//使用Vitural Leaker Detector来检测内存泄漏，可以从http://vld.codeplex.com/ 下载
 #endif
 
 #include "MainDlg.h"
