@@ -4,42 +4,29 @@
 #include "stdafx.h"
 #include <DuiEventSubscriber.h>
 #include "luaScriptModule.h"
-#include <wtl.mini/duistr.h>
-
-#include "tolua++.h"
-// prototype for bindings initialisation function
-extern int tolua_duiengine_open(lua_State* tolua_S);
-
-#include "..\\..\\lua_call.hpp"
+#include "lua_tinker.h"
 
 using namespace DuiEngine;
 
-template<>
-void lua_function_base::push_value(CDuiWindow * pDuiWnd)
+extern BOOL DuiEngine_Export_Lua(lua_State *L);
+
+wchar_t * cast_a2w(char * str)
 {
-	tolua_pushusertype(m_vm,pDuiWnd,"DuiEngine::CDuiWindow");
+	return (wchar_t *)str;
 }
 
-template <>
-DuiEngine::CDuiWindow * lua_function_base::value_extractor()
+int Utf8ToW(lua_State* L)
 {
-	CDuiWindow * val = (DuiEngine::CDuiWindow *)tolua_tousertype(m_vm, -1,0);
-	lua_pop(m_vm, 1);
-	return val;
-}
-
-template<>
-void lua_function_base::push_value(LPNMHDR  pNmhdr)
-{
-	tolua_pushusertype(m_vm,pNmhdr,"NMHDR");
-}
-
-template <>
-LPNMHDR lua_function_base::value_extractor()
-{
-	LPNMHDR val = (LPNMHDR)tolua_tousertype(m_vm, -1,0);
-	lua_pop(m_vm, 1);
-	return val;
+	size_t n = 0;
+	char* str = (char*)luaL_checklstring(L, -1, &n);
+	if(!str)   return 0;
+	int nSize=MultiByteToWideChar(CP_UTF8,0,str,n,NULL,0);
+	wchar_t *wstr=new wchar_t[nSize+1];
+	MultiByteToWideChar(CP_UTF8,0,str,n,wstr,nSize+1);
+	wstr[nSize]=0;
+	lua_pushlstring(L, (char*)wstr, 2*nSize+2);
+	delete []wstr;
+	return 1;
 }
 
 class LuaFunctionSlot : public SlotFunctorBase
@@ -53,8 +40,7 @@ public:
 
 	  virtual bool operator()(CDuiWindow * pSender,LPNMHDR pNmhdr)
 	  {
-		  lua_function<bool> luaEvtHandler(m_pLuaState,m_luaFun);
-		  return luaEvtHandler(pSender,pNmhdr);
+		  return lua_tinker::call<bool>(m_pLuaState,m_luaFun,pSender,pNmhdr);
 	  }
 
 	  virtual SlotFunctorBase* Clone() const 
@@ -77,41 +63,17 @@ private:
 	lua_State *m_pLuaState;
 };
 
-int CvtUTF8ToT(lua_State *L)
-{
-
-	CDuiStringT str;
-	size_t n = 0; 
-	char* pszSour = (char*)luaL_checklstring(L, -1, &n); 
-	if(!pszSour) return 0;
-	CDuiStringA strA(pszSour,n);
-	str=DUI_CA2T(strA,CP_UTF8);
-	lua_pushlstring(L, (char*)str.GetData(), (str.GetLength()+1)*sizeof(TCHAR)); 
-	return 1;
-}
-
-int CvtAnsiToT(lua_State *L)
-{
-
-	CDuiStringT str;
-	size_t n = 0; 
-	char* pszSour = (char*)luaL_checklstring(L, -1, &n); 
-	if(!pszSour) return 0;
-	CDuiStringA strA(pszSour,n);
-	str=DUI_CA2T(strA,CP_ACP);
-	lua_pushlstring(L, (char*)str.GetData(), (str.GetLength()+1)*sizeof(TCHAR)); 
-	return 1;
-}
 
 CLuaScriptModule::CLuaScriptModule()
 {
-	d_state = luaL_newstate();
+	d_state = lua_open();
 	if(d_state)
 	{
 		luaL_openlibs(d_state);
-		tolua_duiengine_open(d_state);
-		lua_register(d_state, "L", CvtUTF8ToT); 
-		lua_register(d_state, "W", CvtAnsiToT); 
+		DuiEngine_Export_Lua(d_state);
+		lua_register(d_state, "A2W", Utf8ToW);
+		lua_tinker::def(d_state, "cast_a2w", cast_a2w);
+		luaL_dostring(d_state,"function L (str)\n return cast_a2w(A2W(str));\nend");//注册一个全局的"L"函数，用来将utf8编码的字符串转换为宽字符
 	}
 }
 

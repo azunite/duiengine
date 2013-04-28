@@ -10,7 +10,6 @@
 
 extern "C"
 {
-#undef LUA_BUILD_AS_DLL
 #include "../lua-5.1/lua.h"
 #include "../lua-5.1/lualib.h"
 #include "../lua-5.1/lauxlib.h"

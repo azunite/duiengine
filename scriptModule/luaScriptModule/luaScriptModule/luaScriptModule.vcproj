@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../../duiengine/include;../lua-5.1;../tolua++-1.0.93/include"
+				AdditionalIncludeDirectories="../../../duiengine/include;&quot;../lua-5.1&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LUASCRIPTMODULE_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,10 +62,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tolua++_d.lib duiengine_d.lib lua_d.lib"
-				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
+				AdditionalDependencies="duiengine_d.lib lua_d.lib"
+				OutputFile="..\lib\$(ProjectName)_d.dll"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../../../duiengine/dependencies/lib;&quot;../lua-5.1/lib&quot;;&quot;../tolua++-1.0.93/lib&quot;;../../../lib"
+				AdditionalLibraryDirectories="../../../duiengine/dependencies/lib;../lib;../../../lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -120,7 +120,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="../../../duiengine/include;../lua-5.1;../tolua++-1.0.93/include"
+				AdditionalIncludeDirectories="../../../duiengine/include;&quot;../lua-5.1&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LUASCRIPTMODULE_EXPORTS;"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -139,9 +139,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="tolua++.lib duiengine.lib lua.lib"
+				AdditionalDependencies="duiengine.lib lua.lib"
+				OutputFile="..\lib\$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../../../duiengine/dependencies/lib;&quot;../lua-5.1/lib&quot;;&quot;../tolua++-1.0.93/lib&quot;;../../../lib"
+				AdditionalLibraryDirectories="../../../duiengine/dependencies/lib;../lib;../../../lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -181,29 +182,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\lua_duiengine.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalOptions="/DLUA_BUILD_AS_DLL=0"
-						PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
-						UsePrecompiledHeader="0"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\luaScriptModule.cpp"
 				>
 			</File>
@@ -234,15 +212,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\lua_call.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\luaScriptModule.h"
-				>
-			</File>
-			<File
-				RelativePath=".\require.h"
 				>
 			</File>
 			<File
@@ -251,51 +221,66 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="package"
-			Filter="pkg"
+			Name="lua_tinker"
 			>
 			<File
-				RelativePath=".\package\basic.pkg"
+				RelativePath=".\lua_tinker.cpp"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\lua_tinker.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="exports"
+			>
+			<File
+				RelativePath=".\exports\DuiBasic.h"
 				>
 			</File>
 			<File
-				RelativePath=".\package\duiengine.pkg"
+				RelativePath=".\exports\DuiEngine.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\package\DuiImgBase.pkg"
+				RelativePath=".\exports\DuiMessageBox.h"
 				>
 			</File>
 			<File
-				RelativePath=".\package\DuiLogger.pkg"
+				RelativePath=".\exports\DuiResProvider.h"
 				>
 			</File>
 			<File
-				RelativePath=".\package\DuiMessageBox.pkg"
+				RelativePath=".\exports\DuiScriptModule.h"
 				>
 			</File>
 			<File
-				RelativePath=".\package\DuiNotify.pkg"
+				RelativePath=".\exports\DuiSystem.h"
 				>
 			</File>
 			<File
-				RelativePath=".\package\DuiResProviderBase.pkg"
+				RelativePath=".\exports\DuiThreadActiveWndMgr.h"
 				>
 			</File>
 			<File
-				RelativePath=".\package\DuiScriptModule.pkg"
-				>
-			</File>
-			<File
-				RelativePath=".\package\DuiSystem.pkg"
-				>
-			</File>
-			<File
-				RelativePath=".\package\DuiThreadActiveWndMgr.pkg"
-				>
-			</File>
-			<File
-				RelativePath=".\package\DuiWindow.pkg"
+				RelativePath=".\exports\DuiWindow.h"
 				>
 			</File>
 		</Filter>

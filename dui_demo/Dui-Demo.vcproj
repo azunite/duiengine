@@ -265,7 +265,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="luaScriptModule_d.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_Dll_d.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\lib;..\duiengine\dependencies\lib;..\scriptModule\luaScriptModule\Debug;&quot;..\scriptModule\luaScriptModule\tolua++-1.0.93\lib&quot;"
@@ -358,7 +357,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="luaScriptModule.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_DLL.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\lib;..\duiengine\dependencies\lib;..\scriptModule\luaScriptModule\Release;&quot;..\scriptModule\luaScriptModule\tolua++-1.0.93\lib&quot;"

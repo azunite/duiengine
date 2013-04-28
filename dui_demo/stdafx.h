@@ -13,12 +13,11 @@
 
 #ifdef DLL_DUI	//DLL version duiengine support lua
 #include "..\scriptModule\luaScriptModule\luaScriptModule\luaScriptModule.h"
-#include "..\\scriptModule\\luaScriptModule\\lua_call.hpp"
 
 #ifdef _DEBUG
-#pragma comment(lib,"..\\scriptModule\\luaScriptModule\\lua-5.1\\lib\\lua_d.lib")
+#pragma comment(lib,"..\\scriptModule\\luaScriptModule\\lib\\luaScriptModule_d.lib")
 #else
-#pragma comment(lib,"..\\scriptModule\\luaScriptModule\\lua-5.1\\lib\\lua.lib")
+#pragma comment(lib,"..\\scriptModule\\luaScriptModule\\lib\\luaScriptModule.lib")
 #endif
 
 #endif
