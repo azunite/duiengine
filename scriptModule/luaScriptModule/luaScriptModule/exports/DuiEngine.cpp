@@ -21,6 +21,7 @@ using namespace DuiEngine;
 
 BOOL DuiEngine_Export_Lua(lua_State *L)
 {
+	lua_tinker::init(L);
 	BOOL bRet=ExpLua_Basic(L);
 	bRet=ExpLua_DuiSystem(L);
 	bRet=ExpLua_DuiWindow(L);
