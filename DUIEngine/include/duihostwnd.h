@@ -35,7 +35,7 @@ class CDuiTipCtrl;
 class DUI_EXP CDuiHostWnd
     : public CSimpleWnd
     , public CDuiFrame
-    , IDuiRealWndHandler
+    , protected IDuiRealWndHandler
 {
 public:
     CDuiHostWnd(UINT uResID = 0);
