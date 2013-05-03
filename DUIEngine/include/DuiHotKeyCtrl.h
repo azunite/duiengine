@@ -1,12 +1,13 @@
 #pragma once
 #include "duiwnd.h"
-
+#include "Accelerator.h"
 
 namespace DuiEngine
 {
 
-class DUI_EXP CDuiHotKeyCtrl :
-    public CDuiWindow
+class DUI_EXP CDuiHotKeyCtrl 
+	: public CDuiWindow
+	, public CAccelerator
 {
     DUIOBJ_DECLARE_CLASS_NAME(CDuiHotKeyCtrl, "hotkey")
 public:
@@ -17,7 +18,7 @@ public:
 
     void SetHotKey(WORD vKey,WORD wModifiers);
 
-    void GetHotKey(WORD & vKey,WORD wModifers);
+    void GetHotKey(WORD & vKey,WORD &wModifers);
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_WORD_ATTRIBUTE("invalidcomb",m_wInvalidComb,FALSE)
@@ -58,10 +59,6 @@ protected:
 
     void UpdateCaret();
 
-    CDuiStringT FormatHotkey();
-
-    CDuiStringT GetKeyName(WORD vk);
-
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_CREATE(OnCreate)
     MSG_WM_PAINT(OnPaint)
@@ -75,9 +72,6 @@ protected:
     DUIWIN_END_MSG_MAP()
     WORD 	m_wInvalidComb;		//无效的组合键
     WORD 	m_wInvalidModifier; //对无效组合键的替换方案,默认方案
-
-    WORD 	m_wModifier;
-    WORD	m_wVK;
 
     HFONT	m_hTxtFont;
     BOOL	m_bInSetting;		//正在设置中

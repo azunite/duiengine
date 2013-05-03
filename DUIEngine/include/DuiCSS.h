@@ -19,7 +19,6 @@ public:
     BOOL Init(UINT uXmlID);
 	BOOL Init(TiXmlElement *pTiXml);
 protected:
-    TiXmlDocument	*m_pXmlDoc;
 	TiXmlElement	*m_pXmlRoot;
 };
 

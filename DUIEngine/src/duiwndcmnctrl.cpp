@@ -198,6 +198,21 @@ void CDuiButton::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
     }
 }
 
+bool CDuiButton::OnAcceleratorPressed( const CAccelerator& accelerator )
+{
+	if(IsDisabled(TRUE)) return false;
+
+	DUINMCOMMAND nms;
+	nms.hdr.code = DUINM_COMMAND;
+	nms.hdr.hwndFrom = NULL;
+	nms.hdr.idFrom = GetCmdID();
+	nms.uItemID = GetCmdID();
+	nms.uItemData = GetUserData();
+	DuiNotify((LPNMHDR)&nms);
+
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Image Control
 // Use src attribute specify a resource id

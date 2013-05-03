@@ -9,6 +9,7 @@
 #include "duiwnd.h"
 #include "duiwndpanel.h"
 #include "duiwndnotify.h"
+#include "Accelerator.h"
 
 namespace DuiEngine
 {
@@ -86,10 +87,10 @@ protected:
     void OnMouseHover(WPARAM wParam, CPoint ptPos);
 
     DUIWIN_BEGIN_MSG_MAP()
-    MSG_WM_LBUTTONDOWN(OnLButtonDown)
-    MSG_WM_LBUTTONUP(OnLButtonUp)
-    MSG_WM_MOUSEMOVE(OnMouseMove)
-    MSG_WM_MOUSEHOVER(OnMouseHover)
+		MSG_WM_LBUTTONDOWN(OnLButtonDown)
+		MSG_WM_LBUTTONUP(OnLButtonUp)
+		MSG_WM_MOUSEMOVE(OnMouseMove)
+		MSG_WM_MOUSEHOVER(OnMouseHover)
     DUIWIN_END_MSG_MAP()
 
     CRect m_rcText;
@@ -101,7 +102,7 @@ protected:
 //
 // Usage: <button id=xx>inner text example</button>
 //
-class DUI_EXP CDuiButton : public CDuiWindow
+class DUI_EXP CDuiButton : public CDuiWindow, public CAcceleratorTarget
 {
     DUIOBJ_DECLARE_CLASS_NAME(CDuiButton, "button")
 public:
@@ -128,6 +129,7 @@ protected:
         if(m_bTabStop) __super::DuiDrawFocus(hdc);
     }
 
+	virtual bool OnAcceleratorPressed(const CAccelerator& accelerator);
 protected:
     void OnPaint(CDCHandle dc);
 
