@@ -26,6 +26,8 @@ public:
 
 	IDropTarget * GetDropTarget(){return &m_dropTarget;}
 
+	CFocusManager * GetFocusManager() {return &m_focusMgr;}
+
     virtual LRESULT DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
 

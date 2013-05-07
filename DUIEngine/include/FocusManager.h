@@ -122,7 +122,7 @@ namespace DuiEngine
 	};
 
 
-	class CFocusManager
+	class DUI_EXP CFocusManager
 	{
 	public:
 		// The reason why the focus changed.
