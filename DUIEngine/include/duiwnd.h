@@ -111,19 +111,15 @@ typedef enum tagGDUI_CODE
     GDUI_OWNER,
 } GDUI_CODE;
 
-//tolua_begin
 class DUI_EXP CDuiWindow : public CDuiObject
 	, public CDuiEventSet
     , public CDuiRef
 {
-    //tolua_end
     DUIOBJ_DECLARE_CLASS_NAME(CDuiWindow, "duiwindow")
 public:
-    //tolua_begin
     CDuiWindow();
 
     virtual ~CDuiWindow();
-//tolua_end
     virtual void OnFinalRelease();
 
     enum
@@ -215,33 +211,33 @@ public:
     // Method Define
 
     // Get align
-    UINT GetTextAlign();	//tolua_export
+    UINT GetTextAlign();	
     // Get position type
-    DWORD GetPositionType();//tolua_export
+    DWORD GetPositionType();
 
     // Set position type
-    void SetPositionType(DWORD dwPosType, DWORD dwMask = 0xFFFFFFFF);//tolua_export
+    void SetPositionType(DWORD dwPosType, DWORD dwMask = 0xFFFFFFFF);
 
-    void SetFixSize(int nWid,int nHei);//tolua_export
-    void SetBkColor(COLORREF cr);//tolua_export
+    void SetFixSize(int nWid,int nHei);
+    void SetBkColor(COLORREF cr);
 
     // Get DuiWindow rect(position in container)
-    void GetRect(LPRECT prect);//tolua_export
+    void GetRect(LPRECT prect);
 
-    virtual void GetClient(LPRECT pRect);//tolua_export
+    virtual void GetClient(LPRECT pRect);
 
     void GetDlgPosition(DUIDLG_POSITION *pPos);
     // Get inner text
-    LPCTSTR GetInnerText();//tolua_export
+    LPCTSTR GetInnerText();
 
 
     // Set inner text
-    HRESULT SetInnerText(LPCTSTR lpszText);//tolua_export
+    HRESULT SetInnerText(LPCTSTR lpszText);
 
     VOID TestMainThread();
 
     // Send a message to DuiWindow
-    LRESULT DuiSendMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0,BOOL *pbMsgHandled=NULL);//tolua_export
+    LRESULT DuiSendMessage(UINT Msg, WPARAM wParam = 0, LPARAM lParam = 0,BOOL *pbMsgHandled=NULL);
 
     PDUIMSG GetCurDuiMsg()
     {
@@ -249,9 +245,9 @@ public:
     }
 
     // Move DuiWindow to new place
-    void Move(LPRECT prect);//tolua_export
+    void Move(LPRECT prect);
 
-    void Move(int x,int y, int cx=-1,int cy=-1);//tolua_export
+    void Move(int x,int y, int cx=-1,int cy=-1);
 
     void ReCalcWndPos();
 
@@ -262,17 +258,17 @@ public:
     virtual BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip);
 
     // Get DuiWindow state
-    DWORD GetState(void);//tolua_export
+    DWORD GetState(void);
 
     // Modify DuiWindow state
-    DWORD ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate=FALSE);//tolua_export
+    DWORD ModifyState(DWORD dwStateAdd, DWORD dwStateRemove,BOOL bUpdate=FALSE);
 
     // Get Command ID
-    UINT GetCmdID();//tolua_export
-    void SetCmdID(UINT uNewID);//tolua_export
+    UINT GetCmdID();
+    void SetCmdID(UINT uNewID);
 
-	ULONG_PTR GetUserData();//tolua_export
-    ULONG_PTR SetUserData(ULONG_PTR uData);//tolua_export
+	ULONG_PTR GetUserData();
+    ULONG_PTR SetUserData(ULONG_PTR uData);
 
 	LPCSTR GetName(){ return m_strName.IsEmpty()?NULL:(LPCSTR)m_strName;}
     //************************************
@@ -317,49 +313,49 @@ public:
     //************************************
     void KillDuiTimerEx(UINT_PTR id);
 
-    HDUIWND GetDuiHwnd();//tolua_export
+    HDUIWND GetDuiHwnd();
 
 
-    CDuiWindow *GetParent();//tolua_export
+    CDuiWindow *GetParent();
 
-    void SetParent(CDuiWindow *pParent);//tolua_export
+    void SetParent(CDuiWindow *pParent);
 
     CDuiWindow *GetTopLevelParent();
 
-    BOOL DestroyChild(CDuiWindow *pChild);//tolua_export
+    BOOL DestroyChild(CDuiWindow *pChild);
 
-    int GetChildrenCount();//tolua_export
+    int GetChildrenCount();
 
-    CDuiWindow * GetChild(UINT uCmdID);//tolua_export
+    CDuiWindow * GetChild(UINT uCmdID);
 
-    virtual void SetChildContainer(CDuiWindow *pChild);//tolua_export
+    virtual void SetChildContainer(CDuiWindow *pChild);
 
-    void InsertChild(CDuiWindow *pNewChild,CDuiWindow *pInsertAfter=ICWND_LAST);//tolua_export
+    void InsertChild(CDuiWindow *pNewChild,CDuiWindow *pInsertAfter=ICWND_LAST);
 
-    BOOL RemoveChild(CDuiWindow *pChild);//tolua_export
+    BOOL RemoveChild(CDuiWindow *pChild);
 
-    BOOL IsChecked();//tolua_export
+    BOOL IsChecked();
 
-    BOOL IsDisabled(BOOL bCheckParent = FALSE);//tolua_export
+    BOOL IsDisabled(BOOL bCheckParent = FALSE);
 
-    BOOL IsVisible(BOOL bCheckParent = FALSE);//tolua_export
-    void SetVisible(BOOL bVisible,BOOL bUpdate=FALSE);//tolua_export
+    BOOL IsVisible(BOOL bCheckParent = FALSE);
+    void SetVisible(BOOL bVisible,BOOL bUpdate=FALSE);
 
-    void EnableWindow( BOOL bEnable,BOOL bUpdate=FALSE);//tolua_export
+    void EnableWindow( BOOL bEnable,BOOL bUpdate=FALSE);
 
-    void SetCheck(BOOL bCheck);//tolua_export
+    void SetCheck(BOOL bCheck);
 
     BOOL NeedRedrawParent();
 
-    LPCTSTR GetLinkUrl();//tolua_export
+    LPCTSTR GetLinkUrl();
 
     CDuiContainer *GetContainer();
 
     void SetContainer(CDuiContainer *pContainer);
 
-    void SetOwner(CDuiWindow *pOwner);//tolua_export
+    void SetOwner(CDuiWindow *pOwner);
 
-    CDuiWindow *GetOwner();//tolua_export
+    CDuiWindow *GetOwner();
 
     BOOL IsMsgTransparent();
 
@@ -373,7 +369,7 @@ public:
     // Qualifier:
     // Parameter: UINT uCmdID
     //************************************
-    CDuiWindow* FindChildByCmdID(UINT uCmdID);//tolua_export
+    CDuiWindow* FindChildByCmdID(UINT uCmdID);
 
 	//************************************
 	// Method:    FindChildByName，通过名字查找子窗口
@@ -382,21 +378,23 @@ public:
 	// Qualifier:
 	// Parameter: LPCSTR pszName
 	//************************************
-	CDuiWindow* FindChildByName(LPCSTR pszName);//tolua_export
+	CDuiWindow* FindChildByName(LPCSTR pszName);
 
     // 从XML创建子窗口
     // LPCSTR utf8Xml: utf8 编码的XML串
     // return : 顶层的最后一个窗口
-    CDuiWindow *LoadXmlChildren(LPCSTR utf8Xml);//tolua_export
+    CDuiWindow *LoadXmlChildren(LPCSTR utf8Xml);
 
-    void NotifyInvalidate();//tolua_export
-    void NotifyInvalidateRect(LPRECT lprect);//tolua_export
-    void NotifyInvalidateRect(const CRect& rect);//tolua_export
+    void NotifyInvalidate();
+    void NotifyInvalidateRect(LPRECT lprect);
+    void NotifyInvalidateRect(const CRect& rect);
     void LockUpdate();
     void UnlockUpdate();
     BOOL IsUpdateLocked();
-    void BringWindowToTop();//tolua_export
+    void BringWindowToTop();
 
+	//同类控件自动成组标志,主要是给RadioButton用的。
+	virtual BOOL IsSiblingsAutoGroupped(){return FALSE;}
 public:
     //////////////////////////////////////////////////////////////////////////
     // Virtual functions
@@ -404,11 +402,11 @@ public:
 
     virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
     // Create DuiWindow from xml element
-    virtual BOOL Load(TiXmlElement* pTiXmlElem);//tolua_export
+    virtual BOOL Load(TiXmlElement* pTiXmlElem);
 
-    virtual HDUIWND DuiGetHWNDFromPoint(CPoint ptHitTest, BOOL bOnlyText);//tolua_export
+    virtual HDUIWND DuiGetHWNDFromPoint(CPoint ptHitTest, BOOL bOnlyText);
 
-    virtual LRESULT DuiNotify(LPNMHDR pnms);//tolua_export
+    virtual LRESULT DuiNotify(LPNMHDR pnms);
 
     virtual UINT OnGetDuiCode();
 
@@ -493,20 +491,20 @@ public:
     BOOL ReleaseDuiCapture();
     void SetDuiFocus();
 
-    CDuiWindow *GetCheckedRadioButton();//tolua_export
+    CDuiWindow *GetCheckedRadioButton();
 
-    void CheckRadioButton(CDuiWindow * pRadioBox);//tolua_export
+    void CheckRadioButton(CDuiWindow * pRadioBox);
 
-    BOOL SetItemVisible(UINT uItemID, BOOL bVisible);//tolua_export
+    BOOL SetItemVisible(UINT uItemID, BOOL bVisible);
 
-    BOOL IsItemVisible(UINT uItemID, BOOL bCheckParent = FALSE);//tolua_export
-    BOOL GetItemCheck(UINT uItemID);//tolua_export
+    BOOL IsItemVisible(UINT uItemID, BOOL bCheckParent = FALSE);
+    BOOL GetItemCheck(UINT uItemID);
 
-    BOOL SetItemCheck(UINT uItemID, BOOL bCheck);//tolua_export
-    BOOL EnableItem(UINT uItemID, BOOL bEnable);//tolua_export
-    BOOL IsItemEnable(UINT uItemID, BOOL bCheckParent = FALSE);//tolua_export
+    BOOL SetItemCheck(UINT uItemID, BOOL bCheck);
+    BOOL EnableItem(UINT uItemID, BOOL bEnable);
+    BOOL IsItemEnable(UINT uItemID, BOOL bCheckParent = FALSE);
 
-    CDuiWindow *GetDuiWindow(int uCode);	//tolua_export
+    CDuiWindow *GetDuiWindow(int uCode);	
 
     //************************************
     // Method:    BeforePaint
@@ -596,7 +594,9 @@ protected:
 
     virtual BOOL NeedRedrawWhenStateChange();
     virtual void DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat);
-    virtual void DuiDrawFocus(HDC hdc);
+    virtual void DuiDrawFocus(HDC dc);
+
+	void DuiDrawDefFocusRect(CDCHandle dc,CRect rc);
 
     //////////////////////////////////////////////////////////////////////////
     // Message Handler

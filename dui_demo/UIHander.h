@@ -40,6 +40,7 @@ protected:
 	void OnCommand(UINT uNotifyCode, int nID, HWND wndCtl);
 
 	LRESULT OnListBtnClick(LPNMHDR pNHdr);
+	void OnTimer(UINT_PTR nIDEvent);
 
 
 	BEGIN_MSG_MAP_EX(CUIHander)
@@ -47,6 +48,7 @@ protected:
 		MSG_WM_INITDIALOG(OnInitDialog)
 		MSG_WM_DESTROY(OnDestory)
 		MSG_WM_COMMAND(OnCommand)
+		MSG_WM_TIMER(OnTimer)
 	END_MSG_MAP()
 
 	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)

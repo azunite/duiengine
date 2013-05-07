@@ -9,8 +9,6 @@ namespace DuiEngine
 
 CDuiHotKeyCtrl::CDuiHotKeyCtrl(void)
 {
-    m_wVK=0;
-    m_wModifier=0;
     m_hTxtFont=0;
     m_wInvalidModifier=HOTKEYF_CONTROL;
     m_wInvalidComb=HKCOMB_NONE;

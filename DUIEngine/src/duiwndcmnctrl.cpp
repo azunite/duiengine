@@ -620,12 +620,17 @@ void CDuiCheckBox::OnPaint(CDCHandle dc)
     __super::OnPaint(dc);
 }
 
-void CDuiCheckBox::DuiDrawFocus( HDC hdc )
+void CDuiCheckBox::DuiDrawFocus( HDC dc )
 {
-    if(!m_pFocusSkin) return;
-    CRect rcCheckBox(0,0,CheckBoxSize,CheckBoxSize);
-    rcCheckBox.MoveToXY(m_rcWindow.left,m_rcWindow.top+(m_rcWindow.Height()-CheckBoxSize)/2);
-    m_pFocusSkin->Draw(hdc,rcCheckBox,0);
+    if(m_pFocusSkin)
+	{
+		CRect rcCheckBox(0,0,CheckBoxSize,CheckBoxSize);
+		rcCheckBox.MoveToXY(m_rcWindow.left,m_rcWindow.top+(m_rcWindow.Height()-CheckBoxSize)/2);
+		m_pFocusSkin->Draw(dc,rcCheckBox,0);
+	}else
+	{
+		__super::DuiDrawFocus(dc);
+	}
 }
 
 LRESULT CDuiCheckBox::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
@@ -822,12 +827,17 @@ void CDuiRadioBox::OnPaint(CDCHandle dc)
     __super::OnPaint(dc);
 }
 
-void CDuiRadioBox::DuiDrawFocus(HDC hdc)
+void CDuiRadioBox::DuiDrawFocus(HDC dc)
 {
-    if(!m_pFocusSkin) return;
-    CRect rcCheckBox(0,0,RadioBoxSize,RadioBoxSize);
-    rcCheckBox.MoveToXY(m_rcWindow.left,m_rcWindow.top+(m_rcWindow.Height()-RadioBoxSize)/2);
-    m_pFocusSkin->Draw(hdc,rcCheckBox,0);
+    if(m_pFocusSkin)
+	{
+		CRect rcCheckBox(0,0,RadioBoxSize,RadioBoxSize);
+		rcCheckBox.MoveToXY(m_rcWindow.left,m_rcWindow.top+(m_rcWindow.Height()-RadioBoxSize)/2);
+		m_pFocusSkin->Draw(dc,rcCheckBox,0);
+	}else
+	{
+		__super::DuiDrawFocus(dc);
+	}
 }
 
 LRESULT CDuiRadioBox::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
@@ -885,47 +895,11 @@ void CDuiRadioBox::OnLButtonDown(UINT nFlags, CPoint point)
     __super::OnLButtonDown(nFlags,point);
 }
 
-
-void CDuiRadioBox::OnLButtonUp(UINT nFlags, CPoint point)
+void CDuiRadioBox::OnSetDuiFocus()
 {
-    __super::OnLButtonUp(nFlags,point);
-    CDuiWindow *pParent=GetParent();
-    if(pParent->IsClass("div"))
-    {
-        pParent->CheckRadioButton(this);
-    }
-    else
-    {
-        DUIASSERT(FALSE);
-    }
-}
-
-void CDuiRadioBox::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
-{
-    if(nChar==VK_SPACE)
-    {
-        CDuiWindow *pParent=GetParent();
-        if(pParent->IsClass("div"))
-        {
-            pParent->CheckRadioButton(this);
-
-            if (GetCmdID())
-            {
-                DUINMCOMMAND nms;
-                nms.hdr.code = DUINM_COMMAND;
-                nms.hdr.hwndFrom = NULL;
-                nms.hdr.idFrom = GetCmdID();
-                nms.uItemID = GetCmdID();
-                nms.uItemData = GetUserData();
-                DuiNotify((LPNMHDR)&nms);
-            }
-        }
-        else
-        {
-            DUIASSERT(FALSE);
-        }
-
-    }
+	CDuiWindow *pParent=GetParent();
+	pParent->CheckRadioButton(this);
+	NotifyInvalidate();
 }
 
 //////////////////////////////////////////////////////////////////////////

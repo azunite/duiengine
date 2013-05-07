@@ -30,9 +30,9 @@ public:
 	virtual ULONG STDMETHODCALLTYPE AddRef( void){return ++nRef;}
 
 	virtual ULONG STDMETHODCALLTYPE Release( void) { 
-		nRef--;
-		if(nRef==0) delete this;
-		return nRef;
+		ULONG uRet= -- nRef;
+		if(uRet==0) delete this;
+		return uRet;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -140,11 +140,13 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 	{
 		pList2->SetItemCount(100);
 	}
+#ifdef DLL_DUI
 	CDuiWindow *pTst=m_pMainDlg->FindChildByCmdID(btn_tstevt);
-// 	pTst->subscribeEvent(DUINM_COMMAND,Subscriber(&CUIHander::Evt_Test,this));
 	DuiSystem::getSingleton().GetScriptModule()->subscribeEvent(pTst,DUINM_COMMAND,"onEvtTstClick");
+#endif
 
-	SetMsgHandled(FALSE); 
+//	m_pMainDlg->SetTimer(100,2000,NULL);
+// 	SetMsgHandled(FALSE); 
 	//演示在程序初始化的时候通过如用户配置文件设置PANE的大小.
 // 	CDuiSplitWnd *pSplit=(CDuiSplitWnd*)m_pMainDlg->FindChildByCmdID(1180);
 // 	pSplit->SetPaneInfo(0,100,-1,-1);
@@ -320,3 +322,13 @@ LRESULT CUIHander::OnListPredraw( LPNMHDR pNHdr )
 	return S_OK;
 }
 
+void CUIHander::OnTimer( UINT_PTR nIDEvent )
+{
+	if(nIDEvent!=100) return;
+	static int nCount=0;
+	if(nCount>5) m_pMainDlg->KillTimer(nIDEvent);
+	TCHAR szMsg[100];
+	_stprintf(szMsg,_T("Msg box No. %d"),nCount);
+	nCount++;
+	DuiMessageBox(0,szMsg,_T("tip"),MB_OK);
+}

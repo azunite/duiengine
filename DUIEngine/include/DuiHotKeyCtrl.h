@@ -34,7 +34,7 @@ protected:
     }
     virtual UINT OnGetDuiCode()
     {
-        return DUIC_WANTALLKEYS|DUIC_WANTSYSKEY & (~DUIC_WANTTAB);
+        return (DUIC_WANTALLKEYS|DUIC_WANTSYSKEY) & (~DUIC_WANTTAB);
     }
 
     int OnCreate(LPVOID);

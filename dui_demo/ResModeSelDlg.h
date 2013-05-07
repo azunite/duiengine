@@ -10,7 +10,7 @@ public:
 	void OnOK()
 	{
 		m_nMode=((CDuiTabCtrl*)FindChildByCmdID(200))->GetCurSel();
-		__super::OnOK();
+		EndDialog(IDOK);
 	}
 
 	int m_nMode;

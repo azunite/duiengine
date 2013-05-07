@@ -18,10 +18,9 @@ namespace DuiEngine
 CDuiFrame::CDuiFrame()
 	:m_hCapture(NULL)
 	,m_hHover(NULL)
-	,m_hFocus(NULL)
-	,m_hFocusBackup(NULL)
 	,m_bNcHover(FALSE)
 	,m_dropTarget(this)
+	,m_focusMgr(this)
 {
 }
 
@@ -91,11 +90,7 @@ HDUIWND CDuiFrame::OnSetDuiCapture(HDUIWND hDuiWnd)
 
 void CDuiFrame::OnSetDuiFocus(HDUIWND hDuiWnd)
 {
-    CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_hFocus);
-    if(pFocus) pFocus->DuiSendMessage(WM_KILLFOCUS);
-    m_hFocus=hDuiWnd;
-    pFocus=DuiWindowManager::GetWindow(m_hFocus);
-    if(pFocus) pFocus->DuiSendMessage(WM_SETFOCUS);
+	m_focusMgr.SetFocusedHwnd(hDuiWnd);
 }
 
 HDUIWND CDuiFrame::GetDuiCapture()
@@ -105,7 +100,7 @@ HDUIWND CDuiFrame::GetDuiCapture()
 
 HDUIWND CDuiFrame::GetDuiFocus()
 {
-    return m_hFocus;
+    return m_focusMgr.GetFocusedHwnd();
 }
 
 HDUIWND CDuiFrame::GetDuiHover()
@@ -223,7 +218,7 @@ void CDuiFrame::OnFrameMouseEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 void CDuiFrame::OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-    CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_hFocus);
+    CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_focusMgr.GetFocusedHwnd());
     if(pFocus)
     {
         pFocus->DuiSendMessage(uMsg,wParam,lParam);
@@ -232,101 +227,13 @@ void CDuiFrame::OnFrameKeyEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 void CDuiFrame::OnFrameKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-    CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_hFocus);
-    UINT uCode=pFocus?pFocus->OnGetDuiCode():0;
+	if(m_focusMgr.OnKeyDown(nChar)) return; //首先处理焦点切换
 
-    WORD wCtrl=::GetKeyState(VK_CONTROL);
-    if(!(wCtrl&0x8000)  && nChar==VK_RETURN && !(uCode & DUIC_WANTRETURN))
-    {
-        //处理RETURN
-        if(!OnDefKeyDown(nChar,nFlags))
-            ::SendMessage(GetContainer()->GetHostHwnd(),WM_COMMAND,IDOK,0);
-        return;
-    }
-    if(!(wCtrl&0x8000) && nChar == VK_ESCAPE && uCode != DUIC_WANTALLKEYS)
-    {
-        //处理ESCAPE
-        ::SendMessage(GetContainer()->GetHostHwnd(),WM_COMMAND,IDCANCEL,0);
-        return;
-    }
-
-    if(nChar==VK_TAB)
-    {
-        //首先处理tab按键
-        if(pFocus)
-        {
-            if(uCode & DUIC_WANTTAB)
-            {
-                pFocus->DuiSendMessage(WM_KEYDOWN,nChar,MAKELPARAM(nRepCnt,nFlags));
-                return;
-            }
-        }
-        else
-        {
-            if(this->IsTabStop()!=0)
-            {
-                this->SetDuiFocus();
-                return;
-            }
-            pFocus=this;
-        }
-        CDuiWindow *pNextFocus=GetNextKeyHostWnd(pFocus,pFocus);
-        if(pNextFocus)
-        {
-            pNextFocus->SetDuiFocus();
-            return;
-        }
-    }
+    CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_focusMgr.GetFocusedHwnd());
     if(pFocus)
     {
         pFocus->DuiSendMessage(WM_KEYDOWN,nChar,MAKELPARAM(nRepCnt,nFlags));
     }
-}
-
-CDuiWindow * CDuiFrame::GetNextKeyHostWnd(CDuiWindow *pCurWnd,CDuiWindow *pFirst)
-{
-    CDuiWindow *pChild=pCurWnd->GetDuiWindow(GDUI_FIRSTCHILD);
-    if(pChild)
-    {
-        if(pChild->IsTabStop()&& pChild->IsVisible(TRUE) && !pChild->IsDisabled(TRUE))
-        {
-            if(pChild==pFirst) return NULL;
-            else return pChild;
-        }
-        else
-            return GetNextKeyHostWnd(pChild,pFirst);
-    }
-
-    CDuiWindow *pParent=NULL;
-    while(pCurWnd)
-    {
-        CDuiWindow *pNextSibling=pCurWnd->GetDuiWindow(GDUI_NEXTSIBLING);
-        while(pNextSibling)
-        {
-            //没有子节点的兄弟结点不递归调用，以提高效率。
-            if(pNextSibling->IsTabStop() && pNextSibling->IsVisible(TRUE) && !pNextSibling->IsDisabled(TRUE))
-            {
-                if(pNextSibling==pFirst)
-                    return NULL;
-                else
-                    return pNextSibling;
-            }
-            else
-            {
-                if(pNextSibling->GetDuiWindow(GDUI_FIRSTCHILD))
-                    return GetNextKeyHostWnd(pNextSibling,pFirst);
-                else
-                    pNextSibling=pNextSibling->GetDuiWindow(GDUI_NEXTSIBLING);
-            }
-        }
-        pParent=pCurWnd;//save current duiwindow level
-        pCurWnd=pCurWnd->GetDuiWindow(GDUI_PARENT);
-    }
-    //search next char host win from the very top win
-    if(pParent!=pFirst)
-        return GetNextKeyHostWnd(pParent,pFirst);
-    else
-        return NULL;
 }
 
 BOOL CDuiFrame::RegisterDragDrop( HDUIWND hDuiWnd,IDropTarget *pDropTarget )
@@ -343,18 +250,10 @@ void CDuiFrame::OnActivate( UINT nState )
 {
 	if(nState==WA_INACTIVE)
 	{
-		if(m_hFocus)
-		{
-			m_hFocusBackup=m_hFocus;
-			OnSetDuiFocus(NULL);
-		}
+		m_focusMgr.StoreFocusedView();
 	}else if(nState==WA_ACTIVE)
 	{
-		if(m_hFocusBackup)
-		{
-			OnSetDuiFocus(m_hFocusBackup);
-			m_hFocusBackup=NULL;
-		}
+		m_focusMgr.RestoreFocusedView();
 	}
 }
 

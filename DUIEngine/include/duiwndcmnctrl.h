@@ -124,9 +124,9 @@ protected:
         return DUIC_WANTCHARS;
     }
 
-    virtual void DuiDrawFocus(HDC hdc)
+    virtual void DuiDrawFocus(HDC dc)
     {
-        if(m_bTabStop) __super::DuiDrawFocus(hdc);
+        if(m_bTabStop) __super::DuiDrawFocus(dc);
     }
 
 	virtual bool OnAcceleratorPressed(const CAccelerator& accelerator);
@@ -404,7 +404,7 @@ protected:
         return TRUE;
     }
 
-    virtual void DuiDrawFocus(HDC hdc);
+    virtual void DuiDrawFocus(HDC dc);
 
     void OnLButtonDown(UINT nFlags, CPoint point);
 
@@ -502,7 +502,7 @@ protected:
 
     virtual void  GetClient(LPRECT pRect);
 
-    virtual void DuiDrawFocus(HDC hdc);
+    virtual void DuiDrawFocus(HDC dc);
 
     virtual BOOL IsTabStop()
     {
@@ -511,13 +511,15 @@ protected:
 
     virtual UINT OnGetDuiCode()
     {
-        return DUIC_WANTCHARS;
+        return 0;
     }
+
+	virtual BOOL IsSiblingsAutoGroupped() {return TRUE;}
+
     void OnLButtonDown(UINT nFlags, CPoint point);
 
-    void OnLButtonUp(UINT nFlags, CPoint point);
+	void OnSetDuiFocus();
 
-    void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, FALSE)
@@ -528,8 +530,7 @@ protected:
     MSG_WM_PAINT(OnPaint)
     MSG_WM_CALCSIZE(OnCalcSize)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
-    MSG_WM_LBUTTONUP(OnLButtonUp)
-    MSG_WM_KEYDOWN(OnKeyDown)
+	MSG_WM_SETFOCUS_EX(OnSetDuiFocus)
     DUIWIN_END_MSG_MAP()
 };
 

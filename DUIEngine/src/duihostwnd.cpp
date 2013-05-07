@@ -606,29 +606,9 @@ LRESULT CDuiHostWnd::OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CDuiHostWnd::OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    if(uMsg==WM_KEYDOWN && (wParam==VK_RETURN || wParam==VK_ESCAPE))
+	if(uMsg==WM_SYSKEYDOWN || uMsg==WM_SYSKEYUP)
     {
-        //处理默认按钮，默认按钮的ID必须是IDOK或者IDCANCEL
-        CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_hFocus);
-        if(!pFocus || (wParam==VK_RETURN && !(pFocus->OnGetDuiCode()&DUIC_WANTRETURN)) || !(pFocus->OnGetDuiCode()&DUIC_WANTALLKEYS))
-        {
-            UINT uCmdID = (wParam==VK_RETURN)?IDOK:IDCANCEL;
-            CDuiWindow *pWnd=FindChildByCmdID(uCmdID);
-            if(pWnd && (pWnd->IsClass(CDuiButton::GetClassName())||pWnd->IsClass(CDuiImageBtnWnd::GetClassName())))
-            {
-                DUINMCOMMAND nms;
-                nms.hdr.code = DUINM_COMMAND;
-                nms.hdr.hwndFrom = NULL;
-                nms.hdr.idFrom = uCmdID;
-                nms.uItemID = uCmdID;
-
-                return OnDuiNotify((LPNMHDR)&nms);
-            }
-        }
-    }
-    else if(uMsg==WM_SYSKEYDOWN || uMsg==WM_SYSKEYUP)
-    {
-        CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_hFocus);
+        CDuiWindow *pFocus=DuiWindowManager::GetWindow(m_focusMgr.GetFocusedHwnd());
         if(!pFocus  || !(pFocus->OnGetDuiCode()&DUIC_WANTSYSKEY))
         {
             SetMsgHandled(FALSE);
@@ -953,16 +933,9 @@ void CDuiHostWnd::OnClose()
     EndDialog(IDCANCEL);
 }
 
-LRESULT CDuiHostWnd::OnOK()
+void CDuiHostWnd::OnOK()
 {
-    EndDialog(IDOK);
-    return 0;
-}
-
-LRESULT CDuiHostWnd::OnCancel()
-{
-    EndDialog(IDCANCEL);
-    return 0;
+	EndDialog(IDOK);
 }
 
 LRESULT CDuiHostWnd::OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam)

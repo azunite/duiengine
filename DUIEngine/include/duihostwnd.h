@@ -196,19 +196,17 @@ protected:
     UINT OnWndNcHitTest(CPoint point);
 
     void OnClose();
-
-    LRESULT OnOK();
-
-    LRESULT OnCancel();
+	void OnOK();
 
     LRESULT OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
     void UpdateHost(CDCHandle dc,const CRect &rc);
 protected:
-    DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
-    DUI_NOTIFY_ID_COMMAND(IDCANCEL, OnCancel)
-    DUI_NOTIFY_ID_COMMAND(IDOK, OnOK)
-    DUI_NOTIFY_MAP_END()
+
+	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
+		DUI_NOTIFY_ID_COMMAND(IDOK, OnOK)
+		DUI_NOTIFY_ID_COMMAND(IDCANCEL, OnClose)
+	DUI_NOTIFY_MAP_END()	
 
     BEGIN_MSG_MAP_EX(CDuiHostWnd)
     MSG_WM_SIZE(OnSize)
@@ -234,8 +232,7 @@ protected:
     MSG_WM_GETMINMAXINFO(OnGetMinMaxInfo)
     MESSAGE_HANDLER_EX(UM_MSGFILTER,OnMsgFilter)
     MSG_WM_CLOSE(OnClose)
-
-    MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
+	MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
     REFLECT_NOTIFY_CODE(NM_CUSTOMDRAW)
     END_MSG_MAP()
 };

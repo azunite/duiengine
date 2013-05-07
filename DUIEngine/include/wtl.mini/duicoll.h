@@ -1026,7 +1026,7 @@ void CDuiArray< E, ETraits >::AssertValid() const
     else
     {
         DUIASSUME( m_nSize <= m_nMaxSize );
-        DUIASSERT( AtlIsValidAddress( m_pData, m_nMaxSize * sizeof( E ) ) );
+//         DUIASSERT( AtlIsValidAddress( m_pData, m_nMaxSize * sizeof( E ) ) );
     }
 }
 #endif
@@ -1624,7 +1624,7 @@ POSITION CDuiList< E, ETraits >::InsertBefore( POSITION pos, INARGTYPE element )
 
     if( pOldNode->m_pPrev != NULL )
     {
-        DUIASSERT(AtlIsValidAddress(pOldNode->m_pPrev, sizeof(CNode)));
+//         DUIASSERT(AtlIsValidAddress(pOldNode->m_pPrev, sizeof(CNode)));
         pOldNode->m_pPrev->m_pNext = pNewNode;
     }
     else
@@ -1651,7 +1651,7 @@ POSITION CDuiList< E, ETraits >::InsertAfter( POSITION pos, INARGTYPE element )
 
     if( pOldNode->m_pNext != NULL )
     {
-        DUIASSERT(AtlIsValidAddress(pOldNode->m_pNext, sizeof(CNode)));
+//         DUIASSERT(AtlIsValidAddress(pOldNode->m_pNext, sizeof(CNode)));
         pOldNode->m_pNext->m_pPrev = pNewNode;
     }
     else
@@ -1679,7 +1679,7 @@ void CDuiList< E, ETraits >::RemoveAt( POSITION pos )
     }
     else
     {
-        DUIASSERT( AtlIsValidAddress( pOldNode->m_pPrev, sizeof(CNode) ));
+//         DUIASSERT( AtlIsValidAddress( pOldNode->m_pPrev, sizeof(CNode) ));
         pOldNode->m_pPrev->m_pNext = pOldNode->m_pNext;
     }
     if( pOldNode == m_pTail )
@@ -1688,7 +1688,7 @@ void CDuiList< E, ETraits >::RemoveAt( POSITION pos )
     }
     else
     {
-        DUIASSERT( AtlIsValidAddress( pOldNode->m_pNext, sizeof(CNode) ));
+//         DUIASSERT( AtlIsValidAddress( pOldNode->m_pNext, sizeof(CNode) ));
         pOldNode->m_pNext->m_pPrev = pOldNode->m_pPrev;
     }
     FreeNode( pOldNode );
@@ -1887,7 +1887,7 @@ POSITION CDuiList< E, ETraits >::Find( INARGTYPE element, POSITION posStartAfter
     }
     else
     {
-        DUIASSERT(AtlIsValidAddress(pNode, sizeof(CNode)));
+//         DUIASSERT(AtlIsValidAddress(pNode, sizeof(CNode)));
         pNode = pNode->m_pNext;  // start after the one specified
     }
 
@@ -1913,8 +1913,8 @@ void CDuiList< E, ETraits >::AssertValid() const
     else
     {
         // non-empty list
-        DUIASSERT(AtlIsValidAddress(m_pHead, sizeof(CNode)));
-        DUIASSERT(AtlIsValidAddress(m_pTail, sizeof(CNode)));
+//         DUIASSERT(AtlIsValidAddress(m_pHead, sizeof(CNode)));
+//         DUIASSERT(AtlIsValidAddress(m_pTail, sizeof(CNode)));
     }
 }
 #endif

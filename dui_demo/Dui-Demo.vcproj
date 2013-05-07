@@ -455,10 +455,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc"
 			>
 			<File
-				RelativePath=".\lua_call.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MainDlg.h"
 				>
 			</File>

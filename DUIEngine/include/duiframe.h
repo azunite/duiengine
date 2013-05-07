@@ -9,6 +9,7 @@
 
 #include "duiwndpanel.h"
 #include "DuiFrameDropTarget.h"
+#include "FocusManager.h"
 
 namespace DuiEngine
 {
@@ -55,14 +56,15 @@ protected:
 
 	virtual void OnActivate(UINT nState);
 
-    static CDuiWindow * GetNextKeyHostWnd(CDuiWindow *pCurWnd,CDuiWindow *pFirst);
-
 protected:
     HDUIWND m_hCapture;
     HDUIWND m_hHover;
     BOOL	m_bNcHover;
-    HDUIWND m_hFocus;
-	HDUIWND m_hFocusBackup;//窗口失活时备份当前焦点窗口。
+
+	CFocusManager m_focusMgr;
+
+//     HDUIWND m_hFocus;
+// 	HDUIWND m_hFocusBackup;//窗口失活时备份当前焦点窗口。
 
 	CDuiFrameDropTarget m_dropTarget;
 };

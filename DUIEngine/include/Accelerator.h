@@ -8,7 +8,7 @@ namespace DuiEngine
 	class DUI_EXP CAccelerator
 	{
 	public:
-		CAccelerator(void);
+		CAccelerator(UINT vKey=0,bool bCtrl=false,bool bAlt=false,bool bShift=false);
 		~CAccelerator(void);
 
 		CDuiStringT GetKeyName(WORD vk);

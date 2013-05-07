@@ -89,7 +89,7 @@ public:
 
     /*!
     \brief
-            Subscribes the named Event to a scripted function
+            Subscribes or unsubscribe the named Event to a scripted function
 
     \param target
             The target EventSet for the subscription.
@@ -103,6 +103,7 @@ public:
     \return 
     */
     virtual bool subscribeEvent(CDuiWindow* target, UINT uEvent, LPCSTR subscriber_name) = 0;
+	virtual bool unsubscribeEvent(DuiEngine::CDuiWindow* target, UINT uEvent, LPCSTR subscriber_name ) = 0;
 
 };
 

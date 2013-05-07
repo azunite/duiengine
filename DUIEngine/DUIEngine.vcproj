@@ -596,6 +596,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\auto_reset.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\DuiAttrCrack.h"
 				>
 			</File>
@@ -613,6 +617,10 @@
 			</File>
 			<File
 				RelativePath=".\include\duictrls.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiDef.h"
 				>
 			</File>
 			<File

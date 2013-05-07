@@ -7,14 +7,11 @@
 #include <windows.h>
 #include <oleauto.h>
 
+#include "../DuiDef.h"
+
 typedef WCHAR char16;
 typedef unsigned int uint32;
 
-// DISALLOW_COPY_AND_ASSIGN禁用拷贝和赋值构造函数.
-// 需要在类的private:访问控制域中使用.
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-	TypeName(const TypeName&); \
-	void operator=(const TypeName&)
 
 namespace DuiEngine
 {

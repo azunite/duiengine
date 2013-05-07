@@ -1014,13 +1014,13 @@ void CDuiWindow::OnPaint(CDCHandle dc)
 
     DuiDrawText(dc,m_strInnerText, m_strInnerText.GetLength(), DuiDC.rcClient, GetTextAlign());
 
-    AfterPaint(dc, DuiDC);
-
     //draw focus rect
     if(GetContainer()->GetDuiFocus()==m_hDuiWnd)
     {
         DuiDrawFocus(dc);
     }
+    AfterPaint(dc, DuiDC);
+
 }
 
 void CDuiWindow::OnNcPaint(CDCHandle dc)
@@ -1243,24 +1243,29 @@ void CDuiWindow::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UIN
     CGdiAlpha::DrawText(hdc,pszBuf,cchText,pRect,uFormat);
 }
 
-void CDuiWindow::DuiDrawFocus(HDC hdc)
+void CDuiWindow::DuiDrawFocus(HDC dc)
 {
     CRect rcFocus;
     GetClient(&rcFocus);
-    rcFocus.DeflateRect(2,2);
+	DuiDrawDefFocusRect(dc,rcFocus);
+}
 
-    HBRUSH hbr=(HBRUSH)::GetStockObject(NULL_BRUSH);
-    CPen pen;
-    pen.CreatePen(PS_DOT,1,RGB(88,88,88));
-    CDCHandle dc(hdc);
-    HBRUSH hOldBr=dc.SelectBrush(hbr);
-    HPEN hOldPen=dc.SelectPen(pen);
-    ALPHAINFO ai;
-    if(GetContainer()->IsTranslucent()) CGdiAlpha::AlphaBackup(hdc,&rcFocus,ai);
-    dc.Rectangle(&rcFocus);
-    if(GetContainer()->IsTranslucent()) CGdiAlpha::AlphaRestore(hdc,ai);
-    dc.SelectPen(hOldPen);
-    dc.SelectBrush(hOldBr);
+
+void CDuiWindow::DuiDrawDefFocusRect( CDCHandle dc,CRect rcFocus )
+{
+	rcFocus.DeflateRect(2,2);
+	HBRUSH hbr=(HBRUSH)::GetStockObject(NULL_BRUSH);
+	CPen pen;
+	pen.CreatePen(PS_DOT,1,RGB(88,88,88));
+	HBRUSH hOldBr=dc.SelectBrush(hbr);
+	HPEN hOldPen=dc.SelectPen(pen);
+	ALPHAINFO ai;
+	if(GetContainer()->IsTranslucent()) CGdiAlpha::AlphaBackup(dc,&rcFocus,ai);
+	dc.Rectangle(&rcFocus);
+	if(GetContainer()->IsTranslucent()) CGdiAlpha::AlphaRestore(dc,ai);
+	dc.SelectPen(hOldPen);
+	dc.SelectBrush(hOldBr);
+
 }
 
 UINT CDuiWindow::OnGetDuiCode()

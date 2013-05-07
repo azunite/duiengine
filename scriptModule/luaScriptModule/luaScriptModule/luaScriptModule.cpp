@@ -123,3 +123,8 @@ bool CLuaScriptModule::subscribeEvent(DuiEngine::CDuiWindow* target, UINT uEvent
 {
 	return target->subscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
 }
+
+bool CLuaScriptModule::unsubscribeEvent(DuiEngine::CDuiWindow* target, UINT uEvent, LPCSTR subscriber_name )
+{
+	return target->unsubscribeEvent(uEvent,LuaFunctionSlot(d_state,subscriber_name));
+}
