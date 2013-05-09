@@ -165,7 +165,7 @@ void CDuiLink::OnMouseHover( WPARAM wParam, CPoint pt )
 
 CDuiButton::CDuiButton() :m_pSkin(NULL)
 {
-	m_bTabStop=FALSE;
+	m_bTabStop=TRUE;
 }
 
 void CDuiButton::OnPaint(CDCHandle dc)
@@ -186,7 +186,7 @@ void CDuiButton::OnLButtonDown(UINT uFlag,CPoint pt)
 
 void CDuiButton::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-    if(nChar==VK_SPACE && GetCmdID())
+    if(nChar==VK_SPACE || nChar==VK_RETURN && GetCmdID())
     {
         DUINMCOMMAND nms;
         nms.hdr.code = DUINM_COMMAND;
