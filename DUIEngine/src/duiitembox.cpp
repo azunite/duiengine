@@ -264,11 +264,6 @@ void CDuiItemBox::OnSize(UINT nType, CSize size)
     ReLayout();
 }
 
-void CDuiItemBox::OnCalcChildPos(CDuiWindow *pDuiWndChild)
-{
-    //leave it unhandled
-}
-
 void CDuiItemBox::ReLayout()
 {
     CRect rcItem;

@@ -268,24 +268,23 @@ LRESULT CDuiSliderBar::NotifySbCode(UINT uCode, int nPos)
     return DuiNotify((LPNMHDR)&nms);
 }
 
-LRESULT CDuiSliderBar::OnCalcSize( BOOL bCalcValidRects, LPSIZE pSize )
+CSize CDuiSliderBar::GetDesiredSize(LPRECT pRcContainer)
 {
-	__super::OnCalcSize(bCalcValidRects, pSize);
+	DUIASSERT(m_pSkinBg && m_pSkinThumb);
+	CSize szRet;
+	SIZE sizeBg = m_pSkinBg->GetSkinSize();
+	SIZE sizeThumb= m_pSkinThumb->GetSkinSize();
 	
-	if(m_dlgpos.nCount!=4)
+	if(IsVertical())
 	{
-		SIZE sizeBg = m_pSkinBg->GetSkinSize();
-		SIZE sizeThumb= m_pSkinThumb->GetSkinSize();
-
-		if(IsVertical())
-		{
-			if(sizeThumb.cx>sizeBg.cx) pSize->cx+=sizeThumb.cx-sizeBg.cx;
-		}else
-		{
-			if(sizeThumb.cy>sizeBg.cy) pSize->cy+=sizeThumb.cy-sizeBg.cy;
-		}
+		szRet.cx=max(sizeBg.cx,sizeThumb.cx);
+		szRet.cy=100;
+	}else
+	{
+		szRet.cy=max(sizeBg.cy,sizeThumb.cy);
+		szRet.cx=100;
 	}
-	return 0;
+	return szRet;
 }
 
 }//end of namespace

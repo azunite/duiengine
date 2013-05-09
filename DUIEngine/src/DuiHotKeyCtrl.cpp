@@ -13,6 +13,7 @@ CDuiHotKeyCtrl::CDuiHotKeyCtrl(void)
     m_wInvalidModifier=HOTKEYF_CONTROL;
     m_wInvalidComb=HKCOMB_NONE;
     m_bInSetting=FALSE;
+	m_bTabStop=TRUE;
 }
 
 CDuiHotKeyCtrl::~CDuiHotKeyCtrl(void)

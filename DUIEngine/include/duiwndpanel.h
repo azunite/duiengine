@@ -176,7 +176,7 @@ protected:
 protected:
     virtual void OnViewOriginChanged(CPoint ptOld,CPoint ptNew) {}
 
-    virtual CRect GetViewRect();
+    virtual CRect GetChildrenLayoutRect();
 
     virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
 

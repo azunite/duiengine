@@ -104,6 +104,7 @@ CDuiTabCtrl::CDuiTabCtrl() : m_nCurrentPage(0)
     , m_nAnimateSteps(0)
     , m_ptText(-1,-1)
 {
+	m_bTabStop=TRUE;
 	addEvent(DUINM_TAB_SELCHANGING);
 	addEvent(DUINM_TAB_SELCHANGED);
 	addEvent(DUINM_TAB_ITEMHOVER);
@@ -179,19 +180,25 @@ void CDuiTabCtrl::OnPaint( CDCHandle dc )
         rcItemPrev=rcItem;
     }
     dc.RestoreDC(nSaveDC);
+	
+	if(GetContainer()->GetDuiFocus()==m_hDuiWnd)
+	{
+		CRect rc;
+		GetItemRect(m_nCurrentPage,rc);
+		rc.DeflateRect(2,2);
+		DuiDrawDefFocusRect(dc,&rc);
+	}
     AfterPaint(dc,duiDC);
 }
 
-void CDuiTabCtrl::OnCalcChildPos( CDuiWindow *pDuiWndChild )
+CRect CDuiTabCtrl::GetChildrenLayoutRect()
 {
-    CRect rcClient;
-    GetClient(&rcClient);
-    if(m_nTabAlign==AlignLeft)
-        rcClient.left+= (m_nTabWidth+m_nFramePos);
-    else
-        rcClient.top+= (m_nTabHeight+m_nFramePos);
-    DUIWNDPOS WndPos = {rcClient.left,rcClient.top,rcClient.Width(),rcClient.Height()};
-    pDuiWndChild->DuiSendMessage(WM_WINDOWPOSCHANGED, NULL, (LPARAM)&WndPos);
+	CRect rcRet=__super::GetChildrenLayoutRect();
+	if(m_nTabAlign==AlignLeft)
+		rcRet.left+= (m_nTabWidth+m_nFramePos);
+	else
+		rcRet.top+= (m_nTabHeight+m_nFramePos);
+	return rcRet;
 }
 
 void CDuiTabCtrl::OnLButtonDown( UINT nFlags, CPoint point )
@@ -216,7 +223,10 @@ void CDuiTabCtrl::OnLButtonDown( UINT nFlags, CPoint point )
     if (bClickMove)
     {
         __super::OnLButtonDown(nFlags,point);
-    }
+    }else
+	{
+		SetDuiFocus();
+	}
 }
 
 BOOL CDuiTabCtrl::RemoveItem( int nIndex )
@@ -309,7 +319,7 @@ LRESULT CDuiTabCtrl::OnCreate( LPVOID )
 
 BOOL CDuiTabCtrl::SetCurSel( int nIndex )
 {
-    if( nIndex < 0 || (m_nCurrentPage == nIndex)) return FALSE;
+    if( nIndex < 0 || nIndex> GetItemCount()-1 || (m_nCurrentPage == nIndex)) return FALSE;
     int nOldPage = m_nCurrentPage;
 
     DUINMTABSELCHANGE nms;
@@ -460,7 +470,8 @@ int CDuiTabCtrl::InsertItem( TiXmlElement *pXmlElement,int iInsert/*=-1*/,BOOL b
 
     if(!bLoading)
     {
-        OnCalcChildPos(pChild);
+		CRect rcContainer=GetChildrenLayoutRect();
+		pChild->Move(&rcContainer);
         NotifyInvalidate();
     }
 
@@ -493,7 +504,9 @@ BOOL CDuiTabCtrl::GetItemRect( int nIndex, CRect &rcItem )
         rcItem.OffsetRect(0, m_nTabPos + nIndex * (rcItem.Height()+ m_nTabSpacing));
         break;
     }
-
+	CRect rcClient;
+	GetClient(&rcClient);
+	rcItem.IntersectRect(rcItem,rcClient);
     return TRUE;
 }
 
@@ -538,6 +551,25 @@ void CDuiTabCtrl::DrawItem( CDCHandle dc,const CRect &rcItem,int iItem,DWORD dwS
 		
         CGdiAlpha::DrawText(dc,GetItem(iItem)->GetTitle(),-1,&rcText,align);
     }
+}
+
+void CDuiTabCtrl::OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags )
+{
+	if(nChar==VK_LEFT || nChar==VK_UP)
+	{
+		if(!SetCurSel(m_nCurrentPage-1))
+			SetCurSel(GetItemCount()-1);
+	}else if(nChar==VK_RIGHT || nChar==VK_DOWN)
+	{
+		if(!SetCurSel(m_nCurrentPage+1))
+			SetCurSel(0);
+	}else if(nChar==VK_HOME)
+	{
+		SetCurSel(0);
+	}else if(nChar==VK_END)
+	{
+		SetCurSel(GetItemCount()-1);
+	}
 }
 
 }//namespace DuiEngine

@@ -163,9 +163,9 @@ void CDuiLink::OnMouseHover( WPARAM wParam, CPoint pt )
 // Usage: <button id=xx>inner text example</button>
 //
 
-CDuiButton::CDuiButton() :m_bTabStop(FALSE),m_pSkin(NULL)
+CDuiButton::CDuiButton() :m_pSkin(NULL)
 {
-
+	m_bTabStop=FALSE;
 }
 
 void CDuiButton::OnPaint(CDCHandle dc)
@@ -242,26 +242,6 @@ void CDuiImageWnd::OnPaint(CDCHandle dc)
         m_pSkin->Draw(dc, m_rcWindow, m_nSubImageID);
 }
 
-LRESULT CDuiImageWnd::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
-{
-    __super::OnCalcSize(bCalcValidRects, pSize);
-
-
-    if (m_pSkin && (m_dlgpos.nCount==2 || m_dlgpos.nCount==0))	// 如果设置的pos参数是2个则重新计算矩形大小
-    {
-        SIZE sizeImage;
-        sizeImage = m_pSkin->GetSkinSize();
-
-        if (sizeImage.cx)
-            pSize->cx = sizeImage.cx;
-        if (sizeImage.cy)
-            pSize->cy = sizeImage.cy;
-
-        return TRUE;
-    }
-    return 0;
-}
-
 BOOL CDuiImageWnd::SetSkin(CDuiSkinBase *pSkin,int nSubID/*=0*/)
 {
     if(IsVisible(TRUE)) NotifyInvalidate();
@@ -275,10 +255,13 @@ BOOL CDuiImageWnd::SetSkin(CDuiSkinBase *pSkin,int nSubID/*=0*/)
     m_pSkin->AddRef();
     m_bManaged=TRUE;
     m_nSubImageID=nSubID;
-    if(m_dlgpos.nCount==2 && m_pParent)
+
+	DUIASSERT(GetParent());
+
+    if(m_dlgpos.nCount==2)
     {
         //重新计算坐标
-        m_pParent->DuiSendMessage(WM_CALCWNDPOS,0,(LPARAM)this);
+		DuiSendMessage(WM_WINDOWPOSCHANGED);
     }
     if(IsVisible(TRUE)) NotifyInvalidate();
     return TRUE;
@@ -290,6 +273,13 @@ BOOL CDuiImageWnd::SetIcon( int nSubID )
     if(nSubID<0 || nSubID>m_pSkin->GetStates()-1) return FALSE;
     m_nSubImageID=nSubID;
     return TRUE;
+}
+
+CSize CDuiImageWnd::GetDesiredSize(LPRECT pRcContainer)
+{
+	CSize szRet;
+	if(m_pSkin) szRet=m_pSkin->GetSkinSize();
+	return szRet;
 }
 
 CDuiAnimateImgWnd::CDuiAnimateImgWnd()
@@ -308,24 +298,6 @@ void CDuiAnimateImgWnd::OnPaint(CDCHandle dc)
         m_pSkin->Draw(dc, m_rcWindow, m_iCurFrame);
 }
 
-LRESULT CDuiAnimateImgWnd::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
-{
-    __super::OnCalcSize(bCalcValidRects, pSize);
-
-    if (m_pSkin && m_dlgpos.nCount==2)	// 如果设置的pos参数是2个则重新计算矩形大小
-    {
-        SIZE sizeImage;
-        sizeImage = m_pSkin->GetSkinSize();
-
-        if (sizeImage.cx)
-            pSize->cx = sizeImage.cx;
-        if (sizeImage.cy)
-            pSize->cy = sizeImage.cy;
-
-        return TRUE;
-    }
-    return 0;
-}
 
 void CDuiAnimateImgWnd::OnDuiTimer(char cID)
 {
@@ -370,6 +342,13 @@ BOOL CDuiAnimateImgWnd::Load(TiXmlElement* pTiXmlElem)
     return bRet;
 }
 
+CSize CDuiAnimateImgWnd::GetDesiredSize(LPRECT pRcContainer)
+{
+	CSize szRet;
+	if(m_pSkin) szRet=m_pSkin->GetSkinSize();
+	return szRet;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Progress Control
 // Use id attribute to process click event
@@ -390,31 +369,26 @@ CDuiProgress::CDuiProgress()
 }
 
 
-LRESULT CDuiProgress::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
+CSize CDuiProgress::GetDesiredSize(LPRECT pRcContainer)
 {
-	if(m_dlgpos.nCount==4) //指定了4个坐标时由基类计算大小
-		CDuiWindow::OnCalcSize(bCalcValidRects, pSize);
-	else 
-    {
-        SIZE sizeBg = m_pSkinBg->GetSkinSize();
-		if(IsVertical())
-		{
-			pSize->cx = sizeBg.cx + 2 * m_style.m_nMarginX;
-			if(m_uPositionType & SizeY_Specify)
-				pSize->cy=m_lSpecifyHeight;
-			else
-				pSize->cy = sizeBg.cy +2 * m_style.m_nMarginY;
-		}else
-		{
-			pSize->cy = sizeBg.cy + 2 * m_style.m_nMarginY;
-			if(m_uPositionType & SizeX_Specify)
-				pSize->cx=m_lSpecifyWidth;
-			else
-				pSize->cx = sizeBg.cx +2 * m_style.m_nMarginX;
-		}
-    }
-
-    return 0;
+	CSize szRet;
+	SIZE sizeBg = m_pSkinBg->GetSkinSize();
+	if(IsVertical())
+	{
+		szRet.cx = sizeBg.cx + 2 * m_style.m_nMarginX;
+		if(m_uPositionType & SizeY_Specify)
+			szRet.cy=m_lSpecifyHeight;
+		else
+			szRet.cy = sizeBg.cy +2 * m_style.m_nMarginY;
+	}else
+	{
+		szRet.cy = sizeBg.cy + 2 * m_style.m_nMarginY;
+		if(m_uPositionType & SizeX_Specify)
+			szRet.cx=m_lSpecifyWidth;
+		else
+			szRet.cx = sizeBg.cx +2 * m_style.m_nMarginX;
+	}
+	return szRet;
 }
 
 void CDuiProgress::OnPaint(CDCHandle dc)
@@ -602,6 +576,7 @@ CDuiCheckBox::CDuiCheckBox()
     : m_pSkin(DuiSkinPool::getSingleton().GetSkin("btncheckbox"))
     , m_pFocusSkin(DuiSkinPool::getSingleton().GetSkin("focuscheckbox"))
 {
+	m_bTabStop=TRUE;
 }
 
 void CDuiCheckBox::GetClient(LPRECT pRect)
@@ -633,14 +608,12 @@ void CDuiCheckBox::DuiDrawFocus( HDC dc )
 	}
 }
 
-LRESULT CDuiCheckBox::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
+CSize CDuiCheckBox::GetDesiredSize(LPRECT pRcContainer)
 {
-    __super::OnCalcSize(bCalcValidRects, pSize);
-
-    pSize->cx += CheckBoxSize + CheckBoxSpacing;
-    pSize->cy = max(pSize->cy, CheckBoxSize);
-
-    return FALSE;
+	CSize szRet=__super::GetDesiredSize(pRcContainer);
+	szRet.cx+=CheckBoxSize + CheckBoxSpacing;
+	szRet.cy=max(szRet.cy, CheckBoxSize);
+	return szRet;
 }
 
 
@@ -761,18 +734,10 @@ void CDuiIconWnd::OnPaint(CDCHandle dc)
     }
 }
 
-LRESULT CDuiIconWnd::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
-{
-	if(m_dlgpos.nCount!=4)
-	{
-		pSize->cx = m_nSize;
-		pSize->cy = m_nSize;
-	}else
-	{
-		__super::OnCalcSize(bCalcValidRects,pSize);
-	}
 
-    return TRUE;
+CSize CDuiIconWnd::GetDesiredSize(LPRECT pRcContainer)
+{
+	return CSize(m_nSize,m_nSize);
 }
 
 HICON CDuiIconWnd::AttachIcon(HICON hIcon)
@@ -806,6 +771,7 @@ CDuiRadioBox::CDuiRadioBox()
     : m_pSkin(DuiSkinPool::getSingleton().GetSkin("btnRadio"))
     , m_pFocusSkin(DuiSkinPool::getSingleton().GetSkin("focusRadio"))
 {
+	m_bTabStop=TRUE;
 }
 
 void CDuiRadioBox::GetClient(LPRECT pRect)
@@ -840,14 +806,13 @@ void CDuiRadioBox::DuiDrawFocus(HDC dc)
 	}
 }
 
-LRESULT CDuiRadioBox::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
+
+CSize CDuiRadioBox::GetDesiredSize(LPRECT pRcContainer)
 {
-    __super::OnCalcSize(bCalcValidRects, pSize);
-
-    pSize->cx += RadioBoxSize + RadioBoxSpacing;
-    pSize->cy = max(pSize->cy, RadioBoxSize);
-
-    return FALSE;
+	CSize szRet=__super::GetDesiredSize(pRcContainer);
+	szRet.cx+=RadioBoxSize + RadioBoxSpacing;
+	szRet.cy=max(szRet.cy,RadioBoxSize);
+	return szRet;
 }
 
 
@@ -936,25 +901,12 @@ void CDuiToggle::OnLButtonUp(UINT nFlags,CPoint pt)
     __super::OnLButtonUp(nFlags,pt);
 }
 
-LRESULT CDuiToggle::OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize)
+CSize CDuiToggle::GetDesiredSize(LPRECT pRcContainer)
 {
-    __super::OnCalcSize(bCalcValidRects, pSize);
-
-    if (m_pSkin && m_dlgpos.nCount==2)	// 如果设置的pos参数是2个则重新计算矩形大小
-    {
-        SIZE sizeImage;
-        sizeImage = m_pSkin->GetSkinSize();
-
-        if (sizeImage.cx)
-            pSize->cx = sizeImage.cx;
-        if (sizeImage.cy)
-            pSize->cy = sizeImage.cy;
-
-        return TRUE;
-    }
-    return 0;
+	CSize sz;
+	if(m_pSkin) sz=m_pSkin->GetSkinSize();
+	return sz;
 }
-
 
 #define GROUP_HEADER		20
 #define GROUP_ROUNDCORNOR	4

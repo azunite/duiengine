@@ -61,7 +61,7 @@ protected:
     virtual BOOL Load(TiXmlElement* pXmlElem);
 
 
-    void OnWindowPosChanged(LPDUIWNDPOS lpWndPos);
+    void OnWindowPosChanged(LPRECT lpWndPos);
 
     void OnShowWindow(BOOL bShow, UINT nStatus);
     void OnDestroy();

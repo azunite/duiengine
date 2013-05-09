@@ -28,10 +28,6 @@ public:
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
 protected:
-    virtual BOOL IsTabStop()
-    {
-        return TRUE;
-    }
     virtual UINT OnGetDuiCode()
     {
         return (DUIC_WANTALLKEYS|DUIC_WANTSYSKEY) & (~DUIC_WANTTAB);

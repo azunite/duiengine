@@ -65,7 +65,7 @@ HSTREEITEM CDuiTreeBox::InsertItem(TiXmlElement *pTiXmlItem,DWORD dwData,HSTREEI
             pParentItem->InsertChild(pToggle);
             pToggle->SetToggle(FALSE,FALSE);
             pToggle->SetCmdID(IDC_SWITCH);
-            pParentItem->DuiSendMessage(WM_CALCWNDPOS,0,(LPARAM)pToggle);
+			pToggle->DuiSendMessage(WM_WINDOWPOSCHANGED);
         }
     }
     pItemObj->SetItemData(dwData);

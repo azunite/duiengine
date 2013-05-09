@@ -114,19 +114,9 @@ protected:
         return TRUE;
     }
 
-    virtual BOOL IsTabStop()
-    {
-        return m_bTabStop;
-    }
-
     virtual UINT OnGetDuiCode()
     {
         return DUIC_WANTCHARS;
-    }
-
-    virtual void DuiDrawFocus(HDC dc)
-    {
-        if(m_bTabStop) __super::DuiDrawFocus(dc);
     }
 
 	virtual bool OnAcceleratorPressed(const CAccelerator& accelerator);
@@ -137,11 +127,9 @@ protected:
 
     void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
-	BOOL m_bTabStop;
 	CDuiSkinBase *m_pSkin;
 public:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_INT_ATTRIBUTE("tabstop", m_bTabStop, FALSE)
 	DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
@@ -168,12 +156,12 @@ public:
 
     void OnPaint(CDCHandle dc);
 
-    LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
-
     BOOL SetSkin(CDuiSkinBase *pSkin,int nSubID=0);
 
     BOOL SetIcon(int nSubID);
 protected:
+	virtual CSize GetDesiredSize(LPRECT pRcContainer);
+
     BOOL m_bManaged;
     int m_nSubImageID;
     CDuiSkinBase *m_pSkin;
@@ -186,7 +174,6 @@ protected:
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_PAINT(OnPaint)
-    MSG_WM_CALCSIZE(OnCalcSize)
     DUIWIN_END_MSG_MAP()
 };
 
@@ -200,8 +187,6 @@ public:
 
     void OnPaint(CDCHandle dc);
 
-    LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
-
     void OnDuiTimer(char cID);
 
     void Start();
@@ -214,9 +199,10 @@ public:
 
     virtual BOOL Load(TiXmlElement* pTiXmlElem);
 protected:
+	virtual CSize GetDesiredSize(LPRECT pRcContainer);
+
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_PAINT(OnPaint)
-    MSG_WM_CALCSIZE(OnCalcSize)
     MSG_WM_DUITIMER(OnDuiTimer)
     MSG_WM_DESTROY(OnDestroy)
     DUIWIN_END_MSG_MAP()
@@ -257,7 +243,8 @@ public:
 
 	BOOL IsVertical(){return m_bVertical;}
 protected:
-	LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
+
+	virtual CSize GetDesiredSize(LPRECT pRcContainer);
 
 	void OnPaint(CDCHandle dc);
 
@@ -273,7 +260,6 @@ protected:
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_PAINT(OnPaint)
-    MSG_WM_CALCSIZE(OnCalcSize)
     DUIWIN_END_MSG_MAP()
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
@@ -379,13 +365,14 @@ public:
     CDuiCheckBox();
 
     void OnPaint(CDCHandle dc);
-    LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
 protected:
 
     CDuiSkinBase *m_pSkin;
     CDuiSkinBase *m_pFocusSkin;
 
     UINT _GetDrawState();
+
+	virtual CSize GetDesiredSize(LPRECT pRcContainer);
 
     virtual void GetClient(LPRECT pRect);
 
@@ -397,11 +384,6 @@ protected:
     virtual UINT OnGetDuiCode()
     {
         return DUIC_WANTCHARS;
-    }
-
-    virtual BOOL IsTabStop()
-    {
-        return TRUE;
     }
 
     virtual void DuiDrawFocus(HDC dc);
@@ -419,7 +401,6 @@ protected:
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_PAINT(OnPaint)
-    MSG_WM_CALCSIZE(OnCalcSize)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
     MSG_WM_LBUTTONUP(OnLButtonUp)
     MSG_WM_KEYDOWN(OnKeyDown)
@@ -442,11 +423,11 @@ public:
 
     void OnPaint(CDCHandle dc);
 
-    LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
     HICON AttachIcon(HICON hIcon);
 
     void LoadIconFile( LPCWSTR lpFIleName );
 protected:
+	virtual CSize GetDesiredSize(LPRECT pRcContainer);
 
     void _ReloadIcon();
 
@@ -462,7 +443,6 @@ protected:
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_PAINT(OnPaint)
-    MSG_WM_CALCSIZE(OnCalcSize)
     DUIWIN_END_MSG_MAP()
 };
 
@@ -488,8 +468,6 @@ public:
 
     void OnPaint(CDCHandle dc);
 
-    LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
-
 protected:
 
     // CDuiRadioBoxTheme m_theme;
@@ -498,16 +476,13 @@ protected:
 
     UINT _GetDrawState();
 
+	virtual CSize GetDesiredSize(LPRECT pRcContainer);
+
     virtual BOOL NeedRedrawWhenStateChange();
 
     virtual void  GetClient(LPRECT pRect);
 
     virtual void DuiDrawFocus(HDC dc);
-
-    virtual BOOL IsTabStop()
-    {
-        return TRUE;
-    }
 
     virtual UINT OnGetDuiCode()
     {
@@ -528,7 +503,6 @@ protected:
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_PAINT(OnPaint)
-    MSG_WM_CALCSIZE(OnCalcSize)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
 	MSG_WM_SETFOCUS_EX(OnSetDuiFocus)
     DUIWIN_END_MSG_MAP()
@@ -547,8 +521,8 @@ public:
 protected:
     void OnPaint(CDCHandle dc);
     void OnLButtonUp(UINT nFlags,CPoint pt);
+	virtual CSize GetDesiredSize(LPRECT pRcContainer);
 
-    LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_INT_ATTRIBUTE("toggled", m_bToggled, TRUE)
     DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, TRUE)
@@ -557,7 +531,6 @@ protected:
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_PAINT(OnPaint)
     MSG_WM_LBUTTONUP(OnLButtonUp)
-    MSG_WM_CALCSIZE(OnCalcSize)
     DUIWIN_END_MSG_MAP()
 protected:
     BOOL m_bToggled;

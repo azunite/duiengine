@@ -21,34 +21,11 @@ protected:                                                          \
 	}
 
 
-#define WM_CALCWNDPOS	WM_GETMINMAXINFO
-
-#define MSG_WM_CALCWNDPOS(func) \
-	if (uMsg == WM_CALCWNDPOS) \
-{ \
-	SetMsgHandled(TRUE); \
-	func((CDuiWindow*)lParam); \
-	lResult = 0; \
-	if(IsMsgHandled()) \
-	return TRUE; \
-}
-
-#define WM_CALCSIZE		WM_SIZING
-
-#define MSG_WM_CALCSIZE(func) \
-	if (uMsg == WM_CALCSIZE) \
-{ \
-	SetMsgHandled(TRUE); \
-	lResult = func((BOOL)wParam, (LPSIZE)lParam); \
-	if(IsMsgHandled()) \
-	return TRUE; \
-}
-
 #define MSG_WM_DUIWINPOSCHANGED(func) \
 	if (uMsg == WM_WINDOWPOSCHANGED) \
 { \
 	SetMsgHandled(TRUE); \
-	func((LPDUIWNDPOS)lParam); \
+	func((LPRECT)lParam); \
 	lResult = 0; \
 	if(IsMsgHandled()) \
 	return TRUE; \

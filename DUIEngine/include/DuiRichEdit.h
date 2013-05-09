@@ -231,11 +231,6 @@ protected:
 
     void OnDuiTimerEx(UINT_PTR idEvent);
 
-    virtual BOOL IsTabStop()
-    {
-        return TRUE;
-    }
-
     virtual UINT OnGetDuiCode()
     {
         UINT uRet=DUIC_WANTCHARS|DUIC_WANTARROWS;

@@ -28,15 +28,6 @@ namespace DuiEngine
 enum {NormalShow=0,ParentShow=1};	//提供WM_SHOWWINDOW消息识别是父窗口显示还是要显示本窗口
 enum {NormalEnable=0,ParentEnable=1};	//提供WM_ENABLE消息识别是父窗口可用还是直接操作当前窗口
 
-typedef struct tagDUIWNDPOS
-{
-    int     x;
-    int     y;
-    int     cx;
-    int     cy;
-} DUIWNDPOS,*LPDUIWNDPOS;
-
-
 #define DUIC_WANTARROWS     0x0001      /* Control wants arrow keys         */
 #define DUIC_WANTTAB        0x0002      /* Control wants tab keys           */
 #define DUIC_WANTRETURN		0x0004		/* Control wants return keys		*/
@@ -140,11 +131,13 @@ public:
 
     };
 
+	enum PIT{PIT_NORMAL=0,PIT_CENTER,PIT_PERCENT};
+
     struct DUIDLG_POSITION_ITEM
     {
-        BOOL bCenter;
+		PIT pit;
         BOOL bMinus;
-        int  nPos;
+        float  nPos;
     };
 
     struct DUIDLG_POSITION
@@ -194,6 +187,7 @@ protected:
     CDuiStringT m_strToolTipText;
     int	 m_nSepSpace;	//自动排版的水平空格
     BOOL m_bClipClient;
+	BOOL m_bTabStop;
 
     CDuiSkinBase * m_pBgSkin;
     CDuiSkinBase * m_pNcSkin;
@@ -248,8 +242,6 @@ public:
     void Move(LPRECT prect);
 
     void Move(int x,int y, int cx=-1,int cy=-1);
-
-    void ReCalcWndPos();
 
     // Set current cursor, when hover
     virtual BOOL OnDuiSetCursor(const CPoint &pt);
@@ -562,10 +554,72 @@ protected:
     DUIWIN_INT_ATTRIBUTE("sep", m_nSepSpace, FALSE)
     DUIWIN_INT_ATTRIBUTE("maxwidth",m_nMaxWidth,FALSE)
     DUIWIN_INT_ATTRIBUTE("clipclient",m_bClipClient,FALSE)
+    DUIWIN_INT_ATTRIBUTE("tabstop",m_bTabStop,FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
 protected:
-    //************************************
+	//************************************
+	// Method:    GetChildrenLayoutRect :返回子窗口的排版空间
+	// FullName:  DuiEngine::CDuiWindow::GetChildrenLayoutRect
+	// Access:    virtual protected 
+	// Returns:   CRect
+	// Qualifier:
+	//************************************
+	virtual CRect GetChildrenLayoutRect();
+
+	//************************************
+	// Method:    UpdateChildrenPosition :更新子窗口位置
+	// FullName:  DuiEngine::CDuiWindow::UpdateChildrenPosition
+	// Access:    virtual protected 
+	// Returns:   void
+	// Qualifier:
+	//************************************
+	virtual void UpdateChildrenPosition();
+
+	//************************************
+	// Method:    GetDesiredSize: 当没有指定窗口大小时，通过如皮肤计算窗口的期望大小
+	// FullName:  DuiEngine::CDuiWindow::GetDesiredSize
+	// Access:    virtual protected 
+	// Returns:   CSize
+	// Qualifier:
+	// Parameter: LPRECT pRcContainer
+	//************************************
+	virtual CSize GetDesiredSize(LPRECT pRcContainer);
+
+	//************************************
+	// Method:    CalcSize ：计算窗口大小
+	// FullName:  DuiEngine::CDuiWindow::CalcSize
+	// Access:    protected 
+	// Returns:   CSize
+	// Qualifier:
+	// Parameter: LPRECT pRcContainer
+	//************************************
+	CSize CalcSize(LPRECT pRcContainer);
+
+	//************************************
+	// Method:    PositionItem2Point ：将一个position_item解释为绝对坐标
+	// FullName:  DuiEngine::CDuiWindow::PositionItem2Point
+	// Access:    protected 
+	// Returns:   CPoint
+	// Qualifier:
+	// Parameter: const DUIDLG_POSITION_ITEM & pos
+	// Parameter: int nMin 父窗口的范围
+	// Parameter: int nMax 父窗口的范围
+	//************************************
+	int PositionItem2Value(const DUIDLG_POSITION_ITEM &pos,int nMin, int nMax);
+
+	//************************************
+	// Method:    ParsePosition :解析一个坐标定义到position_item,增加对百分比的支持
+	// FullName:  DuiEngine::CDuiWindow::ParsePosition
+	// Access:    protected 
+	// Returns:   LPCSTR
+	// Qualifier:
+	// Parameter: const char * pszPos
+	// Parameter: DUIDLG_POSITION_ITEM & pos
+	//************************************
+	LPCSTR ParsePosition(const char * pszPos,DUIDLG_POSITION_ITEM &pos);
+
+   //************************************
     // Method:    _PaintBackground
     // Function:  从顶层窗口开始绘制窗口内容到指定DC，到pEnd时结束绘制。
     // Access:    protected
@@ -617,7 +671,7 @@ protected:
         return FALSE;
     }
 
-    void OnWindowPosChanged(LPDUIWNDPOS lpWndPos);
+    void OnWindowPosChanged(LPRECT lpRcContainer);
 
     int OnCreate(LPVOID);
 
@@ -639,14 +693,6 @@ protected:
     // remark:
     //************************************
     void OnNcPaint(CDCHandle dc);
-
-    virtual CRect GetViewRect();
-
-    void OnCalcChildPos(CDuiWindow *pDuiWndChild);
-
-    // Calc DuiWindow size
-    LRESULT OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
-
 
     BOOL OnDefKeyDown(UINT nChar, UINT nFlags);
 
@@ -680,10 +726,8 @@ protected:
     MSG_WM_CREATE(OnCreate)
     MSG_WM_DESTROY(OnDestroy)
     MSG_WM_DUIWINPOSCHANGED(OnWindowPosChanged)
-    MSG_WM_CALCSIZE(OnCalcSize)
     MSG_WM_SHOWWINDOW(OnShowWindow)
 	MSG_WM_ENABLE_EX(OnEnable)
-    MSG_WM_CALCWNDPOS(OnCalcChildPos)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)
     MSG_WM_LBUTTONUP(OnLButtonUp)
     MSG_WM_MOUSEMOVE(OnMouseMove)
@@ -693,7 +737,5 @@ protected:
     MSG_WM_SETFOCUS_EX(OnSetDuiFocus)
     MSG_WM_KILLFOCUS_EX(OnKillDuiFocus)
     DUIWIN_END_MSG_MAP_BASE()
-    //tolua_begin
 };
-//tolua_end
 }//namespace DuiEngine

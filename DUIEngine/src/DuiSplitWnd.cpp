@@ -165,7 +165,7 @@ int CDuiSplitWnd::FunComp( const void * p1,const void * p2 )
     return pPane1->pPane->m_nPriority-pPane2->pPane->m_nPriority;
 }
 
-void CDuiSplitWnd::OnWindowPosChanged( LPDUIWNDPOS lpWndPos )
+void CDuiSplitWnd::OnWindowPosChanged( LPRECT lpWndPos )
 {
     __super::OnWindowPosChanged(lpWndPos);
 

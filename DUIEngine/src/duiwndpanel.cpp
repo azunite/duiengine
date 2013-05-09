@@ -622,14 +622,13 @@ void CDuiScrollView::OnSize(UINT nType,CSize size)
     SetViewSize(m_szView);
 }
 
-CRect CDuiScrollView::GetViewRect()
+CRect CDuiScrollView::GetChildrenLayoutRect()
 {
-    CRect rcView;
-    CDuiWindow::GetClient(&rcView);
-    rcView.OffsetRect(-m_ptOrgin);
-    rcView.right=rcView.left+m_szView.cx;
-    rcView.bottom=rcView.top+m_szView.cy;
-    return rcView;
+	CRect rcRet=__super::GetChildrenLayoutRect();
+    rcRet.OffsetRect(-m_ptOrgin);
+    rcRet.right=rcRet.left+m_szView.cx;
+    rcRet.bottom=rcRet.top+m_szView.cy;
+    return rcRet;
 }
 
 
@@ -638,13 +637,7 @@ void CDuiScrollView::SetViewOrigin(CPoint pt)
     if(m_ptOrgin==pt) return;
     OnViewOriginChanged(m_ptOrgin,pt);
     m_ptOrgin=pt;
-    CDuiWindow *pChild=m_pFirstChild;
-    while(pChild)
-    {
-        DuiSendMessage(WM_CALCWNDPOS,0,(LPARAM)pChild);
-        pChild=pChild->GetDuiWindow(GDUI_NEXTSIBLING);
-    }
-
+	UpdateChildrenPosition();
     CRect rcClient;
     GetClient(&rcClient);
     NotifyInvalidateRect(rcClient);

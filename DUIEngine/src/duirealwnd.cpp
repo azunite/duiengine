@@ -48,7 +48,7 @@ void CDuiRealWnd::ShowRealWindow()
     }
 }
 
-void CDuiRealWnd::OnWindowPosChanged(LPDUIWNDPOS lpWndPos)
+void CDuiRealWnd::OnWindowPosChanged(LPRECT lpWndPos)
 {
     CRect rcOldWnd = m_rcWindow;
 

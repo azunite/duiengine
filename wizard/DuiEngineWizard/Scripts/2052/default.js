@@ -139,7 +139,7 @@ function AddConfig(proj, strProjectName)
 		var PrebuildTool= config.Tools('VCPreBuildEventTool');
 		//添加编译前命令行
 		PrebuildTool.CommandLine = '$(DUIENGINEPATH)\\tool\\residbuilder -y -p skin -i skin\\index.xml -r .\\duires\\winres.rc2 -n .\\duires\\name2id.xml -h .\\duires\\winres.h';
-		PrebuildTool.Description = '编译XML资源';
+		PrebuildTool.Description = 'Building XML Resource';
 		
 		// Release设置
 		var config = proj.Object.Configurations('Release');
@@ -170,7 +170,7 @@ function AddConfig(proj, strProjectName)
 		var PrebuildTool= config.Tools('VCPreBuildEventTool');
 		//添加编译前命令行
 		PrebuildTool.CommandLine = '$(DUIENGINEPATH)\\tool\\residbuilder -y -p skin -i skin\\index.xml -r .\\duires\\winres.rc2 -n .\\duires\\name2id.xml -h .\\duires\\winres.h';
-		PrebuildTool.Description = '编译XML资源';
+		PrebuildTool.Description = 'Building XML Resource';
 
 	}
 	catch(e)

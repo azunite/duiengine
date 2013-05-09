@@ -61,6 +61,7 @@ CDuiComboBox::CDuiComboBox(void)
 ,m_bItemPanel(FALSE)
 ,m_iAnimTime(200)
 {
+	m_bTabStop=TRUE;
 	addEvent(DUINM_LBSELCHANGED);
 	addEvent(DUINM_LBSELCHANGING);
 	addEvent(DUINM_RICHEDIT_NOTIFY);
@@ -260,7 +261,7 @@ UINT CDuiComboBox::OnGetDuiCode()
 
 BOOL CDuiComboBox::IsTabStop()
 {
-	if (m_bDropdown)
+	if (m_bDropdown && m_bTabStop)
 		return TRUE;
 	return FALSE;
 }

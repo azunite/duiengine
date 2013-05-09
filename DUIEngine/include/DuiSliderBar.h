@@ -39,7 +39,8 @@ protected:
 protected:
 	LRESULT         NotifySbCode(UINT uCode, int nPos);
 
-	LRESULT			OnCalcSize(BOOL bCalcValidRects, LPSIZE pSize);
+	virtual CSize	GetDesiredSize(LPRECT pRcContainer);
+
 	CRect           GetPartRect(UINT uSBCode);
 
 	void            OnPaint(CDCHandle dc);
@@ -55,7 +56,6 @@ protected:
         MSG_WM_MOUSEMOVE(OnMouseMove)
         MSG_WM_MOUSELEAVE(OnMouseLeave)
         MSG_WM_PAINT(OnPaint)
-		MSG_WM_CALCSIZE(OnCalcSize)
     DUIWIN_END_MSG_MAP()
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
