@@ -62,12 +62,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	DuiSystem *pDuiSystem=new DuiSystem(hInstance);
 
 	//生成控件类厂并注册到系统
-	TplDuiWindowFactory<CDuiListBox2> *pFacListCtrl= new TplDuiWindowFactory<CDuiListBox2>;
-	DuiWindowFactoryManager::getSingleton().RegisterFactory(pFacListCtrl,true);
+	DuiWindowFactoryManager::getSingleton().RegisterFactory(TplDuiWindowFactory<CDuiListBox2>(),true);
 
 	//生成皮肤类厂并注册到系统
-	TplSkinFactory<CDuiSkinGif> * pFacSkinGif = new TplSkinFactory<CDuiSkinGif>;
-	DuiSkinFactoryManager::getSingleton().RegisterFactory(pFacSkinGif);
+	DuiSkinFactoryManager::getSingleton().RegisterFactory(TplSkinFactory<CDuiSkinGif>());
 
 
 	char szCurrentDir[MAX_PATH]; memset( szCurrentDir, 0, sizeof(szCurrentDir) );
@@ -153,10 +151,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	DuiSkinPool::getSingleton().RemoveAll();//以DLL方式使用DuiEngine时，使用了自定义皮肤类型时需要先删除皮肤池才能正常释放皮肤类厂。
 
 	//从系统中反注册控件及皮肤类厂并删除类厂对象
-	DuiWindowFactoryManager::getSingleton().UnregisterFactory(pFacListCtrl);
-	delete pFacListCtrl;
-	DuiSkinFactoryManager::getSingleton().UnregisterFactory(pFacSkinGif);
-	delete pFacSkinGif;
+	DuiWindowFactoryManager::getSingleton().UnregisterFactory(CDuiListBox2::GetClassName());
+	DuiSkinFactoryManager::getSingleton().UnregisterFactory(CDuiSkinGif::GetClassName());
 
 	delete pDuiSystem;
 

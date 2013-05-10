@@ -15,7 +15,7 @@ public:
 
     virtual const CDuiStringA & getWindowType()=0;
 
-	virtual	BOOL IsSysWindow()=0;
+	virtual CDuiWindowFactory* Clone() const =0;
 };
 
 template <typename T>
@@ -23,9 +23,8 @@ class TplDuiWindowFactory : public CDuiWindowFactory
 {
 public:
     //! Default constructor.
-	TplDuiWindowFactory(BOOL bSysCtrl=FALSE):m_bSysCtrl(bSysCtrl)
+	TplDuiWindowFactory():m_strTypeName(T::GetClassName())
     {
-        m_strTypeName=T::GetClassName();
     }
 
     // Implement WindowFactory interface
@@ -44,10 +43,12 @@ public:
         return m_strTypeName;
     }
 
-	virtual BOOL IsSysWindow() {return m_bSysCtrl;}
+	virtual CDuiWindowFactory* Clone() const 
+	{
+		return new TplDuiWindowFactory();
+	}
 protected:
     CDuiStringA m_strTypeName;
-	BOOL	m_bSysCtrl;
 };
 
 
@@ -68,14 +69,14 @@ public:
     // Parameter: CDuiWindowFactory * pWndFactory:窗口工厂指针
 	// Parameter: bool bReplace:强制替换原有工厂标志
     //************************************
-    bool RegisterFactory(CDuiWindowFactory *pWndFactory,bool bReplace=false)
+    bool RegisterFactory(CDuiWindowFactory & wndFactory,bool bReplace=false)
     {
-        if(HasKey(pWndFactory->getWindowType()))
+		if(HasKey(wndFactory.getWindowType()))
 		{
 			if(!bReplace) return false;
-			RemoveKeyObject(pWndFactory->getWindowType());
+			RemoveKeyObject(wndFactory.getWindowType());
 		}
-        AddKeyObject(pWndFactory->getWindowType(),pWndFactory);
+        AddKeyObject(wndFactory.getWindowType(),wndFactory.Clone());
         return true;
     }
 
@@ -87,11 +88,9 @@ public:
     // Qualifier:
     // Parameter: CDuiWindowFactory * pWndFactory
     //************************************
-    bool UnregisterFactory(CDuiWindowFactory *pWndFactory)
+    bool UnregisterFactory(const CDuiStringA & strClassType)
     {
-        if(!HasKey(pWndFactory->getWindowType())) return false;
-        m_mapNamedObj->RemoveKey(pWndFactory->getWindowType());
-        return true;
+		return  RemoveKeyObject(strClassType);
     }
 
 	CDuiWindow *CreateWindowByName(LPCSTR pszClassName);

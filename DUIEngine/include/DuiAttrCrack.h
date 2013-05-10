@@ -1,3 +1,6 @@
+//////////////////////////////////////////////////////////////////////////
+// Xml Attributes Declaration Map
+
 #ifndef DUIATTRCRACK_H
 #define DUIATTRCRACK_H
 
@@ -6,8 +9,8 @@
 #include "duifontpool.h"
 #include "DuiCSS.h"
 
-//////////////////////////////////////////////////////////////////////////
-// Xml Attributes Declaration Map
+namespace DuiEngine
+{
 
 // Attribute Declaration
 #define DUIWIN_DECLARE_ATTRIBUTES_BEGIN()                            \
@@ -260,5 +263,7 @@ public:                                                             \
 		}                                                           \
 		else                                                        \
  
+
+}//end of namespace
 
 #endif//DUIATTRCRACK_H

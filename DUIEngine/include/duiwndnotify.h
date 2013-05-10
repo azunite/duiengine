@@ -50,7 +50,7 @@ class CDuiWindow;
 
 // void OnDuiItemCommandData(UINT uData)
 #define DUI_NOTIFY_ID_CMD_DATA(itemid, func)                                  \
-	if (DUINM_COMMAND == uCode && itemid == ((LPDUINMCOMMAND)pnmh)->uItemID)  \
+	if (DUINM_COMMAND == uCode && itemid == ((DuiEngine::LPDUINMCOMMAND)pnmh)->uItemID)  \
 	{                                                                       \
 	func(((LPDUINMCOMMAND)pnmh)->uItemData);                            \
 	return TRUE;                                                        \
@@ -58,14 +58,14 @@ class CDuiWindow;
 
 // void OnDuiItemCommand()
 #define DUI_NOTIFY_ID_COMMAND(itemid, func)                                  \
-    if (DUINM_COMMAND == uCode && itemid == ((LPDUINMCOMMAND)pnmh)->uItemID)  \
+    if (DUINM_COMMAND == uCode && itemid == ((DuiEngine::LPDUINMCOMMAND)pnmh)->uItemID)  \
     {                                                                       \
         func();                                                             \
         return TRUE;                                                        \
     }                                                                       \
  
 #define DUI_NOTIFY_ID_COMMAND_EX(itemidbegin, itemidend, func)					\
-	if (DUINM_COMMAND == uCode && itemidbegin <= ((LPDUINMCOMMAND)pnmh)->uItemID	\
+	if (DUINM_COMMAND == uCode && itemidbegin <= ((DuiEngine::LPDUINMCOMMAND)pnmh)->uItemID	\
 		&& itemidend >= ((LPDUINMCOMMAND)pnmh)->uItemID )						\
 	{																			\
 		func(((LPDUINMCOMMAND)pnmh)->uItemID);                                   \
@@ -76,7 +76,7 @@ class CDuiWindow;
 #define DUI_NOTIFY_COMMAND(func)                                                     \
     if (DUINM_COMMAND == uCode)                                                      \
     {                                                                               \
-        func(((LPDUINMCOMMAND)pnmh)->uItemID, ((LPDUINMCOMMAND)pnmh)->szItemClass);   \
+        func(((LPDUINMCOMMAND)pnmh)->uItemID, ((DuiEngine::LPDUINMCOMMAND)pnmh)->szItemClass);   \
         return TRUE;                                                                \
     }                                                                               \
  
@@ -105,7 +105,7 @@ typedef struct _DUINMTABSELCHANGE
 
 // BOOL OnDuiTabSelChange(int nTabItemIDOld, int nTabItemIDNew)
 #define DUI_NOTIFY_TAB_SELCHANGE(tabid, func)                                        \
-    if (DUINM_TAB_SELCHANGING == uCode && tabid == ((LPDUINMTABSELCHANGE)pnmh)->uTabID) \
+    if (DUINM_TAB_SELCHANGING == uCode && tabid == ((DuiEngine::LPDUINMTABSELCHANGE)pnmh)->uTabID) \
     {                                                                               \
         BOOL bRet = func(                                                           \
             ((LPDUINMTABSELCHANGE)pnmh)->uTabItemIDOld,                              \
@@ -127,7 +127,7 @@ typedef struct _DUINMTABSELCHANGED
 
 // void OnDuiTabSelChanged(int nTabItemIDOld, int nTabItemIDNew)
 #define DUI_NOTIFY_TAB_SELCHANGED(tabid, func)                                        \
-	if (DUINM_TAB_SELCHANGED == uCode && tabid == ((LPDUINMTABSELCHANGE)pnmh)->uTabID) \
+	if (DUINM_TAB_SELCHANGED == uCode && tabid == ((DuiEngine::LPDUINMTABSELCHANGE)pnmh)->uTabID) \
 {                                                                               \
 	func(                                                           \
 	((LPDUINMTABSELCHANGE)pnmh)->uTabItemIDOld,                              \
@@ -161,7 +161,7 @@ typedef struct tagDUINMSCROLL
 #define DUI_NOTIFY_SCROLL(id, func)                                  \
 	if (DUINM_SCROLL == uCode && id == pnmh->idFrom)  \
 {                                                                       \
-	func(((PDUINMSCROLL)pnmh)->uSbCode,((PDUINMSCROLL)pnmh)->nPos,((PDUINMSCROLL)pnmh)->pScrollBar);   \
+	func(((PDUINMSCROLL)pnmh)->uSbCode,((DuiEngine::PDUINMSCROLL)pnmh)->nPos,((DuiEngine::PDUINMSCROLL)pnmh)->pScrollBar);   \
 	return TRUE;                                                        \
 }
 
