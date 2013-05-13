@@ -23,7 +23,7 @@ CDuiMenuAttr::CDuiMenuAttr()
     m_crTxtGray=GetSysColor(COLOR_GRAYTEXT);
 }
 
-void CDuiMenuAttr::OnAttributeFinish( TiXmlElement* pXmlElem )
+void CDuiMenuAttr::OnAttributeFinish( pugi::xml_node xmlNode )
 {
     DUIASSERT(m_pItemSkin);
     if(m_nItemHei==0) m_nItemHei=m_pItemSkin->GetSkinSize().cy;
@@ -191,34 +191,19 @@ BOOL CDuiMenu::LoadMenu( UINT uResID )
 {
     if(::IsMenu(m_hMenu)) return FALSE;
 
-    DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
-    if(!pRes) return FALSE;
-    DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
-    if(dwSize==0) return FALSE;
+	pugi::xml_document xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,uResID,DUIRES_XML_TYPE)) return FALSE;
 
-    CMyBuffer<char> strXml;
-    strXml.Allocate(dwSize);
-    pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
+	pugi::xml_node xmlMenu=xmlDoc.child("menu");
+    if(!xmlMenu)  return FALSE;
 
-    TiXmlDocument xmlDoc;
-
-    xmlDoc.Parse(strXml);
-    if(xmlDoc.Error())
-    {
-        return FALSE;
-    }
-    TiXmlElement *pRoot=xmlDoc.RootElement();
-    if(strcmp(pRoot->Value(),"menu")!=0)
-    {
-        return FALSE;
-    }
-    m_hMenu=CreatePopupMenu();
+	m_hMenu=CreatePopupMenu();
     if(!m_hMenu) return FALSE;
 
-    m_menuSkin.Load(pRoot);
+    m_menuSkin.Load(xmlMenu);
     DUIASSERT(m_menuSkin.m_pItemSkin);
 
-    BuildMenu(m_hMenu,pRoot);
+    BuildMenu(m_hMenu,xmlMenu);
 
     return TRUE;
 }
@@ -300,28 +285,34 @@ UINT CDuiMenu::TrackPopupMenu(
     return uRet;
 }
 
-void CDuiMenu::BuildMenu( HMENU menuPopup,TiXmlElement *pTiXmlMenu )
+void CDuiMenu::BuildMenu( HMENU menuPopup,pugi::xml_node xmlNode )
 {
-    TiXmlElement *pTiXmlItem=pTiXmlMenu->FirstChildElement();
+	pugi::xml_node xmlItem=xmlNode.first_child();
 
-    while(pTiXmlItem)
+    while(xmlItem)
     {
-        if(strcmp("item",pTiXmlItem->Value())==0)
+        if(strcmp("item",xmlItem.name())==0)
         {
             DuiMenuItemData *pdmmi=new DuiMenuItemData;
             pdmmi->hMenu=menuPopup;
-            pdmmi->itemInfo.iIcon=-1;
+			pdmmi->itemInfo.iIcon=xmlItem.attribute("icon").as_int(-1);
+			pdmmi->itemInfo.strText=DUI_CA2T(xmlItem.text().get(),CP_UTF8);
 
-            int nID=0;
-            BOOL bCheck=FALSE,bDisable=FALSE,bRadio=FALSE;
-            pTiXmlItem->Attribute("id",&nID);
-            pTiXmlItem->Attribute("check",&bCheck);
-            pTiXmlItem->Attribute("radio",&bRadio);
-            pTiXmlItem->Attribute("disable",&bDisable);
-            pTiXmlItem->Attribute("icon",&pdmmi->itemInfo.iIcon);
-            pdmmi->itemInfo.strText=DUI_CA2T(pTiXmlItem->GetText(),CP_UTF8);
+            int nID=xmlItem.attribute("id").as_int(0);
+            BOOL bCheck=xmlItem.attribute("check").as_bool(false);
+			BOOL bRadio=xmlItem.attribute("radio").as_bool(false);
+			BOOL bDisable=xmlItem.attribute("disable").as_bool(false);
 
-            if(!pTiXmlItem->FirstChildElement())
+
+			pugi::xml_writer_buff writer;
+			xmlItem.print(writer);
+			CDuiStringW str=DUI_CA2W(CDuiStringA(writer.buffer(),writer.size()),CP_UTF8);
+
+			pugi::xml_node xmlChild=xmlItem.first_child();
+			while(xmlChild && xmlChild.type()==pugi::node_pcdata) xmlChild=xmlChild.next_sibling();
+
+
+			if(!xmlChild)
             {
                 pdmmi->nID=nID;
                 UINT uFlag=MF_OWNERDRAW;
@@ -337,15 +328,15 @@ void CDuiMenu::BuildMenu( HMENU menuPopup,TiXmlElement *pTiXmlMenu )
                 UINT uFlag=MF_OWNERDRAW|MF_POPUP;
                 if(bDisable) uFlag |= MF_GRAYED;
                 AppendMenu(menuPopup,uFlag,(UINT_PTR)hSubMenu,(LPCTSTR)pdmmi);
-                BuildMenu(hSubMenu,pTiXmlItem);//build sub menu
+                BuildMenu(hSubMenu,xmlItem);//build sub menu
             }
             m_arrDmmi.Add(pdmmi);
         }
-        else if(strcmp("sep",pTiXmlItem->Value())==0)
+        else if(strcmp("sep",xmlItem.name())==0)
         {
             AppendMenu(menuPopup,MF_SEPARATOR|MF_OWNERDRAW,(UINT_PTR)0,(LPCTSTR)NULL);
         }
-        pTiXmlItem=pTiXmlItem->NextSiblingElement();
+		xmlItem=xmlItem.next_sibling();
     }
 }
 

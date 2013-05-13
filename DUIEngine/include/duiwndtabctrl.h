@@ -129,11 +129,11 @@ public:
 
     BOOL SetItemTitle(int nIndex, LPCTSTR lpszTitle);
 
-    BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
+    BOOL LoadChildren(pugi::xml_node xmlNode);
 
     BOOL InsertItem(LPCWSTR lpContent,int iInsert=-1);
 
-    int InsertItem(TiXmlElement *pXmlElement,int iInsert=-1,BOOL bLoading=FALSE);
+    int InsertItem(pugi::xml_node xmlNode,int iInsert=-1,BOOL bLoading=FALSE);
 
     int GetItemCount()
     {

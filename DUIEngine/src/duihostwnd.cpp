@@ -75,42 +75,24 @@ HWND CDuiHostWnd::Create(HWND hWndParent,int x,int y,int nWidth,int nHeight)
 
 BOOL CDuiHostWnd::Load(UINT uResID)
 {
-    DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
-    if(!pRes) return FALSE;
+	pugi::xml_document xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,uResID,DUIRES_XML_TYPE)) return FALSE;
 
-    DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,uResID);
-    if(dwSize==0) return FALSE;
-
-    CMyBuffer<char> strXml;
-    strXml.Allocate(dwSize);
-    pRes->GetRawBuffer(DUIRES_XML_TYPE,uResID,strXml,dwSize);
-
-    return SetXml(strXml);
+    return SetXml(xmlDoc.child("layer"));
 }
 
-BOOL CDuiHostWnd::SetXml(LPCSTR lpszXml)
+BOOL CDuiHostWnd::SetXml(LPSTR lpszXml,int nLen)
 {
-
-    TiXmlDocument xmlDoc;
-    {
-        // Free stack
-        xmlDoc.Parse(lpszXml, NULL, TIXML_ENCODING_UTF8);
-    }
-
-    if (xmlDoc.Error())
-    {
-        return FALSE;
-    }
-
-    TiXmlElement *pXmlRootElem = xmlDoc.RootElement();
-
-    if (strcmp(pXmlRootElem->Value(),"layer")!=0) return FALSE;
-
-	return SetXml(pXmlRootElem);
+	pugi::xml_document xmlDoc;
+	if(!xmlDoc.load_buffer(lpszXml,nLen,pugi::parse_default,pugi::encoding_utf8)) return FALSE;
+ 
+	return SetXml(xmlDoc.child("layer"));
 }
 
-BOOL CDuiHostWnd::SetXml(TiXmlElement *pXmlRootElem )
+BOOL CDuiHostWnd::SetXml(pugi::xml_node xmlNode )
 {
+	if(!xmlNode) return FALSE;
+
 	m_dwDlgStyle =CSimpleWnd::GetStyle();
 	m_dwDlgExStyle  = CSimpleWnd::GetExStyle();
 
@@ -118,27 +100,22 @@ BOOL CDuiHostWnd::SetXml(TiXmlElement *pXmlRootElem )
 
 
 	{
-		m_strWindowCaption = pXmlRootElem->Attribute("title");
-		m_sizeDefault.cx = 0;
-		m_sizeDefault.cy = 0;
-		pXmlRootElem->Attribute("width", (int *)&m_sizeDefault.cx);
-		pXmlRootElem->Attribute("height", (int *)&m_sizeDefault.cy);
-		CDuiStringA strNC=pXmlRootElem->Attribute("ncRect");
+		m_strWindowCaption = xmlNode.attribute("title").value();
+		m_sizeDefault.cx = xmlNode.attribute("width").as_int(0);
+		m_sizeDefault.cy = xmlNode.attribute("height").as_int(0);
+		CDuiStringA strNC=xmlNode.attribute("ncRect").value();
 		sscanf(strNC,"%d,%d,%d,%d",&m_rcNC.left,&m_rcNC.top,&m_rcNC.right,&m_rcNC.bottom);
-		CDuiStringA strMin = pXmlRootElem->Attribute("minsize");
+		CDuiStringA strMin = xmlNode.attribute("minsize").value();
 		sscanf(strMin,"%d,%d",&m_szMin.cx, &m_szMin.cy);
 
-		m_bTranslucent=FALSE;
-		pXmlRootElem->Attribute("translucent",&m_bTranslucent);
+		m_bTranslucent=xmlNode.attribute("translucent").as_bool(false);
 
 		if(m_bTranslucent)
 		{
 			m_dwDlgExStyle |= WS_EX_LAYERED;
 		}
 
-		BOOL bValue = FALSE;
-
-		pXmlRootElem->Attribute("appwin", &bValue);
+		BOOL bValue = xmlNode.attribute("appwin").as_bool(false);
 		if (bValue)
 		{
 			m_dwDlgExStyle |= WS_EX_APPWINDOW;
@@ -146,9 +123,7 @@ BOOL CDuiHostWnd::SetXml(TiXmlElement *pXmlRootElem )
 		}
 
 
-		m_bResizable = FALSE;
-
-		pXmlRootElem->Attribute("resize", &m_bResizable);
+		m_bResizable = xmlNode.attribute("resize").as_bool(false);
 
 		if (m_bResizable)
 		{
@@ -164,7 +139,7 @@ BOOL CDuiHostWnd::SetXml(TiXmlElement *pXmlRootElem )
 		DuiSkinPool::getSingleton().LoadSkins(m_strWindowCaption);	//load skin only used in the host window
 	}
 
-	CDuiPanel::Load(pXmlRootElem->FirstChildElement("body"));
+	CDuiPanel::Load(xmlNode.child("body"));
 
 	SetAttribute("pos", "0,0,-0,-0", TRUE);
 

@@ -28,7 +28,7 @@ public:
 
     void DeleteItem(int iItem);
 
-    int InsertItem(int iItem,TiXmlElement *pXmlItem,DWORD dwData=0);
+    int InsertItem(int iItem,pugi::xml_node xmlNode,DWORD dwData=0);
 
     int InsertItem(int iItem,LPCWSTR pszXml,DWORD dwData=0);
 
@@ -68,7 +68,7 @@ public:
     //自动修改pt的位置为相对当前项的偏移量
     int HitTest(CPoint &pt);
 
-    virtual BOOL Load(TiXmlElement* pTiXmlElem);
+    virtual BOOL Load(pugi::xml_node xmlNode);
 
 	BOOL IsVirtual(){return m_bVirtual;}
 protected:
@@ -87,7 +87,7 @@ protected:
 
     virtual void OnDrawItem(CDCHandle & dc, CRect & rc, int iItem);
 
-    virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
+    virtual BOOL LoadChildren(pugi::xml_node xmlNode);
     // Get tooltip Info
     virtual BOOL OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect &rcTip,CDuiStringT &strTip);
 
@@ -106,6 +106,10 @@ protected:
     virtual BOOL OnDuiSetCursor(const CPoint &pt);
 
     void OnDestroy();
+
+	void OnSetDuiFocus();
+	void OnKillDuiFocus();
+
 protected:
     CDuiArray<CDuiItemPanel *> m_arrItems;
 
@@ -115,7 +119,7 @@ protected:
 
 	CDuiItemPanel	* m_pTemplPanel;	//虚拟列表使用的DUI模板
 	int		m_nItems;					//虚拟列表中记录列表项
-	TiXmlElement	* m_pXmlTempl;		//列表模板XML
+	pugi::xml_document m_xmlTempl;		////列表模板XML
     CDuiItemPanel	*	m_pCapturedFrame;
     CDuiSkinBase * m_pItemSkin;
 	int		m_nItemHei;
@@ -135,6 +139,8 @@ public:
     MSG_WM_KEYDOWN(OnKeyDown)
     MSG_WM_CHAR(OnChar)
 	MSG_WM_SIZE(OnSize)
+	MSG_WM_SETFOCUS_EX(OnSetDuiFocus)
+	MSG_WM_KILLFOCUS_EX(OnKillDuiFocus)
 	MESSAGE_RANGE_HANDLER_EX(WM_MOUSEFIRST,WM_MBUTTONDBLCLK,OnMouseEvent)
     DUIWIN_END_MSG_MAP()
 };

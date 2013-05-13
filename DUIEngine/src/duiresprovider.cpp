@@ -193,26 +193,20 @@ BOOL DuiResProviderFiles::Init( LPCSTR pszPath )
     }
     fclose(f);
 
-    TiXmlDocument xmlDoc;
+	pugi::xml_document xmlDoc;
     CDuiStringA strFileName;
+	if(!xmlDoc.load_buffer(xmlBuf,xmlBuf.size(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
 
-    xmlDoc.Parse(xmlBuf);
-    if(xmlDoc.Error()) return FALSE;
-    TiXmlElement *pXmlElem = xmlDoc.RootElement();
-    while(pXmlElem)
+	pugi::xml_node xmlNode=xmlDoc.child("resid");
+    while(xmlNode)
     {
-        CDuiStringA strValue = pXmlElem->Value();
-        if(strValue=="resid")
-        {
-            DuiResID id(pXmlElem->Attribute("type"));
-            pXmlElem->Attribute("id",&(int)id.nID);
-            CDuiStringA strFile = pXmlElem->Attribute("file");
-            CDuiStringW strFileW=DUI_CA2W(strFile,CP_UTF8);
-            strFile=DUI_CW2A(strFileW);
-            if(!m_strPath.IsEmpty()) strFile.Format("%s\\%s",(LPCSTR)m_strPath,(LPCSTR)strFile);
-            m_mapFiles[id]=strFile;
-        }
-        pXmlElem=pXmlElem->NextSiblingElement();
+		DuiResID id(xmlNode.attribute("type").value(),xmlNode.attribute("id").as_int(0));
+		CDuiStringA strFile = xmlNode.attribute("file").value();
+		CDuiStringW strFileW=DUI_CA2W(strFile,CP_UTF8);
+		strFile=DUI_CW2A(strFileW);
+		if(!m_strPath.IsEmpty()) strFile.Format("%s\\%s",(LPCSTR)m_strPath,(LPCSTR)strFile);
+		m_mapFiles[id]=strFile;
+		xmlNode=xmlNode.next_sibling("resid");
     }
 
     m_strPath=pszPath;

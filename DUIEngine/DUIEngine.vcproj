@@ -940,6 +940,58 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="dependencies"
+			>
+			<Filter
+				Name="pugixml"
+				>
+				<File
+					RelativePath=".\dependencies\pugixml\pugiconfig.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\dependencies\pugixml\pugixml.cpp"
+					>
+					<FileConfiguration
+						Name="Debug_Dll|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release_Dll|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DEBUG|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="RELEASE|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\dependencies\pugixml\pugixml.hpp"
+					>
+				</File>
+			</Filter>
+		</Filter>
 		<File
 			RelativePath=".\license.txt"
 			>

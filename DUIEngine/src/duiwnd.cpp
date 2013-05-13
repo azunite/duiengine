@@ -534,37 +534,37 @@ CDuiWindow* CDuiWindow::FindChildByName( LPCSTR pszName )
 	return NULL;
 }
 
-BOOL CDuiWindow::LoadChildren(TiXmlElement* pTiXmlChildElem)
+BOOL CDuiWindow::LoadChildren(pugi::xml_node xmlNode)
 {
-    for (TiXmlElement* pXmlChild = pTiXmlChildElem; NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement())
+	for (pugi::xml_node xmlChild=xmlNode; xmlChild; xmlChild=xmlChild.next_sibling())
     {
-        CDuiWindow *pChild = DuiWindowFactoryManager::getSingleton().CreateWindowByName(pXmlChild->Value());
+        CDuiWindow *pChild = DuiWindowFactoryManager::getSingleton().CreateWindowByName(xmlChild.name());
 		if(!pChild) continue;
 
 		InsertChild(pChild);
-        pChild->Load(pXmlChild);
+        pChild->Load(xmlChild);
     }
     return TRUE;
 }
 
 // Create DuiWindow from xml element
-BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
+BOOL CDuiWindow::Load(pugi::xml_node xmlNode)
 {
     DUIASSERT(m_pContainer);
-    if (!pTiXmlElem)
+    if (!xmlNode)
     {
         if(m_pParent)	m_pParent->DestroyChild(this);
         return FALSE;
     }
 
     {
-        m_strInnerText = DUI_CA2T(pTiXmlElem->GetText(), CP_UTF8);
+        m_strInnerText = DUI_CA2T(xmlNode.text().get(), CP_UTF8);
         if (!m_strInnerText.IsEmpty()) DuiStringPool::getSingleton().BuildString(m_strInnerText);
     }
 
     m_uPositionType = 0;
     m_dlgpos.nCount = 0;
-    __super::Load(pTiXmlElem);
+    __super::Load(xmlNode);
 
     //加载style中指定的皮肤属性，由于皮肤有owner属性，而style没有owner属性，因此需要在属性加载完成后查询皮肤名称并加载 hjx:2012.1.15
     if(m_pBgSkin==NULL && !m_style.m_strSkinName.IsEmpty())
@@ -577,9 +577,9 @@ BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
 
     if (4 != m_dlgpos.nCount)
     {
-        int nValue = 0;
-        CDuiStringA strValue;
-        strValue = pTiXmlElem->Attribute("width", &nValue);
+        CDuiStringA strValue = xmlNode.attribute("width").value();
+		int nValue =atoi(strValue);
+
         if (0 == nValue && "full" == strValue && 0 == m_dlgpos.nCount)
         {
             m_rcWindow.right = 0;
@@ -600,8 +600,8 @@ BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
             }
         }
 
-		nValue=0;
-        strValue = pTiXmlElem->Attribute("height", &nValue);
+		strValue = xmlNode.attribute("height").value();
+		nValue =atoi(strValue);
         if (0 == nValue && "full" == strValue)
         {
             m_rcWindow.bottom = 0;
@@ -629,17 +629,16 @@ BOOL CDuiWindow::Load(TiXmlElement* pTiXmlElem)
         if(m_pParent)	m_pParent->DestroyChild(this);
         return FALSE;
     }
-    LoadChildren(pTiXmlElem->FirstChildElement());
+    LoadChildren(xmlNode.first_child());
     return TRUE;
 }
 
 CDuiWindow * CDuiWindow::LoadXmlChildren(LPCSTR utf8Xml)
 {
-    TiXmlDocument doc;
-    doc.Parse( utf8Xml,NULL, TIXML_ENCODING_UTF8);
-    if(doc.Error()) return NULL;
+	pugi::xml_document xmlDoc;
+	if(!xmlDoc.load_buffer(utf8Xml,strlen(utf8Xml),pugi::parse_default,pugi::encoding_utf8)) return NULL;
     CDuiWindow *pCurLast=m_pLastChild;
-    BOOL bLoaded=LoadChildren(doc.RootElement());
+    BOOL bLoaded=LoadChildren(xmlDoc.first_child());
     if(!bLoaded) return NULL;
     if(!m_rcWindow.IsRectEmpty())
     {
@@ -767,7 +766,14 @@ void CDuiWindow::NotifyInvalidateRect(LPRECT lprect)
 
 void CDuiWindow::NotifyInvalidateRect(const CRect& rect)
 {
-    if (!m_bUpdateLocked)
+	BOOL bUpdateLocked=FALSE;
+	CDuiWindow *pWnd=this;
+	while(pWnd && !bUpdateLocked)
+	{
+		bUpdateLocked=pWnd->IsUpdateLocked();
+		pWnd=pWnd->GetParent();
+	}
+    if (!bUpdateLocked)
     {
         GetContainer()->OnRedraw(rect);
     }

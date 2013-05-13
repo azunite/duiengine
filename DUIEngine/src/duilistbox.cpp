@@ -236,56 +236,48 @@ int CDuiListBox::HitTest(CPoint &pt)
     return nRet;
 }
 
-BOOL CDuiListBox::Load(TiXmlElement* pTiXmlElem)
+BOOL CDuiListBox::Load(pugi::xml_node xmlNode)
 {
-    if (!__super::Load(pTiXmlElem))
+    if (!__super::Load(xmlNode))
         return FALSE;
 
-    int			nChildSrc=-1;
-    pTiXmlElem->Attribute("itemsrc",&nChildSrc);
+    int	nChildSrc= xmlNode.attribute("itemsrc").as_int(-1);
 
     if (nChildSrc == -1)
         return TRUE;
 
-	TiXmlDocument xmlDoc;
-	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,nChildSrc,DUIRES_XML_TYPE)) return FALSE;
+	pugi::xml_document xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,nChildSrc,DUIRES_XML_TYPE)) return FALSE;
 
-	TiXmlElement *pSubTiElement = xmlDoc.RootElement();
-    return LoadChildren(pSubTiElement);
+    return LoadChildren(xmlDoc.first_child());
 }
 
-BOOL CDuiListBox::LoadChildren(TiXmlElement* pTiXmlChildElem)
+BOOL CDuiListBox::LoadChildren(pugi::xml_node xmlNode)
 {
-    if(!pTiXmlChildElem) return TRUE;
+    if(!xmlNode) return TRUE;
 
-    TiXmlElement* pParent=(TiXmlElement*)pTiXmlChildElem->Parent();
-
-    TiXmlElement* pItem=(TiXmlElement*)pParent->FirstChildElement("item");
-    while(pItem)
+	pugi::xml_node xmlParent=xmlNode.parent();
+	pugi::xml_node xmlItem=xmlParent.child("items");
+    while(xmlItem)
     {
         LPLBITEM pItemObj = new LBITEM;
-        LoadItemAttribute(pItem, pItemObj);
+        LoadItemAttribute(xmlItem, pItemObj);
         InsertItem(-1, pItemObj);
-        pItem = pItem->NextSiblingElement();
+        xmlItem = xmlItem.next_sibling();
     }
 
-    int nSelItem=-1;
-    pParent->Attribute("cursel",&nSelItem);
-    SetCurSel(nSelItem);
+    int nSelItem=xmlParent.attribute("cursel").as_int(-1);
+	SetCurSel(nSelItem);
 
     return TRUE;
 }
 
-void CDuiListBox::LoadItemAttribute(TiXmlElement *pTiXmlItem, LPLBITEM pItem)
+void CDuiListBox::LoadItemAttribute(pugi::xml_node xmlNode, LPLBITEM pItem)
 {
-    for (TiXmlAttribute *pAttrib = pTiXmlItem->FirstAttribute(); NULL != pAttrib; pAttrib = pAttrib->Next())
-    {
-        if ( !_stricmp(pAttrib->Name(), "img"))
-            pItem->nImage = atoi(pAttrib->Value());
-        else if ( !_stricmp(pAttrib->Name(), "data"))
-            pItem->lParam = atol(pAttrib->Value());
-    }
-    pItem->strText =  DUI_CA2T(pTiXmlItem->GetText(), CP_UTF8);
+	pItem->nImage=xmlNode.attribute("img").as_int(pItem->nImage);
+	pItem->lParam=xmlNode.attribute("data").as_uint(pItem->lParam);
+
+    pItem->strText =  DUI_CA2T(xmlNode.text().get(), CP_UTF8);
     DuiStringPool::getSingleton().BuildString(pItem->strText);
 }
 

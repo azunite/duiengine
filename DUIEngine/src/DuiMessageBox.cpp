@@ -9,14 +9,14 @@ namespace DuiEngine
 
 	int CDuiMessageBox::MessageBox( HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType )
 	{
-		TiXmlElement *pXmlTempl=DuiSystem::getSingleton().GetMsgBoxTemplate();
-		if(!pXmlTempl) return ::MessageBox(hWnd,lpText,lpCaption,uType);
+		pugi::xml_node xmlTempl=DuiSystem::getSingleton().GetMsgBoxTemplate().child("layer");
+		if(!xmlTempl) return ::MessageBox(hWnd,lpText,lpCaption,uType);
 
-		TiXmlElement * pXmlBody=pXmlTempl->FirstChildElement("body");
-		DUIASSERT(pXmlBody);
+		pugi::xml_node xmlBody=xmlTempl.child("body");
+		DUIASSERT(xmlBody);
 
 		Create(NULL,NULL,WS_POPUPWINDOW,0,0,0,10,10,NULL);
-		SetXml(pXmlTempl);
+		SetXml(xmlTempl);
 
 
 		switch(uType&0x0F)
@@ -106,11 +106,11 @@ namespace DuiEngine
 			DUIASSERT(FALSE);
 			break;
 		}
-		const char *pszFrameAttr=pXmlTempl->Attribute("frame_size");
+		const char *pszFrameAttr=xmlTempl.attribute("frame_size").value();
 		CRect rcFrame;
 		sscanf(pszFrameAttr,"%d,%d,%d,%d",&rcFrame.left,&rcFrame.top,&rcFrame.right,&rcFrame.bottom);
 		CSize szMin;
-		const char *pszMinAttr=pXmlTempl->Attribute("minsize");
+		const char *pszMinAttr=xmlTempl.attribute("minsize").value();
 		sscanf(pszMinAttr,"%d,%d",&szMin.cx,&szMin.cy);
 
 		CDuiWindow * pTitle= FindChildByName(NAME_MSGBOX_TITLE);

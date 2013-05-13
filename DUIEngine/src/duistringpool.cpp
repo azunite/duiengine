@@ -42,14 +42,14 @@ BOOL DuiStringPool::BuildString(CDuiStringT &strContainer)
 
 BOOL DuiStringPool::Init(UINT uResID)
 {
-	TiXmlDocument xmlDoc;
-	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,uResID)) return FALSE;
-	return Init(xmlDoc.RootElement());
+	pugi::xml_document xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,uResID)) return FALSE;
+	return Init(xmlDoc);
 }
 
-BOOL DuiStringPool::Init( TiXmlElement *pXmlStringRootElem )
+BOOL DuiStringPool::Init( pugi::xml_node xmlNode )
 {
-	if (strcmp(pXmlStringRootElem->Value(), "string") != 0)
+	if (strcmp(xmlNode.name(), "string") != 0)
 	{
 		DUIASSERT(FALSE);
 		return FALSE;
@@ -57,15 +57,13 @@ BOOL DuiStringPool::Init( TiXmlElement *pXmlStringRootElem )
 	LPCSTR lpszStringID = NULL;
 	UINT uStringID = 0;
 
-	for (TiXmlElement* pXmlChild = pXmlStringRootElem->FirstChildElement("s"); NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement("s"))
+	for (pugi::xml_node xmlStr=xmlNode.child("s"); xmlStr; xmlStr=xmlStr.next_sibling("s"))
 	{
-		lpszStringID = pXmlChild->Attribute("id");
-		if (!lpszStringID)
+		uStringID=xmlStr.attribute("id").as_int(-1);
+		if(uStringID==-1) continue;
 			continue;
-
-		uStringID = (UINT)(ULONG)::StrToIntA(lpszStringID);
-		CDuiStringA str=pXmlChild->GetText();
-		if(str.IsEmpty()) str=pXmlChild->Attribute("text");
+		CDuiStringA str=xmlStr.text().get();
+		if(str.IsEmpty()) str=xmlStr.attribute("text").value();
 		AddKeyObject(uStringID,CDuiStringT(DUI_CA2T(str, CP_UTF8)));
 	}
 	return TRUE;

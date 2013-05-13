@@ -17,7 +17,7 @@ namespace DuiEngine
 class DUI_EXP CDuiTreeItem : public CDuiItemPanel
 {
 public:
-    CDuiTreeItem(CDuiWindow *pFrameHost,TiXmlElement *pXml);
+    CDuiTreeItem(CDuiWindow *pFrameHost,pugi::xml_node xmlNode);
 
     BOOL m_bCollapsed;
     BOOL m_bVisible;
@@ -37,7 +37,7 @@ public:
 
     virtual ~CDuiTreeBox();
 
-    HSTREEITEM InsertItem(TiXmlElement *pTiXmlItem,DWORD dwData,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
+    HSTREEITEM InsertItem(pugi::xml_node xmlNode,DWORD dwData,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
     CDuiTreeItem* InsertItem(LPCWSTR pszXml,DWORD dwData,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
 
     BOOL RemoveItem(HSTREEITEM hItem);
@@ -73,9 +73,9 @@ protected:
 
     virtual int GetScrollLineSize(BOOL bVertical);
 
-    virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
+    virtual BOOL LoadChildren(pugi::xml_node xmlNode);
 
-    void LoadBranch(HSTREEITEM hParent,TiXmlElement* pItem);
+    void LoadBranch(HSTREEITEM hParent,pugi::xml_node xmlNode);
 
     LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
 
@@ -112,7 +112,7 @@ protected:
     COLORREF m_crItemBg,m_crItemSelBg;
     CDuiSkinBase * m_pItemSkin;
 
-    TiXmlElement	*m_pTiXmlSwitch;
+	pugi::xml_document m_xmlSwitch;
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_INT_ATTRIBUTE("indent", m_nIndent, TRUE)

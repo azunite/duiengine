@@ -65,7 +65,7 @@ protected:
 	UINT m_uAlign,m_uVAlign;
 
     // Load style-pool from xml tree
-    static void _LoadStylePool(TiXmlElement *pXmlStyleRootElem);
+	static void _LoadStylePool(pugi::xml_node xmlNode);
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_STRING_ATTRIBUTE("name", m_strClassName, TRUE)
@@ -116,7 +116,7 @@ public:
 
     BOOL Init(UINT uResID);
 
-	BOOL Init(TiXmlElement *pXmlStyleRootElem);
+	BOOL Init(pugi::xml_node xmlNode);
 };
 
 }//namespace DuiEngine

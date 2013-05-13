@@ -127,24 +127,17 @@ namespace DuiEngine{
 		BOOL bIdx=m_zipFile.GetFile(_T("index.xml"),zf);
 		if(!bIdx) return FALSE;
 
-		TiXmlDocument xmlDoc;
+		pugi::xml_document xmlDoc;
 		CDuiStringA strFileName;
-		CDuiStringA xmlBuf((char*)zf.GetData(),zf.GetSize());
-		xmlDoc.Parse(xmlBuf);
-		if(xmlDoc.Error()) return FALSE;
-		TiXmlElement *pXmlElem = xmlDoc.RootElement();
-		while(pXmlElem)
+		if(!xmlDoc.load_buffer_inplace(zf.GetData(),zf.GetSize(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
+		pugi::xml_node xmlElem=xmlDoc.child("resid");
+		while(xmlElem)
 		{
-			CDuiStringA strValue = pXmlElem->Value();
-			if(strValue=="resid")
-			{
-				DuiResID id(pXmlElem->Attribute("type"));
-				pXmlElem->Attribute("id",&(int)id.nID);
-				CDuiStringA strFile = pXmlElem->Attribute("file");
-				CDuiStringW strFileW=DUI_CA2W(strFile,CP_UTF8);
-				m_mapFiles[id]=DUI_CW2T(strFileW,CP_ACP);
-			}
-			pXmlElem=pXmlElem->NextSiblingElement();
+			DuiResID id(xmlElem.attribute("type").value(),xmlElem.attribute("id").as_int(0));
+			CDuiStringA strFile = xmlElem.attribute("file").value();
+			CDuiStringW strFileW=DUI_CA2W(strFile,CP_UTF8);
+			m_mapFiles[id]=DUI_CW2T(strFileW,CP_ACP);
+			xmlElem=xmlElem.next_sibling("resid");
 		}
 		return TRUE;
 	}

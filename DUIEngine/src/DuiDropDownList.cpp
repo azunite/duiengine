@@ -44,9 +44,9 @@ int CDuiDropDownListBase::OnCreate( LPCREATESTRUCT lpCreateStruct )
     int nRet=__super::OnCreate(lpCreateStruct);
     if(nRet!=0) return nRet;
 
-    TiXmlElement *pXmlTemplate=(TiXmlElement *)lpCreateStruct->lpCreateParams;
-    DUIASSERT(pXmlTemplate);
-    CreateListBox(pXmlTemplate);
+	pugi::xml_document * pXmlDocTempl=(pugi::xml_document*)lpCreateStruct->lpCreateParams;
+    DUIASSERT(pXmlDocTempl);
+    CreateListBox(pXmlDocTempl);
 
     CRect rcClient;
     GetClientRect(&rcClient);
@@ -86,13 +86,13 @@ CDuiDropDownList::CDuiDropDownList(CDuiDropDownListOwner* pOwner,int nDropHeight
 {
 }
 
-void CDuiDropDownList::CreateListBox(TiXmlElement *pXmlTemplate)
+void CDuiDropDownList::CreateListBox(pugi::xml_document *pXmlDocTmpl)
 {
     m_pListBox=new CDuiListBox;
     InsertChild(m_pListBox);
     m_pListBox->SetCmdID(IDC_DROPDOWN_LIST);
 
-    m_pListBox->Load(pXmlTemplate);
+    m_pListBox->Load(pXmlDocTmpl->first_child());
     m_pListBox->SetAttribute("pos", "0,0,-0,-0", TRUE);
     m_pListBox->SetAttribute("hottrack","1",TRUE);
 
@@ -146,16 +146,17 @@ CDuiDropDownListEx::CDuiDropDownListEx(CDuiDropDownListOwner* pOwner,int nDropHe
 {
 }
 
-void CDuiDropDownListEx::CreateListBox(TiXmlElement *pXmlTemplate)
+void CDuiDropDownListEx::CreateListBox(pugi::xml_document *pXmlDocTmpl)
 {
     m_pListBox=new CDuiListBoxEx;
     InsertChild(m_pListBox);
     m_pListBox->SetCmdID(IDC_DROPDOWN_LIST);
 
-    pXmlTemplate->Attribute("id_text",&m_nTextID);
-    pXmlTemplate->Attribute("id_icon",&m_nIconID);
+	pugi::xml_node xmlTemplate=pXmlDocTmpl->first_child();
+	m_nTextID=xmlTemplate.attribute("id_text").as_int(0);
+	m_nIconID=xmlTemplate.attribute("id_icon").as_int(0);
 
-    m_pListBox->Load(pXmlTemplate);
+    m_pListBox->Load(xmlTemplate);
     m_pListBox->SetAttribute("pos", "0,0,-0,-0", TRUE);
     m_pListBox->SetAttribute("hottrack","1",TRUE);
 

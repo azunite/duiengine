@@ -17,7 +17,7 @@ namespace DuiEngine
 {
 
 
-CDuiItemPanel::CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml,CDuiItemContainer *pItemContainer)
+CDuiItemPanel::CDuiItemPanel(CDuiWindow *pFrameHost,pugi::xml_node xmlNode,CDuiItemContainer *pItemContainer)
     :m_pFrmHost(pFrameHost)
     ,m_pItemContainer(pItemContainer)
     ,m_dwData(0)
@@ -29,7 +29,7 @@ CDuiItemPanel::CDuiItemPanel(CDuiWindow *pFrameHost,TiXmlElement *pXml,CDuiItemC
     if(!m_pItemContainer) m_pItemContainer=dynamic_cast<CDuiItemContainer*>(m_pFrmHost);
     DUIASSERT(m_pItemContainer);
     SetContainer(this);
-    Load(pXml);
+    Load(xmlNode);
 }
 
 void CDuiItemPanel::OnFinalRelease()

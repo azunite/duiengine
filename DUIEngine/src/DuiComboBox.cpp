@@ -52,7 +52,6 @@ LRESULT CComboEdit::DuiNotify( LPNMHDR pnms )
 CDuiComboBox::CDuiComboBox(void)
 :m_pSkinBtn(DuiSkinPool::getSingleton().GetSkin("comboboxbtn"))
 ,m_pEdit(NULL)
-,m_pXmlListStyle(NULL)
 ,m_iCurSel(-1)
 ,m_bDropdown(TRUE)
 ,m_nDropHeight(200)
@@ -69,39 +68,38 @@ CDuiComboBox::CDuiComboBox(void)
 
 CDuiComboBox::~CDuiComboBox(void)
 {
-	if(m_pXmlListStyle) delete m_pXmlListStyle;
 }
 
 
-BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
+BOOL CDuiComboBox::LoadChildren( pugi::xml_node xmlNode )
 {
 	BOOL bRet=FALSE;
-	TiXmlNode *pTiXmlParent=pTiXmlChildElem->Parent();
-	DUIASSERT(pTiXmlParent);
+	pugi::xml_node xmlParent = xmlNode.parent();
+
+	DUIASSERT(xmlParent);
 	//初始化列表数据
-	TiXmlElement *pTiXmlItems=pTiXmlParent->FirstChildElement("items");
-	if(pTiXmlItems)
+	pugi::xml_node xmlNode_Items=xmlParent.child("items");
+	if(xmlNode_Items)
 	{
-		TiXmlElement *pItem=pTiXmlItems->FirstChildElement("item");
-		while(pItem)
+		pugi::xml_node xmlNode_Item=xmlNode_Items.child("item");
+		while(xmlNode_Item)
 		{
 			CBITEM cbi={_T(""),0,0};
-			cbi.strText=DUI_CA2T(pItem->Attribute("text"),CP_UTF8);
-			pItem->Attribute("icon",&cbi.iIcon);
-			const char *pszData=pItem->Attribute("data");
-			if(pszData) cbi.lParam=atoi(pszData);
+			cbi.strText=DUI_CA2T(xmlNode_Item.attribute("text").value(),CP_UTF8);
+			cbi.iIcon=xmlNode_Item.attribute("icon").as_int(0);
+			cbi.lParam=xmlNode_Item.attribute("data").as_int(0);
             m_arrCbItem.Add(cbi);
-			pItem=pItem->NextSiblingElement("item");
+			xmlNode_Item=xmlNode_Item.next_sibling("item");
 		}
 		bRet=TRUE;
 	}
 
 	//获取列表模板
-	TiXmlElement *pTiListStyle=pTiXmlParent->FirstChildElement("liststyle");
-	if(pTiListStyle)
+	pugi::xml_node xmlNode_lstStyle=xmlParent.child("liststyle");
+	if(xmlNode_lstStyle)
 	{
-		m_pXmlListStyle=pTiListStyle->Clone()->ToElement();
-		m_pXmlListStyle->SetAttribute("virtual",0);//强制list不使用虚拟列表
+		m_xmlListStyle.append_copy(xmlNode_lstStyle);
+		m_xmlListStyle.attribute("virtual").set_value(0);
 	}
 
 	DUIASSERT(m_pSkinBtn);
@@ -111,9 +109,9 @@ BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 		SIZE szBtn=m_pSkinBtn->GetSkinSize();
 		m_pEdit=new CComboEdit(this);
 		InsertChild(m_pEdit);
-		TiXmlElement *pTiEditStyle=pTiXmlParent->FirstChildElement("editstyle");
-		if(pTiEditStyle)
-			m_pEdit->Load(pTiEditStyle);
+		pugi::xml_node xmlEditStyle=xmlParent.child("editstyle");
+		if(xmlEditStyle)
+			m_pEdit->Load(xmlEditStyle);
 		else
 			m_pEdit->DuiSendMessage(WM_CREATE);
 		CDuiStringA strPos;
@@ -156,7 +154,7 @@ void CDuiComboBox::DropDown()
 	else
 		m_pListBox=new CDuiDropDownListEx(this,m_nDropHeight);
 
-	m_pListBox->Create(GetContainer()->GetHostHwnd(),NULL,WS_POPUP,WS_EX_TOOLWINDOW,0,0,0,0,m_pXmlListStyle);
+	m_pListBox->Create(GetContainer()->GetHostHwnd(),NULL,WS_POPUP,WS_EX_TOOLWINDOW,0,0,0,0,&m_xmlListStyle);
  	m_pListBox->UpdateItems(&rc);
 }
 

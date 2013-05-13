@@ -18,13 +18,12 @@ class DUI_EXP CDuiDialogFile : public CDuiDialog
 
 public:
 
-    virtual BOOL Load(TiXmlElement* pTiXmlElem)
+    virtual BOOL Load(pugi::xml_node xmlNode)
     {
-        if (!CDuiWindow::Load(pTiXmlElem))
+        if (!CDuiWindow::Load(xmlNode))
             return FALSE;
 
-        int			nChildSrc=-1;
-        pTiXmlElem->Attribute("src",&nChildSrc);
+        int			nChildSrc=xmlNode.attribute("src").as_int(-1);
 
         if (nChildSrc == -1)
             return FALSE;
@@ -39,18 +38,15 @@ public:
         strXml.Allocate(dwSize);
         pRes->GetRawBuffer(DUIRES_XML_TYPE,nChildSrc,strXml,dwSize);
 
-        TiXmlDocument xmlDoc;
-        {
-            xmlDoc.Parse(strXml, NULL, TIXML_ENCODING_UTF8);
-        }
-        if (xmlDoc.Error())
-        {
-            DUIASSERT(FALSE);
-            return FALSE;
-        }
+		pugi::xml_document xmlDoc;
 
-        TiXmlElement *pSubTiElement = xmlDoc.RootElement();
-        return LoadChildren(pSubTiElement);
+		if(!xmlDoc.load_buffer_inplace(strXml,strXml.size(),pugi::parse_default,pugi::encoding_utf8))
+		{
+			DUIASSERT(FALSE);
+			return FALSE;
+		}
+
+        return LoadChildren(xmlDoc);
     }
 
 };

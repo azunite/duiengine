@@ -47,9 +47,9 @@ public:
     HWND Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, LPVOID lpParam);
     BOOL Load(UINT uResID);
 
-    BOOL SetXml(LPCSTR lpszXml);
+    BOOL SetXml(LPSTR lpszXml,int nLen);
 
-	BOOL SetXml(TiXmlElement *pXmlEle);
+	BOOL SetXml(pugi::xml_node xmlNode);
 
 	BOOL IsLayoutInited();
 

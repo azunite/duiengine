@@ -7,10 +7,6 @@
 
 #pragma once
 
-#if !defined(TINYXML_INCLUDED)
-#error Please include tinyxml.h first!
-#endif
-
 #include "DuiCSS.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,7 +45,6 @@ public:                                                 \
 namespace DuiEngine
 {
 
-//tolua_begin
 class DUI_EXP CDuiObject
 {
 public:
@@ -67,26 +62,25 @@ public:
     }
     virtual LPCSTR GetObjectClass() = 0;
 
-    virtual BOOL Load(TiXmlElement* pXmlElem)
+    virtual BOOL Load(pugi::xml_node xmlNode)
     {
-        if(!pXmlElem) return FALSE;
+        if(!xmlNode) return FALSE;
 #ifdef _DEBUG
         {
-            TiXmlPrinter printer;
-            printer.SetStreamPrinting();
-            pXmlElem->Accept( &printer );
-            m_strXml=printer.CStr();
+			pugi::xml_writer_buff writer;
+			xmlNode.print(writer);
+			m_strXml=DUI_CA2A(CDuiStringA(writer.buffer(),writer.size()),CP_UTF8);
         }
 #endif
         //检索并设置类的默认属性
         LoadTemplateAttribute(GetObjectClass());
 
         //设置当前对象的属性
-        for (TiXmlAttribute *pAttrib = pXmlElem->FirstAttribute(); NULL != pAttrib; pAttrib = pAttrib->Next())
+		for (pugi::xml_attribute attr = xmlNode.first_attribute(); attr; attr = attr.next_attribute())
         {
-            SetAttribute(pAttrib->Name(), pAttrib->Value(), TRUE);
+            SetAttribute(attr.name(), attr.value(), TRUE);
         }
-        OnAttributeFinish(pXmlElem);
+        OnAttributeFinish(xmlNode);
         return TRUE;
     }
 
@@ -107,7 +101,7 @@ public:
     }
     //tolua_end
 protected:
-    virtual void OnAttributeFinish(TiXmlElement* pXmlElem) {}
+	virtual void OnAttributeFinish(pugi::xml_node xmlNode) {}
     virtual void OnAttributeChanged(const CDuiStringA & strAttrName,BOOL bLoading,HRESULT hRet) {}
     //************************************
     // Method:    LoadTemplateAttribute
@@ -120,14 +114,14 @@ protected:
     void LoadTemplateAttribute(CDuiStringA strTemplate)
     {
         if(!DuiCSS::getSingleton().HasKey(strTemplate)) return;
-        TiXmlElement *pObjDefAttr=DuiCSS::getSingleton().GetKeyObject(strTemplate);
-        const char * pszBaseCls=pObjDefAttr->Attribute("baseClass");
+        pugi::xml_node xmlNode=DuiCSS::getSingleton().GetKeyObject(strTemplate);
+        const char * pszBaseCls=xmlNode.attribute("baseClass").value();
         if(pszBaseCls) LoadTemplateAttribute(pszBaseCls);//深度优先，防止属性重复问题
 
-        for (TiXmlAttribute *pAttrib = pObjDefAttr->FirstAttribute(); NULL != pAttrib; pAttrib = pAttrib->Next())
+		for (pugi::xml_attribute attr= xmlNode.first_attribute(); attr; attr = attr.next_attribute())
         {
-            if(strcmp(pAttrib->Name(),"baseClass")==0) continue;
-            SetAttribute(pAttrib->Name(), pAttrib->Value(), TRUE);
+            if(strcmp(attr.name(),"baseClass")==0) continue;
+            SetAttribute(attr.name(), attr.value(), TRUE);
         }
     }
 

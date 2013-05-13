@@ -34,31 +34,32 @@ CDuiSkinBase * DuiSkinFactoryManager::CreateSkinByName( LPCSTR pszClassName )
 // DuiSkinPool
 template<> DuiSkinPool * Singleton<DuiSkinPool>::ms_Singleton =0;
 
-DuiSkinPool::DuiSkinPool():m_pXmlSkinDesc(NULL)
+DuiSkinPool::DuiSkinPool()
 {
     m_pFunOnKeyRemoved=OnKeyRemoved;
 }
 
 DuiSkinPool::~DuiSkinPool()
 {
-    if(m_pXmlSkinDesc) delete m_pXmlSkinDesc;
 }
 
 BOOL DuiSkinPool::Init(UINT uResID)
 {
-	TiXmlDocument xmlDoc;
-	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,uResID)) return FALSE;
-	return Init(xmlDoc.RootElement());
+	pugi::xml_document xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,uResID)) return FALSE;
+
+	return Init(xmlDoc.child("skins"));
 }
 
-BOOL DuiSkinPool::Init(TiXmlElement *pXmlSkinRootElem)
+BOOL DuiSkinPool::Init(pugi::xml_node xmlNode)
 {
-	if (strcmp(pXmlSkinRootElem->Value(), "skins") != 0)
+	if (strcmp(xmlNode.name(), "skins") != 0)
 	{
 		DUIASSERT(FALSE);
 		return FALSE;
 	}
-	m_pXmlSkinDesc=pXmlSkinRootElem->Clone()->ToElement();
+
+	m_xmlSkinDesc.append_copy(xmlNode);
 	LoadSkins("");
 	return TRUE;
 }
@@ -68,14 +69,14 @@ int DuiSkinPool::LoadSkins(LPCSTR strOwnerName)
     int nLoaded=0;
     CDuiStringA strSkinName, strTypeName;
 
-    TiXmlElement *pXmlSkin=m_pXmlSkinDesc->FirstChildElement();
-    while(pXmlSkin)
+	pugi::xml_node xmlSkin=m_xmlSkinDesc.child("skins").first_child();
+    while(xmlSkin)
     {
-        CDuiStringA strOwner= pXmlSkin->Attribute("owner");
+        CDuiStringA strOwner= xmlSkin.attribute("owner").value();
         if(strOwner==strOwnerName)
         {
-            strSkinName = pXmlSkin->Attribute("name");
-            strTypeName = pXmlSkin->Value();
+			strTypeName = xmlSkin.name();
+            strSkinName = xmlSkin.attribute("name").value();
 
             if (strSkinName.IsEmpty() || strTypeName.IsEmpty())
                 continue;
@@ -84,7 +85,7 @@ int DuiSkinPool::LoadSkins(LPCSTR strOwnerName)
 			CDuiSkinBase *pSkin=DuiSkinFactoryManager::getSingleton().CreateSkinByName(strTypeName);
             if(pSkin)
             {
-                pSkin->Load(pXmlSkin);
+                pSkin->Load(xmlSkin);
                 pSkin->SetOwner(strOwnerName);
                 AddKeyObject(strSkinName,pSkin);
                 nLoaded++;
@@ -94,7 +95,7 @@ int DuiSkinPool::LoadSkins(LPCSTR strOwnerName)
                 DUIRES_ASSERTA(FALSE,"load skin error,type=%s,name=%s",strTypeName,strSkinName);
             }
         }
-        pXmlSkin=pXmlSkin->NextSiblingElement();
+		xmlSkin=xmlSkin.next_sibling();
     }
 
     return nLoaded;

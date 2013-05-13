@@ -27,7 +27,6 @@ CDuiListBoxEx::CDuiListBoxEx()
     , m_pTemplPanel(NULL)
 	, m_nItems(0)
     , m_pItemSkin(NULL)
-	, m_pXmlTempl(NULL)
 	, m_bVirtual(FALSE)
 {
 	addEvent(DUINM_LBITEMNOTIFY);
@@ -39,13 +38,12 @@ CDuiListBoxEx::CDuiListBoxEx()
 
 CDuiListBoxEx::~CDuiListBoxEx()
 {
-    if(m_pXmlTempl) delete m_pXmlTempl;
 }
 
 
 void CDuiListBoxEx::DeleteAllItems(BOOL bUpdate/*=TRUE*/)
 {
-	if(m_pTemplPanel)
+	if(IsVirtual())
 	{
 		m_nItems=0;
 	}
@@ -68,7 +66,7 @@ void CDuiListBoxEx::DeleteAllItems(BOOL bUpdate/*=TRUE*/)
 
 void CDuiListBoxEx::DeleteItem(int iItem)
 {
-	if(m_pTemplPanel) return;
+	if(IsVirtual()) return;
 
     if(iItem<0 || iItem>=GetItemCount()) return;
     if(m_pCapturedFrame == m_arrItems[iItem])
@@ -94,11 +92,11 @@ void CDuiListBoxEx::DeleteItem(int iItem)
     SetViewSize(szView);
 }
 
-int CDuiListBoxEx::InsertItem(int iItem,TiXmlElement *pXmlItem,DWORD dwData/*=0*/)
+int CDuiListBoxEx::InsertItem(int iItem,pugi::xml_node xmlNode,DWORD dwData/*=0*/)
 {
-	if(m_pTemplPanel) return -1;
+	if(IsVirtual()) return -1;
 
-	CDuiItemPanel *pItemObj=new CDuiItemPanel(this,pXmlItem,this);
+	CDuiItemPanel *pItemObj=new CDuiItemPanel(this,xmlNode,this);
 
     if(iItem==-1 || iItem>=GetItemCount())
     {
@@ -126,13 +124,12 @@ int CDuiListBoxEx::InsertItem(int iItem,TiXmlElement *pXmlItem,DWORD dwData/*=0*
 
 int CDuiListBoxEx::InsertItem(int iItem,LPCWSTR pszXml,DWORD dwData/*=0*/)
 {
-	if(m_pTemplPanel) return -1;
+	if(IsVirtual()) return -1;
 
     CDuiStringA strUtf8=DUI_CW2A(pszXml,CP_UTF8);
-    TiXmlDocument xmlDoc;
-    xmlDoc.Parse(strUtf8);
-    if(xmlDoc.Error()) return NULL;
-    return InsertItem(iItem,xmlDoc.RootElement(),dwData);
+	pugi::xml_document xmlDoc;
+	if(!xmlDoc.load_buffer(strUtf8.GetData(),strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return -1;
+    return InsertItem(iItem,xmlDoc.first_child(),dwData);
 }
 
 void CDuiListBoxEx::SetCurSel(int iItem)
@@ -140,7 +137,7 @@ void CDuiListBoxEx::SetCurSel(int iItem)
 	if(iItem<0 || iItem>=GetItemCount()) return;
 
     if(m_iSelItem==iItem) return;
-	if(m_pTemplPanel)
+	if(IsVirtual())
 	{
 		int nOldSel=m_iSelItem;
 		m_iSelItem=iItem;
@@ -214,27 +211,26 @@ BOOL CDuiListBoxEx::SetItemCount(int nItems,LPCTSTR pszXmlTemplate)
 	if(m_arrItems.GetCount()!=0) return FALSE;
 	if(pszXmlTemplate)
 	{
-		TiXmlDocument xmlDoc;
-		CDuiStringA strXml=DUI_CT2A(pszXmlTemplate,CP_UTF8);
-		xmlDoc.Parse(strXml);
-		if(xmlDoc.Error()) return FALSE;
-		if(m_bVirtual)
+		CDuiStringA strUtf8=DUI_CT2A(pszXmlTemplate,CP_UTF8);
+		pugi::xml_document xmlDoc;
+		if(!xmlDoc.load_buffer(strUtf8.GetData(),strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
+		if(IsVirtual())
 		{
 			if(m_pTemplPanel)
 			{
 				m_pTemplPanel->DuiSendMessage(WM_DESTROY);
 				m_pTemplPanel->Release();
 			}
-			m_pTemplPanel=new CDuiItemPanel(this,xmlDoc.RootElement(),this);
+			m_pTemplPanel=new CDuiItemPanel(this,xmlDoc,this);
 			if(m_pItemSkin) m_pTemplPanel->SetSkin(m_pItemSkin);
 		}else
 		{
 			if(m_pTemplPanel) delete m_pTemplPanel;
-			m_pXmlTempl=xmlDoc.RootElement()->Clone()->ToElement();
+			m_xmlTempl.append_copy(xmlDoc.first_child());
 		}
 
 	}
-    if(m_bVirtual)
+    if(IsVirtual())
 	{
 		DUIASSERT(m_pTemplPanel);
 		m_nItems=nItems;
@@ -247,11 +243,11 @@ BOOL CDuiListBoxEx::SetItemCount(int nItems,LPCTSTR pszXmlTemplate)
 		m_pTemplPanel->Move(0,0,rcClient.Width(),m_nItemHei);
 		NotifyInvalidate();
 		return TRUE;
-	}else if(m_pXmlTempl)
+	}else if(m_xmlTempl)
 	{
 		for(int i=0;i<nItems;i++)
 		{
-			InsertItem(i,m_pXmlTempl);
+			InsertItem(i,m_xmlTempl.first_child());
 		}
 		return TRUE;
 	}else
@@ -263,7 +259,7 @@ BOOL CDuiListBoxEx::SetItemCount(int nItems,LPCTSTR pszXmlTemplate)
 
 int CDuiListBoxEx::GetItemCount()
 {
-	if(m_bVirtual) 
+	if(IsVirtual()) 
 		return m_nItems;
     else
 		return m_arrItems.GetCount();
@@ -341,7 +337,7 @@ void CDuiListBoxEx::OnPaint(CDCHandle dc)
 void CDuiListBoxEx::OnSize( UINT nType, CSize size )
 {
 	__super::OnSize(nType,size);
-	if(m_bVirtual)
+	if(IsVirtual())
 	{
 		DUIASSERT(m_pTemplPanel);
 		m_pTemplPanel->Move(CRect(0,0,m_rcClient.Width(),m_nItemHei));
@@ -356,7 +352,7 @@ void CDuiListBoxEx::OnSize( UINT nType, CSize size )
 
 void CDuiListBoxEx::OnDrawItem(CDCHandle & dc, CRect & rc, int iItem)
 {
-	if(m_bVirtual)
+	if(IsVirtual())
 	{//虚拟列表，由APP控制显示
 		DUIASSERT(m_pTemplPanel);
 		DUINMGETLBDISPINFO nms;
@@ -369,12 +365,19 @@ void CDuiListBoxEx::OnDrawItem(CDCHandle & dc, CRect & rc, int iItem)
 		nms.pItem = m_pTemplPanel;
 		nms.pHostDuiWin   = this;
 
+		m_pTemplPanel->LockUpdate();
+
 		m_pTemplPanel->SetItemIndex(iItem);
+
+		if(!nms.bSelect) m_pTemplPanel->GetFocusManager()->StoreFocusedView();
+		else m_pTemplPanel->GetFocusManager()->RestoreFocusedView();
 
 		DWORD dwState=0;
 		if(nms.bHover) dwState|=DuiWndState_Hover;
 		if(nms.bSelect) dwState|=DuiWndState_PushDown;
 		m_pTemplPanel->ModifyItemState(dwState,-1);
+
+		m_pTemplPanel->UnlockUpdate();
 
 		LockUpdate();
 		GetContainer()->OnDuiNotify((LPNMHDR)&nms);
@@ -386,59 +389,55 @@ void CDuiListBoxEx::OnDrawItem(CDCHandle & dc, CRect & rc, int iItem)
 	}
 }
 
-BOOL CDuiListBoxEx::Load(TiXmlElement* pTiXmlElem)
+BOOL CDuiListBoxEx::Load(pugi::xml_node xmlNode)
 {
-    if (!__super::Load(pTiXmlElem))
+    if (!__super::Load(xmlNode))
         return FALSE;
 
-    int			nChildSrc=-1;
-    pTiXmlElem->Attribute("itemsrc",&nChildSrc);
+    int			nChildSrc= xmlNode.attribute("itemsrc").as_int(-1);
 
     if (nChildSrc == -1)
         return TRUE;
 
-	TiXmlDocument xmlDoc;
-	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,nChildSrc,DUIRES_XML_TYPE))
+	pugi::xml_document xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,nChildSrc,DUIRES_XML_TYPE))
 		return FALSE;
 
-	TiXmlElement *pSubTiElement = xmlDoc.RootElement();
-    return LoadChildren(pSubTiElement);
+    return LoadChildren(xmlDoc);
 }
 
-BOOL CDuiListBoxEx::LoadChildren(TiXmlElement* pTiXmlChildElem)
+BOOL CDuiListBoxEx::LoadChildren(pugi::xml_node xmlNode)
 {
-    if(!pTiXmlChildElem) return TRUE;
-    TiXmlElement* pParent=(TiXmlElement*)pTiXmlChildElem->Parent();
-    TiXmlElement* pTemplate=(TiXmlElement*)pParent->FirstChildElement("template");
-	TiXmlElement* pItems=(TiXmlElement*)pParent->FirstChildElement("items");
+    if(!xmlNode) return TRUE;
 
-	if(!m_bVirtual)
+    pugi::xml_node xmlParent=xmlNode.parent();
+    pugi::xml_node xmlTempl=xmlParent.child("template");
+	pugi::xml_node xmlItems=xmlParent.child("items");
+
+	if(!IsVirtual())
 	{//普通列表
-		if(pTemplate) m_pXmlTempl=pTemplate->Clone()->ToElement();
+		if(xmlTempl) m_xmlTempl.append_copy(xmlTempl);
 
-		if(pItems)
+		if(xmlItems)
 		{
-			TiXmlElement *pChild=pItems->FirstChildElement();
-			while(pChild)
+			pugi::xml_node xmlItem=xmlItems.first_child();
+			while(xmlItem)
 			{
-				int dwData=0;
-				pChild->Attribute("itemdata",&dwData);
-				if(strcmp(pChild->Value(),"dlg")==0 || strcmp(pChild->Value(),"item")==0)
+				if(strcmp(xmlItem.name(),"dlg")==0 || strcmp(xmlItem.name(),"item")==0)
 				{
-					InsertItem(-1,pChild,dwData);
+					int dwData=xmlItem.attribute("itemdata").as_int(0);
+					InsertItem(-1,xmlItem,dwData);
 				}
-				pChild=pChild->NextSiblingElement();
+				xmlItem=xmlItem.next_sibling();
 			}
-			int nSelItem=-1;
-			pItems->Attribute("cursel",&nSelItem);
-			SetCurSel(nSelItem);
+			SetCurSel(xmlItems.attribute("cursel").as_int(-1));
 		}
 
 		return TRUE;
 	}else
     {//虚拟列表
-		DUIASSERT(pTemplate);
-		m_pTemplPanel=new CDuiItemPanel(this,pTemplate,this);
+		DUIASSERT(xmlTempl);
+		m_pTemplPanel=new CDuiItemPanel(this,xmlTempl,this);
 		if(m_pItemSkin) m_pTemplPanel->SetSkin(m_pItemSkin);
 		return TRUE;
     }
@@ -456,7 +455,7 @@ void CDuiListBoxEx::NotifySelChange( int nOldSel,int nNewSel ,UINT uMsg)
     nms.uHoverID=0;
     if(nNewSel!=-1)
     {
-		if(m_bVirtual)
+		if(IsVirtual())
 		{
 			DUIASSERT(m_pTemplPanel);
 			CDuiWindow *pHover=DuiWindowManager::GetWindow(m_pTemplPanel->GetDuiHover());
@@ -470,6 +469,11 @@ void CDuiListBoxEx::NotifySelChange( int nOldSel,int nNewSel ,UINT uMsg)
 
     nms.hdr.code=DUINM_LBSELCHANGING;
     if(S_OK!=DuiNotify((LPNMHDR)&nms)) return ;
+
+	if(!IsVirtual() && nOldSel!=-1)
+	{
+		m_arrItems[nOldSel]->GetFocusManager()->SetFocusedHwnd(0);
+	}
 	m_iSelItem=nNewSel;
     if(nOldSel!=-1)
     {
@@ -494,7 +498,7 @@ void CDuiListBoxEx::OnMouseLeave()
     {
 		int nOldHover=m_iHoverItem;
 		m_iHoverItem=-1;
-		if(m_bVirtual)
+		if(IsVirtual())
 		{
 			DUIASSERT(m_pTemplPanel);
 			RedrawItem(nOldHover);
@@ -516,7 +520,7 @@ BOOL CDuiListBoxEx::OnDuiSetCursor(const CPoint &pt)
     else if(m_iHoverItem!=-1)
     {
 		CRect rcItem=GetItemRect(m_iHoverItem);
-		if(m_bVirtual)
+		if(IsVirtual())
 		{
 			DUIASSERT(m_pTemplPanel);
 			bRet=m_pTemplPanel->DoFrameEvent(WM_SETCURSOR,0,MAKELPARAM(pt.x-rcItem.left,pt.y-rcItem.top))!=0;
@@ -571,7 +575,7 @@ UINT CDuiListBoxEx::OnGetDuiCode()
 void CDuiListBoxEx::OnDestroy()
 {
     DeleteAllItems(FALSE);
-	if(m_bVirtual)
+	if(IsVirtual())
 	{
 		DUIASSERT(m_pTemplPanel);
 		m_pTemplPanel->DuiSendMessage(WM_DESTROY);
@@ -585,7 +589,7 @@ BOOL CDuiListBoxEx::OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRe
 {
     if(m_iHoverItem==-1)
         return __super::OnUpdateToolTip(hCurTipHost,hNewTipHost,rcTip,strTip);
-    else if(m_bVirtual)
+    else if(IsVirtual())
 		return m_pTemplPanel->OnUpdateToolTip(hCurTipHost,hNewTipHost,rcTip,strTip);
 	else
 		return m_arrItems[m_iHoverItem]->OnUpdateToolTip(hCurTipHost,hNewTipHost,rcTip,strTip);
@@ -641,7 +645,7 @@ LRESULT CDuiListBoxEx::OnMouseEvent( UINT uMsg,WPARAM wParam,LPARAM lParam )
 			if(nOldHover!=-1)
 			{
 				RedrawItem(nOldHover);
-				if(!m_bVirtual)
+				if(!IsVirtual())
 				{
 					m_arrItems[nOldHover]->DoFrameEvent(WM_MOUSELEAVE,0,0);
 				}else
@@ -653,7 +657,7 @@ LRESULT CDuiListBoxEx::OnMouseEvent( UINT uMsg,WPARAM wParam,LPARAM lParam )
 			if(m_iHoverItem!=-1)
 			{
 				RedrawItem(m_iHoverItem);
-				if(!m_bVirtual)
+				if(!IsVirtual())
 				{
 					m_arrItems[m_iHoverItem]->DoFrameEvent(WM_MOUSEHOVER,wParam,MAKELPARAM(pt.x,pt.y));
 				}else
@@ -665,7 +669,7 @@ LRESULT CDuiListBoxEx::OnMouseEvent( UINT uMsg,WPARAM wParam,LPARAM lParam )
 		}
 		if(m_iHoverItem!=-1)
 		{
-			if(!m_bVirtual)
+			if(!IsVirtual())
 			{
 				m_arrItems[m_iHoverItem]->DoFrameEvent(uMsg,wParam,MAKELPARAM(pt.x,pt.y));
 			}else
@@ -683,11 +687,29 @@ LRESULT CDuiListBoxEx::OnMouseEvent( UINT uMsg,WPARAM wParam,LPARAM lParam )
 //同步在CDuiItemPanel中的index属性，在执行了插入，删除等操作后使用
 void CDuiListBoxEx::UpdatePanelsIndex(UINT nFirst,UINT nLast)
 {
-	if(m_pTemplPanel) return;
+	if(IsVirtual()) return;
 	for(UINT i=nFirst;i<m_arrItems.GetCount() && i<nLast;i++)
 	{
 		m_arrItems[i]->SetItemIndex(i);
 	}
 }
 
+void CDuiListBoxEx::OnSetDuiFocus()
+{
+	__super::OnSetDuiFocus();
+//	if(m_iSelItem!=-1) RedrawItem(m_iSelItem);
+}
+
+void CDuiListBoxEx::OnKillDuiFocus()
+{
+	__super::OnKillDuiFocus();
+	if(IsVirtual())
+	{
+		m_pTemplPanel->GetFocusManager()->SetFocusedHwnd(0);
+	}else
+	{
+		if(m_iSelItem!=-1) m_arrItems[m_iSelItem]->GetFocusManager()->SetFocusedHwnd(0);
+	}
+	if(m_iSelItem!=-1) RedrawItem(m_iSelItem);
+}
 }//namespace DuiEngine

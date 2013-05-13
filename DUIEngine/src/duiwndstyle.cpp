@@ -76,17 +76,17 @@ BOOL DuiStylePool::GetStyle(LPCSTR lpszName, DuiStyle& style)
 
 BOOL DuiStylePool::Init(UINT uResID)
 {
-	TiXmlDocument xmlDoc;
-	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,uResID)) return FALSE;
-	return Init(xmlDoc.RootElement());
+	pugi::xml_document xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,uResID)) return FALSE;
+	return Init(xmlDoc.child("style"));
 }
 
 // Load style-pool from xml tree
-BOOL DuiStylePool::Init(TiXmlElement *pXmlStyleRootElem)
+BOOL DuiStylePool::Init(pugi::xml_node xmlStyleRoot)
 {
-	DUIASSERT(pXmlStyleRootElem);
+	DUIASSERT(xmlStyleRoot);
 
-    if (strcmp(pXmlStyleRootElem->Value(), "style") != 0)
+    if (strcmp(xmlStyleRoot.name(), "style") != 0)
 	{
 		DUIASSERT(FALSE);
 		return FALSE;
@@ -94,13 +94,13 @@ BOOL DuiStylePool::Init(TiXmlElement *pXmlStyleRootElem)
 
 	LPCSTR lpszClassName = NULL;
 
-    for (TiXmlElement* pXmlChild = pXmlStyleRootElem->FirstChildElement("class"); NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement("class"))
+	for (pugi::xml_node xmlChild=xmlStyleRoot.child("class"); xmlChild; xmlChild=xmlChild.next_sibling("class"))
     {
-        lpszClassName = pXmlChild->Attribute("name");
+        lpszClassName = xmlChild.attribute("name").value();
         if (!lpszClassName)
             continue;
 
-        GetKeyObject(lpszClassName).Load(pXmlChild);
+        GetKeyObject(lpszClassName).Load(xmlChild);
     }
 	return TRUE;
 }

@@ -392,9 +392,9 @@ public:
     // Virtual functions
     virtual void OnStateChanged(DWORD dwOldState,DWORD dwNewState) {}
 
-    virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
+	virtual BOOL LoadChildren(pugi::xml_node xmlNode);
     // Create DuiWindow from xml element
-    virtual BOOL Load(TiXmlElement* pTiXmlElem);
+    virtual BOOL Load(pugi::xml_node xmlNode);
 
     virtual HDUIWND DuiGetHWNDFromPoint(CPoint ptHitTest, BOOL bOnlyText);
 

@@ -102,11 +102,11 @@ public:
 
 	BOOL Init(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 
-	BOOL LoadXmlDocment(TiXmlDocument *pXmlDoc,UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
+	BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 
 	BOOL SetMsgBoxTemplate(UINT uXmlResID,LPCSTR pszType=DUIRES_XML_TYPE);
 protected:
-	TiXmlElement * GetMsgBoxTemplate(){return m_pTiXmlMsgBoxTempl;}
+	pugi::xml_node GetMsgBoxTemplate(){return m_xmlMsgBoxTempl;}
 	void LockSharePtr( void * pObj );
 	void * GetSharePtr();
 	void * ReleaseSharePtr();
@@ -139,7 +139,7 @@ protected:
     CNamedID *m_pBuf;
     int		  m_nCount;
 
-	TiXmlElement *m_pTiXmlMsgBoxTempl;
+	pugi::xml_document	m_xmlMsgBoxTempl;
 };
 
 }//namespace DuiEngine

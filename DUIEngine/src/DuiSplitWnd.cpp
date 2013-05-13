@@ -91,22 +91,22 @@ int CDuiSplitWnd::GetNextVisiblePanel(int iPanel)
     return -1;
 }
 
-BOOL CDuiSplitWnd::LoadChildren( TiXmlElement* pTiXmlChildElem )
+BOOL CDuiSplitWnd::LoadChildren( pugi::xml_node xmlNode )
 {
-    if(!pTiXmlChildElem) return FALSE;
-    TiXmlElement *pTiXmlParent=pTiXmlChildElem->Parent()->ToElement();
-    DUIASSERT(pTiXmlParent);
-    TiXmlElement *pTiXmlPane=pTiXmlParent->FirstChildElement("pane");
-    while(pTiXmlPane)
+    if(!xmlNode) return FALSE;
+	pugi::xml_node xmlParent=xmlNode.parent();
+    DUIASSERT(xmlParent);
+	pugi::xml_node xmlPane=xmlParent.child("pane");
+    while(xmlPane)
     {
         CDuiSplitPane *pPane=new CDuiSplitPane();
         InsertChild(pPane);
-        if(pPane->Load(pTiXmlPane))
+        if(pPane->Load(xmlPane))
         {
             pPane->AddRef();
             m_arrPane.Add(pPane);
         }
-        pTiXmlPane=pTiXmlPane->NextSiblingElement("pane");
+		xmlPane=xmlPane.next_sibling("pane");
     }
     return TRUE;
 }

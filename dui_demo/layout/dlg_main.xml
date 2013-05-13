@@ -47,7 +47,7 @@
               <item text="combobox.item6" icon="6" data="100"/>
             </items>
           </combobox>
-	        <combobox name="IDC_CB_TEST" pos="100,70,300,94" dropdown="1" dropheight="250" class="cls_edit" dotted="0" animtime=200>
+	        <combobox name="IDC_CB_TEST" pos="100,70,300,94" dropdown="1" dropheight="250" class="cls_edit" dotted="0" animtime="200">
             <liststyle class="cls_edit"  iconskin="icon3" itemheight="30" crtext="000000" crseltext="FFFFFF" critembg="FFFFFF" critemselbg="000088"/>
             <editstyle inset="5,0,5,0" crtext="000000" align="left" crbg="FFFFFF"/>
             <items>

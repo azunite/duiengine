@@ -134,9 +134,9 @@ end:
     return rcRet;
 }
 
-void CDuiScrollBar::OnAttributeFinish(TiXmlElement* pXmlElem)
+void CDuiScrollBar::OnAttributeFinish(pugi::xml_node xmlNode)
 {
-	__super::OnAttributeFinish(pXmlElem);
+	__super::OnAttributeFinish(xmlNode);
     DUIASSERT(m_pSkin);
     if(m_uAllowSize==-1)
     {

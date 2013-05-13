@@ -89,7 +89,7 @@ protected:
 protected:
 
 	void GetDropBtnRect(LPRECT prc);
-	virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);	
+	virtual BOOL LoadChildren(pugi::xml_node xmlNode);	
 	
 	void OnPaint(CDCHandle dc);
 	void OnLButtonDown(UINT nFlags,CPoint pt);
@@ -127,7 +127,7 @@ protected:
 
 	CDuiRichEdit *m_pEdit;
 	CDuiDropDownListBase  *m_pListBox;
-	TiXmlElement * m_pXmlListStyle;
+	pugi::xml_document m_xmlListStyle;
 	CDuiSkinBase *m_pSkinBtn;
 	DWORD		  m_dwBtnState;
 	

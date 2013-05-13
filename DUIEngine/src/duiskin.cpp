@@ -51,9 +51,9 @@ int CDuiImageList::GetStates()
 	return m_nStates;
 }
 
-void CDuiImageList::OnAttributeFinish( TiXmlElement* pXmlElem )
+void CDuiImageList::OnAttributeFinish(pugi::xml_node xmlNode )
 {
-	__super::OnAttributeFinish(pXmlElem);
+	__super::OnAttributeFinish(xmlNode);
 
 	DUIASSERT(m_pDuiImg);
 	if(0 != m_lSubImageWidth)
@@ -86,9 +86,9 @@ void CDuiSkinImgFrame::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlp
     FrameDraw(dc, m_pDuiImg , rcSour,rcDraw, m_rcMargin, m_crBg, m_uDrawPart,m_bTile,byAlpha);
 }
 
-void CDuiSkinImgFrame::OnAttributeFinish(TiXmlElement* pXmlElem)
+void CDuiSkinImgFrame::OnAttributeFinish(pugi::xml_node xmlNode)
 {
-	__super::OnAttributeFinish(pXmlElem);
+	__super::OnAttributeFinish(xmlNode);
 	if(m_rcMargin.right==-1)
 	{
 		DUIASSERT(m_lSubImageWidth>=m_rcMargin.left);

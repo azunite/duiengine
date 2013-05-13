@@ -79,7 +79,7 @@ protected:
     void OnKillFocus(HWND wndFocus);
     void OnClose();
 
-    virtual void CreateListBox(TiXmlElement *pXmlTemplate) = 0;
+    virtual void CreateListBox(pugi::xml_document *pXmlDocTmpl) = 0;
     virtual void OnFinalMessage(HWND);
     virtual BOOL PreTranslateMessage(MSG* pMsg);
 
@@ -111,7 +111,7 @@ public:
 
 protected:
 
-    virtual void CreateListBox(TiXmlElement *pXmlTemplate);
+    virtual void CreateListBox(pugi::xml_document *pXmlDocTmpl);
 
     CDuiListBox *m_pListBox;
 };
@@ -129,7 +129,7 @@ public:
 
 protected:
 
-    virtual void CreateListBox(TiXmlElement *pXmlTemplate);
+    virtual void CreateListBox(pugi::xml_document *pXmlDocTmpl);
 
     int m_nTextID;
     int m_nIconID;

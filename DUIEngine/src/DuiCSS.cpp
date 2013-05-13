@@ -11,26 +11,26 @@ template<> DuiCSS *Singleton<DuiCSS>::ms_Singleton =0;
 
 BOOL DuiCSS::Init(UINT uXmlID)
 {
-	TiXmlDocument xmlDoc;
-	if(!DuiSystem::getSingleton().LoadXmlDocment(&xmlDoc,uXmlID)) return FALSE;
-	return Init(xmlDoc.RootElement());
+	pugi::xml_document xmlDoc;
+	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,uXmlID)) return FALSE;
+	return Init(xmlDoc.child("objattr"));
 }
 
-BOOL DuiCSS::Init( TiXmlElement *pTiXml )
+BOOL DuiCSS::Init( pugi::xml_node xmlNode )
 {
-	if (strcmp(pTiXml->Value(), "objattr") != 0)
+	if (strcmp(xmlNode.name(), "objattr") != 0)
 	{
 		DUIASSERT(FALSE);
 		return FALSE;
 	}
 
-	m_pXmlRoot=(TiXmlElement *)pTiXml->Clone();
+	m_xmlRoot.append_copy(xmlNode);
 
-	TiXmlElement *pObjAttr=m_pXmlRoot->FirstChildElement();
-	while(pObjAttr)
+	pugi::xml_node xmlObjAttr=m_xmlRoot.child("objattr").first_child();
+	while(xmlObjAttr)
 	{
-		AddKeyObject(pObjAttr->Value(),pObjAttr);
-		pObjAttr=pObjAttr->NextSiblingElement();
+		AddKeyObject(xmlObjAttr.name(),xmlObjAttr);
+		xmlObjAttr=xmlObjAttr.next_sibling();
 	}
 	return TRUE;
 }

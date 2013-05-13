@@ -5,21 +5,20 @@
 namespace DuiEngine
 {
 
-class DUI_EXP DuiCSS :public DuiSingletonMap<DuiCSS,TiXmlElement *,CDuiStringA>
+class DUI_EXP DuiCSS :public DuiSingletonMap<DuiCSS,pugi::xml_node,CDuiStringA>
 {
 public:
-    DuiCSS():m_pXmlRoot(NULL)
+    DuiCSS()
     {
     }
     virtual ~DuiCSS()
     {
-        if(m_pXmlRoot) delete m_pXmlRoot;
     }
 
     BOOL Init(UINT uXmlID);
-	BOOL Init(TiXmlElement *pTiXml);
+	BOOL Init(pugi::xml_node xmlNode);
 protected:
-	TiXmlElement	*m_pXmlRoot;
+	pugi::xml_document m_xmlRoot;
 };
 
 }//namespace DuiEngine

@@ -32,7 +32,7 @@ public:
 protected:
     CRect GetPartRect(UINT uSBCode);
 
-    virtual void OnAttributeFinish(TiXmlElement* pXmlElem);
+    virtual void OnAttributeFinish(pugi::xml_node xmlNode);
 
     void OnPaint(CDCHandle dc);
 

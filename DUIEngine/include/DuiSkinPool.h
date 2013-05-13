@@ -90,7 +90,7 @@ public:
 
     BOOL Init(UINT uResID);
 
-	BOOL Init(TiXmlElement *pXmlSkinRootElem);
+	BOOL Init(pugi::xml_node xmlNode);
 
     CDuiSkinBase* GetSkin(LPCSTR strSkinName);
 
@@ -100,7 +100,7 @@ public:
 protected:
     static void OnKeyRemoved(const DuiSkinPtr & obj);
 
-    TiXmlElement * m_pXmlSkinDesc;
+	pugi::xml_document m_xmlSkinDesc;
 };
 
 }//namespace DuiEngine

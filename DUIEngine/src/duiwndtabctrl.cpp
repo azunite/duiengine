@@ -416,11 +416,11 @@ BOOL CDuiTabCtrl::SetItemTitle( int nIndex, LPCTSTR lpszTitle )
     return FALSE;
 }
 
-BOOL CDuiTabCtrl::LoadChildren( TiXmlElement* pTiXmlChildElem )
+BOOL CDuiTabCtrl::LoadChildren( pugi::xml_node xmlNode )
 {
-    for (TiXmlElement* pXmlChild = pTiXmlChildElem; NULL != pXmlChild; pXmlChild = pXmlChild->NextSiblingElement())
+    for ( pugi::xml_node xmlChild = xmlNode; xmlChild; xmlChild = xmlChild.next_sibling())
     {
-        InsertItem(pXmlChild,-1,TRUE);
+        InsertItem(xmlChild,-1,TRUE);
     }
 
     if((m_nCurrentPage==-1 || m_nCurrentPage>=m_lstPages.GetCount() && m_lstPages.GetCount()>0))
@@ -437,33 +437,25 @@ BOOL CDuiTabCtrl::LoadChildren( TiXmlElement* pTiXmlChildElem )
 BOOL CDuiTabCtrl::InsertItem( LPCWSTR lpContent ,int iInsert/*=-1*/)
 {
     CDuiStringA utf8_xml=DUI_CW2A(lpContent,CP_UTF8);
-    TiXmlDocument * doc = new TiXmlDocument();
-    doc->Parse( utf8_xml );
+	pugi::xml_document xmlDoc;
+	if(!xmlDoc.load_buffer(utf8_xml,utf8_xml.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
 
-    TiXmlHandle docHandle(doc);
-    TiXmlNode * root = docHandle.FirstChild("tab").ToElement();
-    if (root == NULL)
-    {
-        delete doc;
-        return NULL;
-    }
-    TiXmlElement * pTabElement = root->ToElement();
-    BOOL val =InsertItem(pTabElement,iInsert)!=-1;
-    delete doc;
-    return val;
+	pugi::xml_node xmlTab=xmlDoc.child("tab");
+
+    return InsertItem(xmlTab,iInsert)!=-1;
 }
 
-int CDuiTabCtrl::InsertItem( TiXmlElement *pXmlElement,int iInsert/*=-1*/,BOOL bLoading/*=FALSE*/ )
+int CDuiTabCtrl::InsertItem( pugi::xml_node xmlNode,int iInsert/*=-1*/,BOOL bLoading/*=FALSE*/ )
 {
     CDuiTab *pChild=NULL;
-    if (!CDuiTab::CheckAndNew(pXmlElement->Value(),(void**)&pChild)) return -1;
+    if (!CDuiTab::CheckAndNew(xmlNode.name(),(void**)&pChild)) return -1;
 
     if(iInsert==-1) iInsert=m_lstPages.GetCount();
     InsertChild(pChild);
 
     m_lstPages.InsertAt(iInsert,pChild);
 
-    pChild->Load(pXmlElement);
+    pChild->Load(xmlNode);
     pChild->SetPositionType(SizeX_FitParent|SizeY_FitParent);
 
     if(!bLoading && m_nCurrentPage>=iInsert) m_nCurrentPage++;

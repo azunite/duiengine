@@ -350,47 +350,46 @@ void CDuiTreeCtrl::PageDown()
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOL CDuiTreeCtrl::LoadChildren(TiXmlElement* pTiXmlChildElem)
+BOOL CDuiTreeCtrl::LoadChildren(pugi::xml_node xmlNode)
 {
-	if(!pTiXmlChildElem) return FALSE;
+	if(!xmlNode) return FALSE;
 
 	RemoveAllItems();
 	ItemLayout();
 
-	TiXmlElement *pItem=NULL;
-	if(strcmp("item",pTiXmlChildElem->Value())==0) pItem=pTiXmlChildElem;
-	else pItem=pTiXmlChildElem->NextSiblingElement("item");
+	pugi::xml_node xmlParent=xmlNode.parent();
+	pugi::xml_node xmlItem=xmlParent.child("item");
 
-	if(pItem) LoadBranch(STVI_ROOT,pItem);
+	if(xmlItem) LoadBranch(STVI_ROOT,xmlItem);
 
 	return TRUE;
 }
 
-void CDuiTreeCtrl::LoadBranch(HSTREEITEM hParent,TiXmlElement* pItem)
+void CDuiTreeCtrl::LoadBranch(HSTREEITEM hParent,pugi::xml_node xmlItem)
 {
-	while(pItem)
+	while(xmlItem)
 	{
-		HSTREEITEM hItem=InsertItem(pItem,hParent);
+		HSTREEITEM hItem=InsertItem(xmlItem,hParent);
 
-		TiXmlElement *pChildItem=pItem->FirstChildElement("item");
-		if(pChildItem) LoadBranch(hItem,pChildItem);
+		pugi::xml_node xmlChild=xmlItem.child("item");
+		if(xmlChild) LoadBranch(hItem,xmlChild);
 
-		pItem=pItem->NextSiblingElement("item");
+		xmlItem=xmlItem.next_sibling("item");
 	}
 }
 
-void CDuiTreeCtrl::LoadItemAttribute(TiXmlElement *pTiXmlItem, LPTVITEM pItem)
+void CDuiTreeCtrl::LoadItemAttribute(pugi::xml_node xmlItem, LPTVITEM pItem)
 {
-	for (TiXmlAttribute *pAttrib = pTiXmlItem->FirstAttribute(); NULL != pAttrib; pAttrib = pAttrib->Next())
+	for (pugi::xml_attribute attr=xmlItem.first_attribute(); attr; attr=attr.next_attribute())
 	{
-		if ( !_stricmp(pAttrib->Name(), "text"))
-			pItem->strText = DUI_CA2T(pAttrib->Value(), CP_UTF8); 
-		else if ( !_stricmp(pAttrib->Name(), "img"))
-			pItem->nImage = atoi(pAttrib->Value());
-		else if ( !_stricmp(pAttrib->Name(), "selimg"))
-			pItem->nSelectedImage = atoi(pAttrib->Value());
-		else if ( !_stricmp(pAttrib->Name(), "data"))
-			pItem->lParam = atol(pAttrib->Value());
+		if ( !_stricmp(attr.name(), "text"))
+			pItem->strText = DUI_CA2T(attr.value(), CP_UTF8); 
+		else if ( !_stricmp(attr.name(), "img"))
+			pItem->nImage = attr.as_int(0);
+		else if ( !_stricmp(attr.name(), "selimg"))
+			pItem->nSelectedImage = attr.as_int(0);
+		else if ( !_stricmp(attr.name(), "data"))
+			pItem->lParam = attr.as_uint(0);
 	}
 }
 
@@ -439,11 +438,11 @@ HSTREEITEM CDuiTreeCtrl::InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEI
 	return hRet;
 }
 
-HSTREEITEM CDuiTreeCtrl::InsertItem(TiXmlElement *pTiXmlItem,HSTREEITEM hParent/*=STVI_ROOT*/, HSTREEITEM hInsertAfter/*=STVI_LAST*/,BOOL bEnsureVisible/*=FALSE*/)
+HSTREEITEM CDuiTreeCtrl::InsertItem(pugi::xml_node xmlItem,HSTREEITEM hParent/*=STVI_ROOT*/, HSTREEITEM hInsertAfter/*=STVI_LAST*/,BOOL bEnsureVisible/*=FALSE*/)
 {
 	LPTVITEM pItemObj = new TVITEM();
 
-	LoadItemAttribute(pTiXmlItem, pItemObj);
+	LoadItemAttribute(xmlItem, pItemObj);
 	return InsertItem(pItemObj, hParent, hInsertAfter, bEnsureVisible);
 }
 

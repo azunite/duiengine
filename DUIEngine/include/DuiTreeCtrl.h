@@ -114,12 +114,12 @@ public:
 
 protected:
 
-	virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
-	virtual void LoadBranch(HSTREEITEM hParent,TiXmlElement* pItem);
-	virtual void LoadItemAttribute(TiXmlElement *pTiXmlItem, LPTVITEM pItem);
+	virtual BOOL LoadChildren(pugi::xml_node xmlNode);
+	virtual void LoadBranch(HSTREEITEM hParent,pugi::xml_node xmlNode);
+	virtual void LoadItemAttribute(pugi::xml_node xmlNode, LPTVITEM pItem);
 
 	HSTREEITEM InsertItem(LPTVITEM pItemObj,HSTREEITEM hParent,HSTREEITEM hInsertAfter,BOOL bEnsureVisible);
-	HSTREEITEM InsertItem(TiXmlElement *pTiXmlItem,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
+	HSTREEITEM InsertItem(pugi::xml_node xmlNode,HSTREEITEM hParent=STVI_ROOT, HSTREEITEM hInsertAfter=STVI_LAST,BOOL bEnsureVisible=FALSE);
 	
 	virtual int GetScrollLineSize(BOOL bVertical);	
 

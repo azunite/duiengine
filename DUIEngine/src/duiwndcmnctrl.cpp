@@ -109,9 +109,9 @@ void CDuiLink::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT 
     __super::DuiDrawText(hdc,pszBuf,cchText,pRect,uFormat);
 }
 
-void CDuiLink::OnAttributeFinish( TiXmlElement* pXmlElem )
+void CDuiLink::OnAttributeFinish( pugi::xml_node xmlNode)
 {
-	__super::OnAttributeFinish(pXmlElem);
+	__super::OnAttributeFinish(xmlNode);
     if(m_strToolTipText.IsEmpty()) m_strToolTipText=m_strLinkUrl;
 }
 
@@ -335,9 +335,9 @@ void CDuiAnimateImgWnd::OnDestroy()
     Stop();
 }
 
-BOOL CDuiAnimateImgWnd::Load(TiXmlElement* pTiXmlElem)
+BOOL CDuiAnimateImgWnd::Load(pugi::xml_node xmlNode)
 {
-    BOOL bRet=__super::Load(pTiXmlElem);
+    BOOL bRet=__super::Load(xmlNode);
     if(m_bAutoStart) Start();
     return bRet;
 }
@@ -704,9 +704,9 @@ CDuiIconWnd::CDuiIconWnd()
 
 }
 
-BOOL CDuiIconWnd::Load(TiXmlElement* pTiXmlElem)
+BOOL CDuiIconWnd::Load(pugi::xml_node xmlNode)
 {
-    if (!CDuiWindow::Load(pTiXmlElem))
+    if (!CDuiWindow::Load(xmlNode))
         return FALSE;
 
     _ReloadIcon();

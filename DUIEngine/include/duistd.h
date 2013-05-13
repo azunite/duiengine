@@ -11,6 +11,7 @@
 #define DUI_EXP
 #endif
 
+
 # pragma warning(disable:4661)
 # pragma warning(disable:4251)
 
@@ -19,16 +20,10 @@
 #include <Shlwapi.h>
 #include <OleCtl.h>
 #include <tchar.h>
+#include <stdio.h>
 
-
-
-#include "..\dependencies\tinyxml\tinyxml.h"
-
-#ifdef DEBUG
-#pragma comment(lib,"tinyxml_d.lib")
-#else
-#pragma comment(lib,"tinyxml.lib")
-#endif//DEBUG
+//export pugixml interface
+#include "../dependencies/pugixml/pugixml.hpp"
 
 #include "DuiUtilities.h"
 

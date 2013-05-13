@@ -56,7 +56,7 @@ protected:
 
     int GetNextVisiblePanel(int iPanel);
 
-    virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
+    virtual BOOL LoadChildren(pugi::xml_node xmlNode);
 
     virtual BOOL OnDuiSetCursor(const CPoint &pt);
 

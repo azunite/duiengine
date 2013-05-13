@@ -200,10 +200,10 @@ BOOL CDuiBitmap::TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc
 }
 
 
-void CDuiBitmap::SetAttributes( TiXmlElement *pTiXmlEle )
+void CDuiBitmap::SetAttributes( pugi::xml_node xmlNode )
 {
-    if(!pTiXmlEle) return;
-    const char * pszMask=pTiXmlEle->Attribute("mask");
+    if(!xmlNode) return;
+    const char * pszMask=xmlNode.attribute("mask").value();
     if(pszMask)
     {
         int r=0,g=0,b=0;

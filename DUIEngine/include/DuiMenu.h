@@ -17,7 +17,7 @@ class CDuiMenuAttr:public CDuiObject
 public:
     CDuiMenuAttr();
 
-    virtual void OnAttributeFinish(TiXmlElement* pXmlElem);
+    virtual void OnAttributeFinish(pugi::xml_node xmlNode);
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_SKIN_ATTRIBUTE("itemskin",m_pItemSkin,FALSE)
@@ -202,7 +202,7 @@ public:
 protected:
     CDuiMenu(CDuiMenu *pParent);
 
-    void BuildMenu(HMENU menuPopup,TiXmlElement *pTiXmlMenu);
+    void BuildMenu(HMENU menuPopup,pugi::xml_node xmlNode);
 
     CDuiArray<DuiMenuItemData *> m_arrDmmi;
     CDuiMenuAttr	m_menuSkin;

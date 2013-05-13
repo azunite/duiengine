@@ -77,7 +77,7 @@ class DUI_EXP CDuiLink : public CDuiWindow
 public:
 
 protected:
-    virtual void OnAttributeFinish(TiXmlElement* pXmlElem);
+    virtual void OnAttributeFinish(pugi::xml_node xmlNode);
     virtual void DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat);
     virtual BOOL OnDuiSetCursor(const CPoint &pt);
 
@@ -197,7 +197,7 @@ public:
 
     void OnDestroy();
 
-    virtual BOOL Load(TiXmlElement* pTiXmlElem);
+    virtual BOOL Load(pugi::xml_node xmlNode);
 protected:
 	virtual CSize GetDesiredSize(LPRECT pRcContainer);
 
@@ -419,7 +419,7 @@ class DUI_EXP CDuiIconWnd : public CDuiWindow
 public:
     CDuiIconWnd();
 
-    virtual BOOL Load(TiXmlElement* pTiXmlElem);
+    virtual BOOL Load(pugi::xml_node xmlNode);
 
     void OnPaint(CDCHandle dc);
 

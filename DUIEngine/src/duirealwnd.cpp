@@ -9,14 +9,12 @@ namespace DuiEngine
 CDuiRealWndParam::CDuiRealWndParam()
     :m_dwStyle(WS_CHILD)
     ,m_dwExStyle(0)
-    ,m_pXmlParams(NULL)
 {
 
 }
 
 CDuiRealWndParam::~CDuiRealWndParam()
 {
-    if(m_pXmlParams) delete m_pXmlParams;
 }
 
 
@@ -86,13 +84,12 @@ void CDuiRealWnd::OnDestroy()
     }
 }
 
-BOOL CDuiRealWnd::Load(TiXmlElement* pXmlElem)
+BOOL CDuiRealWnd::Load(pugi::xml_node xmlNode)
 {
-    BOOL bRet=__super::Load(pXmlElem);
+    BOOL bRet=__super::Load(xmlNode);
     if(bRet)
     {
-        TiXmlElement *pParams=pXmlElem->FirstChildElement("params");
-        if(pParams) m_realwndParam.m_pXmlParams=pParams->Clone()->ToElement();
+        m_realwndParam.m_xmlParams.append_copy(xmlNode.child("params"));
         if(m_bInit) InitRealWnd();
     }
     return bRet;

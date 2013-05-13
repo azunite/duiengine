@@ -94,11 +94,11 @@ public:
     DUIWIN_DECLARE_ATTRIBUTES_END()
 protected:
 
-    virtual void OnAttributeFinish(TiXmlElement* pXmlElem)
+    virtual void OnAttributeFinish(pugi::xml_node xmlNode)
     {
         //加载图片文件参数，它保存在皮肤的imgparam子节点中
-        TiXmlElement *pXmlImgParam=pXmlElem->FirstChildElement("imgparam");
-        if(m_pDuiImg) m_pDuiImg->SetAttributes(pXmlImgParam);
+		pugi::xml_node xmlNode_ImgParam=xmlNode.child("imgparam");
+        if(xmlNode_ImgParam) m_pDuiImg->SetAttributes(xmlNode_ImgParam);
     }
 
     CDuiImgBase *m_pDuiImg;

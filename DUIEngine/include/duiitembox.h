@@ -58,7 +58,7 @@ protected:
 
     virtual int GetScrollLineSize(BOOL bVertical);
 
-    virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
+    virtual BOOL LoadChildren(pugi::xml_node xmlNode);
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_INT_ATTRIBUTE("itemwid", m_nItemWid, TRUE)
