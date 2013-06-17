@@ -5,7 +5,7 @@
         <text pos="11,9" class="cls_txt_red">%str1% ver:%str2%</text>
         <imgbtn id="1" name="close" skin="btn_sys_close" pos="-45,0" tip="close" animate="0"/>
       </caption>
-      <dlg pos=0,29,-0,-0>
+      <dlg pos="0,29,-0,-0">
       		<button pos="|-50,|-15,|50,|15" name="btn_msgbox" class="normalbtn">msg box</button>
       </dlg>
     </dlg>
