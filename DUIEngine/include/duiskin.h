@@ -45,6 +45,9 @@ public:
 
     virtual BOOL IgnoreState();
     virtual int GetStates();
+
+	virtual void SetWidth(LONG width) {m_lSubImageWidth=width;}
+
 protected:
 	virtual void OnAttributeFinish(pugi::xml_node xmlNode);
 

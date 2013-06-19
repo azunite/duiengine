@@ -37,7 +37,7 @@ SIZE CDuiImageList::GetSkinSize()
 {
     SIZE ret = {0, 0};
     if(m_pDuiImg) m_pDuiImg->GetImageSize(ret);
-    ret.cx = m_lSubImageWidth;
+    if(m_lSubImageWidth!=0) ret.cx = m_lSubImageWidth;
     return ret;
 }
 
