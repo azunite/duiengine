@@ -181,7 +181,7 @@ void CDuiTabCtrl::OnPaint( CDCHandle dc )
     }
     dc.RestoreDC(nSaveDC);
 	
-	if(GetContainer()->GetDuiFocus()==m_hDuiWnd)
+	if(GetContainer()->GetDuiFocus()==m_hDuiWnd && IsTabStop())
 	{
 		CRect rc;
 		GetItemRect(m_nCurrentPage,rc);

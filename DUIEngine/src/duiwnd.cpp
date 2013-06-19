@@ -1110,7 +1110,7 @@ void CDuiWindow::DuiDrawFocus(HDC dc)
 {
     CRect rcFocus;
     GetClient(&rcFocus);
-	DuiDrawDefFocusRect(dc,rcFocus);
+	if(IsTabStop())	DuiDrawDefFocusRect(dc,rcFocus);
 }
 
 

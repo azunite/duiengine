@@ -375,7 +375,7 @@ CDuiString(const _Elem ch) : m_pstr(NULL),m_nLength(0)
 
 CDuiString(const _Elem * lpsz, int nLen=-1) : m_pstr((_Elem *)strNull),m_nLength(0)
 {
-    if(nLen==-1 && lpsz) nLen=_Traits::length(lpsz);
+    if(nLen==-1 && lpsz) nLen=(int)_Traits::length(lpsz);
     DUIASSERT(!_Traits::IsBadStringPtr(lpsz,nLen) || lpsz==NULL);
     Assign(lpsz, nLen);
 }
@@ -420,7 +420,7 @@ void Append(const _Elem * pstr,int nCount=-1)
 
 void Assign(const _Elem * pstr, int cchMax=-1)
 {
-    if(cchMax<0) cchMax=_Traits::length(pstr);
+    if(cchMax<0) cchMax=(int)_Traits::length(pstr);
 
     if( cchMax > GetLength() )
     {
