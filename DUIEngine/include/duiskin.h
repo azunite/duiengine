@@ -45,8 +45,17 @@ public:
 
     virtual BOOL IgnoreState();
     virtual int GetStates();
-
-	virtual void SetWidth(LONG width) {m_lSubImageWidth=width;}
+	void    SetStates(int nStates){m_nStates=nStates;}
+	virtual void SetWidth(LONG width) {
+		m_lSubImageWidth=width;
+		if(m_nStates==0)
+		{
+			if(m_pDuiImg)
+				m_nStates=m_pDuiImg->GetWidth()/m_lSubImageWidth;
+			else
+				m_nStates=1;
+		}
+	}
 
 protected:
 	virtual void OnAttributeFinish(pugi::xml_node xmlNode);
