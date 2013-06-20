@@ -9,8 +9,9 @@
 #include "DuiSkinGif.h"	//应用层定义的皮肤对象
 
 //从ZIP文件加载皮肤模块
+#if !defined(_WIN64)
 #include "zipskin/DuiResProviderZip.h"
-
+#endif
 
 #ifdef _DEBUG
 #include <vld.h>//使用Vitural Leaker Detector来检测内存泄漏，可以从http://vld.codeplex.com/ 下载
@@ -32,8 +33,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 {
 	HRESULT hRes = OleInitialize(NULL);
 	DUIASSERT(SUCCEEDED(hRes));
- 
-	//////////////////////////////////////////////////////////////////////////
+
+#if !defined(_WIN64)
 	//<--资源类型选择 
 	DuiSystem * pDuiModeSel = new DuiSystem(hInstance);
 	DuiSystem::getSingletonPtr();
@@ -56,7 +57,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	delete pDuiModeSel;
 
 	if(nMode==-1) return -1;
-
+#else
+	int nMode=0;	//64位时直接从文件加载资源
+#endif
 	//资源类型选择完成 -->
 	
 	DuiSystem *pDuiSystem=new DuiSystem(hInstance);
@@ -102,6 +105,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 		break;
 	default://load form ZIP
 		{
+#if !defined(_WIN64)
 			//从ZIP文件加载皮肤
 			DuiResProviderZip *zipSkin=new DuiResProviderZip;
 			CDuiStringT strZip=DUI_CA2T(szCurrentDir)+_T("\\def_skin.zip");
@@ -112,6 +116,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 			}
 			pDuiSystem->SetResProvider(zipSkin); 
 			pDuiSystem->logEvent(_T("load resource from zip"));
+#else
+			return -1;
+#endif;
 		}
 		break;
 	}
@@ -127,7 +134,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	BOOL bOK=pDuiSystem->Init(IDR_DUI_INIT); //初始化DUI系统,原来的系统初始化方式依然可以使用。
 	pDuiSystem->SetMsgBoxTemplate(IDR_DUI_MSGBOX);
 
-#ifdef DLL_DUI
+#if defined(DLL_DUI) && !defined(_WIN64)
 	CLuaScriptModule scriptLua;
 	scriptLua.executeScriptFile("..\\dui_demo\\lua\\test.lua");
 	pDuiSystem->SetScriptModule(&scriptLua);

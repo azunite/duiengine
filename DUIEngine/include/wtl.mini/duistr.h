@@ -402,7 +402,7 @@ operator const _Elem *() const
 
 void Append(const _Elem * pstr,int nCount=-1)
 {
-    if(nCount<0) nCount=_Traits::length(pstr);
+    if(nCount<0) nCount=(int)_Traits::length(pstr);
 	if(GetLength()==0)
 	{
 		Assign(pstr,nCount);

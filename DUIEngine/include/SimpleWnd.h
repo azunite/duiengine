@@ -3,11 +3,37 @@
 //////////////////////////////////////////////////////////////////////////
 // thunk 技术实现参考http://www.cppblog.com/proguru/archive/2008/08/24/59831.html
 //////////////////////////////////////////////////////////////////////////
-
-#include "DUISingleton.h"
-
 namespace DuiEngine
 {
+
+	class CSimpleWndHelper{
+	public:
+		static CSimpleWndHelper* GetInstance();
+
+		static BOOL Init(HINSTANCE hInst,LPCTSTR pszClassName);
+		static void Destroy();
+
+		HANDLE GetHeap(){return m_hHeap;}
+
+		void LockSharePtr(void * p);
+		void UnlockSharePtr();
+		void * GetSharePtr(){return m_sharePtr;}
+
+		HINSTANCE GetAppInstance(){return m_hInst;}
+		ATOM GetSimpleWndAtom(){return m_atom;}
+	private:
+		CSimpleWndHelper(HINSTANCE hInst,LPCTSTR pszClassName);
+		~CSimpleWndHelper();
+
+		HANDLE				m_hHeap;
+		CRITICAL_SECTION	m_cs;
+		void *				m_sharePtr;
+
+		ATOM				m_atom;
+		HINSTANCE			m_hInst;
+
+		static CSimpleWndHelper* s_Instance;
+	};
 
 #if defined(_M_IX86)
 // 按一字节对齐
@@ -19,10 +45,10 @@ struct tagThunk
     BYTE  m_jmp;
     DWORD m_relproc;
     //关键代码   //////////////////////////////////////
-    BOOL Init(DWORD proc, void* pThis)
+    BOOL Init(DWORD_PTR proc, void* pThis)
     {
         m_mov = 0x042444C7;
-        m_this = (DWORD)pThis;  // mov [esp+4], pThis;而esp+4本来是放hWnd,现在被偷着放对象指针了.
+        m_this = (DWORD)(ULONG_PTR)pThis;  // mov [esp+4], pThis;而esp+4本来是放hWnd,现在被偷着放对象指针了.
         m_jmp = 0xe9;
         // 跳转到proc指定的入口函数
         m_relproc = (DWORD)((INT_PTR)proc - ((INT_PTR)this + sizeof(tagThunk)));
@@ -52,7 +78,7 @@ struct tagThunk
         RaxMov = 0xb848;          // mov rax, target
         RaxImm = (ULONG64)proc;   //
         RaxJmp = 0xe0ff;          // jmp rax
-        FlushInstructionCache(GetCurrentProcess(), this, sizeof(_stdcallthunk));
+        FlushInstructionCache(GetCurrentProcess(), this, sizeof(tagThunk));
         return TRUE;
     }
     //some thunks will dynamically allocate the memory for the code
@@ -62,8 +88,33 @@ struct tagThunk
     }
 };
 #pragma pack(pop)
+#elif defined(_ARM_)
+#pragma pack(push,4)
+	struct tagThunk // this should come out to 16 bytes
+	{
+		DWORD	m_mov_r0;		// mov	r0, pThis
+		DWORD	m_mov_pc;		// mov	pc, pFunc
+		DWORD	m_pThis;
+		DWORD	m_pFunc;
+		BOOL Init(DWORD_PTR proc, void* pThis)
+		{
+			m_mov_r0 = 0xE59F0000;
+			m_mov_pc = 0xE59FF000;
+			m_pThis = (DWORD)pThis;
+			m_pFunc = (DWORD)proc;
+			// write block from data cache and
+			//  flush from instruction cache
+			FlushInstructionCache(GetCurrentProcess(), this, sizeof(tagThunk));
+			return TRUE;
+		}
+		void* GetCodeAddress()
+		{
+			return this;
+		}
+	};
+#pragma pack(pop)
 #else
-#error Only AMD64 and X86 supported
+#error Only AMD64, ARM and X86 supported
 #endif
 
 class CMessageMap
@@ -73,7 +124,7 @@ public:
                                       LRESULT& lResult, DWORD dwMsgMapID) = 0;
 };
 
-class DUI_EXP CSimpleWnd : public CMessageMap
+class  DUI_EXP CSimpleWnd : public CMessageMap
 {
 public:
     CSimpleWnd(HWND hWnd=0);
@@ -81,7 +132,7 @@ public:
 
     static ATOM RegisterSimpleWnd(HINSTANCE hInst,LPCTSTR pszSimpleWndName);
 
-    HWND Create( LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam );
+    HWND Create(LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam );
 
     BOOL SubclassWindow(HWND hWnd);
 
@@ -475,8 +526,22 @@ public:
     LRESULT ReflectNotifications(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
     static BOOL DefaultReflectionHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
 
-    BEGIN_MSG_MAP_EX(CSimpleWnd)
-    END_MSG_MAP()
+public://EXTRACT FROM BEGIN_MSG_MAP_EX and END_MSG_MAP
+	BOOL m_bMsgHandled;
+	/* "handled" management for cracked handlers */ 
+	BOOL IsMsgHandled() const
+	{ 
+		return m_bMsgHandled;
+	}
+	void SetMsgHandled(BOOL bHandled)
+	{ 
+		m_bMsgHandled = bHandled;
+	} 
+
+	BOOL ProcessWindowMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult, DWORD dwMsgMapID = 0)
+	{
+		return FALSE;
+	}
 protected:
     LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

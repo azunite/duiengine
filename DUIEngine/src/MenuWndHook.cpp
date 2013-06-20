@@ -15,6 +15,10 @@
 #include "duiskinpool.h"
 #include "duiskin.h"
 
+#ifdef _WIN64
+#define GWL_WNDPROC	GWLP_WNDPROC
+#endif//_WIN64
+
 namespace DuiEngine
 {
 

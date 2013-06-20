@@ -33,8 +33,9 @@ using namespace DuiEngine;
 
 #ifdef _DEBUG
 
-# pragma comment(lib, "tinyxml_d.lib")
+#if !defined(_WIN64)
 #pragma comment(lib,"zlib_d.lib")
+#endif
 
 	#ifdef DLL_DUI
 	# pragma comment(lib, "duiengine_d.lib")
@@ -43,8 +44,9 @@ using namespace DuiEngine;
 	#endif
 #else
 
-# pragma comment(lib, "tinyxml.lib")
+#if !defined(_WIN64)
 #pragma comment(lib,"zlib.lib")
+#endif
 
 	#ifdef DLL_DUI
 	# pragma comment(lib, "duiengine.lib")

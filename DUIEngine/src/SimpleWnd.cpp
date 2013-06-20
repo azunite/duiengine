@@ -1,10 +1,54 @@
 #include "duistd.h"
 #include "SimpleWnd.h"
-#include "DuiSystem.h"
-
 
 namespace DuiEngine
 {
+	CSimpleWndHelper * CSimpleWndHelper::s_Instance=NULL;
+
+	CSimpleWndHelper::CSimpleWndHelper(HINSTANCE hInst,LPCTSTR pszClassName)
+		:m_hInst(hInst)
+		,m_sharePtr(NULL)
+	{
+		InitializeCriticalSection(&m_cs);
+		m_hHeap=HeapCreate(HEAP_CREATE_ENABLE_EXECUTE,0,0);
+		m_atom=CSimpleWnd::RegisterSimpleWnd(hInst,pszClassName);
+	}
+
+	CSimpleWndHelper::~CSimpleWndHelper()
+	{
+		if(m_hHeap) HeapDestroy(m_hHeap);
+		DeleteCriticalSection(&m_cs);
+		if(m_atom) UnregisterClass((LPCTSTR)m_atom,m_hInst);
+	}
+
+	CSimpleWndHelper* CSimpleWndHelper::GetInstance()
+	{
+		return s_Instance;
+	}
+
+	BOOL CSimpleWndHelper::Init(HINSTANCE hInst,LPCTSTR pszClassName)
+	{
+		if(s_Instance) return FALSE;
+		s_Instance=new CSimpleWndHelper(hInst,pszClassName);
+		return s_Instance!=NULL;
+	}
+
+	void CSimpleWndHelper::Destroy()
+	{
+		if(s_Instance) delete s_Instance;
+		s_Instance=NULL;
+	}
+
+	void CSimpleWndHelper::LockSharePtr(void *p)
+	{
+		EnterCriticalSection(&m_cs);
+		m_sharePtr=p;
+	}
+
+	void CSimpleWndHelper::UnlockSharePtr()
+	{
+		LeaveCriticalSection(&m_cs);
+	}
 
 //////////////////////////////////////////////////////////////////////////
 CSimpleWnd::CSimpleWnd(HWND hWnd)
@@ -32,16 +76,17 @@ ATOM CSimpleWnd::RegisterSimpleWnd( HINSTANCE hInst,LPCTSTR pszSimpleWndName )
     return ::RegisterClassEx(&wcex);
 }
 
-HWND CSimpleWnd::Create( LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam )
+HWND CSimpleWnd::Create(LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,LPVOID lpParam )
 {
-    DuiSystem::getSingleton().LockSharePtr(this);
-    m_pThunk=(tagThunk*)HeapAlloc(DuiSystem::getSingleton().GetExecutableHeap(),HEAP_ZERO_MEMORY,sizeof(tagThunk));
+	CSimpleWndHelper::GetInstance()->LockSharePtr(this);
+
+	m_pThunk=(tagThunk*)HeapAlloc(CSimpleWndHelper::GetInstance()->GetHeap(),HEAP_ZERO_MEMORY,sizeof(tagThunk));
     // 在::CreateWindow返回之前会去调StarWindowProc函数
-    HWND hWnd= ::CreateWindowEx(dwExStyle,(LPCTSTR)DuiSystem::getSingleton().GetHostWndAtom(), lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, 0, DuiSystem::getSingleton().GetInstance(), lpParam);
-    DuiSystem::getSingleton().ReleaseSharePtr();
+    HWND hWnd= ::CreateWindowEx(dwExStyle,(LPCTSTR)CSimpleWndHelper::GetInstance()->GetSimpleWndAtom(), lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, 0, CSimpleWndHelper::GetInstance()->GetAppInstance(), lpParam);
+	CSimpleWndHelper::GetInstance()->UnlockSharePtr(); 
     if(!hWnd)
     {
-        HeapFree(DuiSystem::getSingleton().GetExecutableHeap(),0,m_pThunk);
+        HeapFree(CSimpleWndHelper::GetInstance()->GetHeap(),0,m_pThunk);
         m_pThunk=NULL;
     }
     return hWnd;
@@ -52,7 +97,7 @@ void CSimpleWnd::OnFinalMessage( HWND hWnd )
 {
     if(m_pThunk)
     {
-        HeapFree(DuiSystem::getSingleton().GetExecutableHeap(),0,m_pThunk);
+        HeapFree(CSimpleWndHelper::GetInstance()->GetHeap(),0,m_pThunk);
         m_pThunk=NULL;
     }
 }
@@ -105,11 +150,11 @@ LRESULT CALLBACK CSimpleWnd::WindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LP
 
 LRESULT CALLBACK CSimpleWnd::StartWindowProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-    CSimpleWnd* pThis=(CSimpleWnd*)DuiSystem::getSingleton().GetSharePtr();
+    CSimpleWnd* pThis=(CSimpleWnd*)CSimpleWndHelper::GetInstance()->GetSharePtr();
 
     pThis->m_hWnd=hWnd;
     // 初始化Thunk，做了两件事:1、mov指令替换hWnd为对象指针，2、jump指令跳转到WindowProc
-    pThis->m_pThunk->Init((DWORD)WindowProc, pThis);
+    pThis->m_pThunk->Init((DWORD_PTR)WindowProc, pThis);
 
     // 得到Thunk指针
     WNDPROC pProc = (WNDPROC)pThis->m_pThunk->GetCodeAddress();

@@ -12,51 +12,30 @@ template<> DuiSystem* Singleton<DuiSystem>::ms_Singleton = 0;
 
 DuiSystem::DuiSystem(HINSTANCE hInst,LPCTSTR pszHostClassName/*=_T("DuiHostWnd")*/)
     :m_hInst(hInst)
-    ,m_atomWnd(0)
-    ,m_p(NULL)
     ,m_pResProvider(NULL)
     ,m_pLogger(NULL)
 	,m_pScriptModule(NULL)
     ,m_pBuf(NULL),m_nCount(0)
+	,m_funCreateTextServices(NULL)
 {
-    InitializeCriticalSection(&m_cs);
-    m_atomWnd=CSimpleWnd::RegisterSimpleWnd(hInst,pszHostClassName);
-    m_hHeapExecutable=HeapCreate(HEAP_CREATE_ENABLE_EXECUTE,0,0);
     createSingletons();
+	CSimpleWndHelper::Init(hInst,pszHostClassName);
+	m_rich20=LoadLibrary(_T("riched20.dll"));
+	if(m_rich20) m_funCreateTextServices= (PCreateTextServices)GetProcAddress(m_rich20,"CreateTextServices");
 }
 
 DuiSystem::~DuiSystem(void)
 {
     destroySingletons();
-
-    UnregisterClass((LPCTSTR)m_atomWnd,m_hInst);
-    DeleteCriticalSection(&m_cs);
-
+	CSimpleWndHelper::Destroy();
     //name id map
     if(m_pBuf && m_nCount) delete []m_pBuf;
     m_nCount=0;
     m_pBuf=NULL;
-    HeapDestroy(m_hHeapExecutable);
-}
 
-void DuiSystem::LockSharePtr( void * pObj )
-{
-    EnterCriticalSection(&m_cs);
-    m_p=pObj;
+	if(m_rich20) FreeLibrary(m_rich20);
+	m_funCreateTextServices=NULL;
 }
-
-void * DuiSystem::GetSharePtr()
-{
-    return m_p;
-}
-
-void * DuiSystem::ReleaseSharePtr()
-{
-    void *pRet=m_p;
-    LeaveCriticalSection(&m_cs);
-    return pRet;
-}
-
 
 size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/)
 {
@@ -225,4 +204,9 @@ format_error:
 	return FALSE;
 }
 
+HRESULT DuiSystem::CreateTextServices( IUnknown *punkOuter, ITextHost *pITextHost, IUnknown **ppUnk )
+{
+	if(!m_funCreateTextServices) return E_NOTIMPL;
+	return m_funCreateTextServices(punkOuter,pITextHost,ppUnk);
+}
 }//namespace DuiEngine

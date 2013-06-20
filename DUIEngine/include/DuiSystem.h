@@ -16,6 +16,9 @@
 #include "DuiMessageBox.h"
 #include "DuiScriptModule.h"
 
+#include <Richedit.h>
+#include <TextServ.h>
+
 namespace DuiEngine
 {
 
@@ -105,36 +108,21 @@ public:
 	BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
 
 	BOOL SetMsgBoxTemplate(UINT uXmlResID,LPCSTR pszType=DUIRES_XML_TYPE);
+
+	HRESULT CreateTextServices(IUnknown *punkOuter, ITextHost *pITextHost, IUnknown **ppUnk);
 protected:
 	pugi::xml_node GetMsgBoxTemplate(){return m_xmlMsgBoxTempl;}
-	void LockSharePtr( void * pObj );
-	void * GetSharePtr();
-	void * ReleaseSharePtr();
-
-	ATOM GetHostWndAtom()
-	{
-		return m_atomWnd;
-	}
-
-	HANDLE GetExecutableHeap()
-	{
-		return m_hHeapExecutable;
-	}
 
     void createSingletons();
     void destroySingletons();
-    void * m_p;
-    HANDLE m_hHeapExecutable;
-
-    CRITICAL_SECTION m_cs;
-
-    ATOM			m_atomWnd;
 
     DuiResProviderBase	* m_pResProvider;
 	IScriptModule		* m_pScriptModule;
     DuiLogger * m_pLogger;
     HINSTANCE m_hInst;
 
+	HINSTANCE	m_rich20;	//richedit module
+	PCreateTextServices	m_funCreateTextServices;
     //name-id map
     CNamedID *m_pBuf;
     int		  m_nCount;

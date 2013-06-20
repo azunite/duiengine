@@ -9,7 +9,7 @@
         <imgbtn id="5" name="btn_minimize" skin="btn_sys_minimize" pos="-121,0" animate="0" />
       </caption>
 
-      <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10">
+      <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10" tabstop="0">
         <tab id="113" title="miscellaneous" sep="5">
           <animateimg name="ani_test" pos="20,100" skin="icons"/>
           <img id="1139" pos="300,200,400,300" skin="icons" tip="img tip" msgtransparent="0"/>
