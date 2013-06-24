@@ -72,11 +72,11 @@ class CDuiWindow;
 		return TRUE;															\
 	}																			\
  
-// void OnDuiCommand(UINT uItemID, LPCSTR szItemClass)
+// void OnDuiCommand(UINT uItemID)
 #define DUI_NOTIFY_COMMAND(func)                                                     \
     if (DUINM_COMMAND == uCode)                                                      \
     {                                                                               \
-        func(((LPDUINMCOMMAND)pnmh)->uItemID, ((DuiEngine::LPDUINMCOMMAND)pnmh)->szItemClass);   \
+        func(((LPDUINMCOMMAND)pnmh)->uItemID);   \
         return TRUE;                                                                \
     }                                                                               \
  
