@@ -240,6 +240,7 @@ BOOL CDuiTabCtrl::RemoveItem( int nIndex , int nSelPage/*=0*/)
     {
 		if(nSelPage<0) nSelPage=0;
 		if(nSelPage>=GetItemCount()) nSelPage=GetItemCount()-1;
+		m_nCurrentPage=-1;
         SetCurSel(nSelPage);
     }
     return TRUE;
