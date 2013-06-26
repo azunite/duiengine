@@ -143,7 +143,7 @@ public:
     CDuiTab* GetItem(int nIndex);
 
 
-    BOOL RemoveItem(int nIndex);
+    BOOL RemoveItem(int nIndex, int nSelPage=0);
 
     void RemoveAllItems(void);
 protected:

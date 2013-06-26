@@ -229,29 +229,31 @@ void CDuiTabCtrl::OnLButtonDown( UINT nFlags, CPoint point )
 	}
 }
 
-BOOL CDuiTabCtrl::RemoveItem( int nIndex )
+BOOL CDuiTabCtrl::RemoveItem( int nIndex , int nSelPage/*=0*/)
 {
     CDuiTab * pTab = GetItem(nIndex);
 
     DestroyChild(pTab);
     m_lstPages.RemoveAt(nIndex);
 
-    if (m_nCurrentPage < 0 || m_nCurrentPage >= GetItemCount())
+    if (m_nCurrentPage == nIndex)
     {
-        SetCurSel(0);
+		if(nSelPage<0) nSelPage=0;
+		if(nSelPage>=GetItemCount()) nSelPage=GetItemCount()-1;
+        SetCurSel(nSelPage);
     }
-
-    NotifyInvalidate();
     return TRUE;
 }
 
 void CDuiTabCtrl::RemoveAllItems( void )
 {
-    int Count = GetItemCount();
-    for (int i = 0; i < Count; i++)
+    for (int i = GetItemCount()-1; i >= 0; i--)
     {
-        RemoveItem(0);
+		CDuiTab * pTab = GetItem(i);
+		DestroyChild(pTab);
+		m_lstPages.RemoveAt(i);
     }
+	NotifyInvalidate();
 }
 
 void CDuiTabCtrl::OnMouseMove( UINT nFlags, CPoint point )
