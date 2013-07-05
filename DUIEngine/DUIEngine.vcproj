@@ -99,223 +99,6 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release_Dll|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="2"
-			UseOfATL="0"
-			CharacterSet="1"
-			WholeProgramOptimization="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS;DLL_DUI"
-				ExceptionHandling="1"
-				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="duistd.h"
-				BrowseInformation="0"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="shlwapi.lib Msimg32.lib"
-				OutputFile="$(OutDir)\$(ProjectName).dll"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="dependencies\lib"
-				GenerateDebugInformation="false"
-				AssemblyDebug="0"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="copy  $(TargetDir)\$(TargetName).lib ..\lib\&#x0D;&#x0A;copy  $(TargetPath) ..\bin\&#x0D;&#x0A;"
-			/>
-		</Configuration>
-		<Configuration
-			Name="DEBUG|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			UseOfATL="1"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories=".\include;.\dependencies"
-				PreprocessorDefinitions="WIN32;_DEBUG"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="duistd.h"
-				BrowseInformation="1"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="4"
-				ShowIncludes="false"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				AdditionalDependencies="shlwapi.lib Msimg32.lib"
-				OutputFile="..\lib\$(ProjectName)_static_d.lib"
-				AdditionalLibraryDirectories=""
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="RELEASE|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="4"
-			UseOfATL="1"
-			CharacterSet="1"
-			WholeProgramOptimization="0"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS"
-				RuntimeLibrary="0"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderThrough="duistd.h"
-				BrowseInformation="0"
-				WarningLevel="3"
-				Detect64BitPortabilityProblems="false"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				AdditionalDependencies="shlwapi.lib Msimg32.lib"
-				OutputFile="..\lib\$(ProjectName)_static.lib"
-				AdditionalLibraryDirectories=""
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Debug_Dll|x64"
 			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
@@ -372,6 +155,87 @@
 				AssemblyDebug="1"
 				ImportLibrary="$(TargetDir)$(TargetName).lib"
 				TargetMachine="17"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine="copy  $(TargetDir)\$(TargetName).lib ..\lib\&#x0D;&#x0A;copy  $(TargetPath) ..\bin\&#x0D;&#x0A;"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release_Dll|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfATL="0"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS;DLL_DUI"
+				ExceptionHandling="1"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="duistd.h"
+				BrowseInformation="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="shlwapi.lib Msimg32.lib"
+				OutputFile="$(OutDir)\$(ProjectName).dll"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="dependencies\lib"
+				GenerateDebugInformation="false"
+				AssemblyDebug="0"
+				OptimizeReferences="2"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -478,6 +342,76 @@
 			/>
 		</Configuration>
 		<Configuration
+			Name="DEBUG|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			UseOfATL="1"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories=".\include;.\dependencies"
+				PreprocessorDefinitions="WIN32;_DEBUG"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="duistd.h"
+				BrowseInformation="1"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="4"
+				ShowIncludes="false"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				AdditionalDependencies="shlwapi.lib Msimg32.lib"
+				OutputFile="..\lib\$(ProjectName)_static_d.lib"
+				AdditionalLibraryDirectories=""
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
 			Name="DEBUG|x64"
 			OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
@@ -530,6 +464,74 @@
 				Name="VCLibrarianTool"
 				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="..\lib\$(ProjectName)_static_d.lib"
+				AdditionalLibraryDirectories=""
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="RELEASE|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			UseOfATL="1"
+			CharacterSet="1"
+			WholeProgramOptimization="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="duistd.h"
+				BrowseInformation="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				AdditionalDependencies="shlwapi.lib Msimg32.lib"
+				OutputFile="..\lib\$(ProjectName)_static.lib"
 				AdditionalLibraryDirectories=""
 			/>
 			<Tool
@@ -643,10 +645,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\DuiCSS.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\duiDefaultLogger.cpp"
 				>
 			</File>
@@ -656,10 +654,6 @@
 			</File>
 			<File
 				RelativePath=".\src\DuiEventSet.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\duifontpool.cpp"
 				>
 			</File>
 			<File
@@ -684,10 +678,6 @@
 			</File>
 			<File
 				RelativePath=".\src\DuiImgDecoder_Def.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\duiimgpool.cpp"
 				>
 			</File>
 			<File
@@ -735,10 +725,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\duiskin.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\DuiSkinBase.cpp"
 				>
 			</File>
@@ -766,31 +752,15 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Release_Dll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="DEBUG|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="RELEASE|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Debug_Dll|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_Dll|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -806,7 +776,23 @@
 					/>
 				</FileConfiguration>
 				<FileConfiguration
+					Name="DEBUG|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="DEBUG|x64"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="RELEASE|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -821,10 +807,6 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\src\duistringpool.cpp"
-				>
 			</File>
 			<File
 				RelativePath=".\src\DuiSystem.cpp"
@@ -935,6 +917,30 @@
 				</File>
 				<File
 					RelativePath=".\src\activex\DuiBStr.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="pools"
+				>
+				<File
+					RelativePath=".\src\DuiCSS.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\duifontpool.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\duiimgpool.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\duiskin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\duistringpool.cpp"
 					>
 				</File>
 			</Filter>
@@ -1315,31 +1321,15 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
-						Name="Release_Dll|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="DEBUG|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="RELEASE|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Debug_Dll|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release_Dll|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1355,7 +1345,23 @@
 						/>
 					</FileConfiguration>
 					<FileConfiguration
+						Name="DEBUG|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="DEBUG|x64"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="RELEASE|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"

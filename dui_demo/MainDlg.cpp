@@ -14,6 +14,7 @@
 CMainDlg::CMainDlg() : CDuiHostWnd(IDR_DUI_MAIN_DIALOG)
 {
 	m_pUiHandler = new CUIHander(this);
+	m_bLayoutInited=FALSE;
 } 
 
 CMainDlg::~CMainDlg()

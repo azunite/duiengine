@@ -61,7 +61,6 @@ BOOL DuiStringPool::Init( pugi::xml_node xmlNode )
 	{
 		uStringID=xmlStr.attribute("id").as_int(-1);
 		if(uStringID==-1) continue;
-			continue;
 		CDuiStringA str=xmlStr.text().get();
 		if(str.IsEmpty()) str=xmlStr.attribute("text").value();
 		AddKeyObject(uStringID,CDuiStringT(DUI_CA2T(str, CP_UTF8)));

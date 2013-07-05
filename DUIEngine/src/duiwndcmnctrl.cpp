@@ -550,18 +550,18 @@ CDuiLine::CDuiLine()
 // Do nothing
 void CDuiLine::OnPaint(CDCHandle dc)
 {
-    CGdiAlpha::DrawLine(dc,m_rcWindow.left,m_rcWindow.top,m_rcWindow.right,m_rcWindow.bottom,m_style.m_crBg,m_nPenStyle);
+    CGdiAlpha::DrawLine(dc,m_rcWindow.left,m_rcWindow.top,m_rcWindow.right,m_rcWindow.bottom,m_style.m_crBg,m_nPenStyle, m_nLineSize);
 
     // ª≠“ı”∞œﬂ
     if (m_bLineShadow)
     {
         if ((m_rcWindow.left+m_nLineSize-1) == m_rcWindow.right)
         {
-            CGdiAlpha::DrawLine(dc,m_rcWindow.right+1,m_rcWindow.top,m_rcWindow.right+1,m_rcWindow.bottom,m_crShadow,m_nPenStyle);
+            CGdiAlpha::DrawLine(dc,m_rcWindow.right+1,m_rcWindow.top,m_rcWindow.right+1,m_rcWindow.bottom,m_crShadow,m_nPenStyle, m_nLineSize);
         }
         else
         {
-            CGdiAlpha::DrawLine(dc,m_rcWindow.left,m_rcWindow.bottom+1,m_rcWindow.right,m_rcWindow.bottom+1,m_crShadow,m_nPenStyle);
+            CGdiAlpha::DrawLine(dc,m_rcWindow.left,m_rcWindow.bottom+1,m_rcWindow.right,m_rcWindow.bottom+1,m_crShadow,m_nPenStyle, m_nLineSize);
         }
     }
 }

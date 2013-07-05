@@ -145,34 +145,42 @@ int CGdiAlpha::DrawText(HDC hdc,LPCTSTR pszText,int nCount,LPRECT pRect,UINT uFo
     return nRet;
 }
 
-void CGdiAlpha::DrawLine(HDC hdc,int x1,int y1,int x2,int y2,COLORREF cr,UINT style)
+void CGdiAlpha::DrawLine(HDC hdc,int x1,int y1,int x2,int y2,COLORREF cr,UINT style, int iLineSize)
 {
     RECT rcDest;
-    if(x1==x2)
+	int iLineRadius = iLineSize / 2;
+	int iRemainder = iLineSize % 2;
+    if(x1==x2)	// ˙œﬂ
     {
-        SetRect(&rcDest,x1,y1,x1+1,y2);
+        SetRect(&rcDest,x1-iLineRadius,y1,x1+iLineRadius+iRemainder,y2);
     }
-    else if(y1==y2)
+    else if(y1==y2)//∫·œﬂ
     {
-        SetRect(&rcDest,x1,y1,x2,y1+1);
+        SetRect(&rcDest,x1,y1-iLineRadius,x2,y1+iLineRadius+iRemainder);
     }
     else
     {
         if(x1<x2) _swap(x1,x2);
         if(y1<y2) _swap(y1,y2);
-        SetRect(&rcDest,x1,y1,x2+1,y2+1);
+        SetRect(&rcDest,x1-iLineRadius,y1-iLineRadius,x2+iLineRadius+iRemainder,y2+iLineRadius+iRemainder);
     }
-    ALPHAINFO ai;
-    AlphaBackup(hdc,&rcDest,ai);
 
-    HPEN hPen=CreatePen(style,1,cr);
-    HPEN hOld=(HPEN)SelectObject(hdc,hPen);
-    MoveToEx(hdc,x1,y1,NULL);
-    LineTo(hdc,x2,y2);
-    SelectObject(hdc,hOld);
-    DeleteObject(hPen);
+	ALPHAINFO ai;
+	AlphaBackup(hdc,&rcDest,ai);
 
-    AlphaRestore(hdc,ai);
+	LOGBRUSH lb;
+	lb.lbStyle = BS_SOLID; 
+	lb.lbColor = cr;
+	lb.lbHatch = 0;
+	HPEN hPen = ExtCreatePen(PS_GEOMETRIC | PS_ENDCAP_FLAT | style, iLineSize, &lb, 0, NULL);
+	HPEN hOld=(HPEN)SelectObject(hdc,hPen);
+	MoveToEx(hdc,x1,y1,NULL);
+	LineTo(hdc,x2,y2);
+	SelectObject(hdc,hOld);
+	DeleteObject(hPen);
+
+	AlphaRestore(hdc,ai);
+
 }
 
 HBITMAP CGdiAlpha::CreateBitmap32(HDC hdc,int nWid,int nHei,LPVOID * ppBits/*=NULL*/,BYTE byAlpha/*=0*/)

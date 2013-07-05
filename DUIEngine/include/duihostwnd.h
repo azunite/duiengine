@@ -51,8 +51,6 @@ public:
 
 	BOOL SetXml(pugi::xml_node xmlNode);
 
-	BOOL IsLayoutInited();
-
     UINT_PTR DoModal(HWND hWndParent = NULL, LPRECT rect = NULL);
 
     void EndDialog(UINT uRetCode);
@@ -66,7 +64,6 @@ protected:
     BOOL m_bTrackFlag;
 
     CDuiStringA m_strWindowCaption;
-    SIZE m_sizeDefault;
     CRect m_rcNC;
 
     DWORD m_dwDlgStyle;
@@ -81,7 +78,6 @@ protected:
     CPoint m_ptCaret;		//≤Â»Î∑˚Œª÷√
     BOOL m_bNeedRepaint;
     BOOL m_bNeedAllRepaint;
-	BOOL m_bLayoutInited;
 
     CDuiTipCtrl	* m_pTipCtrl;
 

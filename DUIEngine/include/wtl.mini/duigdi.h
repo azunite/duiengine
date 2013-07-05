@@ -527,7 +527,7 @@ public:
         LOGFONT logFont = { 0 };
         logFont.lfCharSet = DEFAULT_CHARSET;
         logFont.lfHeight = nPointSize;
-        _tcsncpy_s(logFont.lfFaceName, _countof(logFont.lfFaceName), lpszFaceName);
+        _tcscpy(logFont.lfFaceName, lpszFaceName);
 
         if(bBold)
             logFont.lfWeight = FW_BOLD;

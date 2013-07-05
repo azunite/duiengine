@@ -7,7 +7,7 @@
 #include "wtlhelper/whwindow.h"
 
 class CMainDlg : public CDuiHostWnd
-// 	,public CWHRoundRectFrameHelper<CMainDlg>
+// 	,public CWHRoundRectFrameHelper<CMainDlg>	//需要圆角窗口时启用
 {
 public:
 	CMainDlg();
@@ -33,8 +33,7 @@ public:
 	void OnSize(UINT nType, CSize size)
 	{
 		SetMsgHandled(FALSE);
-		if(!IsLayoutInited()) return;
-
+		if(!m_bLayoutInited) return;
 		if(nType==SIZE_MAXIMIZED)
 		{
 			FindChildByCmdID(3)->SetVisible(TRUE);
@@ -46,6 +45,13 @@ public:
 		}
 	}
 
+	BOOL OnInitDialog(HWND hWnd,LPARAM lp)
+	{
+		m_bLayoutInited=TRUE;
+		SetMsgHandled(FALSE);
+		return FALSE;
+	}
+
 	int OnCreate(LPCREATESTRUCT lpCreateStruct);
 protected:
 
@@ -55,18 +61,20 @@ protected:
 		DUI_NOTIFY_ID_COMMAND(3, OnRestore)
 		DUI_NOTIFY_ID_COMMAND(5, OnMinimize)
 	DUI_NOTIFY_MAP_END()	
-//*
+
 	BEGIN_MSG_MAP_EX(CMainDlg)
-// 		CHAIN_MSG_MAP(CWHRoundRectFrameHelper<CMainDlg>)
+// 		CHAIN_MSG_MAP(CWHRoundRectFrameHelper<CMainDlg>) //需要圆角窗口时启用
 		MSG_WM_CREATE(OnCreate)
 		MSG_WM_CLOSE(OnClose)
 		MSG_WM_SIZE(OnSize)
+		MSG_WM_INITDIALOG(OnInitDialog)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
 		CHAIN_MSG_MAP(CDuiHostWnd)
 		CHAIN_MSG_MAP_MEMBER((*m_pUiHandler))
 		REFLECT_NOTIFICATIONS_EX()
 	END_MSG_MAP()
-//*/
+
 private:
+	BOOL			m_bLayoutInited;
 	CUIHander *    m_pUiHandler; 
 };

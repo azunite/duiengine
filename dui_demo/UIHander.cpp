@@ -166,13 +166,9 @@ void CUIHander::OnDestory()
 
 void CUIHander::OnAttrReposition()
 {
-	m_pMainDlg->FindChildByCmdID(²âÊÔ)->SetAttribute("pos","|-100,|-15,|100,|15");
-	CDuiWindow *pHost=m_pMainDlg->FindChildByCmdID(116);
-
-// 	DuiSystem::getSingleton().GetScriptModule()->executeScriptFile("..\\dui_demo\\lua\\test.lua");
-// 	lua_State *L=(lua_State *)DuiSystem::getSingleton().GetScriptModule()->GetScriptEngine();
-// 	lua_function<void> funTst(L,"test");
-// 	funTst(pHost);
+//	m_pMainDlg->FindChildByCmdID(²âÊÔ)->SetAttribute("pos","|-100,|-15,|100,|15");
+	CDuiTabCtrl *pTab=(CDuiTabCtrl*)m_pMainDlg->FindChildByCmdID(2000);
+	pTab->RemoveItem(3);
 }
 
 
