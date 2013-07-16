@@ -990,4 +990,13 @@ void CDuiHostWnd::OnRealWndSize( CDuiRealWnd *pRealWnd )
     }
 }
 
+void CDuiHostWnd::OnSetFocus( HWND wndOld )
+{
+	DoFrameEvent(WM_ACTIVATE,WA_ACTIVE,0);
+}
+
+void CDuiHostWnd::OnKillFocus( HWND wndFocus )
+{
+	DoFrameEvent(WM_ACTIVATE,WA_INACTIVE,0);
+}
 }//namespace DuiEngine

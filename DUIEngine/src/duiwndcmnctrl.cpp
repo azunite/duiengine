@@ -314,6 +314,7 @@ void CDuiAnimateImgWnd::OnDuiTimer(char cID)
 
 void CDuiAnimateImgWnd::Start()
 {
+	if(!IsVisible(TRUE)) return;
     if(!m_bPlaying)
 	{
 		SetDuiTimer(1,m_nSpeed);
@@ -335,13 +336,6 @@ void CDuiAnimateImgWnd::OnDestroy()
     Stop();
 }
 
-BOOL CDuiAnimateImgWnd::Load(pugi::xml_node xmlNode)
-{
-    BOOL bRet=__super::Load(xmlNode);
-    if(m_bAutoStart) Start();
-    return bRet;
-}
-
 CSize CDuiAnimateImgWnd::GetDesiredSize(LPRECT pRcContainer)
 {
 	CSize szRet;
@@ -349,6 +343,18 @@ CSize CDuiAnimateImgWnd::GetDesiredSize(LPRECT pRcContainer)
 	return szRet;
 }
 
+void CDuiAnimateImgWnd::OnShowWindow( BOOL bShow, UINT nStatus )
+{
+	__super::OnShowWindow(bShow,nStatus);
+	if(!bShow)
+	{
+		if(IsPlaying()) KillDuiTimer(1);
+	}else
+	{
+		if(IsPlaying()) SetDuiTimer(1,m_nSpeed);
+		else if(m_bAutoStart) Start();
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 // Progress Control
 // Use id attribute to process click event
@@ -399,25 +405,16 @@ void CDuiProgress::OnPaint(CDCHandle dc)
 
 	DUIASSERT(m_pSkinBg && m_pSkinPos);
 	
-	CSize szBg=m_pSkinBg->GetSkinSize();
-	CSize szValue=m_pSkinPos->GetSkinSize();
-	
 	m_pSkinBg->Draw(dc, DuiDC.rcClient, DuiWndState_Normal);
 	CRect rcValue=DuiDC.rcClient;
 
 	if(IsVertical())
 	{
 		rcValue.bottom=rcValue.top+rcValue.Height()*(m_nValue-m_nMinValue)/(m_nMaxValue-m_nMinValue);
-		int nMargin=(szBg.cx-szValue.cx)/2;
-		rcValue.left += nMargin;
-		rcValue.right -= nMargin;
 	}
 	else
 	{
 		rcValue.right=rcValue.left+rcValue.Width()*(m_nValue-m_nMinValue)/(m_nMaxValue-m_nMinValue);
-		int nMargin=(szBg.cy-szValue.cy)/2;
-		rcValue.top += nMargin;
-		rcValue.bottom -= nMargin;
 	}
 	if(m_nValue>m_nMinValue)
 	{

@@ -185,26 +185,24 @@ public:
     CDuiAnimateImgWnd();
     virtual ~CDuiAnimateImgWnd() {}
 
-    void OnPaint(CDCHandle dc);
-
-    void OnDuiTimer(char cID);
-
     void Start();
 
     void Stop();
 
 	BOOL IsPlaying(){return m_bPlaying;}
-
-    void OnDestroy();
-
-    virtual BOOL Load(pugi::xml_node xmlNode);
 protected:
 	virtual CSize GetDesiredSize(LPRECT pRcContainer);
+	void OnPaint(CDCHandle dc);
+
+	void OnDuiTimer(char cID);
+	void OnShowWindow(BOOL bShow, UINT nStatus);
+	void OnDestroy();
 
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_PAINT(OnPaint)
     MSG_WM_DUITIMER(OnDuiTimer)
     MSG_WM_DESTROY(OnDestroy)
+	MSG_WM_SHOWWINDOW(OnShowWindow)
     DUIWIN_END_MSG_MAP()
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
