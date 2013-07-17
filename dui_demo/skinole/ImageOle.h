@@ -92,4 +92,4 @@ protected:
 	static CTimerHostWnd ms_TimerHostWnd;
 };
 BOOL RichEdit_InsertSkin(CDuiRichEdit *pRicheditCtrl, CDuiSkinBase *pSkin);
-BOOL RichEdit_InsertImage(CDuiRichEdit *pRicheditCtrl, LPCSTR lpszFileName);
+BOOL RichEdit_InsertImage(CDuiRichEdit *pRicheditCtrl, LPCTSTR lpszFileName);

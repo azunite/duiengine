@@ -39,11 +39,10 @@
  		return sz;
  	}
  
- 	virtual CDuiImgBase * SetImage(CDuiImgBase *pImg)
+ 	virtual void SetImage(CDuiImgBase *pImg)
  	{
- 		CDuiImgBase *pRet=__super::SetImage(pImg);
+ 		__super::SetImage(pImg);
  		OnSetImage();
- 		return pRet;
  	}
  
  	long GetFrameDelay(int iFrame=-1);

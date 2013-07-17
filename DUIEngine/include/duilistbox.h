@@ -119,8 +119,6 @@ protected:
 
     void OnDestroy();
 
-    LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
-
 protected:
 
     CDuiArray<LPLBITEM>	m_arrItems;

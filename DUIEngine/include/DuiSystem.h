@@ -101,13 +101,13 @@ public:
 
     UINT Name2ID(LPCSTR strName);
 
-    size_t InitName2ID(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
+    size_t InitName2ID(UINT uXmlResID ,LPCTSTR pszType=DUIRES_XML_TYPE);
 
-	BOOL Init(UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
+	BOOL Init(UINT uXmlResID ,LPCTSTR pszType=DUIRES_XML_TYPE);
 
-	BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,UINT uXmlResID ,LPCSTR pszType=DUIRES_XML_TYPE);
+	BOOL LoadXmlDocment(pugi::xml_document & xmlDoc,UINT uXmlResID ,LPCTSTR pszType=DUIRES_XML_TYPE);
 
-	BOOL SetMsgBoxTemplate(UINT uXmlResID,LPCSTR pszType=DUIRES_XML_TYPE);
+	BOOL SetMsgBoxTemplate(UINT uXmlResID,LPCTSTR pszType=DUIRES_XML_TYPE);
 
 	HRESULT CreateTextServices(IUnknown *punkOuter, ITextHost *pITextHost, IUnknown **ppUnk);
 protected:

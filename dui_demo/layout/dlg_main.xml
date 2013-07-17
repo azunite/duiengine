@@ -67,6 +67,7 @@
           <check id="1142" pos="10,|10">check 1</check>
           <check id="1143" pos="100,|10">check 2</check>
           <button name="IDC_REPSEL"  pos="200,|10,300,|35" class="normalbtn">repsel</button>
+          <realwnd name="rw_edit_test" pos="350,|10,450,|35" wndclass="edit" wndname="test"/>
         </tab>
         <tab id="115" title="scrollview">
           <scrollview id="1150" pos="10,0,-10,-10" viewwid="900" viewhei="5000">

@@ -142,12 +142,12 @@ BOOL CDuiWindow::OnUpdateToolTip(HDUIWND hCurTipHost,HDUIWND &hNewTipHost,CRect 
 HRESULT CDuiWindow::SetInnerText(LPCTSTR lpszText)
 {
     m_strInnerText = lpszText;
-
+	if(IsVisible(TRUE)) NotifyInvalidate();
 	if ((m_uPositionType & (SizeX_FitContent | SizeY_FitContent)) && (4 != m_dlgpos.nCount))
 	{
 		OnWindowPosChanged(NULL);
+		if(IsVisible(TRUE)) NotifyInvalidate();
 	}
-
 	return S_OK;
 }
 

@@ -13,11 +13,11 @@ public:
     CDuiImgDecoder_Def(void);
     ~CDuiImgDecoder_Def(void);
 
-    virtual CDuiImgBase* CreateDuiImage(LPCSTR pszType);
+    virtual CDuiImgBase* CreateDuiImage(LPCTSTR pszType);
     virtual void DestoryDuiImage(CDuiImgBase* pImg);
-    virtual LPCSTR GetSupportTypes()
+    virtual LPCTSTR GetSupportTypes()
     {
-        return "BMP\0IMGX\0";
+        return _T("BMP\0IMGX\0");
     }
 };
 

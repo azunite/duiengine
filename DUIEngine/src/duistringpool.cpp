@@ -44,7 +44,7 @@ BOOL DuiStringPool::Init(UINT uResID)
 {
 	pugi::xml_document xmlDoc;
 	if(!DuiSystem::getSingleton().LoadXmlDocment(xmlDoc,uResID)) return FALSE;
-	return Init(xmlDoc);
+	return Init(xmlDoc.first_child());
 }
 
 BOOL DuiStringPool::Init( pugi::xml_node xmlNode )

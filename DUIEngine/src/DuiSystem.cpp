@@ -37,7 +37,7 @@ DuiSystem::~DuiSystem(void)
 	m_funCreateTextServices=NULL;
 }
 
-size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/)
+size_t DuiSystem::InitName2ID( UINT uXmlResID ,LPCTSTR pszType/*=DUIRES_XML_TYPE*/)
 {
     if(m_nCount)
     {
@@ -135,7 +135,7 @@ void DuiSystem::logEvent(LoggingLevel level , LPCTSTR pszFormat, ...)
     m_pLogger->logEvent(szBuffer,level);
 }
 
-BOOL DuiSystem::Init( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/ )
+BOOL DuiSystem::Init( UINT uXmlResID ,LPCTSTR pszType/*=DUIRES_XML_TYPE*/ )
 {
 	pugi::xml_document xmlDoc;
 	if(!LoadXmlDocment(xmlDoc,uXmlResID,pszType)) return FALSE;
@@ -174,7 +174,7 @@ BOOL DuiSystem::Init( UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/ )
 	return TRUE;
 }
 
-BOOL DuiSystem::LoadXmlDocment(pugi::xml_document & xmlDoc, UINT uXmlResID ,LPCSTR pszType/*=DUIRES_XML_TYPE*/ )
+BOOL DuiSystem::LoadXmlDocment(pugi::xml_document & xmlDoc, UINT uXmlResID ,LPCTSTR pszType/*=DUIRES_XML_TYPE*/ )
 {
 	DUIASSERT(GetResProvider());
 	DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
@@ -192,7 +192,7 @@ BOOL DuiSystem::LoadXmlDocment(pugi::xml_document & xmlDoc, UINT uXmlResID ,LPCS
 	return result;
 }
 
-BOOL DuiSystem::SetMsgBoxTemplate( UINT uXmlResID,LPCSTR pszType/*=DUIRES_XML_TYPE*/ )
+BOOL DuiSystem::SetMsgBoxTemplate( UINT uXmlResID,LPCTSTR pszType/*=DUIRES_XML_TYPE*/ )
 {
 	if(!LoadXmlDocment(m_xmlMsgBoxTempl,uXmlResID,pszType)) goto format_error;
 	if(!m_xmlMsgBoxTempl.child("layer").attribute("frame_size").value()[0]) goto format_error;

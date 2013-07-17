@@ -16,17 +16,17 @@ DuiResProviderPE::DuiResProviderPE( HINSTANCE hInst ,CDuiImgDecoder *pImgDecoder
 
 }
 
-HBITMAP DuiResProviderPE::LoadBitmap( LPCSTR strType,UINT uID )
+HBITMAP DuiResProviderPE::LoadBitmap( LPCTSTR strType,UINT uID )
 {
-    return LoadBitmapA(m_hResInst,MAKEINTRESOURCEA(uID));
+	return ::LoadBitmap(m_hResInst,MAKEINTRESOURCE(uID));
 }
 
-HICON DuiResProviderPE::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
+HICON DuiResProviderPE::LoadIcon( LPCTSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
 {
-    return (HICON)::LoadImageA(m_hResInst, MAKEINTRESOURCEA(uID), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
+    return (HICON)::LoadImage(m_hResInst, MAKEINTRESOURCE(uID), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR);
 }
 
-CDuiImgBase * DuiResProviderPE::LoadImage( LPCSTR strType,UINT uID )
+CDuiImgBase * DuiResProviderPE::LoadImage( LPCTSTR strType,UINT uID )
 {
     if(!HasResource(strType,uID)) return NULL;
     CDuiImgBase *pImg=GetImageDecoder()->CreateDuiImage(strType);
@@ -41,7 +41,7 @@ CDuiImgBase * DuiResProviderPE::LoadImage( LPCSTR strType,UINT uID )
     return pImg;
 }
 
-size_t DuiResProviderPE::GetRawBufferSize( LPCSTR strType,UINT uID )
+size_t DuiResProviderPE::GetRawBufferSize( LPCTSTR strType,UINT uID )
 {
     HRSRC hRsrc = MyFindResource(strType,uID);
 
@@ -51,7 +51,7 @@ size_t DuiResProviderPE::GetRawBufferSize( LPCSTR strType,UINT uID )
     return ::SizeofResource(m_hResInst, hRsrc);
 }
 
-BOOL DuiResProviderPE::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
+BOOL DuiResProviderPE::GetRawBuffer( LPCTSTR strType,UINT uID,LPVOID pBuf,size_t size )
 {
     DUIASSERT(strType);
     HRSRC hRsrc = MyFindResource(strType,uID);
@@ -83,18 +83,18 @@ BOOL DuiResProviderPE::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t 
     return TRUE;
 }
 
-BOOL DuiResProviderPE::HasResource( LPCSTR strType,UINT uID )
+BOOL DuiResProviderPE::HasResource( LPCTSTR strType,UINT uID )
 {
     DUIASSERT(strType);
     return MyFindResource(strType,uID)!=NULL;
 }
 
-HRSRC DuiResProviderPE::MyFindResource( LPCSTR strType, UINT uID )
+HRSRC DuiResProviderPE::MyFindResource( LPCTSTR strType, UINT uID )
 {
-    if(_stricmp(strType,DUIRES_BMP_TYPE)==0) strType=MAKEINTRESOURCEA(2);//RT_BITMAP;
-    else if(_stricmp(strType,DUIRES_ICON_TYPE)==0) strType=MAKEINTRESOURCEA(3);//RT_ICON;
+    if(_tcsicmp(strType,DUIRES_BMP_TYPE)==0) strType=MAKEINTRESOURCE(2);//RT_BITMAP;
+    else if(_tcsicmp(strType,DUIRES_ICON_TYPE)==0) strType=MAKEINTRESOURCE(3);//RT_ICON;
 
-    return ::FindResourceA(m_hResInst, MAKEINTRESOURCEA(uID), strType);
+    return ::FindResource(m_hResInst, MAKEINTRESOURCE(uID), strType);
 }
 
 
@@ -102,36 +102,36 @@ DuiResProviderFiles::DuiResProviderFiles(CDuiImgDecoder *pImgDecoder):DuiResProv
 {
 }
 
-CDuiStringA DuiResProviderFiles::GetRes( LPCSTR strType,UINT uID )
+CDuiStringT DuiResProviderFiles::GetRes( LPCTSTR strType,UINT uID )
 {
     DuiResID resID(strType,uID);
-    CDuiMap<DuiResID,CDuiStringA>::CPair *p=m_mapFiles.Lookup(resID);
-    if(!p) return "";
-    CDuiStringA strRet=m_strPath+"\\"+p->m_value;
+    CDuiMap<DuiResID,CDuiStringT>::CPair *p=m_mapFiles.Lookup(resID);
+    if(!p) return _T("");
+    CDuiStringT strRet=m_strPath+_T("\\")+p->m_value;
     return strRet;
 }
 
-HBITMAP DuiResProviderFiles::LoadBitmap( LPCSTR strType,UINT uID )
+HBITMAP DuiResProviderFiles::LoadBitmap( LPCTSTR strType,UINT uID )
 {
-    CDuiStringA strPath=GetRes(strType,uID);
+    CDuiStringT strPath=GetRes(strType,uID);
     if(strPath.IsEmpty()) return NULL;
-    return (HBITMAP)::LoadImageA(NULL, strPath, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
+    return (HBITMAP)::LoadImage(NULL, strPath, IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION | LR_LOADFROMFILE);
 }
 
-HICON DuiResProviderFiles::LoadIcon( LPCSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
+HICON DuiResProviderFiles::LoadIcon( LPCTSTR strType,UINT uID ,int cx/*=0*/,int cy/*=0*/)
 {
-    CDuiStringA strPath=GetRes(strType,uID);
+    CDuiStringT strPath=GetRes(strType,uID);
     if(strPath.IsEmpty()) return NULL;
-    return (HICON)::LoadImageA(NULL, strPath, IMAGE_ICON, cx, cy, LR_LOADFROMFILE);
+    return (HICON)::LoadImage(NULL, strPath, IMAGE_ICON, cx, cy, LR_LOADFROMFILE);
 }
 
-CDuiImgBase * DuiResProviderFiles::LoadImage( LPCSTR strType,UINT uID )
+CDuiImgBase * DuiResProviderFiles::LoadImage( LPCTSTR strType,UINT uID )
 {
     if(!HasResource(strType,uID)) return NULL;
     CDuiImgBase * pImg=GetImageDecoder()->CreateDuiImage(strType);
     if(pImg)
     {
-        CDuiStringA strPath=GetRes(strType,uID);
+        CDuiStringT strPath=GetRes(strType,uID);
         if(!pImg->LoadFromFile(strPath))
         {
             GetImageDecoder()->DestoryDuiImage(pImg);
@@ -141,22 +141,22 @@ CDuiImgBase * DuiResProviderFiles::LoadImage( LPCSTR strType,UINT uID )
     return pImg;
 }
 
-size_t DuiResProviderFiles::GetRawBufferSize( LPCSTR strType,UINT uID )
+size_t DuiResProviderFiles::GetRawBufferSize( LPCTSTR strType,UINT uID )
 {
-    CDuiStringA strPath=GetRes(strType,uID);
+    CDuiStringT strPath=GetRes(strType,uID);
     if(strPath.IsEmpty()) return 0;
-    WIN32_FIND_DATAA wfd;
-    HANDLE hf=FindFirstFileA(strPath,&wfd);
+    WIN32_FIND_DATA wfd;
+    HANDLE hf=FindFirstFile(strPath,&wfd);
     if(INVALID_HANDLE_VALUE==hf) return 0;
     FindClose(hf);
     return wfd.nFileSizeLow;
 }
 
-BOOL DuiResProviderFiles::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size_t size )
+BOOL DuiResProviderFiles::GetRawBuffer( LPCTSTR strType,UINT uID,LPVOID pBuf,size_t size )
 {
-    CDuiStringA strPath=GetRes(strType,uID);
+    CDuiStringT strPath=GetRes(strType,uID);
     if(strPath.IsEmpty()) return FALSE;
-    FILE *f=fopen(strPath,"rb");
+    FILE *f=_tfopen(strPath,_T("rb"));
     if(!f) return FALSE;
     size_t len=_filelength(_fileno(f));
     if(len>size)
@@ -171,13 +171,13 @@ BOOL DuiResProviderFiles::GetRawBuffer( LPCSTR strType,UINT uID,LPVOID pBuf,size
     return bRet;
 }
 
-BOOL DuiResProviderFiles::Init( LPCSTR pszPath )
+BOOL DuiResProviderFiles::Init( LPCTSTR pszPath )
 {
     CMyBuffer<char>  xmlBuf;
-    CDuiStringA strPathIndex=pszPath;
-    strPathIndex+="\\";
+    CDuiStringT strPathIndex=pszPath;
+    strPathIndex+=_T("\\");
     strPathIndex+=INDEX_XML;
-    FILE *f=fopen(strPathIndex,"rb");
+    FILE *f=_tfopen(strPathIndex,_T("rb"));
     if(!f) return(FALSE);
     int nLen=_filelength(_fileno(f));
     if(nLen>100*1024)
@@ -194,17 +194,15 @@ BOOL DuiResProviderFiles::Init( LPCSTR pszPath )
     fclose(f);
 
 	pugi::xml_document xmlDoc;
-    CDuiStringA strFileName;
+    CDuiStringT strFileName;
 	if(!xmlDoc.load_buffer(xmlBuf,xmlBuf.size(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
 
 	pugi::xml_node xmlNode=xmlDoc.child("resid");
     while(xmlNode)
     {
-		DuiResID id(xmlNode.attribute("type").value(),xmlNode.attribute("id").as_int(0));
-		CDuiStringA strFile = xmlNode.attribute("file").value();
-		CDuiStringW strFileW=DUI_CA2W(strFile,CP_UTF8);
-		strFile=DUI_CW2A(strFileW);
-		if(!m_strPath.IsEmpty()) strFile.Format("%s\\%s",(LPCSTR)m_strPath,(LPCSTR)strFile);
+		DuiResID id(DUI_CA2T(xmlNode.attribute("type").value(),CP_UTF8),xmlNode.attribute("id").as_int(0));
+		CDuiStringT strFile=DUI_CA2T(xmlNode.attribute("file").value(),CP_UTF8);
+		if(!m_strPath.IsEmpty()) strFile.Format(_T("%s\\%s"),(LPCTSTR)m_strPath,(LPCTSTR)strFile);
 		m_mapFiles[id]=strFile;
 		xmlNode=xmlNode.next_sibling("resid");
     }
@@ -213,10 +211,10 @@ BOOL DuiResProviderFiles::Init( LPCSTR pszPath )
     return TRUE;
 }
 
-BOOL DuiResProviderFiles::HasResource( LPCSTR strType,UINT uID )
+BOOL DuiResProviderFiles::HasResource( LPCTSTR strType,UINT uID )
 {
     DuiResID resID(strType,uID);
-    CDuiMap<DuiResID,CDuiStringA>::CPair *p=m_mapFiles.Lookup(resID);
+    CDuiMap<DuiResID,CDuiStringT>::CPair *p=m_mapFiles.Lookup(resID);
     return (p!=NULL);
 }
 

@@ -20,7 +20,7 @@ public:
     DuiImgPool();
     virtual ~DuiImgPool();
 
-    CDuiImgBase * GetImage(UINT uResID,LPCSTR pszType=NULL);
+    CDuiImgBase * GetImage(UINT uResID,LPCTSTR pszType=NULL);
 
 protected:
     static void OnImageRemoved(const CDuiImgBasePtr & obj)

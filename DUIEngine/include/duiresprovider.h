@@ -15,15 +15,15 @@ class DUI_EXP DuiResProviderPE:public DuiResProviderBase
 {
 public:
     DuiResProviderPE(HINSTANCE hInst,CDuiImgDecoder *pImgDecoder=NULL);
-    HBITMAP	LoadBitmap(LPCSTR strType,UINT uID);
-    HICON   LoadIcon(LPCSTR strType,UINT uID,int cx=0,int cy=0);
-    CDuiImgBase * LoadImage(LPCSTR strType,UINT uID);
-    size_t GetRawBufferSize(LPCSTR strType,UINT uID);
-    BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size);
-    BOOL HasResource(LPCSTR strType,UINT uID);
+    HBITMAP	LoadBitmap(LPCTSTR strType,UINT uID);
+    HICON   LoadIcon(LPCTSTR strType,UINT uID,int cx=0,int cy=0);
+    CDuiImgBase * LoadImage(LPCTSTR strType,UINT uID);
+    size_t GetRawBufferSize(LPCTSTR strType,UINT uID);
+    BOOL GetRawBuffer(LPCTSTR strType,UINT uID,LPVOID pBuf,size_t size);
+    BOOL HasResource(LPCTSTR strType,UINT uID);
 
 protected:
-    HRSRC MyFindResource(LPCSTR strType, UINT uID );
+    HRSRC MyFindResource(LPCTSTR strType, UINT uID );
     HINSTANCE m_hResInst;
 };
 
@@ -33,19 +33,19 @@ public:
 
     DuiResProviderFiles(CDuiImgDecoder *pImgDecoder=NULL);
 
-    BOOL HasResource(LPCSTR strType,UINT uID);
-    HBITMAP	LoadBitmap(LPCSTR strType,UINT uID);
-    HICON   LoadIcon(LPCSTR strType,UINT uID,int cx=0,int cy=0);
-    CDuiImgBase * LoadImage(LPCSTR strType,UINT uID);
-    size_t GetRawBufferSize(LPCSTR strType,UINT uID);
-    BOOL GetRawBuffer(LPCSTR strType,UINT uID,LPVOID pBuf,size_t size);
+    BOOL HasResource(LPCTSTR strType,UINT uID);
+    HBITMAP	LoadBitmap(LPCTSTR strType,UINT uID);
+    HICON   LoadIcon(LPCTSTR strType,UINT uID,int cx=0,int cy=0);
+    CDuiImgBase * LoadImage(LPCTSTR strType,UINT uID);
+    size_t GetRawBufferSize(LPCTSTR strType,UINT uID);
+    BOOL GetRawBuffer(LPCTSTR strType,UINT uID,LPVOID pBuf,size_t size);
 
-    BOOL Init(LPCSTR pszPath);
+    BOOL Init(LPCTSTR pszPath);
 protected:
-    CDuiStringA GetRes( LPCSTR strType,UINT uID );
+    CDuiStringT GetRes( LPCTSTR strType,UINT uID );
 
-    CDuiStringA m_strPath;
-    CDuiMap<DuiResID,CDuiStringA> m_mapFiles;
+    CDuiStringT m_strPath;
+    CDuiMap<DuiResID,CDuiStringT> m_mapFiles;
 };
 
 }//namespace DuiEngine

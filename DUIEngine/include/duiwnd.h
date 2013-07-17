@@ -363,6 +363,12 @@ public:
     //************************************
     CDuiWindow* FindChildByCmdID(UINT uCmdID);
 
+	template<class T>
+	T FindChildByCmdID2(UINT uCmdID)
+	{
+		return dynamic_cast<T>(FindChildByCmdID(uCmdID));
+	}
+
 	//************************************
 	// Method:    FindChildByName，通过名字查找子窗口
 	// Access:    public 
@@ -371,6 +377,12 @@ public:
 	// Parameter: LPCSTR pszName
 	//************************************
 	CDuiWindow* FindChildByName(LPCSTR pszName);
+
+	template<class T>
+	T FindChildByName2(LPCSTR pszName)
+	{
+		return dynamic_cast<T>(FindChildByName(pszName));
+	}
 
     // 从XML创建子窗口
     // LPCSTR utf8Xml: utf8 编码的XML串

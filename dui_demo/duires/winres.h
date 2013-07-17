@@ -24,4 +24,5 @@
 #define	ctrl_hk2		65551
 #define	idx		65552
 #define	btn_tstevt		65553
+#define	rw_edit_test		65554
 /*----------------------------RES_BUILDER:end------------------------------------->*/

@@ -8,8 +8,8 @@ namespace DuiEngine
 class DUI_EXP CDuiImgBase : public CDuiRef
 {
 public:
-    virtual BOOL LoadFromResource(HINSTANCE hInst,LPCSTR pszType,UINT uID)=NULL;
-    virtual BOOL LoadFromFile(LPCSTR pszPath)=NULL;
+    virtual BOOL LoadFromResource(HINSTANCE hInst,LPCTSTR pszType,UINT uID)=NULL;
+    virtual BOOL LoadFromFile(LPCTSTR pszPath)=NULL;
     virtual BOOL LoadFromMemory(LPVOID pBuf,DWORD dwSize)=NULL;
 
     virtual BOOL GetImageSize(SIZE & sz)=NULL;
@@ -29,10 +29,10 @@ public:
 class DUI_EXP CDuiImgDecoder
 {
 public:
-    virtual CDuiImgBase * CreateDuiImage(LPCSTR pszType)=NULL;
+    virtual CDuiImgBase * CreateDuiImage(LPCTSTR pszType)=NULL;
 
     virtual void DestoryDuiImage(CDuiImgBase* pImg)=NULL;
 
-    virtual LPCSTR GetSupportTypes()= NULL;
+    virtual LPCTSTR GetSupportTypes()= NULL;
 };
 }

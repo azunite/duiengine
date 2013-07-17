@@ -108,8 +108,12 @@ protected:
     void OnDestroy();
 
 	void OnSetDuiFocus();
+
 	void OnKillDuiFocus();
 
+	LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
+
+	void Relayout();
 protected:
     CDuiArray<CDuiItemPanel *> m_arrItems;
 
@@ -141,6 +145,7 @@ public:
 	MSG_WM_SIZE(OnSize)
 	MSG_WM_SETFOCUS_EX(OnSetDuiFocus)
 	MSG_WM_KILLFOCUS_EX(OnKillDuiFocus)
+	MSG_WM_NCCALCSIZE(OnNcCalcSize)
 	MESSAGE_RANGE_HANDLER_EX(WM_MOUSEFIRST,WM_MBUTTONDBLCLK,OnMouseEvent)
     DUIWIN_END_MSG_MAP()
 };

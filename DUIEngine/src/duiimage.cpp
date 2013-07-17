@@ -212,17 +212,17 @@ void CDuiBitmap::SetAttributes( pugi::xml_node xmlNode )
     }
 }
 
-BOOL CDuiBitmap::LoadFromResource( HINSTANCE hInst,LPCSTR pszType,UINT uID )
+BOOL CDuiBitmap::LoadFromResource( HINSTANCE hInst,LPCTSTR pszType,UINT uID )
 {
     assert(m_hBitmap==NULL);
-    m_hBitmap = (HBITMAP)::LoadImageA(hInst, MAKEINTRESOURCEA(uID), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+    m_hBitmap = (HBITMAP)::LoadImage(hInst, MAKEINTRESOURCE(uID), IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
     return m_hBitmap!=NULL;
 }
 
-BOOL CDuiBitmap::LoadFromFile( LPCSTR pszPath )
+BOOL CDuiBitmap::LoadFromFile( LPCTSTR pszPath )
 {
     assert(m_hBitmap==NULL);
-    m_hBitmap = (HBITMAP)::LoadImageA(0, pszPath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+    m_hBitmap = (HBITMAP)::LoadImage(0, pszPath, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     return m_hBitmap!=NULL;
 }
 
@@ -384,11 +384,11 @@ BOOL CDuiImgX::TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,i
     return TRUE;
 }
 
-BOOL CDuiImgX::LoadFromResource( HINSTANCE hInst,LPCSTR pszType,UINT uID )
+BOOL CDuiImgX::LoadFromResource( HINSTANCE hInst,LPCTSTR pszType,UINT uID )
 {
     assert(m_pImg==NULL);
 
-    HRSRC hRsrc = ::FindResourceA(hInst, MAKEINTRESOURCEA(uID), pszType);
+    HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(uID), pszType);
 
     if (NULL == hRsrc)
         return NULL;
@@ -427,13 +427,11 @@ BOOL CDuiImgX::LoadFromResource( HINSTANCE hInst,LPCSTR pszType,UINT uID )
     return m_pImg!=NULL;
 }
 
-BOOL CDuiImgX::LoadFromFile( LPCSTR pszPath )
+BOOL CDuiImgX::LoadFromFile( LPCTSTR pszPath )
 {
     assert(m_pImg==NULL);
-    WCHAR szPathW[MAX_PATH+1]= {0};
-    ::MultiByteToWideChar(CP_ACP,0,pszPath,-1,szPathW,MAX_PATH);
-    m_pImg=Gdiplus::Image::FromFile(szPathW);
-
+	CDuiStringW strPath=DUI_CT2W(pszPath);
+    m_pImg=Gdiplus::Image::FromFile(strPath);
     return m_pImg!=NULL;
 }
 

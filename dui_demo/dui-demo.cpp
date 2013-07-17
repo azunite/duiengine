@@ -71,22 +71,22 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	DuiSkinFactoryManager::getSingleton().RegisterFactory(TplSkinFactory<CDuiSkinGif>());
 
 
-	char szCurrentDir[MAX_PATH]; memset( szCurrentDir, 0, sizeof(szCurrentDir) );
-	GetModuleFileNameA( NULL, szCurrentDir, sizeof(szCurrentDir) );
-	LPSTR lpInsertPos = strrchr( szCurrentDir, L'\\' );
-	*lpInsertPos = '\0';   
+	TCHAR szCurrentDir[MAX_PATH]; memset( szCurrentDir, 0, sizeof(szCurrentDir) );
+	GetModuleFileName( NULL, szCurrentDir, sizeof(szCurrentDir) );
+	LPTSTR lpInsertPos = _tcsrchr( szCurrentDir, _T('\\') );
+	*lpInsertPos = _T('\0');   
 
 	DefaultLogger loger;
-	loger.setLogFilename(DUI_CA2T(CDuiStringA(szCurrentDir)+"\\dui-demo.log")); 
+	loger.setLogFilename(CDuiStringT(szCurrentDir)+_T("\\dui-demo.log")); 
 	pDuiSystem->SetLogger(&loger);
-	pDuiSystem->InitName2ID(IDR_NAME2ID,"XML2");//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
+	pDuiSystem->InitName2ID(IDR_NAME2ID,_T("XML2"));//加载ID名称对照表,该资源属于APP级别，所有皮肤应该共享该名字表，名字表总是从程序资源加载
 
 	//根据选择的资源加载模式生成resprovider 
 	switch(nMode)
 	{
 	case 0://load from files
 		{
-			lstrcatA( szCurrentDir, "\\..\\dui_demo" );
+			_tcscat( szCurrentDir, _T("\\..\\dui_demo") );
 			DuiResProviderFiles *pResFiles=new DuiResProviderFiles;
 			if(!pResFiles->Init(szCurrentDir))
 			{
@@ -108,7 +108,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 #if !defined(_WIN64)
 			//从ZIP文件加载皮肤
 			DuiResProviderZip *zipSkin=new DuiResProviderZip;
-			CDuiStringT strZip=DUI_CA2T(szCurrentDir)+_T("\\def_skin.zip");
+			CDuiStringT strZip=CDuiStringT(szCurrentDir)+_T("\\def_skin.zip");
 			if(!zipSkin->Init(strZip))
 			{ 
 				DUIASSERT(0);

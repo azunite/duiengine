@@ -11,16 +11,12 @@ namespace DuiEngine
 class DUI_EXP CDuiSkinBase : public CDuiObject,public CDuiRef
 {
 public:
-    CDuiSkinBase():m_pDuiImg(NULL),m_strOwner(""),m_bManaged(FALSE)
+    CDuiSkinBase():m_pDuiImg(NULL),m_strOwner("")
     {
     }
     virtual ~CDuiSkinBase()
     {
-        if(m_bManaged && m_pDuiImg)
-        {
-            delete m_pDuiImg;
-            m_pDuiImg=NULL;
-        }
+        if(m_pDuiImg) m_pDuiImg->Release();
     }
 
     void OnFinalRelease()
@@ -39,14 +35,13 @@ public:
     }
 
 
-    virtual CDuiImgBase * SetImage(CDuiImgBase *pImg)
+    virtual void SetImage(CDuiImgBase *pImg)
     {
-        if(m_bManaged && m_pDuiImg) delete m_pDuiImg;
-        CDuiImgBase * pRet=m_pDuiImg;
+		if(m_pDuiImg) m_pDuiImg->Release();
         m_pDuiImg=pImg;
-        m_bManaged=TRUE;
-        return pRet;
+		if(m_pDuiImg) m_pDuiImg->AddRef();
     }
+
     CDuiImgBase * GetImage()
     {
         return m_pDuiImg;
@@ -103,7 +98,6 @@ protected:
 
     CDuiImgBase *m_pDuiImg;
     CDuiStringA	m_strOwner;
-    BOOL		m_bManaged;
 };
 
 

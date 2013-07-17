@@ -126,10 +126,17 @@ int CDuiListBoxEx::InsertItem(int iItem,LPCWSTR pszXml,DWORD dwData/*=0*/)
 {
 	if(IsVirtual()) return -1;
 
-    CDuiStringA strUtf8=DUI_CW2A(pszXml,CP_UTF8);
-	pugi::xml_document xmlDoc;
-	if(!xmlDoc.load_buffer(strUtf8.GetData(),strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return -1;
-    return InsertItem(iItem,xmlDoc.first_child(),dwData);
+	if(!pszXml && !m_xmlTempl) return -1;
+	if(pszXml)
+	{
+		CDuiStringA strUtf8=DUI_CW2A(pszXml,CP_UTF8);
+		pugi::xml_document xmlDoc;
+		if(!xmlDoc.load_buffer(strUtf8.GetData(),strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return -1;
+		return InsertItem(iItem,xmlDoc.first_child(),dwData);
+	}else
+	{
+		return InsertItem(iItem,m_xmlTempl.first_child(),dwData);
+	}
 }
 
 void CDuiListBoxEx::SetCurSel(int iItem)
@@ -337,17 +344,7 @@ void CDuiListBoxEx::OnPaint(CDCHandle dc)
 void CDuiListBoxEx::OnSize( UINT nType, CSize size )
 {
 	__super::OnSize(nType,size);
-	if(IsVirtual())
-	{
-		DUIASSERT(m_pTemplPanel);
-		m_pTemplPanel->Move(CRect(0,0,m_rcClient.Width(),m_nItemHei));
-	}
-	else
-	{
-		for(int i=0; i<GetItemCount(); i++)
-			m_arrItems[i]->Move(CRect(0,0,m_rcClient.Width(),m_nItemHei));
-	}
-
+	Relayout();
 }
 
 void CDuiListBoxEx::OnDrawItem(CDCHandle & dc, CRect & rc, int iItem)
@@ -711,5 +708,27 @@ void CDuiListBoxEx::OnKillDuiFocus()
 		if(m_iSelItem!=-1) m_arrItems[m_iSelItem]->GetFocusManager()->SetFocusedHwnd(0);
 	}
 	if(m_iSelItem!=-1) RedrawItem(m_iSelItem);
+}
+
+LRESULT CDuiListBoxEx::OnNcCalcSize( BOOL bCalcValidRects, LPARAM lParam )
+{
+	LRESULT lRet=__super::OnNcCalcSize(bCalcValidRects,lParam);
+	Relayout();
+	return lRet;
+}
+
+void CDuiListBoxEx::Relayout()
+{
+	if(IsVirtual())
+	{
+		DUIASSERT(m_pTemplPanel);
+		m_pTemplPanel->Move(CRect(0,0,m_rcClient.Width(),m_nItemHei));
+	}
+	else
+	{
+		for(int i=0; i<GetItemCount(); i++)
+			m_arrItems[i]->Move(CRect(0,0,m_rcClient.Width(),m_nItemHei));
+	}
+
 }
 }//namespace DuiEngine

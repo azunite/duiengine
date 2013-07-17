@@ -255,10 +255,11 @@ public:                                                             \
 		int nPos=strValue.ReverseFind(':');\
 		if(nPos!=-1)\
 			{\
-			CDuiStringA strType=strValue.Right(strValue.GetLength()-nPos-1);\
+			CDuiStringT strType=DUI_CA2T(strValue.Right(strValue.GetLength()-nPos-1),CP_UTF8);\
 			varname = DuiImgPool::getSingleton().GetImage(StrToIntA(strValue.Left(nPos)),strType);        \
 			}else\
 			varname = DuiImgPool::getSingleton().GetImage(StrToIntA(strValue));        \
+			if(varname) varname->AddRef();							\
 			hRet = allredraw ? S_OK : S_FALSE;                      \
 		}                                                           \
 		else                                                        \

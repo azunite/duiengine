@@ -474,7 +474,7 @@ BOOL RichEdit_InsertSkin(CDuiRichEdit *pRicheditCtrl, CDuiSkinBase *pSkin)
 	return TRUE;
 }
 
-BOOL RichEdit_InsertImage(CDuiRichEdit *pRicheditCtrl, LPCSTR lpszFileName)
+BOOL RichEdit_InsertImage(CDuiRichEdit *pRicheditCtrl, LPCTSTR lpszFileName)
 {
 	CDuiImgX *pImg=new CDuiImgX;
 	if(!pImg->LoadFromFile(lpszFileName))

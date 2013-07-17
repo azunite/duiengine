@@ -88,6 +88,7 @@ HFONT DuiFontPool::_CreateNewFont(BOOL bBold, BOOL bUnderline, BOOL bItalic, cha
     if(chAdding & 0x80) chAdding=-1*(chAdding&~0x80);
     lfNew.lfHeight = _GetFontAbsHeight(lfNew.lfHeight - chAdding);
 
+	lfNew.lfQuality = CLEARTYPE_NATURAL_QUALITY;
     HFONT hFont= ::CreateFontIndirect(&lfNew);
     return hFont;
 }

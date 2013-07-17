@@ -17,10 +17,10 @@ CDuiImgDecoder_Def::~CDuiImgDecoder_Def(void)
 }
 
 
-DuiEngine::CDuiImgBase* CDuiImgDecoder_Def::CreateDuiImage( LPCSTR pszType )
+DuiEngine::CDuiImgBase* CDuiImgDecoder_Def::CreateDuiImage( LPCTSTR pszType )
 {
-    if(stricmp(pszType,"bmp")==0) return new CDuiBitmap;
-    else if(stricmp(pszType,"imgx")==0) return new CDuiImgX;
+    if(_tcsicmp(pszType,_T("bmp"))==0) return new CDuiBitmap;
+    else if(_tcsicmp(pszType,_T("imgx"))==0) return new CDuiImgX;
     else return NULL;
 }
 
