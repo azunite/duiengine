@@ -72,12 +72,14 @@ public:
 
 	BOOL IsVirtual(){return m_bVirtual;}
 protected:
+	virtual void OnItemSetCapture(CDuiItemPanel *pItem,BOOL bCapture);
+	virtual BOOL OnItemGetRect(CDuiItemPanel *pItem,CRect &rcItem);
+	virtual BOOL IsItemRedrawDelay(){return m_bItemRedrawDelay;}
+protected:
 	void UpdatePanelsIndex(UINT nFirst=0,UINT nLast=-1);
 
 	CRect	GetItemRect(int iItem);
 
-    virtual void OnItemSetCapture(CDuiItemPanel *pItem,BOOL bCapture);
-    virtual BOOL OnItemGetRect(CDuiItemPanel *pItem,CRect &rcItem);
 
     virtual int GetScrollLineSize(BOOL bVertical);
 
@@ -128,12 +130,14 @@ protected:
     CDuiSkinBase * m_pItemSkin;
 	int		m_nItemHei;
 	BOOL	m_bVirtual;
+	BOOL	m_bItemRedrawDelay;			//表项重绘时缓冲
 public:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 		DUIWIN_INT_ATTRIBUTE("scrollspeed", m_iScrollSpeed, FALSE)
 		DUIWIN_INT_ATTRIBUTE("itemheight", m_nItemHei, FALSE)
 		DUIWIN_INT_ATTRIBUTE("virtual", m_bVirtual, TRUE)
 		DUIWIN_SKIN_ATTRIBUTE("itemskin", m_pItemSkin, TRUE)
+		DUIWIN_INT_ATTRIBUTE("itemredrawdelay", m_bItemRedrawDelay, TRUE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()

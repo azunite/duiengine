@@ -23,7 +23,7 @@ CDuiItemPanel::CDuiItemPanel(CDuiWindow *pFrameHost,pugi::xml_node xmlNode,CDuiI
     ,m_dwData(0)
     ,m_crBk(CLR_INVALID)
     ,m_crSelBk(RGB(0,0,128))
-	, m_lpItemIndex(-1)
+	,m_lpItemIndex(-1)
 {
     DUIASSERT(m_pFrmHost);
     if(!m_pItemContainer) m_pItemContainer=dynamic_cast<CDuiItemContainer*>(m_pFrmHost);
@@ -118,11 +118,17 @@ void CDuiItemPanel::OnRedraw(const CRect &rc)
     CRect rcItem=GetItemRect();
     if(!rcItem.IsRectNull() && m_pFrmHost->IsVisible(TRUE))
     {
-        CDCHandle dc=OnGetDuiDC(rc,OLEDC_PAINTBKGND);
-        CRgn rgn;
-        rgn.CreateRectRgnIndirect(&rc);
-        RedrawRegion(dc,rgn);
-        OnReleaseDuiDC(dc,rc,OLEDC_PAINTBKGND);
+		if(m_pItemContainer->IsItemRedrawDelay())
+		{
+			m_pFrmHost->NotifyInvalidateRect(rcItem);
+		}else
+		{
+			CDCHandle dc=OnGetDuiDC(rc,OLEDC_PAINTBKGND);
+			CRgn rgn;
+			rgn.CreateRectRgnIndirect(&rc);
+			RedrawRegion(dc,rgn);
+			OnReleaseDuiDC(dc,rc,OLEDC_PAINTBKGND);
+		}
     }
 }
 

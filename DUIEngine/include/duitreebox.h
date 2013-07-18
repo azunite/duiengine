@@ -100,6 +100,7 @@ protected:
 protected:
     virtual void OnItemSetCapture(CDuiItemPanel *pItem,BOOL bCapture);
     virtual BOOL OnItemGetRect(CDuiItemPanel *pItem,CRect &rcItem);
+	virtual BOOL IsItemRedrawDelay(){return m_bItemRedrawDelay;}
 
     HSTREEITEM	m_hSelItem;
     HSTREEITEM	m_hHoverItem;
@@ -111,15 +112,16 @@ protected:
     int m_nItemHei,m_nIndent;
     COLORREF m_crItemBg,m_crItemSelBg;
     CDuiSkinBase * m_pItemSkin;
-
+	BOOL m_bItemRedrawDelay;
 	pugi::xml_document m_xmlSwitch;
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_INT_ATTRIBUTE("indent", m_nIndent, TRUE)
-    DUIWIN_INT_ATTRIBUTE("itemhei", m_nItemHei, TRUE)
-    DUIWIN_SKIN_ATTRIBUTE("itemskin", m_pItemSkin, TRUE)
-    DUIWIN_COLOR_ATTRIBUTE("critembg",m_crItemBg,FALSE)
-    DUIWIN_COLOR_ATTRIBUTE("critemselbg",m_crItemSelBg,FALSE)
+		DUIWIN_INT_ATTRIBUTE("indent", m_nIndent, TRUE)
+		DUIWIN_INT_ATTRIBUTE("itemhei", m_nItemHei, TRUE)
+		DUIWIN_SKIN_ATTRIBUTE("itemskin", m_pItemSkin, TRUE)
+		DUIWIN_COLOR_ATTRIBUTE("critembg",m_crItemBg,FALSE)
+		DUIWIN_COLOR_ATTRIBUTE("critemselbg",m_crItemSelBg,FALSE)
+		DUIWIN_INT_ATTRIBUTE("itemredrawdelay", m_bItemRedrawDelay, TRUE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()

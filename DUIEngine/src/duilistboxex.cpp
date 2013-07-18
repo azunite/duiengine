@@ -28,6 +28,7 @@ CDuiListBoxEx::CDuiListBoxEx()
 	, m_nItems(0)
     , m_pItemSkin(NULL)
 	, m_bVirtual(FALSE)
+	, m_bItemRedrawDelay(TRUE)
 {
 	addEvent(DUINM_LBITEMNOTIFY);
 	addEvent(DUINM_ITEMMOUSEEVENT);

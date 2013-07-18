@@ -33,6 +33,7 @@ CDuiTreeBox::CDuiTreeBox()
     , m_crItemSelBg(RGB(0,0,128))
     , m_pItemSkin(NULL)
     , m_nVisibleItems(0)
+	, m_bItemRedrawDelay(TRUE)
 {
 	addEvent(DUINM_LBITEMNOTIFY);
 	addEvent(DUINM_ITEMMOUSEEVENT);
