@@ -25,4 +25,8 @@
 #define	idx		65552
 #define	btn_tstevt		65553
 #define	rw_edit_test		65554
+#define	de_test		65555
+#define	mp_test		65556
+#define	label_today		65557
+#define	btn_today		65558
 /*----------------------------RES_BUILDER:end------------------------------------->*/

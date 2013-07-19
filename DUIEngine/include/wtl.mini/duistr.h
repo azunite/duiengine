@@ -619,6 +619,32 @@ CDuiString Right(int iLength) const
     return CDuiString(m_pstr + iPos, iLength);
 }
 
+// Delete 'nCount' characters, starting at index 'iIndex'
+int Delete( _In_ int iIndex, _In_ int nCount = 1 )
+{
+	if( iIndex < 0 )
+		iIndex = 0;
+
+	if( nCount < 0 )
+		nCount = 0;
+
+	int nLength = GetLength();
+	if( iIndex + nCount > nLength )
+	{
+		nCount = nLength-iIndex;
+	}
+	if( nCount > 0 )
+	{
+		int nNewLength = nLength-nCount;
+		int nXCHARsToCopy = nLength-(iIndex+nCount)+1;
+		memmove(m_pstr+iIndex,m_pstr+iIndex+nCount,nXCHARsToCopy*sizeof(_Elem));
+		m_nLength-=nCount;
+		m_pstr[m_nLength]=0;
+	}
+
+	return( GetLength() );
+}
+
 int Find(_Elem ch, int iPos = 0) const
 {
     DUIASSERT(iPos>=0 && iPos<=GetLength());

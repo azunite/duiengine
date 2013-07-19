@@ -14,4 +14,7 @@
 #include "DuiHotKeyCtrl.h"
 #include "DuiCaption.h"
 #include "DuiSliderBar.h"
+#include "DuiDateTimeEdit.h"
+#include "DuiMonthPicker.h"
+#include "DuiCalendar.h"
 #include ".\activex\DuiActiveX.h"

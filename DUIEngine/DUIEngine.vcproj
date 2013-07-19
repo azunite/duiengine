@@ -633,6 +633,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiCalendar.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\DuiCaption.cpp"
 				>
 			</File>
@@ -642,6 +646,10 @@
 			</File>
 			<File
 				RelativePath=".\src\DuiComboBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\DuiDateTimeEdit.cpp"
 				>
 			</File>
 			<File
@@ -706,6 +714,10 @@
 			</File>
 			<File
 				RelativePath=".\src\DuiMessageBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\DuiMonthPicker.cpp"
 				>
 			</File>
 			<File
@@ -963,6 +975,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\DuiCalendar.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\duicolor.h"
 				>
 			</File>
@@ -1076,6 +1092,10 @@
 			</File>
 			<File
 				RelativePath=".\include\DuiThreadActiveWndManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiTime.h"
 				>
 			</File>
 			<File
@@ -1206,6 +1226,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\DuiDateTimeEdit.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\DuiDropDownList.h"
 					>
 				</File>
@@ -1231,6 +1255,10 @@
 				</File>
 				<File
 					RelativePath=".\include\DuiMessageBox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiMonthPicker.h"
 					>
 				</File>
 				<File

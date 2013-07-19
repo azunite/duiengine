@@ -67,7 +67,8 @@
           <check id="1142" pos="10,|10">check 1</check>
           <check id="1143" pos="100,|10">check 2</check>
           <button name="IDC_REPSEL"  pos="200,|10,300,|35" class="normalbtn">repsel</button>
-          <realwnd name="rw_edit_test" pos="350,|10,450,|35" wndclass="edit" wndname="test"/>
+          <dateedit pos="10,-50,100,-10" name="de_test"/>
+          
         </tab>
         <tab id="115" title="scrollview">
           <scrollview id="1150" pos="10,0,-10,-10" viewwid="900" viewhei="5000">
@@ -204,7 +205,11 @@
                   <text pos="|-50,|-20">pane2.1 priority=0</text>
                 </pane>
                 <pane idealsize="400" minsize="30" priority="1" crbg="008800">
-                  <text pos="|-50,|-20">pane2.2 priority=1</text>
+<!--                   <text pos="|-50,|-20">pane2.2 priority=1</text> -->
+                  <calendar pos="0,0,-0,-0" name="mp_test" daySkin="skin_webbtn_back" footerHeight="30">
+                    <text name="label_today" pos="10,-20"/>
+                    <imgbtn name="btn_today" pos="-50,-25" skin="skin_webbtn_back"/>
+                  </calendar>
                 </pane>
               </splitcol>
             </pane>
