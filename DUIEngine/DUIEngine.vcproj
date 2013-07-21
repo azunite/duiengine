@@ -673,6 +673,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiHeaderCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\duihostwnd.cpp"
 				>
 			</File>
@@ -1016,6 +1020,10 @@
 			</File>
 			<File
 				RelativePath=".\include\DuiFrameDropTarget.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiHeaderCtrl.h"
 				>
 			</File>
 			<File

@@ -29,4 +29,5 @@
 #define	mp_test		65556
 #define	label_today		65557
 #define	btn_today		65558
+#define	hd_test		65559
 /*----------------------------RES_BUILDER:end------------------------------------->*/

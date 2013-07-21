@@ -94,6 +94,9 @@ namespace DuiEngine
 		WORD HitTest(CPoint  pt);
 		void DrawTitle(CDCHandle &dc);
 		void DrawDate(CDCHandle &dc);
+		void DrawDay(CDCHandle &dc,CRect & rcDay,WORD iDay );
+		void RedrawDay(WORD iDay);
+
 		bool OnTodayClick(CDuiWindow * pSender, LPNMHDR pNmhdr);
 
 		DUIWIN_DECLARE_ATTRIBUTES_BEGIN()

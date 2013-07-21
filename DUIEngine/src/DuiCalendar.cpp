@@ -336,29 +336,44 @@ void CDuiCalendar::DrawDate(CDCHandle &dc)
 
 	int days=CCalendarCore::MonthDays(m_iYear, m_iMonth);
 
-	COLORREF crTxt=dc.GetTextColor();
 	for(int i=1;i<=days;i++)
 	{
 		CRect rcDay=GetDayRect(i);
-		TCHAR text[3];
-		_stprintf(text, _T("%2d"), i);
-		if(i==m_iDay)
-		{
-			if(m_pDaySkin) m_pDaySkin->Draw(dc,rcDay,2);
-			else CGdiAlpha::FillSolidRect(dc,rcDay,m_crDayBack);
-			dc.SetTextColor(m_crDay);
-		}else
-		{
-			if(m_pDaySkin) m_pDaySkin->Draw(dc,rcDay,i==m_iHoverDay?1:0);
-			int iweekday=CCalendarCore::WeekDay(m_iYear,m_iMonth,i);
-			if(iweekday==0 || iweekday==6)
-				dc.SetTextColor(m_crWeekend);
-			else
-				dc.SetTextColor(crTxt);
-		}
-		CGdiAlpha::DrawText(dc,text,-1,rcDay,DT_SINGLELINE|DT_VCENTER|DT_CENTER);
+		DrawDay(dc,rcDay,i);
 	}
+}
+
+
+void CDuiCalendar::DrawDay( CDCHandle &dc,CRect & rcDay,WORD iDay )
+{
+	TCHAR text[3];
+	_stprintf(text, _T("%2d"), iDay);
+	COLORREF crTxt=dc.GetTextColor();
+	if(iDay==m_iDay)
+	{
+		if(m_pDaySkin) m_pDaySkin->Draw(dc,rcDay,2);
+		else CGdiAlpha::FillSolidRect(dc,rcDay,m_crDayBack);
+		dc.SetTextColor(m_crDay);
+	}else
+	{
+		if(m_pDaySkin) m_pDaySkin->Draw(dc,rcDay,iDay==m_iHoverDay?1:0);
+		int iweekday=CCalendarCore::WeekDay(m_iYear,m_iMonth,iDay);
+		if(iweekday==0 || iweekday==6)
+			dc.SetTextColor(m_crWeekend);
+	}
+	CGdiAlpha::DrawText(dc,text,-1,rcDay,DT_SINGLELINE|DT_VCENTER|DT_CENTER);
 	dc.SetTextColor(crTxt);
+}
+
+void CDuiCalendar::RedrawDay(WORD iDay )
+{
+	CRect rcDay=GetDayRect(iDay);
+	CDCHandle dc=GetDuiDC(&rcDay,OLEDC_PAINTBKGND);
+	DuiDCPaint duiDC;
+	BeforePaint(dc,duiDC);
+	DrawDay(dc,rcDay,iDay);
+	AfterPaint(dc,duiDC);
+	ReleaseDuiDC(dc);
 }
 
 void CDuiCalendar::OnPaint(CDCHandle dc) 
@@ -457,8 +472,13 @@ void CDuiCalendar::OnMouseMove( UINT nFlags,CPoint pt )
 	int iDay=HitTest(pt);
 	if(iDay!=m_iHoverDay)
 	{
+		WORD oldHover=m_iHoverDay;
 		m_iHoverDay=iDay;
-		if(m_pDaySkin) NotifyInvalidate();
+		if(m_pDaySkin)
+		{
+			if(oldHover!=0) RedrawDay(oldHover);
+			if(m_iHoverDay!=0) RedrawDay(m_iHoverDay);
+		}
 	}
 }
 
@@ -466,8 +486,9 @@ void CDuiCalendar::OnMouseLeave()
 {
 	if(m_iHoverDay!=0)
 	{
+		WORD oldHover=m_iHoverDay;
 		m_iHoverDay=0;
-		if(m_pDaySkin) NotifyInvalidate();
+		if(m_pDaySkin) RedrawDay(oldHover);
 	}
 }
 

@@ -53,7 +53,7 @@
     <imglst name="slidethumb" src="505" subwidth="18"/>
     <imgframe name="prog_bar" src="506" left="3"/>
     <imgframe name="prog_bg" src="507" left="4"/>
-
+    <imgframe name="btn_yellow" src="510" left="3" states="4"/>
 
   </skins>
 

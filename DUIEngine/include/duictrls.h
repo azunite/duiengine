@@ -17,4 +17,5 @@
 #include "DuiDateTimeEdit.h"
 #include "DuiMonthPicker.h"
 #include "DuiCalendar.h"
+#include "DuiHeaderCtrl.h"
 #include ".\activex\DuiActiveX.h"

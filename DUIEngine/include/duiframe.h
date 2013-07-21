@@ -60,13 +60,11 @@ protected:
 
 protected:
     HDUIWND m_hCapture;
+	CPoint	m_ptSave;
     HDUIWND m_hHover;
     BOOL	m_bNcHover;
 
 	CFocusManager m_focusMgr;
-
-//     HDUIWND m_hFocus;
-// 	HDUIWND m_hFocusBackup;//窗口失活时备份当前焦点窗口。
 
 	CDuiFrameDropTarget m_dropTarget;
 };
