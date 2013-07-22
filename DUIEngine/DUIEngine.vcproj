@@ -1023,10 +1023,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\DuiHeaderCtrl.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duihostwnd.h"
 				>
 			</File>
@@ -1239,6 +1235,10 @@
 				</File>
 				<File
 					RelativePath=".\include\DuiDropDownList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiHeaderCtrl.h"
 					>
 				</File>
 				<File

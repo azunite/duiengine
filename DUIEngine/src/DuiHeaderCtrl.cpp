@@ -1,5 +1,7 @@
 #include "duistd.h"
 #include "DuiHeaderCtrl.h"
+#include "MemDC.h"
+#pragma comment(lib,"comctl32.lib")
 
 namespace DuiEngine
 {
@@ -11,6 +13,7 @@ namespace DuiEngine
 		,m_pSkinSort(NULL)
 		,m_dwHitTest(-1)
 		,m_bDragging(FALSE)
+		,m_hDragImglst(NULL)
 	{
 		m_bClipClient=TRUE;
 	}
@@ -139,7 +142,6 @@ namespace DuiEngine
 	{
 		if(m_bFixWidth) return;
 		SetDuiCapture();
-		m_bDragging=TRUE;
 		m_ptClick=pt;
 		m_dwHitTest=HitTest(pt);
 		if(IsItemHover(m_dwHitTest))
@@ -157,13 +159,16 @@ namespace DuiEngine
 		if(m_bFixWidth) return;
 		if(IsItemHover(m_dwHitTest))
 		{
-			if(pt==m_ptClick)
+			if(m_bDragging)
+			{//拖动表头项
+				ImageList_DragLeave(GetContainer()->GetHostHwnd());
+				ImageList_EndDrag();
+				ImageList_Destroy(m_hDragImglst);
+				m_hDragImglst=NULL;
+			}else
 			{//点击表头项
 				m_arrItems[LOWORD(m_dwHitTest)].state=1;//hover
 				RedrawItem(LOWORD(m_dwHitTest));
-			}else
-			{//拖动表头项
-
 			}
 		}else if(m_dwHitTest!=-1)
 		{//调整表头宽度，发送一个调整完成消息
@@ -176,11 +181,21 @@ namespace DuiEngine
 	void CDuiHeaderCtrl::OnMouseMove( UINT nFlags,CPoint pt )
 	{
 		if(m_bFixWidth) return;
-		if(m_bDragging)
+		if(m_bDragging || nFlags&MK_LBUTTON)
 		{
+			if(!m_bDragging)
+			{
+				m_bDragging=TRUE;
+				if(IsItemHover(m_dwHitTest))
+				{
+					m_hDragImglst=CreateDragImage(LOWORD(m_dwHitTest));
+					ImageList_BeginDrag(m_hDragImglst,0,0,0);
+					ImageList_DragEnter(GetContainer()->GetHostHwnd(),pt.x,pt.y);
+				}
+			}
 			if(IsItemHover(m_dwHitTest))
 			{
-
+				ImageList_DragMove(pt.x,pt.y);
 			}else if(m_dwHitTest!=-1)
 			{//调节宽度
 				int cxNew=m_nAdjItemOldWidth+pt.x-m_ptClick.x;
@@ -280,4 +295,24 @@ namespace DuiEngine
 		return -1;
 	}
 
+	HIMAGELIST CDuiHeaderCtrl::CreateDragImage( int iItem )
+	{
+		if(iItem<0 || iItem>=m_arrItems.GetCount()) return NULL;
+		CRect rcClient;
+		GetClient(rcClient);
+		CRect rcItem(0,0,m_arrItems[iItem].cx,rcClient.Height());
+		
+		CDCHandle dc=GetDuiDC(NULL,OLEDC_NODRAW);
+		CMemDC memdc(dc,rcItem);
+// 		memdc.FillSolidRect(rcItem,255);
+		CDCHandle hmemdc=memdc;
+		BeforePaintEx(hmemdc);
+		DrawItem(hmemdc,rcItem,m_arrItems.GetData()+iItem);
+		HIMAGELIST hImglst=ImageList_Create(rcItem.Width(),rcItem.Height(),ILC_COLOR32,0,1);
+		HBITMAP hItemBmp=memdc.SelectBitmap(NULL);
+		ImageList_Add(hImglst,hItemBmp,NULL);
+		DeleteObject(hItemBmp);
+		ReleaseDuiDC(dc);
+		return hImglst;
+	}
 }//end of namespace DuiEngine

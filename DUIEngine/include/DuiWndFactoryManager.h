@@ -11,8 +11,6 @@ public:
     virtual ~CDuiWindowFactory() {}
     virtual CDuiWindow* NewWindow() = 0;
 
-    virtual void DeleteWindow(CDuiWindow* pWnd) = 0;
-
     virtual const CDuiStringA & getWindowType()=0;
 
 	virtual CDuiWindowFactory* Clone() const =0;
@@ -31,11 +29,6 @@ public:
     CDuiWindow* NewWindow()
     {
         return new T;
-    }
-
-    void DeleteWindow(CDuiWindow* pWnd)
-    {
-        delete static_cast<T*>(pWnd);
     }
 
     virtual const CDuiStringA & getWindowType()

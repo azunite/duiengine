@@ -130,7 +130,6 @@ CDuiSkinBase* DuiSkinPool::GetSkin(LPCSTR strSkinName)
 
 void DuiSkinPool::OnKeyRemoved(const DuiSkinPtr & obj )
 {
-    CSkinFactory *pFactory=DuiSkinFactoryManager::getSingleton().GetKeyObject(obj->GetObjectClass());
-    pFactory->DeleteSkin(obj);
+	obj->Release();
 }
 }//namespace DuiEngine

@@ -10,7 +10,6 @@ class CSkinFactory
 public:
     virtual ~CSkinFactory() {}
     virtual CDuiSkinBase * NewSkin()=NULL;
-    virtual void DeleteSkin(CDuiSkinBase *)=NULL;
     virtual const CDuiStringA & GetTypeName()=NULL;
 	virtual CSkinFactory * Clone()=NULL;
 };
@@ -28,11 +27,6 @@ public:
         return new T;
     }
 
-    virtual void DeleteSkin(CDuiSkinBase * pSkin)
-    {
-        delete static_cast<T*>(pSkin);
-    }
-
     virtual const CDuiStringA & GetTypeName()
     {
         return m_strTypeName;
@@ -44,7 +38,6 @@ public:
 	}
 protected:
     CDuiStringA m_strTypeName;
-	BOOL	m_bSysSkin;
 };
 
 typedef CSkinFactory * CSkinFactoryPtr;

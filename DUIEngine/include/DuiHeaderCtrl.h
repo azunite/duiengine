@@ -60,6 +60,8 @@ namespace DuiEngine
 			return dwHitTest!=-1 && LOWORD(dwHitTest)==HIWORD(dwHitTest);
 		}
 
+		HIMAGELIST CreateDragImage(int iItem);
+
 		void OnLButtonDown(UINT nFlags,CPoint pt);
 		void OnLButtonUp(UINT nFlags,CPoint pt);
 		void OnMouseMove(UINT nFlags,CPoint pt);
@@ -80,6 +82,7 @@ namespace DuiEngine
 		BOOL			m_bFixWidth;
 
 		BOOL			m_bDragging;
+		HIMAGELIST		m_hDragImglst;
 		CPoint			m_ptClick;
 		DWORD			m_dwHitTest;
 
