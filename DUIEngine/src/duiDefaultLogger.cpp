@@ -49,9 +49,7 @@ DefaultLogger::DefaultLogger(void) :
     logEvent(_T("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+"));
     logEvent(_T("+                     DuiEngine - Event log                                   +"));
     logEvent(_T("+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n"));
-    TCHAR addr_buff[100];
-    _stprintf(addr_buff, _T("DuiEngine::Logger singleton created: (%p)"), static_cast<void*>(this));
-    logEvent(addr_buff);
+	logEvent2(_T("DuiEngine::Logger singleton created: (%p)"),static_cast<void*>(this));
 }
 
 /*************************************************************************
@@ -61,9 +59,8 @@ DefaultLogger::~DefaultLogger(void)
 {
     if (d_pFile)
     {
-        TCHAR addr_buff[100];
-        _stprintf(addr_buff, _T("DuiEngine::Logger singleton destroyed.:(%p)"), static_cast<void*>(this));
-        logEvent(addr_buff);
+		FlushCaches();
+		logEvent2(_T("DuiEngine::Logger singleton destroyed: (%p)"),static_cast<void*>(this));
         fclose(d_pFile);
     }
 }
@@ -121,7 +118,7 @@ void DefaultLogger::logEvent(LPCTSTR message, LoggingLevel level /* = Standard *
         else if (d_level >= level)
         {
             // write message
-            _ftprintf(d_pFile,(LPCTSTR)strbuf);
+			fprintf(d_pFile,(LPCSTR)DUI_CT2A(strbuf));
             fflush(d_pFile);
         }
     }
@@ -136,24 +133,27 @@ void DefaultLogger::setLogFilename(LPCTSTR filename, bool append)
         d_pFile=NULL;
     }
     d_pFile=_tfopen(filename,append?_T("a+"):_T("w"));
+	FlushCaches();
+}
 
+void DefaultLogger::FlushCaches()
+{
+	// write out cached log strings.
+	if (d_caching)
+	{
+		d_caching = false;
 
-    // write out cached log strings.
-    if (d_caching)
-    {
-        d_caching = false;
+		for(int i=0; i<d_cache.GetCount(); i++)
+		{
+			if (d_level >= d_cache[i].level)
+			{
+				fprintf(d_pFile,(LPCSTR)DUI_CT2A(d_cache[i].msg));
+				fflush(d_pFile);
+			}
+		}
 
-        for(int i=0; i<d_cache.GetCount(); i++)
-        {
-            if (d_level >= d_cache[i].level)
-            {
-                _ftprintf(d_pFile,d_cache[i].msg);
-                fflush(d_pFile);
-            }
-        }
-
-        d_cache.RemoveAll();
-    }
+		d_cache.RemoveAll();
+	}
 }
 
 } // End of  DuiEngine namespace section

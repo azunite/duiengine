@@ -165,6 +165,16 @@ namespace DuiEngine
 				ImageList_EndDrag();
 				ImageList_Destroy(m_hDragImglst);
 				m_hDragImglst=NULL;
+				if(m_dwDragTo!=m_dwHitTest && IsItemHover(m_dwDragTo))
+				{
+					DUIHDITEM t=m_arrItems[LOWORD(m_dwDragTo)];
+					m_arrItems[LOWORD(m_dwDragTo)]=m_arrItems[LOWORD(m_dwHitTest)];
+					m_arrItems[LOWORD(m_dwHitTest)]=t;
+					//发消息通知宿主表项位置发生变化:todo
+				}
+				m_dwHitTest=-1;
+				m_dwDragTo=-1;
+				NotifyInvalidate();
 			}else
 			{//点击表头项
 				m_arrItems[LOWORD(m_dwHitTest)].state=1;//hover
@@ -188,14 +198,24 @@ namespace DuiEngine
 				m_bDragging=TRUE;
 				if(IsItemHover(m_dwHitTest))
 				{
+					m_dwDragTo=m_dwHitTest;
+					DrawDraggingState(m_dwDragTo);
 					m_hDragImglst=CreateDragImage(LOWORD(m_dwHitTest));
 					ImageList_BeginDrag(m_hDragImglst,0,0,0);
 					ImageList_DragEnter(GetContainer()->GetHostHwnd(),pt.x,pt.y);
 				}
 			}
-			if(IsItemHover(m_dwHitTest))
+			if(m_hDragImglst)
 			{
-				ImageList_DragMove(pt.x,pt.y);
+				DWORD dwDragTo=HitTest(pt);
+				if(IsItemHover(dwDragTo) && m_dwDragTo!=dwDragTo)
+				{
+					ImageList_DragShowNolock(FALSE);
+					DrawDraggingState(dwDragTo);
+					ImageList_DragShowNolock(TRUE);
+					m_dwDragTo=dwDragTo;
+				}
+				ImageList_DragMove(pt.x,m_ptClick.y);
 			}else if(m_dwHitTest!=-1)
 			{//调节宽度
 				int cxNew=m_nAdjItemOldWidth+pt.x-m_ptClick.x;
@@ -304,7 +324,6 @@ namespace DuiEngine
 		
 		CDCHandle dc=GetDuiDC(NULL,OLEDC_NODRAW);
 		CMemDC memdc(dc,rcItem);
-// 		memdc.FillSolidRect(rcItem,255);
 		CDCHandle hmemdc=memdc;
 		BeforePaintEx(hmemdc);
 		DrawItem(hmemdc,rcItem,m_arrItems.GetData()+iItem);
@@ -314,5 +333,29 @@ namespace DuiEngine
 		DeleteObject(hItemBmp);
 		ReleaseDuiDC(dc);
 		return hImglst;
+	}
+
+	void CDuiHeaderCtrl::DrawDraggingState(DWORD dwDragTo)
+	{
+		CRect rcClient;
+		GetClient(&rcClient);
+		CDCHandle dc=GetDuiDC(rcClient,OLEDC_PAINTBKGND);
+		DuiDCPaint duidc;
+		BeforePaint(dc,duidc);
+		CRect rcItem(rcClient.left,rcClient.top,rcClient.left,rcClient.bottom);
+		for(int i=0;i<m_arrItems.GetCount();i++)
+		{
+			if(i==LOWORD(dwDragTo) && LOWORD(dwDragTo)<=LOWORD(m_dwHitTest))
+			{
+				rcItem.OffsetRect(m_arrItems[LOWORD(m_dwHitTest)].cx,0);
+			}
+			if(i==LOWORD(m_dwHitTest))	continue;
+
+			rcItem.left=rcItem.right;
+			rcItem.right=rcItem.left+m_arrItems[i].cx;
+			DrawItem(dc,rcItem,m_arrItems.GetData()+i);
+		}
+		AfterPaint(dc,duidc);
+		ReleaseDuiDC(dc);
 	}
 }//end of namespace DuiEngine

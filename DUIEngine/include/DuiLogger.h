@@ -114,6 +114,14 @@ public:
     */
     virtual void logEvent(LPCTSTR, LoggingLevel level = Standard)=0;
 
+	virtual void logEvent2(LPCTSTR pszFormat,...)
+	{
+		TCHAR szBuf[1024+1];
+		va_list args;
+		va_start( args, pszFormat);
+		_vstprintf_s(szBuf,1024,pszFormat,args);
+		logEvent(szBuf);
+	}
 
     /*!
     \brief

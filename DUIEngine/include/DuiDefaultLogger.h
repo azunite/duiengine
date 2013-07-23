@@ -74,6 +74,7 @@ public:
     */
     virtual void logEvent(LPCTSTR message, LoggingLevel level = Standard);
 
+
     /*!
     \brief
         Set the name of the log file where all subsequent log entries should be written.
@@ -92,6 +93,9 @@ public:
     virtual void setLogFilename(LPCTSTR filename, bool append = false);
 
 protected:
+
+	void FlushCaches();
+
     /*************************************************************************
     	Implementation Data
     *************************************************************************/
@@ -110,6 +114,7 @@ protected:
     CDuiArray<LOGRECORD> d_cache; //!< Used to cache log entries before log file is created.
     bool d_caching;                 //!< true while log entries are beign cached (prior to logfile creation)
 };
+
 
 } // End of  DuiEngine namespace section
 

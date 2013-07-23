@@ -55,6 +55,8 @@ namespace DuiEngine
 		DWORD  HitTest(CPoint pt);
 		void RedrawItem(int iItem);
 
+		void DrawDraggingState(DWORD dwDragTo);
+
 		BOOL IsItemHover(DWORD dwHitTest)
 		{
 			return dwHitTest!=-1 && LOWORD(dwHitTest)==HIWORD(dwHitTest);
@@ -85,6 +87,7 @@ namespace DuiEngine
 		HIMAGELIST		m_hDragImglst;
 		CPoint			m_ptClick;
 		DWORD			m_dwHitTest;
+		DWORD			m_dwDragTo;
 
 		int				m_nAdjItemOldWidth;//保存被拖动项的原始宽度
 		CDuiArray<DUIHDITEM> m_arrItems;
