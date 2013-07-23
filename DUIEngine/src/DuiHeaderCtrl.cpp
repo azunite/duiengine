@@ -199,9 +199,10 @@ namespace DuiEngine
 				if(IsItemHover(m_dwHitTest))
 				{
 					m_dwDragTo=m_dwHitTest;
+					CRect rcItem=GetItemRect(LOWORD(m_dwHitTest));
 					DrawDraggingState(m_dwDragTo);
 					m_hDragImglst=CreateDragImage(LOWORD(m_dwHitTest));
-					ImageList_BeginDrag(m_hDragImglst,0,0,0);
+					ImageList_BeginDrag(m_hDragImglst,0,(m_ptClick.x-rcItem.left),(m_ptClick.y-rcItem.top));
 					ImageList_DragEnter(GetContainer()->GetHostHwnd(),pt.x,pt.y);
 				}
 			}
