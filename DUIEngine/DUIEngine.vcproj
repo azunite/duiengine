@@ -709,6 +709,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiListCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\DuiLogger.cpp"
 				>
 			</File>
@@ -1255,6 +1259,10 @@
 				</File>
 				<File
 					RelativePath=".\include\duilistboxex.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\DuiListCtrl.h"
 					>
 				</File>
 				<File

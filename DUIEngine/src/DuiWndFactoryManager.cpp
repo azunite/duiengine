@@ -62,6 +62,7 @@ void DuiWindowFactoryManager::AddStandardWindowFactory()
 	AddKeyObject(CDuiMonthPicker::GetClassName(),new TplDuiWindowFactory<CDuiMonthPicker>);
 	AddKeyObject(CDuiCalendar::GetClassName(),new TplDuiWindowFactory<CDuiCalendar>);
 	AddKeyObject(CDuiHeaderCtrl::GetClassName(),new TplDuiWindowFactory<CDuiHeaderCtrl>);
+	AddKeyObject(CDuiListCtrl::GetClassName(),new TplDuiWindowFactory<CDuiListCtrl>);
 }
 
 void DuiWindowFactoryManager::OnWndFactoryRemoved( const CDuiWindowFactoryPtr & obj )

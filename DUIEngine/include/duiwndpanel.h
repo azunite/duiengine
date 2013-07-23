@@ -184,8 +184,8 @@ protected:
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_INT_ATTRIBUTE("viewwid", m_szView.cx, FALSE)
     DUIWIN_INT_ATTRIBUTE("viewhei", m_szView.cy, FALSE)
-    DUIWIN_INT_ATTRIBUTE("origin-x", m_ptOrgin.x, FALSE)
-    DUIWIN_INT_ATTRIBUTE("origin-y", m_ptOrgin.y, FALSE)
+    DUIWIN_INT_ATTRIBUTE("origin-x", m_ptOrigin.x, FALSE)
+    DUIWIN_INT_ATTRIBUTE("origin-y", m_ptOrigin.y, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()
@@ -194,7 +194,7 @@ protected:
     DUIWIN_END_MSG_MAP()
 protected:
     CSize m_szView;
-    CPoint m_ptOrgin;
+    CPoint m_ptOrigin;
 };
 
 }//namespace DuiEngine

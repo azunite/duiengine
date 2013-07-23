@@ -256,7 +256,7 @@ void CDuiItemBox::OnSize(UINT nType, CSize size)
 {
     if(m_rcWindow.IsRectEmpty()) return;
 
-    m_ptOrgin=CPoint(0,0);
+    m_ptOrigin=CPoint(0,0);
     m_siVer.nPos=0;
     UpdateScroll();
     ReLayout();
@@ -270,7 +270,7 @@ void CDuiItemBox::ReLayout()
     while(pChild)
     {
         rcItem=GetItemRect(iItem);
-        rcItem.OffsetRect(m_rcWindow.TopLeft()-m_ptOrgin);
+        rcItem.OffsetRect(m_rcWindow.TopLeft()-m_ptOrigin);
         pChild->Move(rcItem);
         pChild=pChild->GetDuiWindow(GDUI_NEXTSIBLING);
         iItem++;

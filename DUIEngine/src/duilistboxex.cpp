@@ -171,7 +171,7 @@ void CDuiListBoxEx::SetCurSel(int iItem)
 void CDuiListBoxEx::EnsureVisible( int iItem )
 {
     if(iItem<0 || iItem>=GetItemCount()) return;
-    int iFirstVisible=(m_ptOrgin.y + m_nItemHei -1) / m_nItemHei;
+    int iFirstVisible=(m_ptOrigin.y + m_nItemHei -1) / m_nItemHei;
     CRect rcClient;
     GetClient(&rcClient);
     int nVisibleItems=rcClient.Height()/m_nItemHei;
@@ -300,7 +300,7 @@ int CDuiListBoxEx::HitTest(CPoint &pt)
     CRect rcClient;
     GetClient(&rcClient);
     CPoint pt2=pt;
-    pt2.y -= rcClient.top - m_ptOrgin.y;
+    pt2.y -= rcClient.top - m_ptOrigin.y;
     int nRet=pt2.y/m_nItemHei;
     if(nRet >= GetItemCount()) nRet=-1;
     else
@@ -322,7 +322,7 @@ void CDuiListBoxEx::OnPaint(CDCHandle dc)
     DuiDCPaint duiDC;
     BeforePaint(dc,duiDC);
 
-    int iFirstVisible=m_ptOrgin.y/m_nItemHei;
+    int iFirstVisible=m_ptOrigin.y/m_nItemHei;
     int nPageItems=(m_rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
 
 	CRect rcClip,rcInter;
@@ -331,7 +331,7 @@ void CDuiListBoxEx::OnPaint(CDCHandle dc)
     for(int iItem = iFirstVisible; iItem<GetItemCount() && iItem <iFirstVisible+nPageItems; iItem++)
     {
         CRect rcItem(0,0,m_rcClient.Width(),m_nItemHei);
-        rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrgin.y);
+        rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrigin.y);
         rcItem.OffsetRect(m_rcClient.TopLeft());
 		rcInter.IntersectRect(&rcClip,&rcItem);
 		if(nClip==NULLREGION || !rcInter.IsRectEmpty())
@@ -613,7 +613,7 @@ CRect CDuiListBoxEx::GetItemRect( int iItem )
 	CRect rcClient;
 	GetClient(&rcClient);
 	CRect rcRet(CPoint(0,iItem*m_nItemHei),CSize(rcClient.Width(),m_nItemHei));
-	rcRet.OffsetRect(rcClient.TopLeft()-m_ptOrgin);
+	rcRet.OffsetRect(rcClient.TopLeft()-m_ptOrigin);
 	return rcRet;
 }
 

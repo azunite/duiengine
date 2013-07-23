@@ -36,6 +36,7 @@ namespace DuiEngine
 		item.cchTextMax=_tcslen(pszText);
 		item.stFlag=stFlag;
 		item.state=0;
+		item.iOrder=iItem;
 		item.lParam=lParam;
 		m_arrItems.InsertAt(iItem,item);
 		NotifyInvalidate();
@@ -53,6 +54,7 @@ namespace DuiEngine
 		if(pItem->mask & DUIHDI_WIDTH) pItem->cx=m_arrItems[iItem].cx;
 		if(pItem->mask & DUIHDI_LPARAM) pItem->lParam=m_arrItems[iItem].lParam;
 		if(pItem->mask & DUIHDI_SORTFLAG) pItem->stFlag=m_arrItems[iItem].stFlag;
+		if(pItem->mask & DUIHDI_ORDER) pItem->iOrder=m_arrItems[iItem].iOrder;
 		return TRUE;
 	}
 
@@ -373,5 +375,13 @@ namespace DuiEngine
 		}
 		AfterPaint(dc,duidc);
 		ReleaseDuiDC(dc);
+	}
+
+	int CDuiHeaderCtrl::GetWidth()
+	{
+		int nRet=0;
+		for(int i=0;i<m_arrItems.GetCount();i++)
+			nRet+=m_arrItems[i].cx;
+		return nRet;
 	}
 }//end of namespace DuiEngine

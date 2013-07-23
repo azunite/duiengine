@@ -72,7 +72,7 @@ BOOL CDuiListBox::SetCurSel(int nIndex)
 
 int CDuiListBox::GetTopIndex() const
 {
-    return m_ptOrgin.y / m_nItemHei;
+    return m_ptOrigin.y / m_nItemHei;
 }
 
 BOOL CDuiListBox::SetTopIndex(int nIndex)
@@ -206,7 +206,7 @@ void CDuiListBox::EnsureVisible(int nIndex)
     CRect rcClient;
     GetClient(&rcClient);
 
-    int iFirstVisible = (m_ptOrgin.y + m_nItemHei -1) / m_nItemHei;
+    int iFirstVisible = (m_ptOrigin.y + m_nItemHei -1) / m_nItemHei;
     int nVisibleItems = rcClient.Height() / m_nItemHei;
     if(nIndex < iFirstVisible || nIndex > iFirstVisible+nVisibleItems-1)
     {
@@ -224,7 +224,7 @@ int CDuiListBox::HitTest(CPoint &pt)
     CRect rcClient;
     GetClient(&rcClient);
     CPoint pt2=pt;
-    pt2.y -= rcClient.top - m_ptOrgin.y;
+    pt2.y -= rcClient.top - m_ptOrigin.y;
     int nRet=pt2.y/m_nItemHei;
     if(nRet >= GetCount()) nRet=-1;
     else
@@ -321,7 +321,7 @@ void CDuiListBox::RedrawItem(int iItem)
     if(iItem>=iFirstVisible && iItem<GetCount() && iItem<iFirstVisible+nPageItems)
     {
         CRect rcItem(0,0,rcClient.Width(),m_nItemHei);
-        rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrgin.y);
+        rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrigin.y);
         rcItem.OffsetRect(rcClient.TopLeft());
         CDCHandle dc=GetDuiDC(&rcItem,OLEDC_PAINTBKGND);
         DuiDCPaint duiDC;
@@ -450,7 +450,7 @@ void CDuiListBox::OnPaint(CDCHandle dc)
     for(int iItem = iFirstVisible; iItem<GetCount() && iItem <iFirstVisible+nPageItems; iItem++)
     {
         CRect rcItem(0,0,m_rcClient.Width(),m_nItemHei);
-        rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrgin.y);
+        rcItem.OffsetRect(0,m_nItemHei*iItem-m_ptOrigin.y);
         rcItem.OffsetRect(m_rcClient.TopLeft());
         DrawItem(dc,rcItem,iItem);
     }

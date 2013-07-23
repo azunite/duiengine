@@ -328,10 +328,10 @@ BOOL CDuiTreeCtrl::EnsureVisible(HSTREEITEM hItem)
 	}
 	int iVisible= GetItemShowIndex(hItem);
 	int yOffset=iVisible*m_nItemHei;
-	if(yOffset+m_nItemHei>m_ptOrgin.y+m_rcClient.Height())
+	if(yOffset+m_nItemHei>m_ptOrigin.y+m_rcClient.Height())
 	{
 		SetScrollPos(TRUE,yOffset+m_nItemHei-m_rcClient.Height(),TRUE);
-	}else if(yOffset<m_ptOrgin.y)
+	}else if(yOffset<m_ptOrigin.y)
 	{
 		SetScrollPos(TRUE,yOffset,TRUE);	
 	}
@@ -708,7 +708,7 @@ BOOL CDuiTreeCtrl::GetItemRect( LPTVITEM pItemObj,CRect &rcItem )
 
 	CRect rcClient;
 	GetClient(rcClient);
-	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
+	int iFirstVisible=m_ptOrigin.y/m_nItemHei;
 	int nPageItems=(rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
 
 	int iVisible=-1;
@@ -721,7 +721,7 @@ BOOL CDuiTreeCtrl::GetItemRect( LPTVITEM pItemObj,CRect &rcItem )
 		if(iVisible>=iFirstVisible && pItem==pItemObj)
 		{
 			CRect rcRet(m_nIndent*pItemObj->nLevel,0,rcClient.Width(),m_nItemHei);
-			rcRet.OffsetRect(rcClient.left-m_ptOrgin.x,rcClient.top-m_ptOrgin.y+iVisible*m_nItemHei);
+			rcRet.OffsetRect(rcClient.left-m_ptOrigin.x,rcClient.top-m_ptOrigin.y+iVisible*m_nItemHei);
 			rcItem=rcRet;
 			return TRUE;
 		}
@@ -745,7 +745,7 @@ HSTREEITEM CDuiTreeCtrl::HitTest(CPoint &pt)
 	CRect rcClient;
 	GetClient(&rcClient);
 	CPoint pt2=pt;
-	pt2.y -= rcClient.top - m_ptOrgin.y;
+	pt2.y -= rcClient.top - m_ptOrigin.y;
 	int iItem=pt2.y/m_nItemHei;
 	if( iItem >= m_nVisibleItems) return NULL;
 
@@ -760,7 +760,7 @@ HSTREEITEM CDuiTreeCtrl::HitTest(CPoint &pt)
 		if(iVisible == iItem)
 		{
 			CRect rcItem(m_nIndent*pItem->nLevel,0,rcClient.Width(),m_nItemHei);
-			rcItem.OffsetRect(rcClient.left-m_ptOrgin.x,rcClient.top-m_ptOrgin.y+iVisible*m_nItemHei);
+			rcItem.OffsetRect(rcClient.left-m_ptOrigin.x,rcClient.top-m_ptOrigin.y+iVisible*m_nItemHei);
 			pt-=rcItem.TopLeft();
 			hRet=hItem;
 			break;
@@ -785,7 +785,7 @@ void CDuiTreeCtrl::RedrawItem(HSTREEITEM hItem)
 	CRect rcClient;
 	GetClient(rcClient);
 
-	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
+	int iFirstVisible=m_ptOrigin.y/m_nItemHei;
 	int nPageItems=(rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
 	int iItem=GetItemShowIndex(hItem);
 	if(iItem!=-1 && iItem>=iFirstVisible && iItem<iFirstVisible+nPageItems)
@@ -793,8 +793,8 @@ void CDuiTreeCtrl::RedrawItem(HSTREEITEM hItem)
 		LPTVITEM pItem=CSTree<LPTVITEM>::GetItem(hItem);
 		
 		CRect rcItem(m_nIndent*pItem->nLevel,0,m_nIndent*pItem->nLevel+pItem->nItemWidth ,m_nItemHei);
-		rcItem.OffsetRect(rcClient.left-m_ptOrgin.x,
-				rcClient.top+m_nItemHei*iItem-m_ptOrgin.y);
+		rcItem.OffsetRect(rcClient.left-m_ptOrigin.x,
+				rcClient.top+m_nItemHei*iItem-m_ptOrigin.y);
 		if (rcItem.bottom > rcClient.bottom) rcItem.bottom = rcClient.bottom;
 		if (rcItem.right > rcClient.right) rcItem.right = rcClient.right;
 
@@ -1116,7 +1116,7 @@ void CDuiTreeCtrl::OnPaint(CDCHandle dc)
 	BeforePaint(dc,duiDC);
 
 	GetClient(rcClient);
-	int iFirstVisible=m_ptOrgin.y/m_nItemHei;
+	int iFirstVisible=m_ptOrigin.y/m_nItemHei;
 	int nPageItems=(m_rcClient.Height()+m_nItemHei-1)/m_nItemHei+1;
 
 	int iVisible=-1;
@@ -1129,8 +1129,8 @@ void CDuiTreeCtrl::OnPaint(CDCHandle dc)
 		if(iVisible>=iFirstVisible)
 		{
 			CRect rcItem(m_nIndent*pItem->nLevel,0,m_nIndent*pItem->nLevel+pItem->nItemWidth,m_nItemHei);
-			rcItem.OffsetRect(rcClient.left-m_ptOrgin.x,
-				rcClient.top-m_ptOrgin.y+iVisible*m_nItemHei);
+			rcItem.OffsetRect(rcClient.left-m_ptOrigin.x,
+				rcClient.top-m_ptOrigin.y+iVisible*m_nItemHei);
 			DrawItem(dc,rcItem,hItem);
 		}
 		if(pItem->bCollapsed)

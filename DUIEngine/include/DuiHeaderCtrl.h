@@ -8,6 +8,7 @@ namespace DuiEngine
 #define DUIHDI_TEXT                0x0002
 #define DUIHDI_SORTFLAG			   0x0004
 #define DUIHDI_LPARAM              0x0008
+#define DUIHDI_ORDER			   0x0010
 
 	typedef enum _DUIHDSORTFLAG{
 		ST_NULL=0,
@@ -23,10 +24,11 @@ namespace DuiEngine
 		DUIHDSORTFLAG stFlag;
 		LPARAM  lParam; 
 		UINT   state;
+		int		iOrder;
 	} DUIHDITEM,  *LPDUIHDITEM;
 
 
-	class CDuiHeaderCtrl: public CDuiWindow
+	class DUI_EXP CDuiHeaderCtrl: public CDuiWindow
 	{
 		DUIOBJ_DECLARE_CLASS_NAME(CDuiHeaderCtrl, "header")
 	public:
@@ -35,6 +37,9 @@ namespace DuiEngine
 
 		int InsertItem( int iItem,LPCTSTR pszText,int nWidth, DUIHDSORTFLAG stFlag,LPARAM lParam );
 		BOOL GetItem(int iItem,DUIHDITEM *pItem);
+
+		int GetItemCount(){return m_arrItems.GetCount();}
+		int GetWidth();
 
 		BOOL DeleteItem(int iItem);
 		void DeleteAllItems();
