@@ -267,13 +267,15 @@ namespace DuiEngine
 
 	void CDuiHeaderCtrl::OnMouseLeave()
 	{
-		if(m_bFixWidth) return;
-		if(IsItemHover(m_dwHitTest))
+		if(!m_bDragging)
 		{
-			m_arrItems[LOWORD(m_dwHitTest)].state=0;
-			RedrawItem(LOWORD(m_dwHitTest));
+			if(IsItemHover(m_dwHitTest) && m_bSortHeader)
+			{
+				m_arrItems[LOWORD(m_dwHitTest)].state=0;
+				RedrawItem(LOWORD(m_dwHitTest));
+			}
+			m_dwHitTest=-1;
 		}
-		m_dwHitTest=-1;
 	}
 
 	BOOL CDuiHeaderCtrl::LoadChildren( pugi::xml_node xmlNode )

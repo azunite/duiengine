@@ -30,4 +30,6 @@
 #define	label_today		65557
 #define	btn_today		65558
 #define	hd_test		65559
+#define	lc_test		65560
+#define	btn_lst_init		65561
 /*----------------------------RES_BUILDER:end------------------------------------->*/

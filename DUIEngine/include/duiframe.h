@@ -60,7 +60,6 @@ protected:
 
 protected:
     HDUIWND m_hCapture;
-	CPoint	m_ptSave;
     HDUIWND m_hHover;
     BOOL	m_bNcHover;
 

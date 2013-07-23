@@ -10,6 +10,19 @@
       </caption>
 
       <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10" tabstop="0">
+        <tab id="110" title="listctrl">
+          <button name="btn_lst_init" pos="10,0,100,25" class="normalbtn">init list</button>
+          <listctrl name="lc_test" pos="10,30,-10,-10" itemHeight="20" headerHeight="30">
+            <header name="hd_test" itemSkin="btn_yellow" align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
+              <items>
+                <item width="60">col 1</item>
+                <item width="50">col 2</item>
+                <item width="70">col 3</item>
+                <item width="30">col 4</item>
+              </items>
+            </header>
+          </listctrl>
+        </tab>
         <tab id="113" title="miscellaneous" sep="5">
           <animateimg name="ani_test" pos="20,100" skin="icons"/>
           <img id="1139" pos="300,200,400,300" skin="icons" tip="img tip" msgtransparent="0"/>
@@ -68,7 +81,7 @@
           <check id="1143" pos="100,|10">check 2</check>
           <button name="IDC_REPSEL"  pos="200,|10,300,|35" class="normalbtn">repsel</button>
           <dateedit pos="10,-50,100,-10" name="de_test"/>
-          <header pos="10,-90,-100,-60" name="hd_test" itemSkin="btn_yellow" align="left">
+          <header pos="10,-90,-100,-60" name="hd_test" itemSkin="btn_yellow" align="left" itemSwapEnable="0" fixWidth="1" sortHeader="0">
             <items>
               <item width="60">col 1</item>
               <item width="50">col 2</item>

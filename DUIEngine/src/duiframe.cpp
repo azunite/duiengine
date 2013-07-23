@@ -73,10 +73,7 @@ LRESULT CDuiFrame::DoFrameEvent(UINT uMsg,WPARAM wParam,LPARAM lParam)
 
 BOOL CDuiFrame::OnReleaseDuiCapture()
 {
-	if(!m_hCapture) return FALSE;
-	m_hHover=m_hCapture;
-	m_hCapture=NULL;
-	OnFrameMouseMove(0,m_ptSave);
+    m_hCapture=NULL;
     return TRUE;
 }
 
@@ -116,8 +113,18 @@ void CDuiFrame::OnFrameMouseMove(UINT uFlag,CPoint pt)
     CDuiWindow *pCapture=DuiWindowManager::GetWindow(m_hCapture);
     if(pCapture)
     {
-		m_ptSave=pt;//保存鼠标位置，在ReleaseDuiCapture时检测鼠标所在的窗口是不发生了变化。
-		pCapture->DuiSendMessage(m_bNcHover?WM_NCMOUSEMOVE:WM_MOUSEMOVE,uFlag,MAKELPARAM(pt.x,pt.y));
+        CRect rc;
+        pCapture->GetRect(&rc);
+        CDuiWindow * pHover=rc.PtInRect(pt)?pCapture:NULL;
+        HDUIWND hHover=pHover?pHover->GetDuiHwnd():NULL;
+        if(hHover!=m_hHover)
+        {
+            CDuiWindow *pOldHover=DuiWindowManager::GetWindow(m_hHover);
+            m_hHover=hHover;
+            if(pOldHover) pOldHover->DuiSendMessage(m_bNcHover?WM_NCMOUSELEAVE:WM_MOUSELEAVE);
+            if(pHover)	pHover->DuiSendMessage(m_bNcHover?WM_NCMOUSEHOVER:WM_MOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
+        }
+        pCapture->DuiSendMessage(m_bNcHover?WM_NCMOUSEMOVE:WM_MOUSEMOVE,uFlag,MAKELPARAM(pt.x,pt.y));
     }
     else
     {

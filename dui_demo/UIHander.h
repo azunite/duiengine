@@ -43,6 +43,8 @@ protected:
 	void OnTimer(UINT_PTR nIDEvent);
 
 
+	void OnBtnInitListClick();
+
 	BEGIN_MSG_MAP_EX(CUIHander)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
 		MSG_WM_INITDIALOG(OnInitDialog)
@@ -52,6 +54,8 @@ protected:
 	END_MSG_MAP()
 
 	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
+		DUI_NOTIFY_ID_COMMAND(btn_lst_init, OnBtnInitListClick)
+		
 		DUI_NOTIFY_ID_COMMAND(≤‚ ‘, OnAttrReposition)
 		DUI_NOTIFY_ID_COMMAND(IDC_REPSEL, OnRepEditSel)
 		DUI_NOTIFY_ID_COMMAND(1307, OnIECtrl)

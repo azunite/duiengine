@@ -80,34 +80,46 @@ void CDuiStatic::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UIN
 // Only For Header Drag Test
 // Usage: <link>inner text example</link>
 //
-
 void CDuiLink::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat)
 {
-    if(!(uFormat&DT_CALCRECT))
-    {
-        CRect rc(pRect);
-        rc.bottom=rc.top;
-        DrawText(hdc,pszBuf,cchText,&rc,DT_LEFT|DT_CALCRECT);
-        m_rcText=rc;
-        m_rcText.right=min(rc.right,pRect->right);
-        if(GetTextAlign()&DT_VCENTER)
-        {
-            m_rcText.top=pRect->top+ (pRect->bottom-pRect->top-rc.Height())/2;
-            m_rcText.bottom=m_rcText.top+rc.Height();
-        }
-        else if(GetTextAlign()&DT_BOTTOM)
-        {
-            m_rcText.bottom=m_rcText.bottom;
-            m_rcText.top=m_rcText.bottom-rc.Height();
-        }
-        else
-        {
-            m_rcText.top=m_rcText.top;
-            m_rcText.bottom=m_rcText.top+rc.Height();
-        }
-    }
-    __super::DuiDrawText(hdc,pszBuf,cchText,pRect,uFormat);
+	if(!(uFormat&DT_CALCRECT))
+	{
+		CRect rc;		
+		DrawText(hdc,pszBuf,cchText,&rc,DT_LEFT|DT_CALCRECT);
+
+		if (m_style.GetTextAlign()&DT_CENTER)
+		{
+			m_rcText.left = pRect->left + (pRect->right-pRect->left - rc.Width())/2;
+			m_rcText.right = m_rcText.left + rc.Width();
+		}
+		else if (m_style.GetTextAlign()&DT_RIGHT)
+		{
+			m_rcText.left = pRect->right - rc.Width();
+			m_rcText.right = pRect->right;
+		}
+		else
+		{
+			m_rcText.left = pRect->left;
+			m_rcText.right = pRect->left + rc.Width();
+		}
+
+		if(m_style.GetTextAlign()&DT_VCENTER)
+		{
+			m_rcText.top=pRect->top+ (pRect->bottom-pRect->top-rc.Height())/2;
+			m_rcText.bottom=m_rcText.top+rc.Height();
+		}else if(m_style.GetTextAlign()&DT_BOTTOM)
+		{
+			m_rcText.bottom=m_rcText.bottom;
+			m_rcText.top=m_rcText.bottom-rc.Height();
+		}else
+		{
+			m_rcText.top=m_rcText.top;
+			m_rcText.bottom=m_rcText.top+rc.Height();
+		}
+	}
+	__super::DuiDrawText(hdc,pszBuf,cchText,pRect,uFormat);
 }
+
 
 void CDuiLink::OnAttributeFinish( pugi::xml_node xmlNode)
 {

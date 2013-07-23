@@ -268,7 +268,7 @@ void CUIHander::OnDuiMenu()
 void CUIHander::OnCommand( UINT uNotifyCode, int nID, HWND wndCtl )
 {
 // 	ATLTRACE(L"\nOnCommand nID=%d",nID);  
-	TCHAR szBuf[200];
+// 	TCHAR szBuf[200];
 // 	_stprintf(szBuf,_T("Menu Command ID=%d\\nSecond Line\\nSecond Line\\nSecond Line\\nSecond Line"),nID);
 // 	_stprintf(szBuf,_T("Menu Command ID=%d\\nSecond Line \\na long long line :消息窗口内容自动换行测试，hahahaha haha haha"),nID);
 // 	DuiMessageBox(NULL,szBuf,_T("tip"),MB_YESNOCANCEL|MB_ICONWARNING);
@@ -329,4 +329,19 @@ void CUIHander::OnTimer( UINT_PTR nIDEvent )
 	_stprintf(szMsg,_T("Msg box No. %d"),nCount);
 	nCount++;
 	DuiMessageBox(0,szMsg,_T("tip"),MB_OK);
+}
+
+//init listctrl
+void CUIHander::OnBtnInitListClick()
+{
+	CDuiListCtrl *pList=m_pMainDlg->FindChildByName2<CDuiListCtrl *>("lc_test");
+	if(pList)
+	{
+		for(int i=0;i<100;i++)
+		{
+			CDuiStringT str;
+			str.Format(_T("item %d"),i+1);
+			pList->InsertItem(i,str,0);
+		}
+	}
 }
