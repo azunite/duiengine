@@ -9,6 +9,8 @@ namespace DuiEngine
 
 	CDuiHeaderCtrl::CDuiHeaderCtrl(void)
 		:m_bFixWidth(FALSE)
+		,m_bItemSwapEnable(TRUE)
+		,m_bSortHeader(TRUE)
 		,m_pSkinItem(NULL)
 		,m_pSkinSort(NULL)
 		,m_dwHitTest(-1)
@@ -140,14 +142,16 @@ namespace DuiEngine
 
 	void CDuiHeaderCtrl::OnLButtonDown( UINT nFlags,CPoint pt )
 	{
-		if(m_bFixWidth) return;
 		SetDuiCapture();
 		m_ptClick=pt;
 		m_dwHitTest=HitTest(pt);
 		if(IsItemHover(m_dwHitTest))
 		{
-			m_arrItems[LOWORD(m_dwHitTest)].state=2;//pushdown
-			RedrawItem(LOWORD(m_dwHitTest));
+			if(m_bSortHeader)
+			{
+				m_arrItems[LOWORD(m_dwHitTest)].state=2;//pushdown
+				RedrawItem(LOWORD(m_dwHitTest));
+			}
 		}else if(m_dwHitTest!=-1)
 		{
 			m_nAdjItemOldWidth=m_arrItems[LOWORD(m_dwHitTest)].cx;
@@ -156,29 +160,34 @@ namespace DuiEngine
 
 	void CDuiHeaderCtrl::OnLButtonUp( UINT nFlags,CPoint pt )
 	{
-		if(m_bFixWidth) return;
 		if(IsItemHover(m_dwHitTest))
 		{
 			if(m_bDragging)
 			{//拖动表头项
-				ImageList_DragLeave(GetContainer()->GetHostHwnd());
-				ImageList_EndDrag();
-				ImageList_Destroy(m_hDragImglst);
-				m_hDragImglst=NULL;
-				if(m_dwDragTo!=m_dwHitTest && IsItemHover(m_dwDragTo))
+				if(m_bItemSwapEnable)
 				{
-					DUIHDITEM t=m_arrItems[LOWORD(m_dwDragTo)];
-					m_arrItems[LOWORD(m_dwDragTo)]=m_arrItems[LOWORD(m_dwHitTest)];
-					m_arrItems[LOWORD(m_dwHitTest)]=t;
-					//发消息通知宿主表项位置发生变化:todo
+					ImageList_DragLeave(GetContainer()->GetHostHwnd());
+					ImageList_EndDrag();
+					ImageList_Destroy(m_hDragImglst);
+					m_hDragImglst=NULL;
+					if(m_dwDragTo!=m_dwHitTest && IsItemHover(m_dwDragTo))
+					{
+						DUIHDITEM t=m_arrItems[LOWORD(m_dwDragTo)];
+						m_arrItems[LOWORD(m_dwDragTo)]=m_arrItems[LOWORD(m_dwHitTest)];
+						m_arrItems[LOWORD(m_dwHitTest)]=t;
+						//发消息通知宿主表项位置发生变化:todo
+					}
+					m_dwHitTest=-1;
+					m_dwDragTo=-1;
+					NotifyInvalidate();
 				}
-				m_dwHitTest=-1;
-				m_dwDragTo=-1;
-				NotifyInvalidate();
 			}else
 			{//点击表头项
-				m_arrItems[LOWORD(m_dwHitTest)].state=1;//hover
-				RedrawItem(LOWORD(m_dwHitTest));
+				if(m_bSortHeader)
+				{
+					m_arrItems[LOWORD(m_dwHitTest)].state=1;//hover
+					RedrawItem(LOWORD(m_dwHitTest));
+				}
 			}
 		}else if(m_dwHitTest!=-1)
 		{//调整表头宽度，发送一个调整完成消息
@@ -190,13 +199,12 @@ namespace DuiEngine
 
 	void CDuiHeaderCtrl::OnMouseMove( UINT nFlags,CPoint pt )
 	{
-		if(m_bFixWidth) return;
 		if(m_bDragging || nFlags&MK_LBUTTON)
 		{
 			if(!m_bDragging)
 			{
 				m_bDragging=TRUE;
-				if(IsItemHover(m_dwHitTest))
+				if(IsItemHover(m_dwHitTest) && m_bItemSwapEnable)
 				{
 					m_dwDragTo=m_dwHitTest;
 					CRect rcItem=GetItemRect(LOWORD(m_dwHitTest));
@@ -206,17 +214,20 @@ namespace DuiEngine
 					ImageList_DragEnter(GetContainer()->GetHostHwnd(),pt.x,pt.y);
 				}
 			}
-			if(m_hDragImglst)
+			if(IsItemHover(m_dwHitTest))
 			{
-				DWORD dwDragTo=HitTest(pt);
-				if(IsItemHover(dwDragTo) && m_dwDragTo!=dwDragTo)
+				if(m_bItemSwapEnable)
 				{
-					ImageList_DragShowNolock(FALSE);
-					DrawDraggingState(dwDragTo);
-					ImageList_DragShowNolock(TRUE);
-					m_dwDragTo=dwDragTo;
+					DWORD dwDragTo=HitTest(pt);
+					if(IsItemHover(dwDragTo) && m_dwDragTo!=dwDragTo)
+					{
+						ImageList_DragShowNolock(FALSE);
+						DrawDraggingState(dwDragTo);
+						ImageList_DragShowNolock(TRUE);
+						m_dwDragTo=dwDragTo;
+					}
+					ImageList_DragMove(pt.x,m_ptClick.y);
 				}
-				ImageList_DragMove(pt.x,m_ptClick.y);
 			}else if(m_dwHitTest!=-1)
 			{//调节宽度
 				int cxNew=m_nAdjItemOldWidth+pt.x-m_ptClick.x;
@@ -231,17 +242,20 @@ namespace DuiEngine
 			DWORD dwHitTest=HitTest(pt);
 			if(dwHitTest!=m_dwHitTest)
 			{
-				if(IsItemHover(m_dwHitTest))
+				if(m_bSortHeader)
 				{
-					WORD iHover=LOWORD(m_dwHitTest);
-					m_arrItems[iHover].state=0;
-					RedrawItem(iHover);
-				}
-				if(IsItemHover(dwHitTest))
-				{
-					WORD iHover=LOWORD(dwHitTest);
-					m_arrItems[iHover].state=1;//hover
-					RedrawItem(iHover);
+					if(IsItemHover(m_dwHitTest))
+					{
+						WORD iHover=LOWORD(m_dwHitTest);
+						m_arrItems[iHover].state=0;
+						RedrawItem(iHover);
+					}
+					if(IsItemHover(dwHitTest))
+					{
+						WORD iHover=LOWORD(dwHitTest);
+						m_arrItems[iHover].state=1;//hover
+						RedrawItem(iHover);
+					}
 				}
 				m_dwHitTest=dwHitTest;
 			}
@@ -295,15 +309,16 @@ namespace DuiEngine
 		CRect	rcClient;
 		GetClient(&rcClient);
 		CRect rcItem(rcClient.left,rcClient.top,rcClient.left,rcClient.bottom);
+		int nMargin=m_bSortHeader?CX_HDITEM_MARGIN:0;
 		for(int i=0;i<m_arrItems.GetCount();i++)
 		{
 			rcItem.left=rcItem.right;
 			rcItem.right=rcItem.left+m_arrItems[i].cx;
-			if(pt.x<rcItem.left+CX_HDITEM_MARGIN)
+			if(pt.x<rcItem.left+nMargin)
 			{
 				int nLeft=i>0?i-1:0;
 				return MAKELONG(nLeft,i);	
-			}else if(pt.x<rcItem.right-CX_HDITEM_MARGIN)
+			}else if(pt.x<rcItem.right-nMargin)
 			{
 				return MAKELONG(i,i);
 			}else if(pt.x<rcItem.right)

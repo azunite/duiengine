@@ -43,6 +43,8 @@ namespace DuiEngine
 			DUIWIN_SKIN_ATTRIBUTE("itemSkin",m_pSkinItem,FALSE)
 			DUIWIN_SKIN_ATTRIBUTE("sortSkin",m_pSkinSort,FALSE)
 			DUIWIN_INT_ATTRIBUTE("fixWidth",m_bFixWidth,FALSE)
+			DUIWIN_INT_ATTRIBUTE("itemSwapEnable",m_bItemSwapEnable,FALSE)
+			DUIWIN_INT_ATTRIBUTE("sortHeader",m_bSortHeader,FALSE)
 		DUIWIN_DECLARE_ATTRIBUTES_END()
 	protected:
 		virtual BOOL LoadChildren(pugi::xml_node xmlNode);
@@ -81,14 +83,16 @@ namespace DuiEngine
 
 		CDuiSkinBase *	m_pSkinItem;
 		CDuiSkinBase *	m_pSkinSort;
-		BOOL			m_bFixWidth;
+		BOOL			m_bSortHeader;		//表头可以点击排序
+		BOOL			m_bFixWidth;		//表项宽度固定开关
+		BOOL			m_bItemSwapEnable;//允许拖动调整位置开关
 
 		BOOL			m_bDragging;
 		HIMAGELIST		m_hDragImglst;
 		CPoint			m_ptClick;
 		DWORD			m_dwHitTest;
 		DWORD			m_dwDragTo;
-
+		
 		int				m_nAdjItemOldWidth;//保存被拖动项的原始宽度
 		CDuiArray<DUIHDITEM> m_arrItems;
 	};
