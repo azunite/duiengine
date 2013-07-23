@@ -18,6 +18,10 @@ namespace DuiEngine
 		,m_hDragImglst(NULL)
 	{
 		m_bClipClient=TRUE;
+		addEvent(DUINM_HDCLICK);
+		addEvent(DUINM_HDSIZECHANGING);
+		addEvent(DUINM_HDSIZECHANGED);
+		addEvent(DUINM_HDSWAP);
 	}
 
 	CDuiHeaderCtrl::~CDuiHeaderCtrl(void)
@@ -177,9 +181,17 @@ namespace DuiEngine
 						DUIHDITEM t=m_arrItems[LOWORD(m_dwDragTo)];
 						m_arrItems[LOWORD(m_dwDragTo)]=m_arrItems[LOWORD(m_dwHitTest)];
 						m_arrItems[LOWORD(m_dwHitTest)]=t;
-						//发消息通知宿主表项位置发生变化:todo
+						//发消息通知宿主表项位置发生变化
+						DUINMHDSWAP	nm;
+						nm.hdr.code=DUINM_HDSWAP;
+						nm.hdr.idFrom=GetCmdID();
+						nm.hdr.hwndFrom=0;
+						nm.pSender=this;
+						nm.iOldIndex=LOWORD(m_dwHitTest);
+						nm.iNewIndex=LOWORD(m_dwDragTo);
+						DuiNotify((LPNMHDR)&nm);
 					}
-					m_dwHitTest=-1;
+					m_dwHitTest=HitTest(pt);
 					m_dwDragTo=-1;
 					NotifyInvalidate();
 				}
@@ -189,11 +201,25 @@ namespace DuiEngine
 				{
 					m_arrItems[LOWORD(m_dwHitTest)].state=1;//hover
 					RedrawItem(LOWORD(m_dwHitTest));
+					DUINMHDCLICK	nm;
+					nm.hdr.code=DUINM_HDCLICK;
+					nm.hdr.idFrom=GetCmdID();
+					nm.hdr.hwndFrom=0;
+					nm.pSender=this;
+					nm.iItem=LOWORD(m_dwHitTest);
+					DuiNotify((LPNMHDR)&nm);
 				}
 			}
 		}else if(m_dwHitTest!=-1)
 		{//调整表头宽度，发送一个调整完成消息
-
+			DUINMHDSIZECHANGED	nm;
+			nm.hdr.code=DUINM_HDSIZECHANGED;
+			nm.hdr.idFrom=GetCmdID();
+			nm.hdr.hwndFrom=0;
+			nm.pSender=this;
+			nm.iItem=LOWORD(m_dwHitTest);
+			nm.nWidth=m_arrItems[nm.iItem].cx;
+			DuiNotify((LPNMHDR)&nm);
 		}
 		m_bDragging=FALSE;
 		ReleaseDuiCapture();
@@ -236,8 +262,15 @@ namespace DuiEngine
 				if(cxNew<0) cxNew=0;
 				m_arrItems[LOWORD(m_dwHitTest)].cx=cxNew;
 				NotifyInvalidate();
-				//发出调节宽度消息:todo
 				UpdateWindow(GetContainer()->GetHostHwnd());//立即更新窗口
+				//发出调节宽度消息
+				DUINMHDSIZECHANGING	nm;
+				nm.hdr.code=DUINM_HDSIZECHANGING;
+				nm.hdr.idFrom=GetCmdID();
+				nm.hdr.hwndFrom=0;
+				nm.pSender=this;
+				nm.nWidth=cxNew;
+				DuiNotify((LPNMHDR)&nm);
 			}
 		}else
 		{
@@ -283,10 +316,12 @@ namespace DuiEngine
 		if(!xmlNode || strcmp(xmlNode.name(),"items")!=0)
 			return FALSE;
 		pugi::xml_node xmlItem=xmlNode.child("item");
+		int iOrder=0;
 		while(xmlItem)
 		{
 			DUIHDITEM item={0};
 			item.mask=0xFFFFFFFF;
+			item.iOrder=iOrder++;
 			CDuiStringT strTxt=DUI_CA2T(xmlItem.text().get(),CP_UTF8);
 			item.pszText=_tcsdup(strTxt);
 			item.cchTextMax=strTxt.GetLength();

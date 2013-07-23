@@ -265,6 +265,53 @@ typedef struct tagDUINMSLIDER
 	BOOL bVertical;
 } DUINMSLIDER,*LPDUINMSLIDER;
 
+//headerctrl
+#define DUINM_HDCLICK	31	//点击表头
+typedef struct tagDUINMHDCLICK
+{
+	NMHDR hdr;
+	CDuiWindow *pSender;
+	int   iItem;
+} DUINMHDCLICK,*LPDUINMHDCLICK;
+
+#define DUINM_HDSIZECHANGING	32	//调整表头宽度中
+typedef struct tagDUINMHDSIZECHANGING
+{
+	NMHDR hdr;
+	CDuiWindow *pSender;
+	int   iItem;
+	int   nWidth;
+} DUINMHDSIZECHANGING,*LPDUINMHDSIZECHANGING;
+
+#define DUINM_HDSIZECHANGED	33	//调整表头宽度完成
+typedef struct tagDUINMHDSIZECHANGED
+{
+	NMHDR hdr;
+	CDuiWindow *pSender;
+	int   iItem;
+	int   nWidth;
+} DUINMHDSIZECHANGED,*LPDUINMHDSIZECHANGED;
+
+#define DUINM_HDSWAP	34	//拖动表项调整位置
+typedef struct tagDUINMHDSWAP
+{
+	NMHDR hdr;
+	CDuiWindow *pSender;
+	int   iOldIndex;
+	int	  iNewIndex;
+} DUINMHDSWAP,*LPDUINMHDSWAP;
+
+//calendar
+#define DUINM_CALENDAR_SELECTDAY	40
+typedef struct tagDUINMCALENDARSELECTDAY
+{
+	NMHDR hdr;
+	CDuiWindow *pSender;
+	WORD   wOldDay;
+	WORD   wNewDay;
+} DUINMCALENDARSELECTDAY,*LPDUINMCALENDARSELECTDAY;
+
+
 //////////////////////////////////////////////////////////////////////////
 //  internal notify message
 

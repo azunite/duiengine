@@ -55,6 +55,10 @@ namespace DuiEngine
 		virtual void DrawItem(CDCHandle dc,CRect rcItem,int iItem, const DUILVITEM *plv);
 		void OnPaint(CDCHandle dc);
 		void OnDestroy();
+
+		bool OnHeaderClick( CDuiWindow * pSender, LPNMHDR pNmhdr );
+		bool OnHeaderSizeChanging( CDuiWindow * pSender, LPNMHDR pNmhdr );
+		bool OnHeaderSwap( CDuiWindow * pSender, LPNMHDR pNmhdr );
 		
 		virtual BOOL OnScroll(BOOL bVertical,UINT uCode,int nPos);
 
@@ -65,7 +69,6 @@ namespace DuiEngine
 
 		CRect GetListRect();
 		void UpdateScrollBar();
-
 		int		m_nHeaderHeight;
 		int		m_nItemHeight;
 		

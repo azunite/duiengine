@@ -36,6 +36,9 @@ namespace DuiEngine
 		CDuiStringA strPos;
 		strPos.SmallFormat("0,0,-0,%d",m_nHeaderHeight);
 		m_pHeader->SetAttribute("pos",strPos);
+		m_pHeader->subscribeEvent(DUINM_HDCLICK,Subscriber(&CDuiListCtrl::OnHeaderClick,this));
+		m_pHeader->subscribeEvent(DUINM_HDSIZECHANGING,Subscriber(&CDuiListCtrl::OnHeaderSizeChanging,this));
+		m_pHeader->subscribeEvent(DUINM_HDSWAP,Subscriber(&CDuiListCtrl::OnHeaderSwap,this));
 		return TRUE;
 	}
 
@@ -277,5 +280,22 @@ namespace DuiEngine
 		if(uCode==SB_THUMBTRACK)
 			UpdateWindow(GetContainer()->GetHostHwnd());
 		return bRet;
+	}
+
+	bool CDuiListCtrl::OnHeaderClick( CDuiWindow * pSender, LPNMHDR pNmhdr )
+	{
+		return true;
+	}
+
+	bool CDuiListCtrl::OnHeaderSizeChanging( CDuiWindow * pSender, LPNMHDR pNmhdr )
+	{
+		NotifyInvalidate();
+		return true;
+	}
+
+	bool CDuiListCtrl::OnHeaderSwap( CDuiWindow * pSender, LPNMHDR pNmhdr )
+	{
+		NotifyInvalidate();
+		return true;
 	}
 }//end of namespece DuiEngine

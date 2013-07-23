@@ -983,10 +983,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\include\DuiCalendar.h"
-				>
-			</File>
-			<File
 				RelativePath=".\include\duicolor.h"
 				>
 			</File>
@@ -1225,6 +1221,10 @@
 			<Filter
 				Name="controls"
 				>
+				<File
+					RelativePath=".\include\DuiCalendar.h"
+					>
+				</File>
 				<File
 					RelativePath=".\include\DuiCaption.h"
 					>

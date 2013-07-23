@@ -283,6 +283,7 @@ CDuiCalendar::CDuiCalendar()
 
 void CDuiCalendar::Init()
 {
+	addEvent(DUINM_CALENDAR_SELECTDAY);
 	m_nTitleHei=TITLE_HEIGHT;
 	m_nFooterHei=FOOTER_HEIGHT;
 	m_crWeekend=RGB(255,0,0);
@@ -462,8 +463,17 @@ void CDuiCalendar::OnLButtonDown(UINT nFlags, CPoint point)
 	WORD day = HitTest(point);
 	if(day !=0 && day != m_iDay)
 	{
+		DUINMCALENDARSELECTDAY nm;
+		nm.hdr.code=DUINM_HDSIZECHANGING;
+		nm.hdr.idFrom=GetCmdID();
+		nm.hdr.hwndFrom=0;
+		nm.pSender=this;
+		nm.wOldDay=m_iDay;
+		nm.wNewDay=day;
+
 		m_iDay = day;
 		NotifyInvalidate();
+		DuiNotify((LPNMHDR)&nm);
     }
 }
 
