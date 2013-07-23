@@ -289,13 +289,13 @@ namespace DuiEngine
 
 	bool CDuiListCtrl::OnHeaderSizeChanging( CDuiWindow * pSender, LPNMHDR pNmhdr )
 	{
-		NotifyInvalidate();
+		NotifyInvalidateRect(GetListRect());
 		return true;
 	}
 
 	bool CDuiListCtrl::OnHeaderSwap( CDuiWindow * pSender, LPNMHDR pNmhdr )
 	{
-		NotifyInvalidate();
+		NotifyInvalidateRect(GetListRect());
 		return true;
 	}
 }//end of namespece DuiEngine
