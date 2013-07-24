@@ -5,7 +5,7 @@
 
 namespace DuiEngine
 {
-#define CX_HDITEM_MARGIN	2
+#define CX_HDITEM_MARGIN	4
 
 	CDuiHeaderCtrl::CDuiHeaderCtrl(void)
 		:m_bFixWidth(FALSE)
@@ -351,6 +351,8 @@ namespace DuiEngine
 		int nMargin=m_bSortHeader?CX_HDITEM_MARGIN:0;
 		for(int i=0;i<m_arrItems.GetCount();i++)
 		{
+			if(m_arrItems[i].cx==0) continue;	//越过宽度为0的项
+
 			rcItem.left=rcItem.right;
 			rcItem.right=rcItem.left+m_arrItems[i].cx;
 			if(pt.x<rcItem.left+nMargin)

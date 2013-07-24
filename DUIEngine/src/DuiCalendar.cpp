@@ -482,10 +482,6 @@ void CDuiCalendar::OnLButtonDown(UINT nFlags, CPoint point)
 void CDuiCalendar::OnMouseMove( UINT nFlags,CPoint pt )
 {
 	int iDay=HitTest(pt);
-	if(iDay>50)
-	{
-		int a=0;
-	}
 	if(iDay!=m_iHoverDay)
 	{
 		WORD oldHover=m_iHoverDay;
