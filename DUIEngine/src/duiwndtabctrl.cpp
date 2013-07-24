@@ -399,6 +399,16 @@ BOOL CDuiTabCtrl::SetCurSel( int nIndex )
     return TRUE;
 }
 
+BOOL CDuiTabCtrl::SetCurSel( LPCTSTR pszTitle )
+{
+	for(int i=0;i<m_lstPages.GetCount();i++)
+	{
+		if(_tcscmp(m_lstPages[i]->GetTitle(),pszTitle)==0)
+			return SetCurSel(i);
+	}
+	return FALSE;
+}
+
 BOOL CDuiTabCtrl::SetItemTitle( int nIndex, LPCTSTR lpszTitle )
 {
     CDuiTab* pTab = GetItem(nIndex);

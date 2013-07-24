@@ -127,6 +127,8 @@ public:
 
     BOOL SetCurSel(int nIndex);
 
+	BOOL SetCurSel(LPCTSTR pszTitle);
+
     BOOL SetItemTitle(int nIndex, LPCTSTR lpszTitle);
 
     BOOL LoadChildren(pugi::xml_node xmlNode);
