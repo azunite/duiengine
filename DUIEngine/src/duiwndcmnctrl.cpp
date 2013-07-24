@@ -588,19 +588,30 @@ CDuiCheckBox::CDuiCheckBox()
 	m_bTabStop=TRUE;
 }
 
-void CDuiCheckBox::GetClient(LPRECT pRect)
+
+CRect CDuiCheckBox::GetCheckRect()
 {
-    *pRect=m_rcWindow;
-    pRect->left+=CheckBoxSize+CheckBoxSpacing;
+	CRect rcClient;
+	GetClient(rcClient);
+	DUIASSERT(m_pSkin);
+	CSize szCheck=m_pSkin->GetSkinSize();
+	CRect rcCheckBox(rcClient.TopLeft(),szCheck);
+	rcCheckBox.OffsetRect(0,(rcClient.Height()-szCheck.cy)/2);
+	return rcCheckBox;
+}
+
+void CDuiCheckBox::GetTextRect( LPRECT pRect )
+{
+	GetClient(pRect);
+	DUIASSERT(m_pSkin);
+	CSize szCheck=m_pSkin->GetSkinSize();
+	pRect->left+=szCheck.cx+CheckBoxSpacing;	
 }
 
 void CDuiCheckBox::OnPaint(CDCHandle dc)
 {
-    CRect rcCheckBox(0,0,CheckBoxSize,CheckBoxSize);
-    rcCheckBox.MoveToXY(m_rcWindow.left,m_rcWindow.top+(m_rcWindow.Height()-CheckBoxSize)/2);
-
+	CRect rcCheckBox=GetCheckRect();
     m_pSkin->Draw(dc, rcCheckBox, _GetDrawState());
-
     __super::OnPaint(dc);
 }
 
@@ -608,8 +619,7 @@ void CDuiCheckBox::DuiDrawFocus( HDC dc )
 {
     if(m_pFocusSkin)
 	{
-		CRect rcCheckBox(0,0,CheckBoxSize,CheckBoxSize);
-		rcCheckBox.MoveToXY(m_rcWindow.left,m_rcWindow.top+(m_rcWindow.Height()-CheckBoxSize)/2);
+		CRect rcCheckBox=GetCheckRect();
 		m_pFocusSkin->Draw(dc,rcCheckBox,0);
 	}else
 	{
@@ -619,9 +629,11 @@ void CDuiCheckBox::DuiDrawFocus( HDC dc )
 
 CSize CDuiCheckBox::GetDesiredSize(LPRECT pRcContainer)
 {
+	DUIASSERT(m_pSkin);
+	CSize szCheck=m_pSkin->GetSkinSize();
 	CSize szRet=__super::GetDesiredSize(pRcContainer);
-	szRet.cx+=CheckBoxSize + CheckBoxSpacing;
-	szRet.cy=max(szRet.cy, CheckBoxSize);
+	szRet.cx+=szCheck.cx + CheckBoxSpacing;
+	szRet.cy=max(szRet.cy, szCheck.cy);
 	return szRet;
 }
 
@@ -783,22 +795,32 @@ CDuiRadioBox::CDuiRadioBox()
 	m_bTabStop=TRUE;
 }
 
-void CDuiRadioBox::GetClient(LPRECT pRect)
+
+CRect CDuiRadioBox::GetRadioRect()
 {
-    *pRect=m_rcWindow;
-    pRect->left+=RadioBoxSize+RadioBoxSpacing;
+	CRect rcClient;
+	GetClient(rcClient);
+	DUIASSERT(m_pSkin);
+	CSize szRadioBox=m_pSkin->GetSkinSize();
+	CRect rcRadioBox(rcClient.TopLeft(),szRadioBox);
+	rcRadioBox.OffsetRect(0,(rcClient.Height()-szRadioBox.cy)/2);
+	return rcRadioBox;
+}
+
+
+void CDuiRadioBox::GetTextRect( LPRECT pRect )
+{
+	GetClient(pRect);
+	DUIASSERT(m_pSkin);
+	CSize szRadioBox=m_pSkin->GetSkinSize();
+	pRect->left+=szRadioBox.cx+RadioBoxSpacing;
 }
 
 void CDuiRadioBox::OnPaint(CDCHandle dc)
 {
-    CRect rcRadioBox(0, 0, RadioBoxSize, RadioBoxSize);
-
-    rcRadioBox.MoveToXY(m_rcWindow.left, m_rcWindow.top + (m_rcWindow.Height() - RadioBoxSize) / 2);
-
-    if (m_pSkin)
-    {
-        m_pSkin->Draw(dc, rcRadioBox, _GetDrawState());
-    }
+	DUIASSERT(m_pSkin);
+    CRect rcRadioBox=GetRadioRect();
+    m_pSkin->Draw(dc, rcRadioBox, _GetDrawState());
     __super::OnPaint(dc);
 }
 
@@ -806,8 +828,7 @@ void CDuiRadioBox::DuiDrawFocus(HDC dc)
 {
     if(m_pFocusSkin)
 	{
-		CRect rcCheckBox(0,0,RadioBoxSize,RadioBoxSize);
-		rcCheckBox.MoveToXY(m_rcWindow.left,m_rcWindow.top+(m_rcWindow.Height()-RadioBoxSize)/2);
+		CRect rcCheckBox=GetRadioRect();
 		m_pFocusSkin->Draw(dc,rcCheckBox,0);
 	}else
 	{
@@ -819,8 +840,9 @@ void CDuiRadioBox::DuiDrawFocus(HDC dc)
 CSize CDuiRadioBox::GetDesiredSize(LPRECT pRcContainer)
 {
 	CSize szRet=__super::GetDesiredSize(pRcContainer);
-	szRet.cx+=RadioBoxSize + RadioBoxSpacing;
-	szRet.cy=max(szRet.cy,RadioBoxSize);
+	CSize szRaio=m_pSkin->GetSkinSize();
+	szRet.cx+=szRaio.cx + RadioBoxSpacing;
+	szRet.cy=max(szRet.cy,szRaio.cy);
 	return szRet;
 }
 

@@ -659,6 +659,7 @@ protected:
     static void _PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pStart,BOOL &bInRange);
 
     virtual BOOL NeedRedrawWhenStateChange();
+	virtual void GetTextRect(LPRECT pRect);
     virtual void DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat);
     virtual void DuiDrawFocus(HDC dc);
 

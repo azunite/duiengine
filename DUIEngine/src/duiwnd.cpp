@@ -653,7 +653,12 @@ HDUIWND CDuiWindow::DuiGetHWNDFromPoint(CPoint ptHitTest, BOOL bOnlyText)
 {
     if (!m_rcWindow.PtInRect(ptHitTest)) return NULL;
 
+	CRect rcClient;
+	GetClient(&rcClient);
 
+	if(!rcClient.PtInRect(ptHitTest))
+		return m_hDuiWnd;	//只在鼠标位于客户区时，才继续搜索子窗口
+	
     HDUIWND hDuiWndChild = NULL;
 
     CDuiWindow *pChild=m_pLastChild;
@@ -752,7 +757,9 @@ void CDuiWindow::OnAttributeChanged( const CDuiStringA & strAttrName,BOOL bLoadi
 
 void CDuiWindow::NotifyInvalidate()
 {
-    NotifyInvalidateRect(m_rcWindow);
+	CRect rcClient;
+	GetClient(&rcClient);
+    NotifyInvalidateRect(rcClient);
 }
 
 void CDuiWindow::NotifyInvalidateRect(LPRECT lprect)
@@ -1007,7 +1014,9 @@ void CDuiWindow::OnPaint(CDCHandle dc)
 
     BeforePaint(dc, DuiDC);
 
-    DuiDrawText(dc,m_strInnerText, m_strInnerText.GetLength(), DuiDC.rcClient, GetTextAlign());
+	CRect rcText;
+	GetTextRect(rcText);
+    DuiDrawText(dc,m_strInnerText, m_strInnerText.GetLength(), rcText, GetTextAlign());
 
     //draw focus rect
     if(GetContainer()->GetDuiFocus()==m_hDuiWnd)
@@ -1101,6 +1110,11 @@ CSize CDuiWindow::GetDesiredSize(LPRECT pRcContainer)
 	return rcTest.Size();
 }
 
+void CDuiWindow::GetTextRect( LPRECT pRect )
+{
+	GetClient(pRect);
+}
+
 void CDuiWindow::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat)
 {
     CGdiAlpha::DrawText(hdc,pszBuf,cchText,pRect,uFormat);
@@ -1109,7 +1123,7 @@ void CDuiWindow::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UIN
 void CDuiWindow::DuiDrawFocus(HDC dc)
 {
     CRect rcFocus;
-    GetClient(&rcFocus);
+    GetTextRect(&rcFocus);
 	if(IsTabStop())	DuiDrawDefFocusRect(dc,rcFocus);
 }
 

@@ -90,7 +90,8 @@ protected:
 
 	void GetDropBtnRect(LPRECT prc);
 	virtual BOOL LoadChildren(pugi::xml_node xmlNode);	
-	
+	virtual void GetTextRect(LPRECT pRect);
+
 	void OnPaint(CDCHandle dc);
 	void OnLButtonDown(UINT nFlags,CPoint pt);
 	void OnLButtonUp(UINT nFlags,CPoint pt);

@@ -354,7 +354,6 @@ class DUI_EXP CDuiCheckBox : public CDuiWindow
 
     enum
     {
-        CheckBoxSize = 15,
         CheckBoxSpacing = 4,
     };
 
@@ -369,10 +368,11 @@ protected:
     CDuiSkinBase *m_pFocusSkin;
 
     UINT _GetDrawState();
+	CRect GetCheckRect();
 
 	virtual CSize GetDesiredSize(LPRECT pRcContainer);
 
-    virtual void GetClient(LPRECT pRect);
+	virtual void GetTextRect(LPRECT pRect);
 
     virtual BOOL NeedRedrawWhenStateChange()
     {
@@ -393,15 +393,15 @@ protected:
     void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, FALSE)
-    DUIWIN_SKIN_ATTRIBUTE("focusskin", m_pFocusSkin, FALSE)
+		DUIWIN_SKIN_ATTRIBUTE("skin", m_pSkin, FALSE)
+		DUIWIN_SKIN_ATTRIBUTE("focusskin", m_pFocusSkin, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()
-    MSG_WM_PAINT(OnPaint)
-    MSG_WM_LBUTTONDOWN(OnLButtonDown)
-    MSG_WM_LBUTTONUP(OnLButtonUp)
-    MSG_WM_KEYDOWN(OnKeyDown)
+		MSG_WM_PAINT(OnPaint)
+		MSG_WM_LBUTTONDOWN(OnLButtonDown)
+		MSG_WM_LBUTTONUP(OnLButtonUp)
+		MSG_WM_KEYDOWN(OnKeyDown)
     DUIWIN_END_MSG_MAP()
 };
 
@@ -455,7 +455,6 @@ class DUI_EXP CDuiRadioBox : public CDuiWindow
 
     enum
     {
-        RadioBoxSize = 15,
         RadioBoxSpacing = 4,
     };
 
@@ -473,12 +472,12 @@ protected:
     CDuiSkinBase *m_pFocusSkin;
 
     UINT _GetDrawState();
+	CRect GetRadioRect();
+	virtual void GetTextRect(LPRECT pRect);
 
 	virtual CSize GetDesiredSize(LPRECT pRcContainer);
 
     virtual BOOL NeedRedrawWhenStateChange();
-
-    virtual void  GetClient(LPRECT pRect);
 
     virtual void DuiDrawFocus(HDC dc);
 

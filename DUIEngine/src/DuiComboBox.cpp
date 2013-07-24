@@ -61,6 +61,9 @@ CDuiComboBox::CDuiComboBox(void)
 ,m_iAnimTime(200)
 {
 	m_bTabStop=TRUE;
+	m_style.SetAttribute("align","left",TRUE);
+	m_style.SetAttribute("valign","middle",TRUE);
+
 	addEvent(DUINM_LBSELCHANGED);
 	addEvent(DUINM_LBSELCHANGING);
 	addEvent(DUINM_RICHEDIT_NOTIFY);
@@ -164,22 +167,19 @@ void CDuiComboBox::CloseUp()
 	m_pListBox = NULL;
 }
 
+
+void CDuiComboBox::GetTextRect( LPRECT pRect )
+{
+	GetClient(pRect);
+	SIZE szBtn=m_pSkinBtn->GetSkinSize();
+	pRect->right-=szBtn.cx;
+}
+
 void CDuiComboBox::OnPaint( CDCHandle dc )
 {
-
 	if(m_iCurSel != -1 && m_pEdit==NULL)
 	{
-		DuiDCPaint DuiDC;
-
-		BeforePaint(dc, DuiDC);
-		CRect rcClient;
-		GetClient(&rcClient);
-		SIZE szBtn=m_pSkinBtn->GetSkinSize();
-		rcClient.right-=szBtn.cx;
-
-		DuiDrawText(dc,m_strInnerText, m_strInnerText.GetLength(), rcClient, DT_LEFT|DT_VCENTER|DT_SINGLELINE|(m_style.m_bDotted?DT_WORD_ELLIPSIS:0));
-
-		AfterPaint(dc, DuiDC);
+		__super::OnPaint(dc);
 	}
 	CRect rcBtn;
 	GetDropBtnRect(&rcBtn);
