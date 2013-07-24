@@ -1,3 +1,8 @@
+2013年7月24日
+1、增加两个控件：calendar,headerctrl及lisctrl的框架。
+2、修改NotifyInvalidate接口为只刷新客户区。原来NotifyInvalidate默认是对整个窗口刷新，以前如果在onscroll中调用了NotifyInvalidate又重新刷新滚动条，导致导致在拖动滚动条时形成闪烁。
+3、修改了DuiGetHWNDFromPoint这个接口。原来如果在非客户区下面有子窗口，找到的将是子窗口。
+
 2013年7月17日
 1、修改界面中有真实子窗口时可能产生的焦点切换问题。
 2、将代码中与文件相关的API由ansi版本切换到Unicode版本。
