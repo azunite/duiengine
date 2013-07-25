@@ -27,14 +27,35 @@
 
 #include "DuiUtilities.h"
 
-#ifndef NO_DUITYPES
-#define _WTYPES_NS DuiEngine
-#include "wtl.mini/duicrack.h"
-#include "wtl.mini/duimisc.h"
-#include "wtl.mini/duigdi.h"
-#endif
+#ifdef USING_ATL
+	#include <atlbase.h>
+	#include <atlapp.h>
+	#include <atlmisc.h>
+	#include <atlgdi.h>
+	#include <atlstr.h>
+	#include <atlcoll.h>
+	#include "wtl.mini/duicrack.h"
+	#define CDuiArray	CAtlArray
+	#define CDuiList	CAtlList
+	#define CDuiMap		CAtlMap
+	#define CDuiStringA	CAtlStringA
+	#define CDuiStringW CAtlStringW
+	#define CDuiStringT CAtlString
+	#define DUI_CA2A	CA2A
+	#define DUI_CA2W	CA2W
+	#define DUI_CW2A	CW2A
+	#define DUI_CA2T	CA2T
+	#define DUI_CW2T	CW2T
+	#define DUI_CT2A	CT2A
+	#define DUI_CT2W	CT2W
+#else//ATL_FREE
+	#define _WTYPES_NS DuiEngine
+	#include "wtl.mini/duicrack.h"
+	#include "wtl.mini/duimisc.h"
+	#include "wtl.mini/duigdi.h"
+	#include "wtl.mini/duistr.h" 
+	#include "wtl.mini/duicoll.h"
+#endif//ATL_FREE
 
-#include "wtl.mini/duistr.h" //注意：如果CDuiStringT已经定义，可以定义NO_DUISTR来防止命名冲突
-#include "wtl.mini/duicoll.h"
 
 #include "DuiAttrCrack.h"

@@ -141,7 +141,7 @@ LRESULT CUIHander::OnInitDialog(HWND hWnd, LPARAM lParam)
 		pList2->SetItemCount(100);
 	}
 	CDuiButton *pBtn=(CDuiButton *)m_pMainDlg->FindChildByCmdID(IDC_REPSEL);
-	m_pMainDlg->GetFocusManager()->RegisterAccelerator(CAccelerator(VK_RETURN,true),pBtn);//给repsel按钮注册一个热键Ctrl+ENTER。
+	m_pMainDlg->GetFocusManager()->RegisterAccelerator(DuiEngine::CAccelerator(VK_RETURN,true),pBtn);//给repsel按钮注册一个热键Ctrl+ENTER。
 #if defined(DLL_DUI) && !defined(_WIN64)
 	CDuiWindow *pTst=m_pMainDlg->FindChildByCmdID(btn_tstevt);
 	DuiSystem::getSingleton().GetScriptModule()->subscribeEvent(pTst,DUINM_COMMAND,"onEvtTstClick");

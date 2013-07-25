@@ -43,14 +43,13 @@ int GetDiff_Months(const COleDateTime& dt1, const COleDateTime& dt2)
     return nMonthDiff;
 }
 
-CString GetLocaleString(LCTYPE LCType, int nMaxLength)
+CDuiStringT GetLocaleString(LCTYPE LCType, int nMaxLength)
 {
-    CString strResult;
-
-    int nResult = ::GetLocaleInfo(LOCALE_USER_DEFAULT, LCType , strResult.GetBufferSetLength(nMaxLength), nMaxLength);
-    strResult.ReleaseBuffer();
-    DUIASSERT(strResult.GetLength() == nResult - 1);
-
+	TCHAR *pszBuf=new TCHAR[nMaxLength+1];
+    int nResult = ::GetLocaleInfo(LOCALE_USER_DEFAULT, LCType ,pszBuf, nMaxLength);
+	pszBuf[nResult]=0;
+	CDuiStringT strResult(pszBuf);
+	delete pszBuf;
     return strResult;
 }
 
@@ -275,7 +274,7 @@ BOOL CDuiDatePickerDay::DrawDay(CDCHandle dc)
     }
 
     // make a text for drawing
-    CString strText;
+    CDuiStringT strText;
     strText.Format(_T("%i"), dtDay.GetDay());
 
     // draw item content
@@ -587,7 +586,7 @@ void CDuiDatePickerMonth::DrawMonthHeader(CDCHandle dc)
 
     HFONT hFontOld = (HFONT)dc.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
 
-    CString strText;
+    CDuiStringT strText;
 
     if (!m_pControl->m_strYearMonthFormat.IsEmpty())
     {
@@ -643,7 +642,7 @@ void CDuiDatePickerMonth::DrawDaysOfWeek(CDCHandle dc)
 
     for (int i = 0; i < XTP_WEEK_DAYS; i++)
     {
-        CString strText(m_pControl->GetDayOfWeekName(i));
+        CDuiStringT strText(m_pControl->GetDayOfWeekName(i));
 
         dc.GetTextExtent(strText, strText.GetLength(), &szText);
         nWholeLetterWidth = max(nWholeLetterWidth, szText.cx);
@@ -659,7 +658,7 @@ void CDuiDatePickerMonth::DrawDaysOfWeek(CDCHandle dc)
         nMaxX = rcItem.right;
 
         // get item text
-        CString strText(m_pControl->GetDayOfWeekName(pDay->GetDate().GetDayOfWeek()));
+        CDuiStringT strText(m_pControl->GetDayOfWeekName(pDay->GetDate().GetDayOfWeek()));
 
         // Check if we can draw whole text
         if (nWholeLetterWidth + 4 <= rcItem.Width())
@@ -1051,7 +1050,7 @@ void CDuiMonthPicker::OnSize(UINT nType, CSize)
 
 void CDuiMonthPicker::CreateMonth()
 {
-    CString s = m_dtFirstMonth.Format();
+    CDuiStringT s = m_dtFirstMonth.Format();
     COleDateTime dtNextMonth(m_dtFirstMonth);
 
     m_monthPicker = new CDuiDatePickerMonth(this, dtNextMonth);
@@ -1108,7 +1107,7 @@ CSize CDuiMonthPicker::CalcButtonSize() const
     if (m_btnToday != NULL)
     {
         CSize sz;
-        CString strText = m_btnToday->GetCaption();
+        CDuiStringT strText = m_btnToday->GetCaption();
 
         dc.GetTextExtent(strText, strText.GetLength(), &sz);
 
@@ -1162,7 +1161,7 @@ void CDuiMonthPicker::DrawButtons(CDCHandle dc)
         }
 
         HFONT hFontOld = (HFONT)dc.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
-        CString strCaption = _T("Today");
+        CDuiStringT strCaption = _T("Today");
 
         dc.SetTextColor(RGB(0,0,0));
         dc.DrawText(strCaption, strCaption.GetLength(), rcButtonX, DT_VCENTER | DT_CENTER | DT_SINGLELINE);

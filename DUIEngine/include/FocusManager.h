@@ -4,28 +4,30 @@
 #include "Accelerator.h"
 #include "wtl.mini/duicoll.h"
 
+template<>
+class  CElementTraits< DuiEngine::CAccelerator > : public CElementTraitsBase< DuiEngine::CAccelerator >
+
+{
+public:
+	static ULONG Hash(INARGTYPE element ) throw()
+	{
+		return MAKELONG(element.GetModifier(),element.GetKey());
+	}
+
+	static bool CompareElements( INARGTYPE element1, INARGTYPE element2 )
+	{
+		return Hash(element1)==Hash(element2);
+	}
+
+	static int CompareElementsOrdered( INARGTYPE element1, INARGTYPE element2 )
+	{
+		return Hash(element1)-Hash(element2);
+	}
+};
+
 namespace DuiEngine
 {
-	template<>
-	class  CElementTraits< CAccelerator > : public CElementTraitsBase< CAccelerator >
 
-	{
-	public:
-		static ULONG Hash(INARGTYPE element ) throw()
-		{
-			return MAKELONG(element.GetModifier(),element.GetKey());
-		}
-
-		static bool CompareElements( INARGTYPE element1, INARGTYPE element2 )
-		{
-			return Hash(element1)==Hash(element2);
-		}
-
-		static int CompareElementsOrdered( INARGTYPE element1, INARGTYPE element2 )
-		{
-			return Hash(element1)-Hash(element2);
-		}
-	};
 
 	template<class T>
 	void CopyDuiList(CDuiList<T> &sour,CDuiList<T> &dest)

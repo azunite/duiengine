@@ -178,8 +178,11 @@ CDuiMenu::CDuiMenu():m_pParent(NULL),m_hMenu(0)
 {
 }
 
-CDuiMenu::CDuiMenu(CDuiMenu *pParent):m_pParent(pParent)
+CDuiMenu::CDuiMenu( const CDuiMenu & src )
 {
+	m_pParent=src.m_pParent;
+	m_hMenu=src.m_hMenu;
+	m_menuSkin=src.m_menuSkin;	
 }
 
 CDuiMenu::~CDuiMenu(void)
@@ -211,7 +214,8 @@ BOOL CDuiMenu::LoadMenu( UINT uResID )
 CDuiMenu CDuiMenu::GetSubMenu(int nPos)
 {
     HMENU hSubMenu=::GetSubMenu(m_hMenu,nPos);
-    CDuiMenu ret(this);
+    CDuiMenu ret;
+	ret.m_pParent=this;
     ret.m_hMenu=hSubMenu;
     ret.m_menuSkin=m_menuSkin;
     return ret;

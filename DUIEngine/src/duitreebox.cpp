@@ -94,7 +94,7 @@ CDuiTreeItem* CDuiTreeBox::InsertItem(LPCWSTR pszXml,DWORD dwData,HSTREEITEM hPa
 	pugi::xml_document xmlDoc;
     CDuiStringA strXml=DUI_CW2A(pszXml,CP_UTF8);;
 
-	if(!xmlDoc.load_buffer(strXml.GetData(),strXml.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return NULL;
+	if(!xmlDoc.load_buffer((LPCSTR)strXml,strXml.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return NULL;
 
     HSTREEITEM hItem=InsertItem(xmlDoc.first_child(),dwData,hParent,hInsertAfter,bEnsureVisible);
     return GetItem(hItem);

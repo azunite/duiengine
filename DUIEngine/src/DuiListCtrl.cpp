@@ -34,7 +34,7 @@ namespace DuiEngine
 		DUIASSERT(m_pHeader->IsClass(CDuiHeaderCtrl::GetClassName()));
 		//设定header的pos属性
 		CDuiStringA strPos;
-		strPos.SmallFormat("0,0,-0,%d",m_nHeaderHeight);
+		strPos.Format("0,0,-0,%d",m_nHeaderHeight);
 		m_pHeader->SetAttribute("pos",strPos);
 		m_pHeader->subscribeEvent(DUINM_HDCLICK,Subscriber(&CDuiListCtrl::OnHeaderClick,this));
 		m_pHeader->subscribeEvent(DUINM_HDSIZECHANGING,Subscriber(&CDuiListCtrl::OnHeaderSizeChanging,this));

@@ -311,7 +311,7 @@ void CDuiCalendar::DrawTitle(CDCHandle &dc)
    if(m_pTitleSkin)
 	   m_pTitleSkin->Draw(dc,rect,0);
    else
-	   CGdiAlpha::FillRect(dc,&rect, CBrush(m_crTitleBack));
+	   CGdiAlpha::FillRect(dc,&rect, CBrush((HBRUSH)::GetStockObject(m_crTitleBack)));
 
    int nWid=rect.Width()/7;
    int x=rect.left;

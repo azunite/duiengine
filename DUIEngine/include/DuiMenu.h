@@ -186,6 +186,7 @@ class DUI_EXP CDuiMenu
 public:
     CDuiMenu();
     ~CDuiMenu(void);
+	CDuiMenu(const CDuiMenu & src);
 
     BOOL LoadMenu(UINT uResID);
 
@@ -200,7 +201,6 @@ public:
     HMENU m_hMenu;
 
 protected:
-    CDuiMenu(CDuiMenu *pParent);
 
     void BuildMenu(HMENU menuPopup,pugi::xml_node xmlNode);
 

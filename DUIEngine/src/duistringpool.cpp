@@ -70,7 +70,7 @@ BOOL DuiStringPool::Init( pugi::xml_node xmlNode )
 
 LPCTSTR DuiStringPool::Get( UINT uID )
 {
-    m_strTmp.Assign(NULL);
+    m_strTmp=_T("");
     if(HasKey(uID))
     {
         m_strTmp=GetKeyObject(uID);

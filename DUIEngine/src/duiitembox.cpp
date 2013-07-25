@@ -21,7 +21,7 @@ CDuiPanel* CDuiItemBox::InsertItem(LPCWSTR pszXml,int iItem/*=-1*/,BOOL bEnsureV
     CDuiStringA strXml=DUI_CW2A(pszXml,CP_UTF8);;
 
 	pugi::xml_document xmlDoc;
-	if(!xmlDoc.load_buffer(strXml.GetData(),strXml.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return NULL;
+	if(!xmlDoc.load_buffer((LPCSTR)strXml,strXml.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return NULL;
 
     CDuiWindow *pChild=m_pFirstChild,*pPrevChild=ICWND_FIRST;
     for(int iChild=0; iChild<iItem || iItem==-1; iChild++)

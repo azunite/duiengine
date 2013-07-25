@@ -132,7 +132,7 @@ int CDuiListBoxEx::InsertItem(int iItem,LPCWSTR pszXml,DWORD dwData/*=0*/)
 	{
 		CDuiStringA strUtf8=DUI_CW2A(pszXml,CP_UTF8);
 		pugi::xml_document xmlDoc;
-		if(!xmlDoc.load_buffer(strUtf8.GetData(),strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return -1;
+		if(!xmlDoc.load_buffer((LPCSTR)strUtf8,strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return -1;
 		return InsertItem(iItem,xmlDoc.first_child(),dwData);
 	}else
 	{
@@ -221,7 +221,7 @@ BOOL CDuiListBoxEx::SetItemCount(int nItems,LPCTSTR pszXmlTemplate)
 	{
 		CDuiStringA strUtf8=DUI_CT2A(pszXmlTemplate,CP_UTF8);
 		pugi::xml_document xmlDoc;
-		if(!xmlDoc.load_buffer(strUtf8.GetData(),strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
+		if(!xmlDoc.load_buffer((LPCSTR)strUtf8,strUtf8.GetLength(),pugi::parse_default,pugi::encoding_utf8)) return FALSE;
 		if(IsVirtual())
 		{
 			if(m_pTemplPanel)

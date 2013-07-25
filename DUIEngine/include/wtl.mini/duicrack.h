@@ -55,6 +55,8 @@ public: \
 		{ \
 		case 0:
 
+#ifndef END_MSG_MAP
+
 #define END_MSG_MAP() \
 	break; \
 		default: \
@@ -63,6 +65,8 @@ public: \
 		} \
 		return FALSE; \
 	}
+
+#endif
 
 // Try to prevent problems with WM_CTLCOLOR* messages when
 // the message wasn't really handled

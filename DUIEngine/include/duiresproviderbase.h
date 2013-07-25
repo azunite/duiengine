@@ -14,62 +14,62 @@
 
 #define MAX_RES_TYPE		10
 
-
-namespace DuiEngine
-{
-
 class DUI_EXP DuiResID
 {
 public:
-    DuiResID(LPCTSTR pszType,UINT id=0)
-    {
-        if(pszType)
-        {
-            _tcscpy_s(szType,MAX_RES_TYPE,pszType);
-        }
-        else
-        {
-            szType[0]=0;
-        }
-        nID=(int)id;
-    }
+	DuiResID(LPCTSTR pszType,UINT id=0)
+	{
+		if(pszType)
+		{
+			_tcscpy_s(szType,MAX_RES_TYPE,pszType);
+		}
+		else
+		{
+			szType[0]=0;
+		}
+		nID=(int)id;
+	}
 
-    TCHAR szType[MAX_RES_TYPE+1];
-    int	 nID;
+	TCHAR szType[MAX_RES_TYPE+1];
+	int	 nID;
 };
 
 
 template<>
-class DUI_EXP CElementTraits< DuiResID > :
-    public CElementTraitsBase< DuiResID >
+class CElementTraits< DuiResID > :
+	public CElementTraitsBase< DuiResID >
 {
 public:
-    static ULONG Hash( INARGTYPE resid )
-    {
-        ULONG_PTR uRet=0;
-        CDuiStringT strType=resid.szType;
-        strType.MakeLower();
-        for(int i=0; i<strType.GetLength(); i++)
-        {
-            uRet=uRet*68+strType[i];
-        }
+	static ULONG Hash( INARGTYPE resid )
+	{
+		ULONG_PTR uRet=0;
+		CDuiStringT strType=resid.szType;
+		strType.MakeLower();
+		for(int i=0; i<strType.GetLength(); i++)
+		{
+			uRet=uRet*68+strType[i];
+		}
 
-        return (ULONG)(uRet*10000+(UINT)resid.nID);
-    }
+		return (ULONG)(uRet*10000+(UINT)resid.nID);
+	}
 
-    static bool CompareElements( INARGTYPE element1, INARGTYPE element2 )
-    {
-        return _tcsicmp(element1.szType,element2.szType)==0 && element1.nID==element2.nID;
-    }
+	static bool CompareElements( INARGTYPE element1, INARGTYPE element2 )
+	{
+		return _tcsicmp(element1.szType,element2.szType)==0 && element1.nID==element2.nID;
+	}
 
-    static int CompareElementsOrdered( INARGTYPE element1, INARGTYPE element2 )
-    {
-        int nRet=_tcsicmp(element1.szType,element2.szType);
-        if(nRet<0) return -1;
-        if(nRet>0) return 1;
-        return element1.nID-element2.nID;
-    }
+	static int CompareElementsOrdered( INARGTYPE element1, INARGTYPE element2 )
+	{
+		int nRet=_tcsicmp(element1.szType,element2.szType);
+		if(nRet<0) return -1;
+		if(nRet>0) return 1;
+		return element1.nID-element2.nID;
+	}
 };
+
+namespace DuiEngine
+{
+
 
 class DUI_EXP DuiResProviderBase
 {

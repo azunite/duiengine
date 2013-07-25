@@ -909,10 +909,11 @@ void CDuiMaskEdit::SetMaskState()
 
 CDuiStringT CDuiMaskEdit::GetWindowText()
 {
-	CDuiStringT strTxt;
 	int nLen=__super::GetWindowTextLength();
-	strTxt.Assign(_T(" "),nLen);
-	__super::GetWindowText((LPTSTR)strTxt.GetData(),nLen);
+	TCHAR *pszBuf=new TCHAR[nLen+1];
+	__super::GetWindowText(pszBuf,nLen);
+	CDuiStringT strTxt(pszBuf,nLen);
+	delete []pszBuf;
 	return strTxt;
 }
 
