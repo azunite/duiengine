@@ -63,6 +63,8 @@ HWND CDuiHostWnd::Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWO
         }
     }
 
+	if(nWidth==0 || nHeight==0) CenterWindow(hWnd);
+
     SendMessage(WM_INITDIALOG, (WPARAM)hWnd);
     return hWnd;
 }
@@ -197,14 +199,10 @@ UINT_PTR CDuiHostWnd::DoModal(HWND hWndParent/* = NULL*/, LPRECT rect /*= NULL*/
 
     HWND hWndLastActive = DuiThreadActiveWndManager::SetActive(m_hWnd);
 
-    if (!rect)
-        CenterWindow();
-
 	if(m_dwDlgExStyle&WS_EX_TOOLWINDOW)
 		::ShowWindow(m_hWnd,SW_SHOWNOACTIVATE);
 	else
 		::ShowWindow(m_hWnd,SW_SHOWNORMAL);
-//     ::SetWindowPos(m_hWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_SHOWWINDOW);
 
     _ModalMessageLoop();
 
