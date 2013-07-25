@@ -36,8 +36,8 @@ public:
 
 
 template<>
-class CElementTraits< DuiResID > :
-	public CElementTraitsBase< DuiResID >
+class _COLL_NS::CElementTraits< DuiResID > :
+	public _COLL_NS::CElementTraitsBase< DuiResID >
 {
 public:
 	static ULONG Hash( INARGTYPE resid )

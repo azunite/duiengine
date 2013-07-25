@@ -52,8 +52,8 @@ public:
 };
 
 template<>
-class CElementTraits< FontKey > :
-	public CElementTraitsBase<FontKey >
+class _COLL_NS::CElementTraits< FontKey > :
+	public _COLL_NS::CElementTraitsBase<FontKey >
 {
 public:
 	static ULONG Hash( INARGTYPE fontKey )

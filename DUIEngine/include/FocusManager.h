@@ -5,7 +5,7 @@
 #include "wtl.mini/duicoll.h"
 
 template<>
-class  CElementTraits< DuiEngine::CAccelerator > : public CElementTraitsBase< DuiEngine::CAccelerator >
+class  _COLL_NS::CElementTraits< DuiEngine::CAccelerator > : public _COLL_NS::CElementTraitsBase< DuiEngine::CAccelerator >
 
 {
 public:

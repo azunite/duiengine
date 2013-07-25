@@ -28,6 +28,7 @@
 #include "DuiUtilities.h"
 
 #ifdef USING_ATL
+	#define _COLL_NS	ATL
 	#include <atlbase.h>
 	#include <atlapp.h>
 	#include <atlmisc.h>
@@ -50,12 +51,13 @@
 	#define DUI_CT2W	CT2W
 #else//ATL_FREE
 	#define _WTYPES_NS DuiEngine
+	#define _COLL_NS	DuiEngine
 	#include "wtl.mini/duicrack.h"
 	#include "wtl.mini/duimisc.h"
 	#include "wtl.mini/duigdi.h"
 	#include "wtl.mini/duistr.h" 
 	#include "wtl.mini/duicoll.h"
-#endif//ATL_FREE
+#endif//USING_ATL
 
 
 #include "DuiAttrCrack.h"
