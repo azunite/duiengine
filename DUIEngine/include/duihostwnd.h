@@ -30,6 +30,23 @@
 namespace DuiEngine
 {
 
+	class CDuiHostWnd;
+	class CTranslucentHostWnd : public CSimpleWnd
+	{
+	public:
+		CTranslucentHostWnd(CDuiHostWnd* pOwner):m_pOwner(pOwner)
+		{
+		}
+
+		void OnPaint(CDCHandle dc);
+
+		BEGIN_MSG_MAP_EX(CTranslucentHostWnd)
+			MSG_WM_PAINT(OnPaint)
+			END_MSG_MAP()
+	private:
+		CDuiHostWnd *m_pOwner;
+	};
+
 class CDuiTipCtrl;
 
 class DUI_EXP CDuiHostWnd
@@ -37,6 +54,7 @@ class DUI_EXP CDuiHostWnd
     , public CDuiFrame
     , protected IDuiRealWndHandler
 {
+	friend class CTranslucentHostWnd;
 public:
     CDuiHostWnd(UINT uResID = 0);
     virtual ~CDuiHostWnd() {}
@@ -95,6 +113,9 @@ protected:
     virtual BOOL _PreTranslateMessage(MSG* pMsg);
 
     CDuiArray<CDuiMessageFilter*> m_aMsgFilter;
+
+private:
+	CTranslucentHostWnd			m_dummyWnd;	//半透明窗口使用的一个响应WM_PAINT消息的窗口
 protected:
     //////////////////////////////////////////////////////////////////////////
     // Message handler
@@ -175,6 +196,9 @@ protected:
 
     /*virtual */
     BOOL DuiSetCaretPos(int x,int y);
+
+	/*virtual */
+	BOOL DuiUpdateWindow();
 
     //////////////////////////////////////////////////////////////////////////
     // IDuiRealWndHandler

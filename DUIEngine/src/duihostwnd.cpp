@@ -11,8 +11,6 @@ namespace DuiEngine
 {
 
 #define TIMER_CARET	1
-#define TIMER_TRANSLUCENT	2
-
 
 //////////////////////////////////////////////////////////////////////////
 // CDuiHostWnd
@@ -34,6 +32,7 @@ CDuiHostWnd::CDuiHostWnd(UINT uResID/* =0*/)
     , m_bResizable(FALSE)
     , m_szMin(200, 200)
     , m_pTipCtrl(NULL)
+	, m_dummyWnd(this)
 {
     SetContainer(this);
 }
@@ -60,6 +59,7 @@ HWND CDuiHostWnd::Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWO
         if(m_bTranslucent)
         {
             SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+			m_dummyWnd.Create(_T("dummyLayeredWnd"),WS_POPUP|WS_VISIBLE,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,-1,-1,1,1,NULL,NULL);
         }
     }
 
@@ -163,8 +163,8 @@ BOOL CDuiHostWnd::SetXml(pugi::xml_node xmlNode )
 
 	RedrawRegion(CDCHandle(m_memDC),CRgn());
 
-	if(m_bTranslucent) SetDuiTimer(TIMER_TRANSLUCENT,10);
-	else KillDuiTimer(TIMER_TRANSLUCENT);
+// 	if(m_bTranslucent) SetDuiTimer(TIMER_TRANSLUCENT,10);
+// 	else KillDuiTimer(TIMER_TRANSLUCENT);
 
 	return TRUE;
 }
@@ -302,6 +302,8 @@ void CDuiHostWnd::_Redraw()
 
     if(!m_bTranslucent)
         Invalidate(FALSE);
+	else if(m_dummyWnd.IsWindow()) 
+		m_dummyWnd.Invalidate(FALSE);
 }
 
 BOOL CDuiHostWnd::_PreTranslateMessage(MSG* pMsg)
@@ -321,7 +323,7 @@ BOOL CDuiHostWnd::_PreTranslateMessage(MSG* pMsg)
 
 void CDuiHostWnd::OnPrint(CDCHandle dc, UINT uFlags)
 {
-    if(m_bTranslucent && !uFlags && (!m_bNeedAllRepaint && !m_bNeedRepaint)) return;
+    if(!m_bNeedAllRepaint && !m_bNeedRepaint) return;
     if (m_bNeedAllRepaint)
     {
         if (!m_rgnInvalidate.IsNull())
@@ -378,7 +380,8 @@ void CDuiHostWnd::OnPrint(CDCHandle dc, UINT uFlags)
 
 void CDuiHostWnd::OnPaint(CDCHandle dc)
 {
-    OnPrint(m_bTranslucent?NULL:CPaintDC(m_hWnd).m_hDC, 0);
+	CPaintDC dc1(m_hWnd);
+    OnPrint(m_bTranslucent?NULL:dc1.m_hDC, 0);
 }
 
 BOOL CDuiHostWnd::OnEraseBkgnd(CDCHandle dc)
@@ -403,6 +406,10 @@ void CDuiHostWnd::OnDestroy()
             m_pTipCtrl->DestroyWindow();
         delete m_pTipCtrl;
     }
+	if(m_bTranslucent && m_dummyWnd.IsWindow())
+	{
+		m_dummyWnd.DestroyWindow();
+	}
 
     DuiSendMessage(WM_DESTROY);
 
@@ -517,11 +524,7 @@ void CDuiHostWnd::OnTimer(UINT_PTR idEvent)
 
 void CDuiHostWnd::OnDuiTimer( char cTimerID )
 {
-    if(cTimerID==TIMER_TRANSLUCENT)
-    {
-        OnPrint(NULL,0);
-    }
-    else if(cTimerID==TIMER_CARET)
+    if(cTimerID==TIMER_CARET)
     {
 		DUIASSERT(m_bCaretShowing);
         DrawCaret(m_ptCaret,TRUE);
@@ -708,10 +711,14 @@ void CDuiHostWnd::OnRedraw(const CRect &rc)
     }
     m_bNeedRepaint = TRUE;
 
-    if(!m_bTranslucent)//半透明状态下由Timer去刷新
+    if(!m_bTranslucent)
     {
         InvalidateRect(rc, FALSE);
-    }
+    }else
+	{//半透明状态下由Timer去刷新
+		if(m_dummyWnd.IsWindow()) 
+			m_dummyWnd.Invalidate(FALSE);
+	}
 }
 
 BOOL CDuiHostWnd::OnReleaseDuiCapture()
@@ -818,6 +825,12 @@ BOOL CDuiHostWnd::DuiSetCaretPos( int x,int y )
 		DrawCaret(m_ptCaret,TRUE);
 	}
     return TRUE;
+}
+
+
+BOOL CDuiHostWnd::DuiUpdateWindow()
+{
+	return UpdateWindow(m_bTranslucent?m_dummyWnd.m_hWnd:m_hWnd);
 }
 
 LRESULT CDuiHostWnd::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
@@ -997,4 +1010,14 @@ void CDuiHostWnd::OnKillFocus( HWND wndFocus )
 {
 	DoFrameEvent(WM_ACTIVATE,WA_INACTIVE,0);
 }
+
+//////////////////////////////////////////////////////////////////////////
+//	CTranslucentHostWnd
+//////////////////////////////////////////////////////////////////////////
+void CTranslucentHostWnd::OnPaint( CDCHandle dc )
+{
+	CPaintDC dc1(m_hWnd);
+	m_pOwner->OnPrint(NULL,0);
+}
+
 }//namespace DuiEngine

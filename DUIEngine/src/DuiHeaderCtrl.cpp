@@ -172,7 +172,7 @@ namespace DuiEngine
 			{//拖动表头项
 				if(m_bItemSwapEnable)
 				{
-					ImageList_DragLeave(GetContainer()->GetHostHwnd());
+					ImageList_DragLeave(GetDesktopWindow());
 					ImageList_EndDrag();
 					ImageList_Destroy(m_hDragImglst);
 					m_hDragImglst=NULL;
@@ -239,7 +239,7 @@ namespace DuiEngine
 					DrawDraggingState(m_dwDragTo);
 					m_hDragImglst=CreateDragImage(LOWORD(m_dwHitTest));
 					ImageList_BeginDrag(m_hDragImglst,0,(m_ptClick.x-rcItem.left),(m_ptClick.y-rcItem.top));
-					ImageList_DragEnter(GetContainer()->GetHostHwnd(),pt.x,pt.y);
+					ImageList_DragEnter(GetDesktopWindow(),pt.x,pt.y);
 				}
 			}
 			if(IsItemHover(m_dwHitTest))
@@ -249,12 +249,14 @@ namespace DuiEngine
 					DWORD dwDragTo=HitTest(pt);
 					if(IsItemHover(dwDragTo) && m_dwDragTo!=dwDragTo)
 					{
-						ImageList_DragShowNolock(FALSE);
+// 						ImageList_DragShowNolock(FALSE);
 						DrawDraggingState(dwDragTo);
-						ImageList_DragShowNolock(TRUE);
+// 						ImageList_DragShowNolock(TRUE);
 						m_dwDragTo=dwDragTo;
 					}
-					ImageList_DragMove(pt.x,m_ptClick.y);
+					CPoint pt2(pt.x,m_ptClick.y);
+					ClientToScreen(GetContainer()->GetHostHwnd(),&pt2);
+					ImageList_DragMove(pt2.x,pt2.y);
 				}
 			}else if(m_dwHitTest!=-1)
 			{//调节宽度
@@ -262,7 +264,7 @@ namespace DuiEngine
 				if(cxNew<0) cxNew=0;
 				m_arrItems[LOWORD(m_dwHitTest)].cx=cxNew;
 				NotifyInvalidate();
-				UpdateWindow(GetContainer()->GetHostHwnd());//立即更新窗口
+				GetContainer()->DuiUpdateWindow();//立即更新窗口
 				//发出调节宽度消息
 				DUINMHDSIZECHANGING	nm;
 				nm.hdr.code=DUINM_HDSIZECHANGING;

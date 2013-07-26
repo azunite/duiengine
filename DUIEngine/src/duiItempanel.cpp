@@ -170,6 +170,11 @@ BOOL CDuiItemPanel::DuiSetCaretPos( int x,int y )
     return m_pFrmHost->GetContainer()->DuiSetCaretPos(x,y);
 }
 
+BOOL CDuiItemPanel::DuiUpdateWindow()
+{
+	return m_pFrmHost->GetContainer()->DuiUpdateWindow();
+}
+
 void CDuiItemPanel::ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove)
 {
     ModifyState(dwStateAdd,dwStateRemove,FALSE);

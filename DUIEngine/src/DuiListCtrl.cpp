@@ -278,7 +278,7 @@ namespace DuiEngine
 		}
 		NotifyInvalidate();
 		if(uCode==SB_THUMBTRACK)
-			UpdateWindow(GetContainer()->GetHostHwnd());
+			GetContainer()->DuiUpdateWindow();
 		return bRet;
 	}
 

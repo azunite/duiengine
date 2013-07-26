@@ -742,7 +742,7 @@ BOOL CDuiScrollView::OnScroll(BOOL bVertical,UINT uCode,int nPos)
             SetViewOrigin(ptOrigin);
 
  		if(uCode==SB_THUMBTRACK)
-			::UpdateWindow(GetContainer()->GetHostHwnd());
+			GetContainer()->DuiUpdateWindow();
     }
     return bRet;
 }

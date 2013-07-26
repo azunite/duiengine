@@ -55,6 +55,8 @@ public:
 
     virtual BOOL DuiSetCaretPos(int x,int y);
 
+	virtual BOOL DuiUpdateWindow();
+
     virtual void ModifyItemState(DWORD dwStateAdd, DWORD dwStateRemove);
 
     virtual HDUIWND DuiGetHWNDFromPoint(POINT ptHitTest, BOOL bOnlyText);

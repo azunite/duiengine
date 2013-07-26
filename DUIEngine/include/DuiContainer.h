@@ -43,6 +43,8 @@ public:
     virtual BOOL DuiShowCaret(BOOL bShow)=NULL;
 
     virtual BOOL DuiSetCaretPos(int x,int y)=NULL;
+
+	virtual BOOL DuiUpdateWindow()=NULL;
 };
 
 
