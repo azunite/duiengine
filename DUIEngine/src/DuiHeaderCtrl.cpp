@@ -172,8 +172,10 @@ namespace DuiEngine
 			{//拖动表头项
 				if(m_bItemSwapEnable)
 				{
-					ImageList_DragLeave(GetDesktopWindow());
+					ImageList_DragLeave(NULL);
 					ImageList_EndDrag();
+// 					ShowCursor(TRUE);
+
 					ImageList_Destroy(m_hDragImglst);
 					m_hDragImglst=NULL;
 					if(m_dwDragTo!=m_dwHitTest && IsItemHover(m_dwDragTo))
@@ -240,8 +242,10 @@ namespace DuiEngine
 					CRect rcItem=GetItemRect(LOWORD(m_dwHitTest));
 					DrawDraggingState(m_dwDragTo);
 					m_hDragImglst=CreateDragImage(LOWORD(m_dwHitTest));
+// 					ShowCursor(FALSE);
+// 					ImageList_SetDragCursorImage(m_hDragImglst,0,(m_ptClick.x-rcItem.left),(m_ptClick.y-rcItem.top));
 					ImageList_BeginDrag(m_hDragImglst,0,(m_ptClick.x-rcItem.left),(m_ptClick.y-rcItem.top));
-					ImageList_DragEnter(GetDesktopWindow(),pt.x,pt.y);
+					ImageList_DragEnter(NULL,pt.x,pt.y);
 				}
 			}
 			if(IsItemHover(m_dwHitTest))
@@ -423,11 +427,19 @@ namespace DuiEngine
 		ReleaseDuiDC(dc);
 	}
 
-	int CDuiHeaderCtrl::GetWidth()
+	int CDuiHeaderCtrl::GetTotalWidth()
 	{
 		int nRet=0;
 		for(int i=0;i<m_arrItems.GetCount();i++)
 			nRet+=m_arrItems[i].cx;
 		return nRet;
 	}
+
+	int CDuiHeaderCtrl::GetItemWidth( int iItem )
+	{
+		if(iItem<0 || iItem>= m_arrItems.GetCount()) return -1;
+		return m_arrItems[iItem].cx;
+	}
+
+
 }//end of namespace DuiEngine

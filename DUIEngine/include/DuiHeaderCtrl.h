@@ -39,7 +39,8 @@ namespace DuiEngine
 		BOOL GetItem(int iItem,DUIHDITEM *pItem);
 
 		int GetItemCount(){return m_arrItems.GetCount();}
-		int GetWidth();
+		int GetTotalWidth();
+		int GetItemWidth(int iItem);
 
 		BOOL DeleteItem(int iItem);
 		void DeleteAllItems();
