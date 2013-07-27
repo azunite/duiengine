@@ -178,9 +178,11 @@ namespace DuiEngine
 					m_hDragImglst=NULL;
 					if(m_dwDragTo!=m_dwHitTest && IsItemHover(m_dwDragTo))
 					{
-						DUIHDITEM t=m_arrItems[LOWORD(m_dwDragTo)];
-						m_arrItems[LOWORD(m_dwDragTo)]=m_arrItems[LOWORD(m_dwHitTest)];
-						m_arrItems[LOWORD(m_dwHitTest)]=t;
+						DUIHDITEM t=m_arrItems[LOWORD(m_dwHitTest)];
+						m_arrItems.RemoveAt(LOWORD(m_dwHitTest));
+						int nPos=LOWORD(m_dwDragTo);
+						if(nPos>LOWORD(m_dwHitTest)) nPos--;//要考虑将自己移除的影响
+						m_arrItems.InsertAt(LOWORD(m_dwDragTo),t);
 						//发消息通知宿主表项位置发生变化
 						DUINMHDSWAP	nm;
 						nm.hdr.code=DUINM_HDSWAP;
@@ -188,7 +190,7 @@ namespace DuiEngine
 						nm.hdr.hwndFrom=0;
 						nm.pSender=this;
 						nm.iOldIndex=LOWORD(m_dwHitTest);
-						nm.iNewIndex=LOWORD(m_dwDragTo);
+						nm.iNewIndex=nPos;
 						DuiNotify((LPNMHDR)&nm);
 					}
 					m_dwHitTest=HitTest(pt);
@@ -249,10 +251,11 @@ namespace DuiEngine
 					DWORD dwDragTo=HitTest(pt);
 					if(IsItemHover(dwDragTo) && m_dwDragTo!=dwDragTo)
 					{
-// 						ImageList_DragShowNolock(FALSE);
-						DrawDraggingState(dwDragTo);
-// 						ImageList_DragShowNolock(TRUE);
 						m_dwDragTo=dwDragTo;
+						DUITRACE(_T("\n!!! dragto %d"),LOWORD(dwDragTo));
+						ImageList_DragShowNolock(FALSE);
+						DrawDraggingState(dwDragTo);
+						ImageList_DragShowNolock(TRUE);
 					}
 					CPoint pt2(pt.x,m_ptClick.y);
 					ClientToScreen(GetContainer()->GetHostHwnd(),&pt2);
@@ -402,13 +405,15 @@ namespace DuiEngine
 		DuiDCPaint duidc;
 		BeforePaint(dc,duidc);
 		CRect rcItem(rcClient.left,rcClient.top,rcClient.left,rcClient.bottom);
+		int iDragTo=LOWORD(dwDragTo);
+		int iDragFrom=LOWORD(m_dwHitTest);
 		for(int i=0;i<m_arrItems.GetCount();i++)
 		{
-			if(i==LOWORD(dwDragTo) && LOWORD(dwDragTo)<=LOWORD(m_dwHitTest))
+			if((i==iDragTo && iDragTo<=iDragFrom) || (i==iDragTo+1 && iDragTo>iDragFrom))
 			{
-				rcItem.OffsetRect(m_arrItems[LOWORD(m_dwHitTest)].cx,0);
+				rcItem.OffsetRect(m_arrItems[iDragFrom].cx,0);
 			}
-			if(i==LOWORD(m_dwHitTest))	continue;
+			if(i==iDragFrom) continue;
 
 			rcItem.left=rcItem.right;
 			rcItem.right=rcItem.left+m_arrItems[i].cx;
