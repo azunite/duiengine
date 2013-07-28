@@ -32,4 +32,5 @@
 #define	hd_test		65559
 #define	lc_test		65560
 #define	btn_lst_init		65561
+#define	btn_lst_insertcol		65562
 /*----------------------------RES_BUILDER:end------------------------------------->*/

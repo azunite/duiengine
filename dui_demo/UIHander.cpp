@@ -345,3 +345,22 @@ void CUIHander::OnBtnInitListClick()
 		}
 	}
 }
+
+//init listctrl
+void CUIHander::OnBtnInsertColClick()
+{
+	CDuiListCtrl *pList=m_pMainDlg->FindChildByName2<CDuiListCtrl *>("lc_test");
+	if(pList)
+	{
+		CDuiStringT strCol;
+		int iCol=pList->GetColumnCount();
+		strCol.Format(_T("col %d"),iCol);
+		pList->InsertColumn(iCol,strCol,70);
+		for(int i=0;i<pList->GetItemCount();i++)
+		{
+			CDuiStringT subStr;
+			subStr.Format(_T("(%d,%d)"),i,iCol);
+			pList->SetSubItemText(i,iCol,subStr);
+		}
+	}
+}

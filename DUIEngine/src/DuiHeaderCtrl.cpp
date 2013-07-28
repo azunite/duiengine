@@ -43,6 +43,13 @@ namespace DuiEngine
 		item.iOrder=iItem;
 		item.lParam=lParam;
 		m_arrItems.InsertAt(iItem,item);
+		//需要更新列的序号
+		for(int i=0;i<GetItemCount();i++)
+		{
+			if(i==iItem) continue;
+			if(m_arrItems[i].iOrder>=iItem)
+				m_arrItems[i].iOrder++;
+		}
 		NotifyInvalidate();
 		return iItem;
 	}
@@ -76,6 +83,12 @@ namespace DuiEngine
 			DrawItem(dc,rcItem,m_arrItems.GetData()+i);
 			if(rcItem.right>=rcClient.right) break;
 		}
+		if(rcItem.right<rcClient.right)
+		{
+			rcItem.left=rcItem.right;
+			rcItem.right=rcClient.right;
+			m_pSkinItem->Draw(dc,rcItem,0);
+		}
 		AfterPaint(dc,duiDC);
 	}
 
@@ -100,8 +113,15 @@ namespace DuiEngine
 	{
 		if(iItem<0 || iItem>=m_arrItems.GetCount()) return FALSE;
 
+		int iOrder=m_arrItems[iItem].iOrder;
 		if(m_arrItems[iItem].pszText) free(m_arrItems[iItem].pszText);
 		m_arrItems.RemoveAt(iItem);
+		//更新排序
+		for(int i=0;i<m_arrItems.GetCount();i++)
+		{
+			if(m_arrItems[i].iOrder>iOrder)
+				m_arrItems[i].iOrder--;
+		}
 		NotifyInvalidate();
 		return TRUE;
 	}
@@ -323,7 +343,7 @@ namespace DuiEngine
 	BOOL CDuiHeaderCtrl::LoadChildren( pugi::xml_node xmlNode )
 	{
 		if(!xmlNode || strcmp(xmlNode.name(),"items")!=0)
-			return FALSE;
+			return TRUE;
 		pugi::xml_node xmlItem=xmlNode.child("item");
 		int iOrder=0;
 		while(xmlItem)
@@ -422,6 +442,12 @@ namespace DuiEngine
 			rcItem.left=rcItem.right;
 			rcItem.right=rcItem.left+m_arrItems[i].cx;
 			DrawItem(dc,rcItem,m_arrItems.GetData()+i);
+		}
+		if(rcItem.right<rcClient.right)
+		{
+			rcItem.left=rcItem.right;
+			rcItem.right=rcClient.right;
+			m_pSkinItem->Draw(dc,rcItem,0);
 		}
 		AfterPaint(dc,duidc);
 		ReleaseDuiDC(dc);

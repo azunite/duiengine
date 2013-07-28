@@ -9,7 +9,6 @@
 	purpose:	自定义皮肤对象
 *********************************************************************/
 #pragma once
-#include "../DUIEngine/dependencies/tinyxml/tinyxml.h"
 #include "../DUIEngine/include/DuiSkinBase.h"
 #include "../DUIEngine/include/duiimage.h"
 

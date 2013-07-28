@@ -12,14 +12,9 @@
       <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10" tabstop="0">
         <tab id="110" title="listctrl">
           <button name="btn_lst_init" pos="10,0,100,25" class="normalbtn">init list</button>
+          <button name="btn_lst_insertcol" pos="110,0,200,25" class="normalbtn">insert col</button>
           <listctrl name="lc_test" pos="10,30,-10,-10" itemHeight="20" headerHeight="30">
             <header name="hd_test" itemSkin="btn_yellow" align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
-              <items>
-                <item width="60">col 1</item>
-                <item width="50">col 2</item>
-                <item width="70">col 3</item>
-                <item width="30">col 4</item>
-              </items>
             </header>
           </listctrl>
         </tab>

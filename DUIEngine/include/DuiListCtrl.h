@@ -1,6 +1,5 @@
 #pragma once
 
-#include <algorithm>
 #include "duiwnd.h"
 #include "duiwndpanel.h"
 #include "DuiHeaderCtrl.h"
@@ -8,62 +7,43 @@
 namespace DuiEngine
 {
 
-	typedef bool (CALLBACK *PFNLVCOMPAREEX)(LPARAM, LPARAM, LPARAM);
-
-	template <class T >
-	class CDuiListArray : public CDuiArray<T>
-	{
-	public:
-		void Reverse()
-		{
-// 			std::reverse(m_aT, m_aT + m_nSize);
-		}
-
-		void Sort()
-		{
-// 			sort(m_aT, m_aT + m_nSize);
-		}
-
-		template< class Pred > inline
-			void Sort(Pred Compare)
-		{
-// 			std::sort(m_aT, m_aT + m_nSize, Compare);
-		}
-
-		BOOL IsEmpty()
-		{
-			return (GetCount() == 0);
-		}
-
+	enum{
+		DUI_LVIF_TEXT=0x01,
+		DUI_LVIF_IMAGE=0x02,
+		DUI_LVIF_INDENT=0x04,
 	};
+
+	typedef int (__cdecl  *PFNLVCOMPAREEX)(void *, const void *, const void *);//使用快速排序算法中的比较函数,参考qsort_s
 
 	typedef struct _DXLVSUBITEM
 	{
 		_DXLVSUBITEM()
 		{
+			mask=0;
 			nImage = 0;
 			strText=NULL;
 			cchTextMax=0;
+			nIndent=0;
 		}
 
+		UINT mask;
 		LPTSTR strText;
 		int		cchTextMax;
 		UINT    nImage;
+		int		nIndent;
 	} DXLVSUBITEM;
 
-	typedef CDuiListArray<DXLVSUBITEM>   ArrSubItem;
+	typedef CDuiArray<DXLVSUBITEM>   ArrSubItem;
 
 	typedef struct _DXLVITEM
 	{
 		_DXLVITEM()
 		{
-			crText = RGB(0,0,0);
 			dwData = 0;
 			arSubItems=NULL;
 		}
 
 		ArrSubItem  *arSubItems;
-		COLORREF    crText;
 		DWORD       dwData;
 	} DXLVITEM;
 
@@ -83,32 +63,29 @@ namespace DuiEngine
 		BOOL            SetItemData(int nItem, DWORD dwData);
 		DWORD           GetItemData(int nItem);
 
-		BOOL            SetSubItem(int nItem, int nSubItem, LPCTSTR pszText, LPARAM lParam=0);
-		BOOL            GetSubItem(int nItem, int nSubItem, DXLVITEM* plv);
+		BOOL            SetSubItem(int nItem, int nSubItem,const DXLVSUBITEM* plv);
+		BOOL            GetSubItem(int nItem, int nSubItem, DXLVSUBITEM* plv);
 
-		BOOL            SetItemText(int nItem, int nSubItem, LPCTSTR pszText);
-		CDuiStringT         GetItemText(int nItem, int nSubItem);
+		BOOL            SetSubItemText(int nItem, int nSubItem, LPCTSTR pszText);
 
 		int             GetSelectedItem();
 		void            SetSelectedItem(int nItem);
 
 		int             GetItemCount();
+		BOOL			SetItemCount( int nItems ,int nGrowBy);
 		int             GetColumnCount();
-
-		void            SetItemColor(int nItem, COLORREF crText);
 
 		int             GetCountPerPage(BOOL bPartial);
 
 		void            DeleteItem(int nItem);
+		void			DeleteColumn(int iCol);
 		void            DeleteAllItems();
 
 		virtual BOOL    LoadChildren(pugi::xml_node xmlNode);
 
-		//  自动修改pt的位置为相对当前项的偏移量
 		int             HitTest(const CPoint& pt);
 
-		BOOL            SortItems(PFNLVCOMPAREEX pfnCompare);
-
+		BOOL			SortItems( PFNLVCOMPAREEX pfnCompare, void * pContext );
 	protected:
 		int             GetTopIndex() const;
 
@@ -129,30 +106,12 @@ namespace DuiEngine
 		virtual BOOL    OnScroll(BOOL bVertical,UINT uCode,int nPos);
 		virtual void    OnLButtonDown(UINT nFlags, CPoint pt);
 		virtual void    OnLButtonUp(UINT nFlags, CPoint pt);
-		virtual void    OnLButtonDblClk(UINT nFlags, CPoint pt);
 		virtual void    OnSize(UINT nType, CSize size);
+		virtual void	UpdateChildrenPosition();
 
 		CRect           GetListRect();
 		void            UpdateScrollBar();
 		void			UpdateHeaderCtrl();
-
-		class CompareItem
-		{
-		public:
-			CompareItem(PFNLVCOMPAREEX pfnCompare) : m_pfnCompare(pfnCompare) {}
-			inline bool operator() (const DXLVITEM& listItem1, const DXLVITEM& listItem2)
-			{
-				if (m_pfnCompare != NULL)
-				{
-					return (m_pfnCompare(listItem1.dwData, listItem2.dwData, 0));
-				}
-
-				return true;
-			}
-
-		protected:
-			PFNLVCOMPAREEX m_pfnCompare;
-		};
 
 	protected:
 		int             m_nHeaderHeight;
@@ -178,7 +137,7 @@ namespace DuiEngine
 		CDuiSkinBase*    m_pIconSkin;
 
 	protected:
-		typedef CDuiListArray<DXLVITEM> ArrLvItem;
+		typedef CDuiArray<DXLVITEM> ArrLvItem;
 
 		CDuiHeaderCtrl*  m_pHeader;
 		ArrLvItem       m_arrItems;
@@ -208,7 +167,6 @@ namespace DuiEngine
 			MSG_WM_SIZE(OnSize)
 			MSG_WM_LBUTTONDOWN(OnLButtonDown)
 			MSG_WM_LBUTTONUP(OnLButtonUp)
-			MSG_WM_LBUTTONDBLCLK(OnLButtonDblClk)
 		DUIWIN_END_MSG_MAP()
 	};
 
