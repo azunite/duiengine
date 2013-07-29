@@ -42,7 +42,7 @@ namespace DuiEngine
 
 		BEGIN_MSG_MAP_EX(CTranslucentHostWnd)
 			MSG_WM_PAINT(OnPaint)
-			END_MSG_MAP()
+		END_MSG_MAP()
 	private:
 		CDuiHostWnd *m_pOwner;
 	};

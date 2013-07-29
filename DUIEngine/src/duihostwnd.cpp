@@ -12,6 +12,7 @@ namespace DuiEngine
 
 #define TIMER_CARET	1
 
+
 //////////////////////////////////////////////////////////////////////////
 // CDuiHostWnd
 //////////////////////////////////////////////////////////////////////////
@@ -59,12 +60,14 @@ HWND CDuiHostWnd::Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWO
         if(m_bTranslucent)
         {
             SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-			m_dummyWnd.Create(_T("dummyLayeredWnd"),WS_POPUP|WS_VISIBLE,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,-1,-1,1,1,NULL,NULL);
+			m_dummyWnd.Create(_T("dummyLayeredWnd"),WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
+            m_dummyWnd.SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd.GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+			::SetLayeredWindowAttributes(m_dummyWnd.m_hWnd,0,0,LWA_ALPHA);
+			m_dummyWnd.ShowWindow(SW_SHOWNOACTIVATE);
         }
     }
 
 	if(nWidth==0 || nHeight==0) CenterWindow(hWnd);
-
     SendMessage(WM_INITDIALOG, (WPARAM)hWnd);
     return hWnd;
 }
@@ -323,7 +326,7 @@ BOOL CDuiHostWnd::_PreTranslateMessage(MSG* pMsg)
 
 void CDuiHostWnd::OnPrint(CDCHandle dc, UINT uFlags)
 {
-    if(!m_bNeedAllRepaint && !m_bNeedRepaint) return;
+    if((m_bTranslucent && !uFlags) && !m_bNeedAllRepaint && !m_bNeedRepaint) return;
     if (m_bNeedAllRepaint)
     {
         if (!m_rgnInvalidate.IsNull())
@@ -830,7 +833,9 @@ BOOL CDuiHostWnd::DuiSetCaretPos( int x,int y )
 
 BOOL CDuiHostWnd::DuiUpdateWindow()
 {
-	return UpdateWindow(m_bTranslucent?m_dummyWnd.m_hWnd:m_hWnd);
+	if(m_bTranslucent) UpdateWindow(m_dummyWnd.m_hWnd);
+	else UpdateWindow(m_hWnd);
+	return TRUE;
 }
 
 LRESULT CDuiHostWnd::OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam)
@@ -1017,7 +1022,7 @@ void CDuiHostWnd::OnKillFocus( HWND wndFocus )
 void CTranslucentHostWnd::OnPaint( CDCHandle dc )
 {
 	CPaintDC dc1(m_hWnd);
-	m_pOwner->OnPrint(NULL,0);
+	m_pOwner->OnPrint(NULL,1);
 }
 
 }//namespace DuiEngine
