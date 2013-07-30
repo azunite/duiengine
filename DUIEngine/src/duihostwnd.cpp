@@ -53,19 +53,7 @@ HWND CDuiHostWnd::Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWO
 
     SetContainer(this);
 
-    if(m_uResID)
-    {
-        Load(m_uResID);
-
-        if(m_bTranslucent)
-        {
-            SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-			m_dummyWnd.Create(_T("dummyLayeredWnd"),WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
-            m_dummyWnd.SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd.GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
-			::SetLayeredWindowAttributes(m_dummyWnd.m_hWnd,0,0,LWA_ALPHA);
-			m_dummyWnd.ShowWindow(SW_SHOWNOACTIVATE);
-        }
-    }
+    if(m_uResID)  Load(m_uResID);
 
 	if(nWidth==0 || nHeight==0) CenterWindow(hWnd);
     SendMessage(WM_INITDIALOG, (WPARAM)hWnd);
@@ -139,6 +127,16 @@ BOOL CDuiHostWnd::SetXml(pugi::xml_node xmlNode )
 
 	ModifyStyle(0,m_dwDlgStyle);
 	ModifyStyleEx(0,m_dwDlgExStyle);
+
+	if(m_bTranslucent)
+	{
+		SetWindowLongPtr(GWL_EXSTYLE, GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+		m_dummyWnd.Create(_T("dummyLayeredWnd"),WS_POPUP,WS_EX_TOOLWINDOW|WS_EX_NOACTIVATE,0,0,10,10,m_hWnd,NULL);
+		m_dummyWnd.SetWindowLongPtr(GWL_EXSTYLE,m_dummyWnd.GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYERED);
+		::SetLayeredWindowAttributes(m_dummyWnd.m_hWnd,0,0,LWA_ALPHA);
+		m_dummyWnd.ShowWindow(SW_SHOWNOACTIVATE);
+	}
+
 	SetWindowText(DUI_CA2T(m_strWindowCaption,CP_UTF8));
 
 	CRect rcClient;
@@ -165,9 +163,6 @@ BOOL CDuiHostWnd::SetXml(pugi::xml_node xmlNode )
 	_Redraw();
 
 	RedrawRegion(CDCHandle(m_memDC),CRgn());
-
-// 	if(m_bTranslucent) SetDuiTimer(TIMER_TRANSLUCENT,10);
-// 	else KillDuiTimer(TIMER_TRANSLUCENT);
 
 	return TRUE;
 }
