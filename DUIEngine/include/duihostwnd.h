@@ -72,6 +72,9 @@ public:
     UINT_PTR DoModal(HWND hWndParent = NULL, LPRECT rect = NULL);
 
     void EndDialog(UINT uRetCode);
+
+	BOOL AnimateHostWindow(DWORD dwTime,DWORD dwFlags);
+
 protected:
     UINT m_uRetCode;
     BOOL m_bExitModalLoop;
@@ -224,6 +227,7 @@ protected:
     LRESULT OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
     void UpdateHost(CDCHandle dc,const CRect &rc);
+	void UpdateLayerFromDC(HDC hdc,BYTE byAlpha);
 protected:
 
 	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)

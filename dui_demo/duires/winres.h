@@ -33,4 +33,5 @@
 #define	lc_test		65560
 #define	btn_lst_init		65561
 #define	btn_lst_insertcol		65562
+#define	btn_ani_list		65563
 /*----------------------------RES_BUILDER:end------------------------------------->*/

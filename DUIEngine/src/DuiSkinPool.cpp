@@ -124,7 +124,11 @@ int DuiSkinPool::FreeSkins( LPCSTR strOwnerName )
 
 CDuiSkinBase* DuiSkinPool::GetSkin(LPCSTR strSkinName)
 {
-    if(!HasKey(strSkinName)) return NULL;
+    if(!HasKey(strSkinName))
+	{
+		DUIRES_ASSERTA(FALSE,"GetSkin[%s] Failed!",strSkinName);
+		return NULL;
+	}
     return GetKeyObject(strSkinName);
 }
 

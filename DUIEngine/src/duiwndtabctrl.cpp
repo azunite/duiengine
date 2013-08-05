@@ -242,7 +242,19 @@ BOOL CDuiTabCtrl::RemoveItem( int nIndex , int nSelPage/*=0*/)
 		if(nSelPage>=GetItemCount()) nSelPage=GetItemCount()-1;
 		m_nCurrentPage=-1;
         SetCurSel(nSelPage);
-    }
+    }else
+	{
+		if(m_nCurrentPage>nIndex) m_nCurrentPage--;
+
+		CRect rcTitle;
+		GetClient(rcTitle);
+		if(m_nTabAlign==AlignLeft)
+			rcTitle.right = rcTitle.left + (m_nTabWidth+m_nFramePos);
+		else
+			rcTitle.bottom = rcTitle.top + (m_nTabHeight+m_nFramePos);
+		
+		NotifyInvalidateRect(rcTitle);
+	}
     return TRUE;
 }
 
@@ -348,22 +360,27 @@ BOOL CDuiTabCtrl::SetCurSel( int nIndex )
     GetItemRect(nIndex, rcItem);
     NotifyInvalidateRect(rcItem);
 
-    if(m_nAnimateSteps && IsVisible(TRUE))
+    if(m_nAnimateSteps && IsVisible(TRUE) && nOldPage!=-1)
     {
-        CDuiTab *pTab=GetItem(m_nCurrentPage);
+        CDuiTab *pTab=GetItem(nOldPage);
         CRect rcTab;
         pTab->GetRect(&rcTab);
         m_tabSlide.Move(rcTab);
         m_tabSlide.SetPage1(pTab);
     }
 
-    pTab = GetItem(m_nCurrentPage);
-    if( pTab) pTab->DuiSendMessage(WM_SHOWWINDOW,FALSE);
+	if(nOldPage!=-1)
+	{
+		pTab = GetItem(nOldPage);
+		if( pTab) pTab->DuiSendMessage(WM_SHOWWINDOW,FALSE);
+	}
 
     m_nCurrentPage = nIndex;
-
-    pTab = GetItem(m_nCurrentPage);
-    if( pTab) pTab->DuiSendMessage(WM_SHOWWINDOW,TRUE);
+	if(nIndex!=-1)
+	{
+		pTab = GetItem(m_nCurrentPage);
+		if( pTab) pTab->DuiSendMessage(WM_SHOWWINDOW,TRUE);
+	}
 
     DUINMTABSELCHANGED nms2;
     nms2.hdr.code = DUINM_TAB_SELCHANGED;
@@ -373,7 +390,7 @@ BOOL CDuiTabCtrl::SetCurSel( int nIndex )
     nms2.uTabItemIDNew = nIndex;
     nms2.uTabItemIDOld = nOldPage;
 
-    if(m_nAnimateSteps && IsVisible(TRUE))
+    if(m_nAnimateSteps && IsVisible(TRUE) && nOldPage!=-1)
     {
         SLIDEDIR sd=SD_RIGHTLEFT;
         if(m_nTabAlign==AlignTop)

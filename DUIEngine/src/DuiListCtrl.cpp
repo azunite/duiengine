@@ -162,8 +162,7 @@ BOOL CDuiListCtrl::SetSubItemText(int nItem, int nSubItem, LPCTSTR pszText)
     lvi.strText = _tcsdup(pszText);
 	lvi.cchTextMax= _tcslen(pszText);
 	
-	CRect rcItem;
-	GetItemRect(nItem);
+	CRect rcItem=GetItemRect(nItem,nSubItem);
 	NotifyInvalidateRect(rcItem);
     return TRUE;
 }
@@ -486,7 +485,7 @@ void CDuiListCtrl::OnPaint(CDCHandle dc)
 	int nSave=dc.SaveDC();
 	CRgn rgn;
 	rgn.CreateRectRgnIndirect(rcList);
-	dc.SelectClipRgn(rgn);
+	dc.SelectClipRgn(rgn,RGN_AND);
     CRect rcItem(rcList);
 
     rcItem.bottom = rcItem.top;

@@ -21,6 +21,7 @@ protected:
 	void OnRepEditSel();
 	void OnIECtrl();
 	void OnDuiMenu();
+	void OnBtnAniList();
 
 	void OnWebkit_GoBack();
 	void OnWebkit_GoForward();
@@ -40,8 +41,6 @@ protected:
 	void OnCommand(UINT uNotifyCode, int nID, HWND wndCtl);
 
 	LRESULT OnListBtnClick(LPNMHDR pNHdr);
-	void OnTimer(UINT_PTR nIDEvent);
-
 
 	void OnBtnInitListClick();
 	void OnBtnInsertColClick();
@@ -51,12 +50,12 @@ protected:
 		MSG_WM_INITDIALOG(OnInitDialog)
 		MSG_WM_DESTROY(OnDestory)
 		MSG_WM_COMMAND(OnCommand)
-		MSG_WM_TIMER(OnTimer)
 	END_MSG_MAP()
 
 	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
 		DUI_NOTIFY_ID_COMMAND(btn_lst_init, OnBtnInitListClick)
 		DUI_NOTIFY_ID_COMMAND(btn_lst_insertcol, OnBtnInsertColClick)
+		DUI_NOTIFY_ID_COMMAND(btn_ani_list, OnBtnAniList)
 
 		DUI_NOTIFY_ID_COMMAND(≤‚ ‘, OnAttrReposition)
 		DUI_NOTIFY_ID_COMMAND(IDC_REPSEL, OnRepEditSel)

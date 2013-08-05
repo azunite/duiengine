@@ -44,6 +44,7 @@ public:
     COLORREF m_crHoverText;
     COLORREF m_crDisabledText;
     COLORREF m_crPushText;
+	COLORREF m_crBorder;
     HFONT m_ftText;
     HFONT m_ftHover;
     HFONT m_ftPush;
@@ -90,6 +91,7 @@ protected:
     DUIWIN_COLOR_ATTRIBUTE("crhover", m_crHoverText, TRUE)
     DUIWIN_COLOR_ATTRIBUTE("crpush", m_crPushText, TRUE)
     DUIWIN_COLOR_ATTRIBUTE("crdisabled", m_crDisabledText, TRUE)
+    DUIWIN_COLOR_ATTRIBUTE("crborder", m_crBorder, TRUE)
     DUIWIN_FONT_ATTRIBUTE("font", m_ftText, TRUE)
     DUIWIN_FONT_ATTRIBUTE("hoverfont", m_ftHover, TRUE)
     DUIWIN_FONT_ATTRIBUTE("pushfont", m_ftPush, TRUE)

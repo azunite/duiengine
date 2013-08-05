@@ -127,7 +127,8 @@ public:
         SizeY_FitContent    = 0x0020UL, // height <= 0 default
         SizeY_FitParent     = 0x0040UL, // height = "full" default
 
-        Position_Mask       = 0x0300UL,
+        Position_Mask       = 0x0300UL, // 指定是浮动窗口还是有锚点窗口
+		Pos_Float			= 0x0100UL,	// 1:浮动窗口，0:锚点窗口
 
     };
 
@@ -464,7 +465,7 @@ public:
 
     //************************************
     // Method:    PaintForeground
-    // Function:  画窗口的前景内容
+    // Function:  画窗口的前景内容,不包括当前窗口的子窗口
     // Access:    public
     // Returns:   void
     // Parameter: HDC hdc 目标DC
@@ -664,6 +665,7 @@ protected:
     virtual void DuiDrawFocus(HDC dc);
 
 	void DuiDrawDefFocusRect(CDCHandle dc,CRect rc);
+	void DrawAniStep(CRect rcFore,CRect rcBack,HDC dcFore,HDC dcBack);
 
     //////////////////////////////////////////////////////////////////////////
     // Message Handler

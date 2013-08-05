@@ -150,14 +150,36 @@ namespace DuiEngine
 class DUI_EXP CTime
 {
 public:
+	// Attributes
+	enum DateTimeStatus
+	{
+		error = -1,
+		valid = 0,
+		invalid = 1,    // Invalid date (out of range, etc.)
+		null = 2,       // Literally has no value
+	};
+
 	static CTime GetCurrentTime() throw();
 	CTime(__time64_t tm=0):m_time(tm){}
 	CTime( int nYear, int nMonth, int nDay, int nHour, int nMin, int nSec,
 		int nDST = -1 );
 
+	int SetDate(int nYear, int nMonth, int nDay) throw();
+	int SetDateTime(int nYear, int nMonth, int nDay,
+		int nHour, int nMin, int nSec,int nDST=-1) throw();
+
 	__time64_t	GetTime() const throw();
 	struct tm* GetLocalTm(struct tm* ptm) const;
+	bool GetAsSystemTime(SYSTEMTIME& timeDest) const throw();
+	int GetStatus()
+	{
+		return m_status;
+	}
 
+	void SetStatus(int nStatus)
+	{
+		m_status=nStatus;
+	}
 	int GetYear() const;
 	int GetMonth() const;
 	int GetDay() const;
@@ -181,13 +203,21 @@ public:
 	bool operator>( CTime time ) const throw();
 	bool operator<=( CTime time ) const throw();
 	bool operator>=( CTime time ) const throw();
+
 protected:
 
 	__time64_t m_time;
+	int m_status;
 };
 
 inline CTime::CTime(int nYear, int nMonth, int nDay, int nHour, int nMin, int nSec,
 							int nDST)
+{
+	SetDateTime(nYear,nMonth,nDay,nHour,nMin,nSec);
+}
+
+inline int CTime::SetDateTime(int nYear, int nMonth, int nDay,
+								int nHour, int nMin, int nSec,int nDst) throw()
 {
 	struct tm atm;
 
@@ -197,9 +227,17 @@ inline CTime::CTime(int nYear, int nMonth, int nDay, int nHour, int nMin, int nS
 	atm.tm_mday = nDay;
 	atm.tm_mon = nMonth - 1;        // tm_mon is 0 based
 	atm.tm_year = nYear - 1900;     // tm_year is 1900 based
-	atm.tm_isdst = nDST;
+	atm.tm_isdst = nDst;
 
 	m_time = _mktime64(&atm);
+
+	m_status=valid;
+	return m_status;//todo:
+}
+
+inline int CTime::SetDate(int nYear, int nMonth, int nDay) throw()
+{
+	return SetDateTime(nYear, nMonth, nDay, 0, 0, 0);
 }
 
 inline struct tm* CTime::GetLocalTm(struct tm* ptm) const
@@ -222,6 +260,27 @@ inline struct tm* CTime::GetLocalTm(struct tm* ptm) const
 	}
 
 	return NULL;
+}
+
+inline bool CTime::GetAsSystemTime(SYSTEMTIME& timeDest) const throw()
+{
+	struct tm ttm;
+	struct tm* ptm;
+
+	ptm = GetLocalTm(&ttm);
+
+	if(!ptm) { return false; }
+
+	timeDest.wYear = (WORD) (1900 + ptm->tm_year);
+	timeDest.wMonth = (WORD) (1 + ptm->tm_mon);
+	timeDest.wDayOfWeek = (WORD) ptm->tm_wday;
+	timeDest.wDay = (WORD) ptm->tm_mday;
+	timeDest.wHour = (WORD) ptm->tm_hour;
+	timeDest.wMinute = (WORD) ptm->tm_min;
+	timeDest.wSecond = (WORD) ptm->tm_sec;
+	timeDest.wMilliseconds = 0;
+
+	return true;
 }
 
 inline CTime CTime::GetCurrentTime() throw()

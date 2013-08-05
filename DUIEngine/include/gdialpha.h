@@ -54,7 +54,7 @@ public:
 	static void DrawLine(HDC hdc,int x1,int y1,int x2,int y2,COLORREF cr,UINT style, int iLineSize = 1);
 
     static HBITMAP CreateBitmap32(HDC hdc,int nWid,int nHei,LPVOID * ppBits=NULL,BYTE byAlpha=0);
-
+	static BOOL Rectangle(HDC hdc,LPRECT pRc,COLORREF crBorder,HBRUSH hbrh);
 };
 
 }//namespace DuiEngine

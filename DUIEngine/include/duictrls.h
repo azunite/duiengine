@@ -15,7 +15,6 @@
 #include "DuiCaption.h"
 #include "DuiSliderBar.h"
 #include "DuiDateTimeEdit.h"
-#include "DuiMonthPicker.h"
 #include "DuiCalendar.h"
 #include "DuiHeaderCtrl.h"
 #include "DuiListCtrl.h"

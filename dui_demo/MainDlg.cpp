@@ -29,3 +29,12 @@ int CMainDlg::OnCreate( LPCREATESTRUCT lpCreateStruct )
 	SetMsgHandled(FALSE);
 	return 0;
 }
+
+void CMainDlg::OnShowWindow( BOOL bShow, UINT nStatus )
+{
+	if(bShow)
+	{
+		AnimateHostWindow(200,AW_CENTER);
+	}
+}
+

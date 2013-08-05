@@ -114,6 +114,20 @@ int CGdiAlpha::FillRect(HDC hdc,LPCRECT pRc,HBRUSH hbrh)
     return nRet;
 }
 
+BOOL CGdiAlpha::Rectangle(HDC hdc,LPRECT pRc,COLORREF crBorder,HBRUSH hbrh)
+{
+	ALPHAINFO ai;
+	AlphaBackup(hdc,pRc,ai);
+	HPEN hPen=CreatePen(PS_SOLID,1,crBorder);
+	HGDIOBJ hOldPen=SelectObject(hdc,hPen);
+	HGDIOBJ hOldBrh=SelectObject(hdc,hbrh);
+	BOOL bRet=::Rectangle(hdc,pRc->left,pRc->top,pRc->right,pRc->bottom);
+	SelectObject(hdc,hOldPen);
+	SelectObject(hdc,hOldBrh);
+	AlphaRestore(hdc,ai);
+	return bRet;
+}
+
 SIZE CGdiAlpha::TextOut(HDC hdc,int x, int y, LPCTSTR pszText,int nCount/*=-1*/)
 {
     SIZE szRet= {0};
@@ -152,16 +166,18 @@ void CGdiAlpha::DrawLine(HDC hdc,int x1,int y1,int x2,int y2,COLORREF cr,UINT st
 	int iRemainder = iLineSize % 2;
     if(x1==x2)	//ÊúÏß
     {
+		if(y1>y2) _swap(y1,y2);
         SetRect(&rcDest,x1-iLineRadius,y1,x1+iLineRadius+iRemainder,y2);
     }
     else if(y1==y2)//ºáÏß
     {
+		if(x1>x2) _swap(x1,x2);
         SetRect(&rcDest,x1,y1-iLineRadius,x2,y1+iLineRadius+iRemainder);
     }
     else
     {
-        if(x1<x2) _swap(x1,x2);
-        if(y1<y2) _swap(y1,y2);
+        if(x1>x2) _swap(x1,x2);
+        if(y1>y2) _swap(y1,y2);
         SetRect(&rcDest,x1-iLineRadius,y1-iLineRadius,x2+iLineRadius+iRemainder,y2+iLineRadius+iRemainder);
     }
 

@@ -1,4 +1,4 @@
-﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="1" translucent="1"  nomaxsize="0">
+﻿<layer title="DUI-DEMO" width="600" height="400" appwin="1" ncRect="5,5,5,5"  resize="1" translucent="0"  nomaxsize="0">
 	<body>
     <dlg id="100" pos="0,0,-0,-0" class="cls_dlg_frame">
       <caption id="101" pos="0,0,-0,29">
@@ -13,8 +13,9 @@
         <tab id="110" title="listctrl">
           <button name="btn_lst_init" pos="10,0,100,25" class="normalbtn">init list</button>
           <button name="btn_lst_insertcol" pos="110,0,200,25" class="normalbtn">insert col</button>
+          <button name="btn_ani_list" width="100" height="25" class="normalbtn">动画切换list</button>
           <listctrl name="lc_test" pos="10,30,-10,-10" itemHeight="20" headerHeight="30">
-            <header name="hd_test" itemSkin="btn_yellow" align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
+            <header itemSkin="btn_yellow" align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
             </header>
           </listctrl>
         </tab>

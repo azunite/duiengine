@@ -120,7 +120,10 @@ void CDuiItemPanel::OnRedraw(const CRect &rc)
     {
 		if(m_pItemContainer->IsItemRedrawDelay())
 		{
-			m_pFrmHost->NotifyInvalidateRect(rcItem);
+			CRect rc2(rc);
+			rc2.OffsetRect(rcItem.TopLeft());
+			rc2.IntersectRect(rc2,rcItem);
+			m_pFrmHost->NotifyInvalidateRect(rc2);
 		}else
 		{
 			CDCHandle dc=OnGetDuiDC(rc,OLEDC_PAINTBKGND);

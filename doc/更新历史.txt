@@ -1,3 +1,7 @@
+2013年8月5日
+1、为duihostwnd增加一个接口：AnimateHostWindow.
+2、实现了原来duiwindow中的animatewindow接口
+
 2013年7月24日
 1、增加两个控件：calendar,headerctrl及lisctrl的框架。
 2、修改NotifyInvalidate接口为只刷新客户区。原来NotifyInvalidate默认是对整个窗口刷新，以前如果在onscroll中调用了NotifyInvalidate又重新刷新滚动条，导致导致在拖动滚动条时形成闪烁。

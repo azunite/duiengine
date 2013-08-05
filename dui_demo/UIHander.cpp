@@ -166,9 +166,7 @@ void CUIHander::OnDestory()
 
 void CUIHander::OnAttrReposition()
 {
-//	m_pMainDlg->FindChildByCmdID(测试)->SetAttribute("pos","|-100,|-15,|100,|15");
-	CDuiTabCtrl *pTab=(CDuiTabCtrl*)m_pMainDlg->FindChildByCmdID(2000);
-	pTab->RemoveItem(3);
+	m_pMainDlg->FindChildByCmdID(测试)->SetAttribute("pos","|-100,|-15,|100,|15");
 }
 
 
@@ -267,10 +265,11 @@ void CUIHander::OnDuiMenu()
 
 void CUIHander::OnCommand( UINT uNotifyCode, int nID, HWND wndCtl )
 {
- 	TCHAR szBuf[200];
+// 	ATLTRACE(L"\nOnCommand nID=%d",nID);  
+// 	TCHAR szBuf[200];
 // 	_stprintf(szBuf,_T("Menu Command ID=%d\\nSecond Line\\nSecond Line\\nSecond Line\\nSecond Line"),nID);
- 	_stprintf(szBuf,_T("Menu Command ID=%d\\nSecond Line \\na long long line :消息窗口内容自动换行测试，hahahaha haha haha"),nID);
- 	DuiMessageBox(NULL,szBuf,_T("tip"),MB_YESNOCANCEL|MB_ICONWARNING);
+// 	_stprintf(szBuf,_T("Menu Command ID=%d\\nSecond Line \\na long long line :消息窗口内容自动换行测试，hahahaha haha haha"),nID);
+// 	DuiMessageBox(NULL,szBuf,_T("tip"),MB_YESNOCANCEL|MB_ICONWARNING);
 }
 
 
@@ -319,16 +318,6 @@ LRESULT CUIHander::OnListPredraw( LPNMHDR pNHdr )
 	return S_OK;
 }
 
-void CUIHander::OnTimer( UINT_PTR nIDEvent )
-{
-	if(nIDEvent!=100) return;
-	static int nCount=0;
-	if(nCount>5) m_pMainDlg->KillTimer(nIDEvent);
-	TCHAR szMsg[100];
-	_stprintf(szMsg,_T("Msg box No. %d"),nCount);
-	nCount++;
-	DuiMessageBox(0,szMsg,_T("tip"),MB_OK);
-}
 
 //init listctrl
 void CUIHander::OnBtnInitListClick()
@@ -360,6 +349,21 @@ void CUIHander::OnBtnInsertColClick()
 			CDuiStringT subStr;
 			subStr.Format(_T("(%d,%d)"),i,iCol);
 			pList->SetSubItemText(i,iCol,subStr);
+		}
+	}
+}
+
+void CUIHander::OnBtnAniList()
+{
+	CDuiWindow *pList=m_pMainDlg->FindChildByName("lc_test");
+	if(pList)
+	{
+		if(pList->IsVisible(TRUE))
+		{
+			pList->AnimateWindow(100,AW_SLIDE|AW_VER_NEGATIVE|AW_HIDE);
+		}else
+		{
+			pList->AnimateWindow(100,AW_SLIDE|AW_VER_NEGATIVE);//AW_SLIDE|AW_VER_NEGATIVE|AW_HOR_POSITIVE
 		}
 	}
 }

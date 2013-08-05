@@ -15,6 +15,7 @@ public:
 
 	void OnClose()
 	{
+		AnimateHostWindow(200,AW_CENTER|AW_HIDE);
 		EndDialog(IDCANCEL);
 	}
 	void OnMaximize()
@@ -53,6 +54,8 @@ public:
 	}
 
 	int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	void OnShowWindow(BOOL bShow, UINT nStatus);
+
 protected:
 
 	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
@@ -68,6 +71,7 @@ protected:
 		MSG_WM_CLOSE(OnClose)
 		MSG_WM_SIZE(OnSize)
 		MSG_WM_INITDIALOG(OnInitDialog)
+		MSG_WM_SHOWWINDOW(OnShowWindow)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
 		CHAIN_MSG_MAP(CDuiHostWnd)
 		CHAIN_MSG_MAP_MEMBER((*m_pUiHandler))
@@ -76,5 +80,6 @@ protected:
 
 private:
 	BOOL			m_bLayoutInited;
+	int				m_iStep;
 	CUIHander *    m_pUiHandler; 
 };

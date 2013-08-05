@@ -866,10 +866,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\DuiMonthPicker.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\duirealwnd.cpp"
 				>
 			</File>
@@ -887,10 +883,6 @@
 			</File>
 			<File
 				RelativePath=".\src\DuiSkinBase.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\src\DuiSkinPool.cpp"
 				>
 			</File>
 			<File
@@ -1114,6 +1106,10 @@
 				</File>
 				<File
 					RelativePath=".\src\duiskin.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\DuiSkinPool.cpp"
 					>
 				</File>
 				<File
@@ -1428,10 +1424,6 @@
 				</File>
 				<File
 					RelativePath=".\include\DuiMessageBox.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\DuiMonthPicker.h"
 					>
 				</File>
 				<File
