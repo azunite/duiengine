@@ -1027,6 +1027,11 @@ BOOL _BitBlt(HDC hDst,HDC hSrc,CRect rc)
 	return BitBlt(hDst,rc.left,rc.top,rc.Width(),rc.Height(),hSrc,rc.left,rc.top,SRCCOPY);
 }
 
+BOOL _BitBlt2(HDC hDst,HDC hSrc,CRect rcDst,CPoint ptSrc)
+{
+	return BitBlt(hDst,rcDst.left,rcDst.top,rcDst.Width(),rcDst.Height(),hSrc,ptSrc.x,ptSrc.y,SRCCOPY);
+}
+
 BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 {
 	if(!IsTranslucent())
@@ -1034,9 +1039,10 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 		return ::AnimateWindow(m_hWnd,dwTime,dwFlags);
 	}else
 	{
-		CRect rcWnd;
+		CRect rcWnd;//窗口矩形
 		GetClientRect(&rcWnd);
-		HBITMAP hBmp=CGdiAlpha::CreateBitmap32(m_memDC,rcWnd.Width(),rcWnd.Height(),NULL,0);
+		CRect rcShow(rcWnd);//动画过程中可见部分
+		HBITMAP hBmp=CGdiAlpha::CreateBitmap32(m_memDC,rcShow.Width(),rcShow.Height(),NULL,0);
 		CMemDC memdc(m_memDC,hBmp);
 
 		memdc.SetBitmapOwner(TRUE); 
@@ -1046,31 +1052,30 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 		{
 			if(dwFlags& AW_SLIDE)
 			{
-				CRect rcWnd2(rcWnd);
-				LONG  x1 = rcWnd.left;
-				LONG  x2 = rcWnd.left;
-				LONG  y1 = rcWnd.top;
-				LONG  y2 = rcWnd.top;
-				LONG * x =&rcWnd.left;
-				LONG * y =&rcWnd.top;
+				LONG  x1 = rcShow.left;
+				LONG  x2 = rcShow.left;
+				LONG  y1 = rcShow.top;
+				LONG  y2 = rcShow.top;
+				LONG * x =&rcShow.left;
+				LONG * y =&rcShow.top;
 
 				if(dwFlags & AW_HOR_POSITIVE)
 				{//left->right:move left
-					x1=rcWnd.left,x2=rcWnd.right;
-					x=&rcWnd.left;
+					x1=rcShow.left,x2=rcShow.right;
+					x=&rcShow.left;
 				}else if(dwFlags & AW_HOR_NEGATIVE)
 				{//right->left:move right
-					x1=rcWnd.right,x2=rcWnd.left;
-					x=&rcWnd.right;
+					x1=rcShow.right,x2=rcShow.left;
+					x=&rcShow.right;
 				}
 				if(dwFlags & AW_VER_POSITIVE)
 				{//top->bottom
-					y1=rcWnd.top,y2=rcWnd.bottom;
-					y=&rcWnd.top;
+					y1=rcShow.top,y2=rcShow.bottom;
+					y=&rcShow.top;
 				}else if(dwFlags & AW_VER_NEGATIVE)
 				{//bottom->top
-					y1=rcWnd.bottom,y2=rcWnd.top;
-					y=&rcWnd.bottom;
+					y1=rcShow.bottom,y2=rcShow.top;
+					y=&rcShow.bottom;
 				}
 				LONG xStepLen=(x2-x1)/nSteps;
 				LONG yStepLen=(y2-y1)/nSteps;
@@ -1079,8 +1084,13 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 				{
 					*x+=xStepLen;
 					*y+=yStepLen;
-					memdc.FillSolidRect(rcWnd2,0);
-					_BitBlt(memdc,m_memDC,rcWnd);
+					memdc.FillSolidRect(rcWnd,0);
+					CPoint ptAnchor;
+					if(dwFlags & AW_VER_NEGATIVE)
+						ptAnchor.y=rcWnd.bottom-rcShow.Height();
+					if(dwFlags & AW_HOR_NEGATIVE)
+						ptAnchor.x=rcWnd.right-rcShow.Width();
+					_BitBlt2(memdc,m_memDC,rcShow,ptAnchor);
 					UpdateLayerFromDC(memdc,0xFF);
 					Sleep(10);
 				}
@@ -1088,14 +1098,13 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 				return TRUE;
 			}else if(dwFlags&AW_CENTER)
 			{
-				CRect rcWnd2(rcWnd);
-				int xStep=rcWnd.Width()/(2*nSteps);
-				int yStep=rcWnd.Height()/(2*nSteps);
+				int xStep=rcShow.Width()/(2*nSteps);
+				int yStep=rcShow.Height()/(2*nSteps);
 				for(int i=0;i<nSteps;i++)
 				{
-					rcWnd.DeflateRect(xStep,yStep);
-					memdc.FillSolidRect(rcWnd2,0);
-					_BitBlt(memdc,m_memDC,rcWnd);
+					rcShow.DeflateRect(xStep,yStep);
+					memdc.FillSolidRect(rcWnd,0);
+					_BitBlt(memdc,m_memDC,rcShow);
 					UpdateLayerFromDC(memdc,0xFF);
 					Sleep(10);
 				}
@@ -1124,31 +1133,30 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 			SetWindowPos(HWND_TOP,0,0,0,0,SWP_NOSIZE|SWP_NOMOVE);
 			if(dwFlags& AW_SLIDE)
 			{
-				CRect rcWnd2(rcWnd);
-				LONG  x1 = rcWnd.left;
-				LONG  x2 = rcWnd.left;
-				LONG  y1 = rcWnd.top;
-				LONG  y2 = rcWnd.top;
-				LONG * x =&rcWnd.left;
-				LONG * y =&rcWnd.top;
+				LONG  x1 = rcShow.left;
+				LONG  x2 = rcShow.left;
+				LONG  y1 = rcShow.top;
+				LONG  y2 = rcShow.top;
+				LONG * x =&rcShow.left;
+				LONG * y =&rcShow.top;
 				
 				if(dwFlags & AW_HOR_POSITIVE)
 				{//left->right:move right
-					x1=rcWnd.left,x2=rcWnd.right;
-					rcWnd.right=rcWnd.left,x=&rcWnd.right;
+					x1=rcShow.left,x2=rcShow.right;
+					rcShow.right=rcShow.left,x=&rcShow.right;
 				}else if(dwFlags & AW_HOR_NEGATIVE)
 				{//right->left:move left
-					x1=rcWnd.right,x2=rcWnd.left;
-					rcWnd.left=rcWnd.right,x=&rcWnd.left;
+					x1=rcShow.right,x2=rcShow.left;
+					rcShow.left=rcShow.right,x=&rcShow.left;
 				}
 				if(dwFlags & AW_VER_POSITIVE)
 				{//top->bottom
-					y1=rcWnd.top,y2=rcWnd.bottom;
-					rcWnd.bottom=rcWnd.top,y=&rcWnd.bottom;
+					y1=rcShow.top,y2=rcShow.bottom;
+					rcShow.bottom=rcShow.top,y=&rcShow.bottom;
 				}else if(dwFlags & AW_VER_NEGATIVE)
 				{//bottom->top
-					y1=rcWnd.bottom,y2=rcWnd.top;
-					rcWnd.top=rcWnd.bottom,y=&rcWnd.top;
+					y1=rcShow.bottom,y2=rcShow.top;
+					rcShow.top=rcShow.bottom,y=&rcShow.top;
 				}
 				LONG xStepLen=(x2-x1)/nSteps;
 				LONG yStepLen=(y2-y1)/nSteps;
@@ -1158,7 +1166,12 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 					*x+=xStepLen;
 					*y+=yStepLen;
 					memdc.FillSolidRect(rcWnd,0);
-					_BitBlt(memdc,m_memDC,rcWnd);
+					CPoint ptAnchor;
+					if(dwFlags & AW_VER_POSITIVE)
+						ptAnchor.y=rcWnd.bottom-rcShow.Height();
+					if(dwFlags & AW_HOR_POSITIVE)
+						ptAnchor.x=rcWnd.right-rcShow.Width();
+ 					_BitBlt2(memdc,m_memDC,rcShow,ptAnchor);
 					UpdateLayerFromDC(memdc,0xFF);
 					Sleep(10);
 				}
@@ -1166,16 +1179,15 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 				return TRUE;
 			}else if(dwFlags&AW_CENTER)
 			{
-				CRect rcWnd2(rcWnd);
-				int xStep=rcWnd.Width()/(2*nSteps);
-				int yStep=rcWnd.Height()/(2*nSteps);
-				rcWnd.left=rcWnd.right=(rcWnd.left+rcWnd.right)/2;
-				rcWnd.top=rcWnd.bottom=(rcWnd.top+rcWnd.bottom)/2;
+				int xStep=rcShow.Width()/(2*nSteps);
+				int yStep=rcShow.Height()/(2*nSteps);
+				rcShow.left=rcShow.right=(rcShow.left+rcShow.right)/2;
+				rcShow.top=rcShow.bottom=(rcShow.top+rcShow.bottom)/2;
 				for(int i=0;i<nSteps;i++)
 				{
-					rcWnd.InflateRect(xStep,yStep);
-					memdc.FillSolidRect(rcWnd2,0);
-					_BitBlt(memdc,m_memDC,rcWnd);
+					rcShow.InflateRect(xStep,yStep);
+					memdc.FillSolidRect(rcWnd,0);
+					_BitBlt(memdc,m_memDC,rcShow);
 					UpdateLayerFromDC(memdc,0xFF);
 					Sleep(10);
 				}

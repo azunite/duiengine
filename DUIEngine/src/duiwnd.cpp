@@ -1638,14 +1638,17 @@ void CDuiWindow::PaintBackground( HDC hdc,LPRECT pRc )
     CRect rcDraw=m_rcWindow;
     if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
 
-    CDuiWindow *pTopWnd=GetTopLevelParent();
-    int nSavedDC=::SaveDC(hdc);
+	CDCHandle dc(hdc); 
+    int nSavedDC=dc.SaveDC();
     CRgn rgn;
     rgn.CreateRectRgnIndirect(&rcDraw);
-    ::ExtSelectClipRgn(hdc,rgn,RGN_AND);
-	CDCHandle dc(hdc);
+	CPoint ptOrg;
+	dc.GetViewportOrg(&ptOrg);
+	rgn.OffsetRgn(ptOrg);
+	dc.SelectClipRgn(rgn,RGN_AND);
 	dc.FillSolidRect(pRc,0);//清除残留的alpha值
 
+	CDuiWindow *pTopWnd=GetTopLevelParent();
     CDuiWindow *pEnd=this;
     while(pEnd && !pEnd->IsVisible(TRUE))
     {
@@ -1659,7 +1662,7 @@ void CDuiWindow::PaintBackground( HDC hdc,LPRECT pRc )
         _PaintBackground(hdc,&rcDraw,pTopWnd,pEnd);
     }
 
-    ::RestoreDC(hdc,nSavedDC);
+    dc.RestoreDC(nSavedDC);
 }
 
 BOOL CDuiWindow::_PaintBackground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pEnd)
@@ -1699,12 +1702,16 @@ void CDuiWindow::PaintForeground( HDC hdc,LPRECT pRc )
     CRect rcDraw=m_rcWindow;
     if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
 
-    CDuiWindow *pTopWnd=GetTopLevelParent();
-    int nSavedDC=::SaveDC(hdc);
-    CRgn rgn;
-    rgn.CreateRectRgnIndirect(&rcDraw);
-    ::ExtSelectClipRgn(hdc,rgn,RGN_AND);
+	CDCHandle dc(hdc); 
+	int nSavedDC=dc.SaveDC();
+	CRgn rgn;
+	rgn.CreateRectRgnIndirect(&rcDraw);
+	CPoint ptOrg;
+	dc.GetViewportOrg(&ptOrg);
+	rgn.OffsetRgn(ptOrg);
+	dc.SelectClipRgn(rgn,RGN_AND);
 
+	CDuiWindow *pTopWnd=GetTopLevelParent();
     CDuiWindow *pStart=this;
     while(pStart && !pStart->IsVisible(TRUE))
     {
@@ -1717,7 +1724,7 @@ void CDuiWindow::PaintForeground( HDC hdc,LPRECT pRc )
         _PaintForeground(hdc,&rcDraw,pTopWnd,pStart,bInRange);
     }
 
-    ::RestoreDC(hdc,nSavedDC);
+	dc.RestoreDC(nSavedDC);
 }
 
 void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pStart,BOOL &bInRange)
@@ -1732,6 +1739,7 @@ void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWin
         pCurWnd->DuiSendMessage(WM_ERASEBKGND, (WPARAM)hdc);
         pCurWnd->DuiSendMessage(WM_PAINT, (WPARAM)hdc);
     }
+    if(pCurWnd==pStart) bInRange=TRUE;//画前景时，pStart指定的窗口不绘制
 
     DuiDCPaint DuiDC;
     CDCHandle dc(hdc);
@@ -1746,21 +1754,43 @@ void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWin
 
     pCurWnd->AfterPaint(dc, DuiDC);
 
-    if(bInRange)
+    if(bInRange && pCurWnd!=pStart)
     {
         pCurWnd->DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link
     }
 
-    if(pCurWnd==pStart) bInRange=TRUE;//画前景时，pStart指定的窗口不绘制
 }
 
-void CDuiWindow::DrawAniStep( CRect rcFore,CRect rcBack,HDC dcFore,HDC dcBack )
+void CDuiWindow::DrawAniStep( CRect rcFore,CRect rcBack,HDC dcFore,HDC dcBack,CPoint ptAnchor)
 {
-	CRect rcAll;
-	rcAll.UnionRect(rcFore,rcBack);
 	CDCHandle dc=GetDuiDC(rcBack,OLEDC_OFFSCREEN,FALSE);
 	BitBlt(dc,rcBack.left,rcBack.top,rcBack.Width(),rcBack.Height(),dcBack,rcBack.left,rcBack.top,SRCCOPY);
-	BitBlt(dc,rcFore.left,rcFore.top,rcFore.Width(),rcFore.Height(),dcFore,rcFore.left,rcFore.top,SRCCOPY);
+	BitBlt(dc,rcFore.left,rcFore.top,rcFore.Width(),rcFore.Height(),dcFore,ptAnchor.x,ptAnchor.y,SRCCOPY);
+	PaintForeground(dc,rcBack);//画前景
+	ReleaseDuiDC(dc);
+}
+
+void CDuiWindow::DrawAniStep( CRect rcWnd,HDC dcFore,HDC dcBack,BYTE byAlpha)
+{
+	CDCHandle dc=GetDuiDC(rcWnd,OLEDC_OFFSCREEN,FALSE);
+	if(byAlpha>0 && byAlpha<255)
+	{
+		BitBlt(dc,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dcBack,rcWnd.left,rcWnd.top,SRCCOPY);
+		//do alphablend
+		BLENDFUNCTION bf={0};
+		bf.BlendOp=AC_SRC_OVER;
+		bf.AlphaFormat=0;//AC_SRC_ALPHA
+		bf.SourceConstantAlpha=byAlpha;
+		BOOL bRet=AlphaBlend(dc,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dcFore,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),bf);
+		int a=bRet;
+	}else if(byAlpha==0)
+	{
+		BitBlt(dc,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dcBack,rcWnd.left,rcWnd.top,SRCCOPY);
+	}else if(byAlpha==255)
+	{
+		BitBlt(dc,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dcFore,rcWnd.left,rcWnd.top,SRCCOPY);
+	}
+	PaintForeground(dc,rcWnd);//画前景
 	ReleaseDuiDC(dc);
 }
 
@@ -1781,36 +1811,38 @@ BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
 	CRect rcWnd;
 	GetRect(&rcWnd);
 
-	CDCHandle dc=GetDuiDC(rcWnd,OLEDC_NODRAW,FALSE);
-	LPBYTE *pBitsBefore,*pBitsAfter;
-	HBITMAP hBmpBefore=CGdiAlpha::CreateBitmap32(dc,rcWnd.Width(),rcWnd.Height(),(LPVOID*)&pBitsBefore,255);
-	HBITMAP hBmpAfter=CGdiAlpha::CreateBitmap32(dc,rcWnd.Width(),rcWnd.Height(),(LPVOID*)&pBitsAfter,255);
-	CMemDC dcBefore(dc,hBmpBefore);
-	dcBefore.SetBitmapOwner(TRUE); 
-	dcBefore.OffsetViewportOrg(-rcWnd.left,-rcWnd.top);
-	BitBlt(dcBefore,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dc,rcWnd.left,rcWnd.top,SRCCOPY);
-
-	CMemDC dcAfter(dc,hBmpAfter);
-	dcAfter.SetBitmapOwner(TRUE); 
-	dcAfter.OffsetViewportOrg(-rcWnd.left,-rcWnd.top);
-	//获得渲染缓存
-	//窗口变化前
-	//更新窗口可见性
-	SetVisible(!(dwFlags&AW_HIDE),FALSE);
-	//窗口变化后
-	int nSaveDC=dc.SaveDC();
-	dc.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
-	dc.SetBkMode(TRANSPARENT);
-	dc.SetTextColor(0);
 	CRgn rgn;
 	rgn.CreateRectRgnIndirect(rcWnd);
-	dc.SelectClipRgn(rgn);
-	PaintBackground(dc,rcWnd);
-	RedrawRegion(dc,rgn);
-	PaintForeground(dc,rcWnd);
-	dc.RestoreDC(nSaveDC);
 
-	BitBlt(dcAfter,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dc,rcWnd.left,rcWnd.top,SRCCOPY);
+	CDCHandle dc=GetDuiDC(rcWnd,OLEDC_NODRAW,FALSE);
+	CMemDC dcBefore(dc,CGdiAlpha::CreateBitmap32(dc,rcWnd.Width(),rcWnd.Height(),NULL,255));
+	dcBefore.SetBitmapOwner(TRUE); 
+	//渲染窗口变化前状态
+	dcBefore.SetBitmapOwner(TRUE); 
+	dcBefore.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
+	dcBefore.SetBkMode(TRANSPARENT);
+	dcBefore.SetTextColor(0);
+
+	dcBefore.OffsetViewportOrg(-rcWnd.left,-rcWnd.top);
+
+	PaintBackground(dcBefore,rcWnd);
+	RedrawRegion(CDCHandle(dcBefore),rgn);
+
+	//更新窗口可见性
+	SetVisible(!(dwFlags&AW_HIDE),FALSE);
+
+	//窗口变化后
+	CMemDC dcAfter(dc,CGdiAlpha::CreateBitmap32(dc,rcWnd.Width(),rcWnd.Height(),NULL,255));
+	dcAfter.SetBitmapOwner(TRUE); 
+	dcAfter.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
+	dcAfter.SetBkMode(TRANSPARENT);
+	dcAfter.SetTextColor(0);
+
+	dcAfter.OffsetViewportOrg(-rcWnd.left,-rcWnd.top);
+
+	PaintBackground(dcAfter,rcWnd);
+	RedrawRegion(CDCHandle(dcAfter),rgn);
+
 	ReleaseDuiDC(dc);
 
 	int nSteps=dwTime/10;
@@ -1847,14 +1879,20 @@ BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
 			LONG xStepLen=(x2-x1)/nSteps;
 			LONG yStepLen=(y2-y1)/nSteps;
 
+			CPoint ptAnchor;
 			for(int i=0;i<nSteps;i++)
 			{
 				*x+=xStepLen;
 				*y+=yStepLen;
-				DrawAniStep(rcNewState,rcWnd,dcBefore,dcAfter);
+				ptAnchor=rcWnd.TopLeft();
+				if(dwFlags & AW_HOR_NEGATIVE)
+				{//right->left:move right
+					ptAnchor.x=rcWnd.right-rcNewState.Width();
+				}
+				DrawAniStep(rcNewState,rcWnd,dcBefore,dcAfter,ptAnchor);
 				Sleep(10);
 			}
-			DrawAniStep(CRect(),rcWnd,dcBefore,dcAfter);
+			DrawAniStep(CRect(),rcWnd,dcBefore,dcAfter,rcWnd.TopLeft());
 			return TRUE;
 		}else if(dwFlags&AW_CENTER)
 		{
@@ -1864,13 +1902,23 @@ BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
 			for(int i=0;i<nSteps;i++)
 			{
 				rcNewState.DeflateRect(xStep,yStep);
-				DrawAniStep(rcNewState,rcWnd,dcBefore,dcAfter);
+				DrawAniStep(rcNewState,rcWnd,dcBefore,dcAfter,rcNewState.TopLeft());
 				Sleep(10);
 			}
-			DrawAniStep(CRect(),rcWnd,dcBefore,dcAfter);
+			DrawAniStep(CRect(),rcWnd,dcBefore,dcAfter,rcWnd.TopLeft());
 			return TRUE;
 		}else if(dwFlags&AW_BLEND)
 		{
+			BYTE byAlpha=255;
+			BYTE byStepLen=255/nSteps;
+			for(int i=0;i<nSteps;i++)
+			{
+				DrawAniStep(rcWnd,dcBefore,dcAfter,byAlpha);
+				Sleep(10);
+				byAlpha-=byStepLen;
+			}
+			DrawAniStep(rcWnd,dcBefore,dcAfter,0);
+			return TRUE;
 		}
 		return FALSE;
 	}else
@@ -1906,14 +1954,20 @@ BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
 			LONG xStepLen=(x2-x1)/nSteps;
 			LONG yStepLen=(y2-y1)/nSteps;
 
+			CPoint ptAnchor;
 			for(int i=0;i<nSteps;i++)
 			{
 				*x+=xStepLen;
 				*y+=yStepLen;
-				DrawAniStep(rcNewState,rcWnd,dcAfter,dcBefore);
+				ptAnchor=rcWnd.TopLeft();
+				if(dwFlags & AW_HOR_POSITIVE)
+				{//left->right:move left
+					ptAnchor.x=rcWnd.right-rcNewState.Width();
+				}
+				DrawAniStep(rcNewState,rcWnd,dcAfter,dcBefore,ptAnchor);
 				Sleep(10);
 			}
-			DrawAniStep(rcWnd,rcWnd,dcAfter,dcBefore);
+			DrawAniStep(rcWnd,rcWnd,dcAfter,dcBefore,rcWnd.TopLeft());
 			return TRUE;
 		}else if(dwFlags&AW_CENTER)
 		{
@@ -1925,13 +1979,23 @@ BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
 			for(int i=0;i<nSteps;i++)
 			{
 				rcNewState.InflateRect(xStep,yStep);
-				DrawAniStep(rcNewState,rcWnd,dcAfter,dcBefore);
+				DrawAniStep(rcNewState,rcWnd,dcAfter,dcBefore,rcNewState.TopLeft());
 				Sleep(10);
 			}
-			DrawAniStep(rcWnd,rcWnd,dcAfter,dcBefore);
+			DrawAniStep(rcWnd,rcWnd,dcAfter,dcBefore,rcWnd.TopLeft());
 			return TRUE;
 		}else if(dwFlags&AW_BLEND)
 		{
+			BYTE byAlpha=0;
+			BYTE byStepLen=255/nSteps;
+			for(int i=0;i<nSteps;i++)
+			{
+				DrawAniStep(rcWnd,dcAfter,dcBefore,byAlpha);
+				Sleep(10);
+				byAlpha+=byStepLen;
+			}
+			DrawAniStep(rcWnd,dcAfter,dcBefore,255);
+			return TRUE;
 		}
 		return FALSE;
 	}

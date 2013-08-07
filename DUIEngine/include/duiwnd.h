@@ -665,8 +665,8 @@ protected:
     virtual void DuiDrawFocus(HDC dc);
 
 	void DuiDrawDefFocusRect(CDCHandle dc,CRect rc);
-	void DrawAniStep(CRect rcFore,CRect rcBack,HDC dcFore,HDC dcBack);
-
+	void DrawAniStep(CRect rcFore,CRect rcBack,HDC dcFore,HDC dcBack,CPoint ptAnchor);
+	void DrawAniStep( CRect rcWnd,HDC dcFore,HDC dcBack,BYTE byAlpha);
     //////////////////////////////////////////////////////////////////////////
     // Message Handler
 

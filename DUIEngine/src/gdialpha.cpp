@@ -232,4 +232,28 @@ HBITMAP CGdiAlpha::CreateBitmap32(HDC hdc,int nWid,int nHei,LPVOID * ppBits/*=NU
     return hRet;
 }
 
+BOOL CGdiAlpha::Bitmap32PreMul( HDC hdc )
+{
+	HBITMAP hBmp=(HBITMAP)GetCurrentObject(hdc,OBJ_BITMAP);
+	DUIASSERT(hBmp);
+	BITMAP  bm;
+	GetObject(hBmp,sizeof(BITMAP),&bm);
+
+	if(bm.bmBitsPixel!=32) return FALSE;
+	
+	LPBYTE pbyLine=(LPBYTE)bm.bmBits;
+	for(int i=0;i<bm.bmWidth;i++)
+	{
+		LPBYTE p=pbyLine;
+		for(int j=0;j<bm.bmHeight;j++)
+		{
+			p[0]=(((WORD)p[1])*p[3])>>8;
+			p[1]=(((WORD)p[1])*p[3])>>8;
+			p[2]=(((WORD)p[1])*p[3])>>8;
+			p+=4;
+		}
+		pbyLine=p;
+	}
+	return TRUE;
+}
 }//namespace DuiEngine
