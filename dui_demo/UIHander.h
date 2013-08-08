@@ -7,6 +7,13 @@ class CMainDlg;
 class CUIHander
 {
 public:
+	struct student{
+		TCHAR szName[100];
+		TCHAR szSex[10];
+		int age;
+		int score;
+	};
+
 	CUIHander(CMainDlg *pMainDlg);
 	~CUIHander(void);
 	
@@ -43,7 +50,8 @@ protected:
 	LRESULT OnListBtnClick(LPNMHDR pNHdr);
 
 	void OnBtnInitListClick();
-	void OnBtnInsertColClick();
+
+	bool OnListHeaderClick(CDuiWindow * pSender, LPNMHDR pNmhdr);
 
 	BEGIN_MSG_MAP_EX(CUIHander)
 		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
@@ -53,10 +61,6 @@ protected:
 	END_MSG_MAP()
 
 	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
-		DUI_NOTIFY_ID_COMMAND(btn_lst_init, OnBtnInitListClick)
-		DUI_NOTIFY_ID_COMMAND(btn_lst_insertcol, OnBtnInsertColClick)
-		DUI_NOTIFY_ID_COMMAND(btn_ani_list, OnBtnAniList)
-
 		DUI_NOTIFY_ID_COMMAND(≤‚ ‘, OnAttrReposition)
 		DUI_NOTIFY_ID_COMMAND(IDC_REPSEL, OnRepEditSel)
 		DUI_NOTIFY_ID_COMMAND(1307, OnIECtrl)

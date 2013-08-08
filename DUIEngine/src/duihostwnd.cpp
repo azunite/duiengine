@@ -1022,12 +1022,7 @@ void CDuiHostWnd::UpdateLayerFromDC(HDC hdc,BYTE byAlpha)
 	ReleaseDC(dc);
 }
 
-BOOL _BitBlt(HDC hDst,HDC hSrc,CRect rc)
-{
-	return BitBlt(hDst,rc.left,rc.top,rc.Width(),rc.Height(),hSrc,rc.left,rc.top,SRCCOPY);
-}
-
-BOOL _BitBlt2(HDC hDst,HDC hSrc,CRect rcDst,CPoint ptSrc)
+BOOL _BitBlt(HDC hDst,HDC hSrc,CRect rcDst,CPoint ptSrc)
 {
 	return BitBlt(hDst,rcDst.left,rcDst.top,rcDst.Width(),rcDst.Height(),hSrc,ptSrc.x,ptSrc.y,SRCCOPY);
 }
@@ -1090,7 +1085,7 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 						ptAnchor.y=rcWnd.bottom-rcShow.Height();
 					if(dwFlags & AW_HOR_NEGATIVE)
 						ptAnchor.x=rcWnd.right-rcShow.Width();
-					_BitBlt2(memdc,m_memDC,rcShow,ptAnchor);
+					_BitBlt(memdc,m_memDC,rcShow,ptAnchor);
 					UpdateLayerFromDC(memdc,0xFF);
 					Sleep(10);
 				}
@@ -1104,7 +1099,7 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 				{
 					rcShow.DeflateRect(xStep,yStep);
 					memdc.FillSolidRect(rcWnd,0);
-					_BitBlt(memdc,m_memDC,rcShow);
+					_BitBlt(memdc,m_memDC,rcShow,rcShow.TopLeft());
 					UpdateLayerFromDC(memdc,0xFF);
 					Sleep(10);
 				}
@@ -1171,7 +1166,7 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 						ptAnchor.y=rcWnd.bottom-rcShow.Height();
 					if(dwFlags & AW_HOR_POSITIVE)
 						ptAnchor.x=rcWnd.right-rcShow.Width();
- 					_BitBlt2(memdc,m_memDC,rcShow,ptAnchor);
+ 					_BitBlt(memdc,m_memDC,rcShow,ptAnchor);
 					UpdateLayerFromDC(memdc,0xFF);
 					Sleep(10);
 				}
@@ -1187,7 +1182,7 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 				{
 					rcShow.InflateRect(xStep,yStep);
 					memdc.FillSolidRect(rcWnd,0);
-					_BitBlt(memdc,m_memDC,rcShow);
+					_BitBlt(memdc,m_memDC,rcShow,rcShow.TopLeft());
 					UpdateLayerFromDC(memdc,0xFF);
 					Sleep(10);
 				}
