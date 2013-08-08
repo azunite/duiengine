@@ -645,6 +645,17 @@ protected:
     //************************************
     static BOOL _PaintBackground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pEnd);
 
+	//************************************
+	// Method:    GetPrevVisibleWindow :获得指定窗口的前一个可见窗口
+	// FullName:  DuiEngine::CDuiWindow::GetPrevVisibleWindow
+	// Access:    protected static 
+	// Returns:   CDuiWindow *
+	// Qualifier:
+	// Parameter: CDuiWindow * pWnd	:当前窗口
+	// Parameter: const CRect rcDraw :目标位置
+	//************************************
+	static CDuiWindow *GetPrevVisibleWindow(CDuiWindow *pWnd,const CRect & rcDraw);
+
     //************************************
     // Method:    _PaintForeground
     // Function:  从pStart指定的窗口开始绘制pRc的内容，直接窗口链结尾
@@ -658,6 +669,17 @@ protected:
     // remark:  函数递归调用
     //************************************
     static void _PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pStart,BOOL &bInRange);
+	
+	//************************************
+	// Method:    GetNextVisibleWindow 获得指定窗口的下一个可见窗口
+	// FullName:  DuiEngine::CDuiWindow::GetNextVisibleWindow
+	// Access:    protected static 
+	// Returns:   CDuiWindow *	:下一个可见窗口
+	// Qualifier:
+	// Parameter: CDuiWindow * pWnd	:参考窗口
+	// Parameter: const CRect &rcDraw:目标矩形
+	//************************************
+	static CDuiWindow *GetNextVisibleWindow(CDuiWindow *pWnd,const CRect &rcDraw);
 
     virtual BOOL NeedRedrawWhenStateChange();
 	virtual void GetTextRect(LPRECT pRect);

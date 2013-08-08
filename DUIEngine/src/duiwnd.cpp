@@ -1638,37 +1638,41 @@ void CDuiWindow::PaintBackground( HDC hdc,LPRECT pRc )
     CRect rcDraw=m_rcWindow;
     if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
 
-	CDCHandle dc(hdc); 
-    int nSavedDC=dc.SaveDC();
-    CRgn rgn;
-    rgn.CreateRectRgnIndirect(&rcDraw);
-	CPoint ptOrg;
-	dc.GetViewportOrg(&ptOrg);
-	rgn.OffsetRgn(ptOrg);
-	dc.SelectClipRgn(rgn,RGN_AND);
-	dc.FillSolidRect(pRc,0);//清除残留的alpha值
-
-	CDuiWindow *pTopWnd=GetTopLevelParent();
-    CDuiWindow *pEnd=this;
-    while(pEnd && !pEnd->IsVisible(TRUE))
-    {
-        pEnd=pEnd->GetParent();
-    }
-
+	CDuiWindow *pEnd=GetPrevVisibleWindow(this,rcDraw);
     if(pEnd)
     {
-        if(pEnd!=this) // 将pEnd的第一个子窗口作为结束绘制标志
-            pEnd=pEnd->GetDuiWindow(GDUI_FIRSTCHILD);
-        _PaintBackground(hdc,&rcDraw,pTopWnd,pEnd);
-    }
+		CDuiWindow *pTopWnd=GetTopLevelParent();
+ 		CDCHandle dc(hdc); 
+		int nSavedDC=dc.SaveDC();
+		CRgn rgn;
+		rgn.CreateRectRgnIndirect(&rcDraw);
+		CPoint ptOrg;
+		dc.GetViewportOrg(&ptOrg);
+		rgn.OffsetRgn(ptOrg);
+		dc.SelectClipRgn(rgn,RGN_AND);
+		dc.FillSolidRect(pRc,0);//清除残留的alpha值
+       _PaintBackground(hdc,&rcDraw,pTopWnd,pEnd);
+	   dc.RestoreDC(nSavedDC);
+   }
+}
 
-    dc.RestoreDC(nSavedDC);
+
+CDuiWindow * CDuiWindow::GetPrevVisibleWindow( CDuiWindow *pWnd ,const CRect & rcDraw)
+{
+	if(!pWnd) return NULL;
+	CDuiWindow *pPrevSibling=pWnd->GetDuiWindow(GDUI_PREVSIBLING);
+	if(pPrevSibling && pPrevSibling->IsVisible(TRUE) && !(pPrevSibling->m_rcWindow & rcDraw).IsRectEmpty())//上一窗口可见而且与指定矩形有交集时，找到窗口
+		return pPrevSibling;
+	else if (pPrevSibling)	return GetPrevVisibleWindow(pPrevSibling,rcDraw);
+	CDuiWindow *pParent=pWnd->GetParent();
+	if(!pParent) return NULL;
+	if(pParent->IsVisible(TRUE) && !(pParent->m_rcWindow & rcDraw).IsRectEmpty())
+		return pParent;
+	return GetPrevVisibleWindow(pParent,rcDraw);
 }
 
 BOOL CDuiWindow::_PaintBackground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pEnd)
 {
-    if(pCurWnd==pEnd )	return TRUE; //不管pEnd是否可见都退出
-
     if(!pCurWnd->IsVisible(TRUE) || ((*pRc)&pCurWnd->m_rcWindow).IsRectEmpty())
         return FALSE;
 
@@ -1692,7 +1696,7 @@ BOOL CDuiWindow::_PaintBackground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWin
 
     pCurWnd->DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link
 
-    return bRet;
+	return (pCurWnd==pEnd || bRet);
 }
 
 
@@ -1702,29 +1706,38 @@ void CDuiWindow::PaintForeground( HDC hdc,LPRECT pRc )
     CRect rcDraw=m_rcWindow;
     if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
 
-	CDCHandle dc(hdc); 
-	int nSavedDC=dc.SaveDC();
-	CRgn rgn;
-	rgn.CreateRectRgnIndirect(&rcDraw);
-	CPoint ptOrg;
-	dc.GetViewportOrg(&ptOrg);
-	rgn.OffsetRgn(ptOrg);
-	dc.SelectClipRgn(rgn,RGN_AND);
 
-	CDuiWindow *pTopWnd=GetTopLevelParent();
-    CDuiWindow *pStart=this;
-    while(pStart && !pStart->IsVisible(TRUE))
-    {
-        pStart=pStart->GetParent();
-    }
+    CDuiWindow *pStart=GetNextVisibleWindow(this,rcDraw);
 
     if(pStart)
     {
         BOOL bInRange=FALSE;
-        _PaintForeground(hdc,&rcDraw,pTopWnd,pStart,bInRange);
-    }
 
-	dc.RestoreDC(nSavedDC);
+		CDCHandle dc(hdc); 
+		int nSavedDC=dc.SaveDC();
+		CRgn rgn;
+		rgn.CreateRectRgnIndirect(&rcDraw);
+		CPoint ptOrg;
+		dc.GetViewportOrg(&ptOrg);
+		rgn.OffsetRgn(ptOrg);
+		dc.SelectClipRgn(rgn,RGN_AND);
+
+		CDuiWindow *pTopWnd=GetTopLevelParent();
+        _PaintForeground(hdc,&rcDraw,pTopWnd,pStart,bInRange);
+
+		dc.RestoreDC(nSavedDC);
+    }
+}
+
+
+CDuiWindow * CDuiWindow::GetNextVisibleWindow( CDuiWindow *pWnd ,const CRect &rcDraw)
+{
+	if(!pWnd) return NULL;
+	CDuiWindow *pNextSibling=pWnd->GetDuiWindow(GDUI_NEXTSIBLING);
+	if(pNextSibling && pNextSibling->IsVisible(TRUE) && !(pNextSibling->m_rcWindow & rcDraw).IsRectEmpty())
+		return pNextSibling;
+	else if (pNextSibling)	return GetNextVisibleWindow(pNextSibling,rcDraw);
+	else return GetNextVisibleWindow(pWnd->GetParent(),rcDraw);
 }
 
 void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pStart,BOOL &bInRange)
@@ -1734,12 +1747,13 @@ void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWin
     if(!pCurWnd->IsVisible(TRUE) || ((*pRc)&pCurWnd->m_rcWindow).IsRectEmpty())
         return ;
 
+    if(!bInRange && pCurWnd==pStart) bInRange=TRUE;//开始进行绘制
+
     if(bInRange)
     {
         pCurWnd->DuiSendMessage(WM_ERASEBKGND, (WPARAM)hdc);
         pCurWnd->DuiSendMessage(WM_PAINT, (WPARAM)hdc);
     }
-    if(pCurWnd==pStart) bInRange=TRUE;//画前景时，pStart指定的窗口不绘制
 
     DuiDCPaint DuiDC;
     CDCHandle dc(hdc);
@@ -1754,11 +1768,7 @@ void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWin
 
     pCurWnd->AfterPaint(dc, DuiDC);
 
-    if(bInRange && pCurWnd!=pStart)
-    {
-        pCurWnd->DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link
-    }
-
+    pCurWnd->DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link
 }
 
 void CDuiWindow::DrawAniStep( CRect rcFore,CRect rcBack,HDC dcFore,HDC dcBack,CPoint ptAnchor)
