@@ -645,11 +645,12 @@ HWND CDuiHostWnd::GetHostHwnd()
 
 HDC CDuiHostWnd::OnGetDuiDC(const CRect & rc,DWORD gdcFlags)
 {
+	m_memDC.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
+	m_memDC.SetBkMode(TRANSPARENT);
+	m_memDC.SetTextColor(0);
+
     if(!(gdcFlags & OLEDC_NODRAW))
     {
-        m_memDC.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
-        m_memDC.SetBkMode(TRANSPARENT);
-        m_memDC.SetTextColor(0);
 		if(m_bCaretActive)
 		{
 			DrawCaret(m_ptCaret,FALSE);//clear old caret
@@ -663,8 +664,8 @@ HDC CDuiHostWnd::OnGetDuiDC(const CRect & rc,DWORD gdcFlags)
 
 void CDuiHostWnd::OnReleaseDuiDC(HDC hdcSour,const CRect &rc,DWORD gdcFlags)
 {
-    if(gdcFlags & OLEDC_NODRAW) return;
 	m_memDC.SelectClipRgn(NULL);
+    if(gdcFlags & OLEDC_NODRAW) return;
 	if(m_bCaretActive)
 	{
 		DrawCaret(m_ptCaret,FALSE);//clear old caret

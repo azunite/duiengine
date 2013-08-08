@@ -1817,31 +1817,22 @@ BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
 	CDCHandle dc=GetDuiDC(rcWnd,OLEDC_NODRAW,FALSE);
 	CMemDC dcBefore(dc,CGdiAlpha::CreateBitmap32(dc,rcWnd.Width(),rcWnd.Height(),NULL,255));
 	dcBefore.SetBitmapOwner(TRUE); 
-	//渲染窗口变化前状态
-	dcBefore.SetBitmapOwner(TRUE); 
-	dcBefore.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
-	dcBefore.SetBkMode(TRANSPARENT);
-	dcBefore.SetTextColor(0);
-
 	dcBefore.OffsetViewportOrg(-rcWnd.left,-rcWnd.top);
 
-	PaintBackground(dcBefore,rcWnd);
-	RedrawRegion(CDCHandle(dcBefore),rgn);
-
+	//渲染窗口变化前状态
+	PaintBackground(dc,rcWnd);
+	RedrawRegion(CDCHandle(dc),rgn);
+	BitBlt(dcBefore,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dc,rcWnd.left,rcWnd.top,SRCCOPY);
 	//更新窗口可见性
 	SetVisible(!(dwFlags&AW_HIDE),FALSE);
-
 	//窗口变化后
 	CMemDC dcAfter(dc,CGdiAlpha::CreateBitmap32(dc,rcWnd.Width(),rcWnd.Height(),NULL,255));
 	dcAfter.SetBitmapOwner(TRUE); 
-	dcAfter.SelectFont(DuiFontPool::getSingleton().GetFont(DUIF_DEFAULTFONT));
-	dcAfter.SetBkMode(TRANSPARENT);
-	dcAfter.SetTextColor(0);
-
 	dcAfter.OffsetViewportOrg(-rcWnd.left,-rcWnd.top);
 
-	PaintBackground(dcAfter,rcWnd);
-	RedrawRegion(CDCHandle(dcAfter),rgn);
+	PaintBackground(dc,rcWnd);
+	RedrawRegion(CDCHandle(dc),rgn);
+	BitBlt(dcAfter,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dc,rcWnd.left,rcWnd.top,SRCCOPY);
 
 	ReleaseDuiDC(dc);
 

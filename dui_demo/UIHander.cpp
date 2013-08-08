@@ -279,35 +279,6 @@ void CUIHander::OnCommand( UINT uNotifyCode, int nID, HWND wndCtl )
 // 	DuiMessageBox(NULL,szBuf,_T("tip"),MB_YESNOCANCEL|MB_ICONWARNING);
 }
 
-
-void CUIHander::OnWebkit_GoBack()
-{
-// 	CDuiWebkit *pWebkitCtrl=static_cast<CDuiWebkit*>(m_pMainDlg->FindChildByCmdID(1205));
-// 	pWebkitCtrl->GoBack();
-}
-
-void CUIHander::OnWebkit_GoForward()
-{
-// 	CDuiWebkit *pWebkitCtrl=static_cast<CDuiWebkit*>(m_pMainDlg->FindChildByCmdID(1205));
-// 	pWebkitCtrl->GoForward();
-}
-
-void CUIHander::OnWebkit_Refresh()
-{
-// 	CDuiWebkit *pWebkitCtrl=static_cast<CDuiWebkit*>(m_pMainDlg->FindChildByCmdID(1205));
-// 	pWebkitCtrl->Refresh();
-}
-
-void CUIHander::OnWebkit_Go()
-{
-// 	CDuiWebkit *pWebkitCtrl=static_cast<CDuiWebkit*>(m_pMainDlg->FindChildByCmdID(1205));
-// 	CDuiRichEdit *pEdit=static_cast<CDuiRichEdit*>(m_pMainDlg->FindChildByCmdID(1203));
-// 	WCHAR szURI[200];
-// 	pEdit->GetWindowText(szURI,200);
-// 	CDuiStringA strURI=CW2A(szURI,CP_UTF8);
-// 	pWebkitCtrl->SetURI(strURI);
-}
-
 //演示列表中的按钮控件的响应
 LRESULT CUIHander::OnListBtnClick( LPNMHDR pNHdr )
 {
@@ -395,4 +366,19 @@ bool CUIHander::OnListHeaderClick( CDuiWindow * pSender, LPNMHDR pNmhdr )
 	pHeader->GetItem(pClick->iItem,&hditem);
 	pList->SortItems(funCmpare,&hditem.iOrder);
 	return true;
+}
+
+void CUIHander::OnBtnAniList()
+{
+	CDuiWindow *pList=m_pMainDlg->FindChildByName("lc_test");
+	if(pList)
+	{
+		if(pList->IsVisible(TRUE))
+		{
+			pList->AnimateWindow(100,AW_SLIDE|AW_VER_NEGATIVE|AW_HIDE);
+		}else
+		{
+			pList->AnimateWindow(100,AW_SLIDE|AW_VER_NEGATIVE);//AW_SLIDE|AW_VER_NEGATIVE|AW_HOR_POSITIVE
+		}
+	}
 }

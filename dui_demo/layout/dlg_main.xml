@@ -15,6 +15,7 @@
             <header itemSkin="btn_yellow" align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
             </header>
           </listctrl>
+          <button name="btn_ani" pos="-100,0,-26,30" class="normalbtn">ani list</button>
         </tab>
         <tab id="113" title="miscellaneous" sep="5">
           <animateimg name="ani_test" pos="20,100" skin="icons"/>
