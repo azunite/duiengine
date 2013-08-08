@@ -645,6 +645,37 @@ int Delete( _In_ int iIndex, _In_ int nCount = 1 )
 	return( GetLength() );
 }
 
+// Remove all trailing occurrences of character 'chTarget'
+CDuiString& TrimRight( _In_ XCHAR chTarget )
+{
+	while(m_nLength>0)
+	{
+		if(m_pstr[m_nLength-1]==chTarget)
+			m_nLength--;
+		else
+			break;
+	}
+	m_pstr[m_nLength]=0;
+	if(m_nLength==0) Empty();
+	return *this;
+}
+
+// Remove all trailing occurrences of character 'chTarget'
+CDuiString& TrimLeft( _In_ XCHAR chTarget )
+{
+	int i=0;
+	while(i<m_nLength)
+	{
+		if(m_pstr[i]!=chTarget) break;
+		i++;
+	}
+	if(i!=0)
+	{
+		Assign(m_pstr+i,m_nLength-i);
+	}
+	return *this;
+}
+
 int Find(_Elem ch, int iPos = 0) const
 {
     DUIASSERT(iPos>=0 && iPos<=GetLength());

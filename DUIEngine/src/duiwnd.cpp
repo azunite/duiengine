@@ -560,7 +560,11 @@ BOOL CDuiWindow::Load(pugi::xml_node xmlNode)
 
     {
         m_strInnerText = DUI_CA2T(xmlNode.text().get(), CP_UTF8);
-        if (!m_strInnerText.IsEmpty()) DuiStringPool::getSingleton().BuildString(m_strInnerText);
+        if (!m_strInnerText.IsEmpty())
+		{
+			m_strInnerText.TrimRight(0x20).TrimLeft(0x20);
+			if (!m_strInnerText.IsEmpty()) DuiStringPool::getSingleton().BuildString(m_strInnerText);
+		}
     }
 
     m_uPositionType = 0;
