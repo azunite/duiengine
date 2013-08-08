@@ -1889,6 +1889,10 @@ BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
 				{//right->left:move right
 					ptAnchor.x=rcWnd.right-rcNewState.Width();
 				}
+				if(dwFlags & AW_VER_NEGATIVE)
+				{
+					ptAnchor.y=rcWnd.bottom-rcNewState.Height();
+				}
 				DrawAniStep(rcNewState,rcWnd,dcBefore,dcAfter,ptAnchor);
 				Sleep(10);
 			}
@@ -1963,6 +1967,10 @@ BOOL CDuiWindow::AnimateWindow(DWORD dwTime,DWORD dwFlags )
 				if(dwFlags & AW_HOR_POSITIVE)
 				{//left->right:move left
 					ptAnchor.x=rcWnd.right-rcNewState.Width();
+				}
+				if(dwFlags & AW_VER_POSITIVE)
+				{
+					ptAnchor.y=rcWnd.bottom-rcNewState.Height();
 				}
 				DrawAniStep(rcNewState,rcWnd,dcAfter,dcBefore,ptAnchor);
 				Sleep(10);
