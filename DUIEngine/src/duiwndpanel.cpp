@@ -30,6 +30,7 @@ CDuiPanelEx::CDuiPanelEx()
     ,m_bDragSb(FALSE)
     ,m_wBarVisible(0)
     ,m_wBarEnable(DUISB_BOTH)
+	,m_dwUpdateInterval(DEF_UPDATEINTERVAL)
 {
     memset(&m_siHoz,0,sizeof(SCROLLINFO));
     memset(&m_siVer,0,sizeof(SCROLLINFO));
@@ -346,6 +347,7 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
             m_bDragSb=TRUE;
             m_ptDragSb=point;
             m_nDragPos=m_HitInfo.bVertical?m_siVer.nPos:m_siHoz.nPos;
+			m_dwUpdateTime=GetTickCount()-m_dwUpdateInterval;//让第一次滚动消息能够即时刷新
 
             CRect rcSlide=GetSbPartRect(m_HitInfo.bVertical,SB_THUMBTRACK);
             HDC hdc=GetDuiDC(&rcSlide,OLEDC_PAINTBKGND,FALSE);
@@ -597,6 +599,16 @@ void CDuiPanelEx::OnDuiTimer( char cTimerID )
     }
 }
 
+void CDuiPanelEx::ScrollUpdate()
+{
+	DWORD dwTime=GetTickCount();
+	if(dwTime-m_dwUpdateTime>=m_dwUpdateInterval)
+	{
+		GetContainer()->DuiUpdateWindow();
+		m_dwUpdateTime=dwTime;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 //	CDuiScrollView
 
@@ -742,7 +754,7 @@ BOOL CDuiScrollView::OnScroll(BOOL bVertical,UINT uCode,int nPos)
             SetViewOrigin(ptOrigin);
 
  		if(uCode==SB_THUMBTRACK)
-			GetContainer()->DuiUpdateWindow();
+			ScrollUpdate();
     }
     return bRet;
 }

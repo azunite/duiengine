@@ -47,6 +47,8 @@ class DUI_EXP CDuiDialog : public CDuiPanel
 #define TIMER_SBWAIT	1		//启动连续滚动的定时器
 #define TIMER_SBGO	2		//连续滚动的定时器
 
+#define DEF_UPDATEINTERVAL	20
+
 class DUI_EXP CDuiPanelEx: public CDuiPanel
 {
     DUIOBJ_DECLARE_CLASS_NAME(CDuiPanelEx, "divex")
@@ -121,6 +123,8 @@ protected:
 
     CRect GetSbSlideRectByPos(BOOL bVertical,int nPos);
 
+	void ScrollUpdate();
+
     SCROLLINFO m_siVer,m_siHoz;
     CDuiSkinBase *m_pSkinSb;
     int			m_nSbArrowSize;
@@ -134,11 +138,15 @@ protected:
     int			m_wBarVisible;	//滚动条显示信息
     int			m_wBarEnable;	//滚动条可操作信息
 
+	DWORD		m_dwUpdateTime;	//记录调用UpdateDuiWindow的时间
+	DWORD		m_dwUpdateInterval;
+
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
     DUIWIN_SKIN_ATTRIBUTE("sbskin", m_pSkinSb, FALSE)
     DUIWIN_INT_ATTRIBUTE("sbarrowsize", m_nSbArrowSize, FALSE)
     DUIWIN_INT_ATTRIBUTE("sbwid", m_nSbWid, FALSE)
     DUIWIN_INT_ATTRIBUTE("sbenable", m_wBarEnable, FALSE)
+	DUIWIN_UINT_ATTRIBUTE("updateinterval", m_dwUpdateInterval, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()

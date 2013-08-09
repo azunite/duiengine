@@ -663,10 +663,9 @@ BOOL CDuiListCtrl::OnScroll(BOOL bVertical, UINT uCode, int nPos)
 		UpdateHeaderCtrl();
     }
 
-    NotifyInvalidate();
-
+	NotifyInvalidate();
     if (uCode==SB_THUMBTRACK)
-		GetContainer()->DuiUpdateWindow();
+		ScrollUpdate();
 
     return bRet;
 }
