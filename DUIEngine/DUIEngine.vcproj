@@ -1351,6 +1351,14 @@
 					RelativePath=".\include\wtl.mini\duistr.h"
 					>
 				</File>
+				<File
+					RelativePath=".\include\wtl.mini\strcpcvt.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\wtl.mini\tstring.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="activex"

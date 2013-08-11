@@ -55,7 +55,9 @@
 	#include "wtl.mini/duicrack.h"
 	#include "wtl.mini/duimisc.h"
 	#include "wtl.mini/duigdi.h"
-	#include "wtl.mini/duistr.h" 
+// 	#include "wtl.mini/duistr.h" 
+	#include "wtl.mini/tstring.h" 
+	#include "wtl.mini/strcpcvt.h"
 	#include "wtl.mini/duicoll.h"
 #endif//USING_ATL
 
