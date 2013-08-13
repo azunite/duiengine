@@ -609,6 +609,14 @@ void CDuiPanelEx::ScrollUpdate()
 	}
 }
 
+void CDuiPanelEx::OnShowWindow( BOOL bShow, UINT nStatus )
+{
+	if(!bShow && m_bDragSb)
+	{//隐藏窗口时正有可能正在拖动滚动条，需要处理一下。
+		OnNcLButtonUp(0,CPoint());
+	}
+	__super::OnShowWindow(bShow,nStatus);
+}
 //////////////////////////////////////////////////////////////////////////
 //	CDuiScrollView
 

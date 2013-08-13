@@ -112,6 +112,8 @@ protected:
     BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 
     void OnDuiTimer(char cTimerID);
+
+	void OnShowWindow(BOOL bShow, UINT nStatus);
 protected:
     virtual int  GetScrollLineSize(BOOL bVertical)
     {
@@ -159,6 +161,7 @@ protected:
     MSG_WM_NCMOUSELEAVE(OnNcMouseLeave)
     MSG_WM_MOUSEWHEEL(OnMouseWheel)
     MSG_WM_DUITIMER(OnDuiTimer)
+	MSG_WM_SHOWWINDOW(OnShowWindow)
     DUIWIN_END_MSG_MAP()
 };
 
