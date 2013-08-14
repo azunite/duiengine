@@ -17,6 +17,13 @@
           </listctrl>
           <button name="btn_ani" pos="-100,0,-26,30" class="normalbtn">ani list</button>
         </tab>
+        <tab id="111" title="align">
+          <text pos="100,10" pos2type="center">center align1</text>
+          <text pos="100,30" pos2type="center">center align align</text>
+          <text pos="200,50" pos2type="righttop">align right top</text>
+          <text pos="200,70" pos2type="righttop">align right top 2</text>
+          <check pos="200,90" pos2type="righttop">check right top</check>
+        </tab>
         <tab id="113" title="miscellaneous" sep="5">
           <animateimg name="ani_test" pos="20,100" skin="icons"/>
           <img id="1139" pos="300,200,400,300" skin="icons" tip="img tip" msgtransparent="0"/>

@@ -40,6 +40,7 @@ BOOL ExpLua_DuiWindow(lua_State *L)
 		lua_tinker::class_def<CDuiWindow>(L,"SetOwner",&CDuiWindow::SetOwner);
 		lua_tinker::class_def<CDuiWindow>(L,"GetOwner",&CDuiWindow::GetOwner);
 		lua_tinker::class_def<CDuiWindow>(L,"NotifyInvalidate",&CDuiWindow::NotifyInvalidate);
+		lua_tinker::class_def<CDuiWindow>(L,"AnimateWindow",&CDuiWindow::AnimateWindow);
 //		lua_tinker::class_def<CDuiWindow>(L,"NotifyInvalidateRect",(void (*)(LPRECT))&CDuiWindow::NotifyInvalidateRect);
 
 		return TRUE;
