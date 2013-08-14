@@ -194,6 +194,15 @@ protected:
     CDuiSkinBase * m_pNcSkin;
 
     DUIDLG_POSITION m_dlgpos;
+	typedef enum tagPOS2TYPE{
+		POS2_LEFTTOP=0,	//左上角
+		POS2_RIGHTTOP,	//右上争
+		POS2_CENTER,	//中心
+		POS2_LEFTBOTTOM,//
+		POS2_RIGHTBOTTOM,//
+	}POS2TYPE;
+	POS2TYPE m_pos2Type;		//指定2点坐标时，坐标类型
+
     int				m_nMaxWidth;	//自动计算大小时使用
     BOOL m_bUpdateLocked;//暂时锁定更新
 #ifdef _DEBUG
@@ -551,23 +560,28 @@ protected:
     BOOL m_bMsgHandled;
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_SKIN_ATTRIBUTE("skin", m_pBgSkin, TRUE)//直接获得皮肤对象
-    DUIWIN_SKIN_ATTRIBUTE("ncskin", m_pNcSkin, TRUE)//直接获得皮肤对象
-    DUIWIN_CUSTOM_ATTRIBUTE("name",OnAttributeName)
-    DUIWIN_STYLE_ATTRIBUTE("class", m_style, TRUE)	//获得style
-    DUIWIN_CHAIN_ATTRIBUTE(m_style)					//支持对style中的属性定制
-    DUIWIN_INT_ATTRIBUTE("id", m_uCmdID, FALSE)
-    DUIWIN_INT_ATTRIBUTE("data", m_uData, 0 )
-	DUIWIN_CUSTOM_ATTRIBUTE("state", OnAttributeState)
-    DUIWIN_TSTRING_ATTRIBUTE("href", m_strLinkUrl, FALSE)
-    DUIWIN_TSTRING_ATTRIBUTE("tip", m_strToolTipText, FALSE)
-    DUIWIN_CUSTOM_ATTRIBUTE("pos", OnAttributePosition)
-    DUIWIN_INT_ATTRIBUTE("show", m_bVisible,FALSE)
-    DUIWIN_INT_ATTRIBUTE("msgtransparent", m_bMsgTransparent, FALSE)
-    DUIWIN_INT_ATTRIBUTE("sep", m_nSepSpace, FALSE)
-    DUIWIN_INT_ATTRIBUTE("maxwidth",m_nMaxWidth,FALSE)
-    DUIWIN_INT_ATTRIBUTE("clipclient",m_bClipClient,FALSE)
-    DUIWIN_INT_ATTRIBUTE("tabstop",m_bTabStop,FALSE)
+		DUIWIN_SKIN_ATTRIBUTE("skin", m_pBgSkin, TRUE)//直接获得皮肤对象
+		DUIWIN_SKIN_ATTRIBUTE("ncskin", m_pNcSkin, TRUE)//直接获得皮肤对象
+		DUIWIN_CUSTOM_ATTRIBUTE("name",OnAttributeName)
+		DUIWIN_STYLE_ATTRIBUTE("class", m_style, TRUE)	//获得style
+		DUIWIN_CHAIN_ATTRIBUTE(m_style)					//支持对style中的属性定制
+		DUIWIN_INT_ATTRIBUTE("id", m_uCmdID, FALSE)
+		DUIWIN_INT_ATTRIBUTE("data", m_uData, 0 )
+		DUIWIN_CUSTOM_ATTRIBUTE("state", OnAttributeState)
+		DUIWIN_TSTRING_ATTRIBUTE("href", m_strLinkUrl, FALSE)
+		DUIWIN_TSTRING_ATTRIBUTE("tip", m_strToolTipText, FALSE)
+		DUIWIN_CUSTOM_ATTRIBUTE("pos", OnAttributePosition)
+		DUIWIN_INT_ATTRIBUTE("show", m_bVisible,FALSE)
+		DUIWIN_INT_ATTRIBUTE("msgtransparent", m_bMsgTransparent, FALSE)
+		DUIWIN_INT_ATTRIBUTE("sep", m_nSepSpace, FALSE)
+		DUIWIN_INT_ATTRIBUTE("maxwidth",m_nMaxWidth,FALSE)
+		DUIWIN_INT_ATTRIBUTE("clipclient",m_bClipClient,FALSE)
+		DUIWIN_INT_ATTRIBUTE("tabstop",m_bTabStop,FALSE)
+		DUIWIN_ENUM_ATTRIBUTE("pos2type",POS2TYPE,FALSE)
+			DUIWIN_ENUM_VALUE("lefttop",POS2_LEFTTOP)
+			DUIWIN_ENUM_VALUE("center",POS2_CENTER)
+			DUIWIN_ENUM_VALUE("righttop",POS2_RIGHTTOP)
+		DUIWIN_ENUM_END(m_pos2Type)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
 protected:
