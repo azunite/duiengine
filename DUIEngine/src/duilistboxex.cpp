@@ -27,6 +27,8 @@ CDuiListBoxEx::CDuiListBoxEx()
     , m_pTemplPanel(NULL)
 	, m_nItems(0)
     , m_pItemSkin(NULL)
+	, m_crItemBg(CLR_INVALID)
+	, m_crItemSelBg(RGB(0,0,128))
 	, m_bVirtual(FALSE)
 	, m_bItemRedrawDelay(TRUE)
 {
@@ -106,6 +108,7 @@ int CDuiListBoxEx::InsertItem(int iItem,pugi::xml_node xmlNode,DWORD dwData/*=0*
     pItemObj->SetItemData(dwData);
     pItemObj->Move(CRect(0,0,m_rcClient.Width(),m_nItemHei));
     if(m_pItemSkin) pItemObj->SetSkin(m_pItemSkin);
+	pItemObj->SetColor(m_crItemBg,m_crItemSelBg);
 
     m_arrItems.InsertAt(iItem,pItemObj);
 

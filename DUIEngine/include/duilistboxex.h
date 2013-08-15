@@ -128,6 +128,7 @@ protected:
 	pugi::xml_document m_xmlTempl;		////列表模板XML
     CDuiItemPanel	*	m_pCapturedFrame;
     CDuiSkinBase * m_pItemSkin;
+	COLORREF m_crItemBg,m_crItemSelBg;
 	int		m_nItemHei;
 	BOOL	m_bVirtual;
 	BOOL	m_bItemRedrawDelay;			//表项重绘时缓冲
@@ -137,6 +138,8 @@ public:
 		DUIWIN_INT_ATTRIBUTE("itemheight", m_nItemHei, FALSE)
 		DUIWIN_INT_ATTRIBUTE("virtual", m_bVirtual, TRUE)
 		DUIWIN_SKIN_ATTRIBUTE("itemskin", m_pItemSkin, TRUE)
+		DUIWIN_COLOR_ATTRIBUTE("critembg",m_crItemBg,FALSE)
+		DUIWIN_COLOR_ATTRIBUTE("critemselbg",m_crItemSelBg,FALSE)
 		DUIWIN_INT_ATTRIBUTE("itemredrawdelay", m_bItemRedrawDelay, TRUE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
