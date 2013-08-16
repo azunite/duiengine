@@ -117,9 +117,12 @@ void DefaultLogger::logEvent(LPCTSTR message, LoggingLevel level /* = Standard *
         }
         else if (d_level >= level)
         {
-            // write message
-			fprintf(d_pFile,(LPCSTR)DUI_CT2A(strbuf));
-            fflush(d_pFile);
+			if(d_pFile)
+			{
+				// write message
+				fprintf(d_pFile,(LPCSTR)DUI_CT2A(strbuf));
+				fflush(d_pFile);
+			}
         }
     }
 }
@@ -138,6 +141,7 @@ void DefaultLogger::setLogFilename(LPCTSTR filename, bool append)
 
 void DefaultLogger::FlushCaches()
 {
+	if(!d_pFile) return;
 	// write out cached log strings.
 	if (d_caching)
 	{
