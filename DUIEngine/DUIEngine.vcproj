@@ -45,7 +45,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
+				AdditionalIncludeDirectories=".\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_USRDLL;DUIENGINE_EXPORTS;DLL_DUI"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -68,7 +68,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_d.dll"
 				AdditionalLibraryDirectories="dependencies\lib"
 				GenerateDebugInformation="true"
@@ -207,7 +206,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				WholeProgramOptimization="true"
-				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
+				AdditionalIncludeDirectories=".\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS;DLL_DUI"
 				ExceptionHandling="1"
 				RuntimeLibrary="0"
@@ -229,7 +228,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="dependencies\lib"
@@ -367,7 +365,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\include;.\dependencies"
+				AdditionalIncludeDirectories=".\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -392,7 +390,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="..\lib\$(ProjectName)_static_d.lib"
 				AdditionalLibraryDirectories=""
 			/>
@@ -509,10 +506,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				AdditionalIncludeDirectories=".\include;.\dependencies;.\dependencies\eastl\include"
+				Optimization="1"
+				AdditionalIncludeDirectories=".\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_USRDLL;DUIENGINE_EXPORTS"
 				RuntimeLibrary="0"
+				TreatWChar_tAsBuiltInType="false"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="duistd.h"
 				BrowseInformation="0"
@@ -531,7 +529,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="shlwapi.lib Msimg32.lib"
 				OutputFile="..\lib\$(ProjectName)_static.lib"
 				AdditionalLibraryDirectories=""
 			/>
@@ -646,7 +643,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\include;.\dependencies"
+				AdditionalIncludeDirectories=".\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;USING_ATL"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -670,8 +667,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="shlwapi.lib Msimg32.lib"
-				OutputFile="..\lib\$(ProjectName)_static_d.lib"
+				OutputFile="..\lib\$(ProjectName)_static_ATL_d.lib"
 				AdditionalLibraryDirectories=""
 			/>
 			<Tool

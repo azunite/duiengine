@@ -1121,7 +1121,6 @@ BOOL CDuiHostWnd::AnimateHostWindow(DWORD dwTime,DWORD dwFlags)
 			return FALSE;
 		}else
 		{
-			LONG_PTR dwStyle=GetWindowLongPtr(GWL_STYLE);
 			if(!IsWindowVisible())
 			{
 				SetWindowPos(0,0,0,0,0,SWP_SHOWWINDOW|SWP_NOMOVE|SWP_NOZORDER|SWP_NOSIZE);

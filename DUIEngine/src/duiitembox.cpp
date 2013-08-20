@@ -243,7 +243,6 @@ CRect CDuiItemBox::GetItemRect(int iItem)
         nPageItems=nPageCols*nPageRows;
     }
 
-    CDuiWindow *pChild=m_pFirstChild;
     int nMargin=(rcClient.Width()-((m_nItemWid+m_nSepWid)*nPageCols-m_nSepWid))/2;
     CRect rcItem(CPoint(nMargin,0),CSize(m_nItemWid,m_nItemHei));
     int iCol=iItem%nPageCols;

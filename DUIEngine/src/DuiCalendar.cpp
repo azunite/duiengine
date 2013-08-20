@@ -226,7 +226,7 @@ void CCalendarCore::FormatLunarYear(WORD  iYear, TCHAR *pBuffer)
 	TCHAR szText2[][3]={_T("×Ó"),_T("³ó"),_T("Òú"),_T("Ã®"),_T("³½"),_T("ËÈ"),_T("Îç"),_T("Î´"),_T("Éê"),_T("ÓÏ"),_T("Ðç"),_T("º¥")};
 	TCHAR szText3[][3]={_T("Êó"),_T("Å£"),_T("»¢"),_T("Ãâ"),_T("Áú"),_T("Éß"),_T("Âí"),_T("Ñò"),_T("ºï"),_T("¼¦"),_T("¹·"),_T("Öí")};
 
-	_stprintf(pBuffer,_T("%s%s %s"),szText1[(iYear-4)%10],szText2[(iYear-4)%12],(iYear-4)%12);
+	_stprintf(pBuffer,_T("%s%s %s"),szText1[(iYear-4)%10],szText2[(iYear-4)%12],szText3[(iYear-4)%12]);
 }
 
 void CCalendarCore::FormatMonth(WORD iMonth, TCHAR *pBuffer, BOOL bLunar)
@@ -314,7 +314,6 @@ void CDuiCalendar::DrawTitle(CDCHandle &dc)
 	   CGdiAlpha::FillRect(dc,&rect, CBrush((HBRUSH)::GetStockObject(m_crTitleBack)));
 
    int nWid=rect.Width()/7;
-   int x=rect.left;
    CRect rcItem=rect;
    rcItem.right=rcItem.left+nWid;
 

@@ -14,6 +14,7 @@
 
 # pragma warning(disable:4661)
 # pragma warning(disable:4251)
+# pragma warning(disable:4100)	//unreferenced formal parameter
 
 #include <Windows.h>
 #include <CommCtrl.h>
@@ -63,3 +64,6 @@
 
 
 #include "DuiAttrCrack.h"
+
+#pragma comment(lib,"Msimg32.lib")
+#pragma comment(lib,"shlwapi.lib")

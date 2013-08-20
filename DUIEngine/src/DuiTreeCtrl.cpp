@@ -580,7 +580,7 @@ void CDuiTreeCtrl::ItemLayout()
 
 void CDuiTreeCtrl::CalaItemWidth(LPTVITEM pItem)
 {
-	int nTextWidth = 0, nOffset = 0;
+	int nTextWidth = 0;
 	CSize sizeSkin;
 	CDCHandle dcDesktop = ::GetDC(::GetDesktopWindow());
 	CDC dcTest;
