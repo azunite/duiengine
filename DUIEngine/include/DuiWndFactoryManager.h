@@ -2,95 +2,78 @@
 #include "duisingletonmap.h"
 #include "duiwnd.h"
 
-namespace DuiEngine
-{
+namespace DuiEngine{
 
 class CDuiWindowFactory
 {
 public:
-    virtual ~CDuiWindowFactory() {}
-    virtual CDuiWindow* NewWindow() = 0;
+	virtual DuiEngine::CDuiWindow* NewWindow() = 0;
 
-    virtual const CDuiStringA & getWindowType()=0;
+	virtual void DeleteWindow(DuiEngine::CDuiWindow* pWnd) = 0;
 
-	virtual CDuiWindowFactory* Clone() const =0;
+	virtual const CStringA & getWindowType()=0;
 };
 
 template <typename T>
 class TplDuiWindowFactory : public CDuiWindowFactory
 {
 public:
-    //! Default constructor.
-	TplDuiWindowFactory():m_strTypeName(T::GetClassName())
-    {
-    }
-
-    // Implement WindowFactory interface
-    CDuiWindow* NewWindow()
-    {
-        return new T;
-    }
-
-    virtual const CDuiStringA & getWindowType()
-    {
-        return m_strTypeName;
-    }
-
-	virtual CDuiWindowFactory* Clone() const 
-	{
-		return new TplDuiWindowFactory();
+	//! Default constructor.
+	TplDuiWindowFactory(){
+		m_strTypeName=T::GetClassName();
 	}
+
+	// Implement WindowFactory interface
+	DuiEngine::CDuiWindow* NewWindow()
+	{
+		return new T;
+	}
+	void DeleteWindow(DuiEngine::CDuiWindow* pWnd)
+	{
+		delete pWnd;
+	}
+	virtual const CStringA & getWindowType()
+	{
+		return m_strTypeName;
+	}
+
 protected:
-    CDuiStringA m_strTypeName;
+	CStringA m_strTypeName;
 };
 
 
 
 typedef CDuiWindowFactory* CDuiWindowFactoryPtr;
-class DUI_EXP DuiWindowFactoryManager :
-    public DuiSingletonMap<DuiWindowFactoryManager,CDuiWindowFactoryPtr,CDuiStringA>
+class DuiWindowFactoryManager :
+	public DuiSingletonMap<DuiWindowFactoryManager,CDuiWindowFactoryPtr,CStringA>
 {
 public:
-    DuiWindowFactoryManager(void);
+	DuiWindowFactoryManager(void);
 
-    //************************************
-    // Method:    RegisterFactory,注册APP自定义的窗口类
-    // FullName:  DuiEngine::DuiWindowFactoryManager::RegisterFactory
-    // Access:    public
-    // Returns:   bool
-    // Qualifier:
-    // Parameter: CDuiWindowFactory * pWndFactory:窗口工厂指针
-	// Parameter: bool bReplace:强制替换原有工厂标志
-    //************************************
-    bool RegisterFactory(CDuiWindowFactory & wndFactory,bool bReplace=false)
-    {
-		if(HasKey(wndFactory.getWindowType()))
-		{
-			if(!bReplace) return false;
-			RemoveKeyObject(wndFactory.getWindowType());
-		}
-        AddKeyObject(wndFactory.getWindowType(),wndFactory.Clone());
-        return true;
-    }
+	template <typename T>
+	bool addFactory()
+	{
+		CDuiWindowFactory *pWndFactory= new T;
+		if(HasKey(pWndFactory->GetTypeName())) return false;
+		return AddKeyObject(pWndFactory->GetTypeName(),pWndFactory);
+	}
 
-    //************************************
-    // Method:    UnregisterFactor,反注册APP自定义的窗口类
-    // FullName:  DuiEngine::DuiWindowFactoryManager::UnregisterFactor
-    // Access:    public
-    // Returns:   bool
-    // Qualifier:
-    // Parameter: CDuiWindowFactory * pWndFactory
-    //************************************
-    bool UnregisterFactory(const CDuiStringA & strClassType)
-    {
-		return  RemoveKeyObject(strClassType);
-    }
+	CDuiWindowFactory * removeFactory(const CStringA & strWndType)
+	{
+		if(!HasKey(strWndType)) return NULL;
+		CDuiWindowFactory *pRet=GetKeyObject(strWndType);
+		RemoveKeyObject(strWndType);
+		return pRet;
+	}
+	
 
-	CDuiWindow *CreateWindowByName(LPCSTR pszClassName);
 protected:
-    static void OnWndFactoryRemoved(const CDuiWindowFactoryPtr & obj);
+	static void OnKeyRemoved(const CDuiWindowFactoryPtr & obj)
+	{
+		delete obj;
+	}
 
-    void AddStandardWindowFactory();
+	void AddStandardWindowFactory();
 };
 
 }//namespace DuiEngine

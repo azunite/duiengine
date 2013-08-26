@@ -17,7 +17,7 @@
 #include "duirealwnd.h"
 
 #include "SimpleWnd.h"
-#include "DuiFrameDropTarget.h"
+#include <vector>
 
 #pragma warning(disable: 4996)
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,240 +30,191 @@
 namespace DuiEngine
 {
 
-	class CDuiHostWnd;
-	class CTranslucentHostWnd : public CSimpleWnd
-	{
-	public:
-		CTranslucentHostWnd(CDuiHostWnd* pOwner):m_pOwner(pOwner)
-		{
-		}
-
-		void OnPaint(CDCHandle dc);
-
-		BEGIN_MSG_MAP_EX(CTranslucentHostWnd)
-			MSG_WM_PAINT(OnPaint)
-		END_MSG_MAP()
-	private:
-		CDuiHostWnd *m_pOwner;
-	};
-
 class CDuiTipCtrl;
 
-class DUI_EXP CDuiHostWnd
-    : public CSimpleWnd
-    , public CDuiFrame
-    , protected IDuiRealWndHandler
+class DUI_EXP CDuiHostWnd 
+	: public CSimpleWnd
+	, public CDuiFrame
+	, IDuiRealWndHandler
 {
-	friend class CTranslucentHostWnd;
 public:
-    CDuiHostWnd(UINT uResID = 0);
-    virtual ~CDuiHostWnd() {}
+	CDuiHostWnd(UINT uResID = 0);
 
 public:
 
-    HWND Create(HWND hWndParent,int x,int y,int nWidth,int nHeight);
-    HWND Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, LPVOID lpParam);
-    BOOL Load(UINT uResID);
+	HWND Create(HWND hWndParent,int x,int y,int nWidth,int nHeight);
+	HWND Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWORD dwExStyle, int x, int y, int nWidth, int nHeight, LPVOID lpParam);
+	BOOL Load(UINT uResID);
 
-    BOOL SetXml(LPSTR lpszXml,int nLen);
+	BOOL SetXml(LPCSTR lpszXml);
 
-	BOOL SetXml(pugi::xml_node xmlNode);
+	UINT_PTR DoModal(HWND hWndParent = NULL, LPRECT rect = NULL);
 
-    UINT_PTR DoModal(HWND hWndParent = NULL, LPRECT rect = NULL);
-
-    void EndDialog(UINT uRetCode);
-
-	BOOL AnimateHostWindow(DWORD dwTime,DWORD dwFlags);
-
+	void EndDialog(UINT uRetCode);
 protected:
-    UINT m_uRetCode;
-    BOOL m_bExitModalLoop;
-    UINT m_uResID;
-    int m_nIdleCount;
+	UINT m_uRetCode;
+	BOOL m_bExitModalLoop;
+	UINT m_uResID;
+	int m_nIdleCount;
 
-    // Tracking flag
-    BOOL m_bTrackFlag;
+	// Tracking flag
+	BOOL m_bTrackFlag;
 
-    CDuiStringA m_strWindowCaption;
-    CRect m_rcNC;
+	CStringA m_strWindowCaption;
+	SIZE m_sizeDefault;
+	CRect m_rcNC;
 
-    DWORD m_dwDlgStyle;
-    DWORD m_dwDlgExStyle;
-    BOOL m_bResizable;
-    CSize m_szMin;
+	DWORD m_dwDlgStyle;
+	DWORD m_dwDlgExStyle;
+	BOOL m_bResizable;
+	CSize m_szMin; 
 
-    BOOL m_bTranslucent;	//窗口的半透明属性
-    BOOL m_bCaretShowing;	//当前有插入符正在显示
-    HBITMAP m_hBmpCaret;	//半透明窗口中的模拟插入符
-    BOOL m_bCaretActive;	//模拟插入符正在显示标志
-    CPoint m_ptCaret;		//插入符位置
-    BOOL m_bNeedRepaint;
-    BOOL m_bNeedAllRepaint;
+	BOOL m_bTranslucent;	//窗口的半透明属性
+	BOOL m_bCaretShowing;	//当前有插入符正在显示
+	HBITMAP m_hBmpCaret;	//半透明窗口中的模拟插入符
+	BOOL m_bCaretActive;	//模拟插入符正在显示标志
+	CPoint m_ptCaret;		//插入符位置
+	BOOL m_bNeedRepaint;
+	BOOL m_bNeedAllRepaint;
 
-    CDuiTipCtrl	* m_pTipCtrl;
+	CDuiTipCtrl	* m_pTipCtrl;
 
-    CRgn m_rgnInvalidate;
+	CRgn m_rgnInvalidate;
 
-    CMemDC	m_memDC;
-
+	CMemDC	m_memDC;
 protected:
-    virtual BOOL OnIdle(int nCount);
+	virtual BOOL OnIdle(int nCount);
 
-    void _ModalMessageLoop();
+	void _ModalMessageLoop();
 
-    void _Redraw();
+	void _Redraw();
 
-    virtual BOOL _PreTranslateMessage(MSG* pMsg);
+	BOOL _PreTranslateMessage(MSG* pMsg);
 
-    CDuiArray<CDuiMessageFilter*> m_aMsgFilter;
-
-private:
-	CTranslucentHostWnd			m_dummyWnd;	//半透明窗口使用的一个响应WM_PAINT消息的窗口
+	std::vector<CDuiMessageFilter*> m_aMsgFilter;
 protected:
-    //////////////////////////////////////////////////////////////////////////
-    // Message handler
+	//////////////////////////////////////////////////////////////////////////
+	// Message handler
 
-    void OnPrint(CDCHandle dc, UINT uFlags);
+	void OnPrint(CDCHandle dc, UINT uFlags);
 
-    void OnPaint(CDCHandle dc);
+	void OnPaint(CDCHandle dc);
 
-    BOOL OnEraseBkgnd(CDCHandle dc);
+	BOOL OnEraseBkgnd(CDCHandle dc);
 
-    int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	int OnCreate(LPCREATESTRUCT lpCreateStruct);
 
-    void OnDestroy();
+	void OnDestroy();
 
-    void OnSize(UINT nType, CSize size);
+	void OnSize(UINT nType, CSize size);
 
-    void OnMouseMove(UINT nFlags, CPoint point);
+	void OnMouseMove(UINT nFlags, CPoint point);
 
-    void OnMouseLeave();
+	void OnMouseLeave();
 
-    void OnLButtonDown(UINT nFlags, CPoint point);
-    void OnLButtonDblClk(UINT nFlags, CPoint point);
+	void OnLButtonDown(UINT nFlags, CPoint point);
+	void OnLButtonDblClk(UINT nFlags, CPoint point);
 
-    BOOL OnSetCursor(HWND hWnd, UINT nHitTest, UINT message);
+	BOOL OnSetCursor(HWND hWnd, UINT nHitTest, UINT message);
 
-    void OnTimer(UINT_PTR idEvent);
+	void OnTimer(UINT_PTR idEvent);
 
-    void OnDuiTimer(char cTimerID);
+	void OnDuiTimer(char cTimerID);
 
-    void DrawCaret(CPoint pt,BOOL bUpdate=FALSE);
+	BOOL DrawCaret(CPoint pt,BOOL bUpdate=FALSE);
 
-    LRESULT OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnMouseEvent(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    LRESULT OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnKeyEvent(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 
-	void OnActivate(UINT nState, BOOL bMinimized, HWND wndOther);
+	//////////////////////////////////////////////////////////////////////////
+	// CDuiContainer
 
-    //////////////////////////////////////////////////////////////////////////
-    // CDuiContainer
+	/*virtual */LRESULT OnDuiNotify(LPNMHDR pHdr);
 
-    /*virtual */
-    LRESULT OnDuiNotify(LPNMHDR pHdr);
+	/*virtual */CRect GetContainerRect();
 
-    /*virtual */
-    CRect GetContainerRect();
+	/*virtual */HWND GetHostHwnd();
 
-    /*virtual */
-    HWND GetHostHwnd();
+	/*virtual */HDC OnGetDuiDC(CRect & rc,DWORD gdcFlags);
 
-    /*virtual */
-    HDC OnGetDuiDC(const CRect & rc,DWORD gdcFlags);
+	/*virtual */void OnReleaseDuiDC(HDC hdcSour,CRect &rc,DWORD gdcFlags);
 
-    /*virtual */
-    void OnReleaseDuiDC(HDC hdcSour,const CRect &rc,DWORD gdcFlags);
+	/*virtual */void OnRedraw(const CRect &rc);
 
-    /*virtual */
-    void OnRedraw(const CRect &rc);
+	/*virtual */BOOL OnReleaseDuiCapture();
 
-    /*virtual */
-    BOOL OnReleaseDuiCapture();
+	/*virtual */HDUIWND OnSetDuiCapture(HDUIWND hDuiWnd);
 
-    /*virtual */
-    HDUIWND OnSetDuiCapture(HDUIWND hDuiWnd);
+	/*virtual */HDUIWND GetDuiCapture();
 
-    /*virtual */
-    HDUIWND GetDuiCapture();
+	/*virtual */BOOL IsTranslucent();
 
-    /*virtual */
-    BOOL IsTranslucent();
+	/*virtual */BOOL DuiCreateCaret(HBITMAP hBmp,int nWidth,int nHeight);
 
-    /*virtual */
-    BOOL DuiCreateCaret(HBITMAP hBmp,int nWidth,int nHeight);
+	/*virtual */BOOL DuiShowCaret(BOOL bShow);
 
-    /*virtual */
-    BOOL DuiShowCaret(BOOL bShow);
+	/*virtual */BOOL DuiSetCaretPos(int x,int y);
 
-    /*virtual */
-    BOOL DuiSetCaretPos(int x,int y);
+	//////////////////////////////////////////////////////////////////////////
+	// IDuiRealWndHandler
+	virtual HWND OnRealWndCreate(CDuiRealWnd *pRealWnd);
+	virtual BOOL OnRealWndInit(CDuiRealWnd *pRealWnd);
+	virtual void OnRealWndDestroy(CDuiRealWnd *pRealWnd);
+	virtual void OnRealWndSize(CDuiRealWnd *pRealWnd);
 
-	/*virtual */
-	BOOL DuiUpdateWindow();
+	LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
 
-    //////////////////////////////////////////////////////////////////////////
-    // IDuiRealWndHandler
-    virtual HWND OnRealWndCreate(CDuiRealWnd *pRealWnd);
-    virtual BOOL OnRealWndInit(CDuiRealWnd *pRealWnd);
-    virtual void OnRealWndDestroy(CDuiRealWnd *pRealWnd);
-    virtual void OnRealWndSize(CDuiRealWnd *pRealWnd);
+	void OnGetMinMaxInfo(LPMINMAXINFO lpMMI);
 
-    LRESULT OnNcCalcSize(BOOL bCalcValidRects, LPARAM lParam);
+	BOOL OnNcActivate(BOOL bActive);
 
-    void OnGetMinMaxInfo(LPMINMAXINFO lpMMI);
+	UINT OnWndNcHitTest(CPoint point);
+	
+	void OnClose();
 
-    BOOL OnNcActivate(BOOL bActive);
+	LRESULT OnOK();
 
-    UINT OnWndNcHitTest(CPoint point);
+	LRESULT OnCancel();
 
-	void OnSetFocus(HWND wndOld);
-	void OnKillFocus(HWND wndFocus);
+	LRESULT OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam);
 
-    void OnClose();
-	void OnOK();
-
-    LRESULT OnMsgFilter(UINT uMsg,WPARAM wParam,LPARAM lParam);
-
-    void UpdateHost(CDCHandle dc,const CRect &rc);
-	void UpdateLayerFromDC(HDC hdc,BYTE byAlpha);
+	void UpdateHost(CDCHandle dc,CRect &rc);
 protected:
-
 	DUI_NOTIFY_MAP(IDC_RICHVIEW_WIN)
+		DUI_NOTIFY_ID_COMMAND(IDCANCEL, OnCancel)
 		DUI_NOTIFY_ID_COMMAND(IDOK, OnOK)
-		DUI_NOTIFY_ID_COMMAND(IDCANCEL, OnClose)
-	DUI_NOTIFY_MAP_END()	
+	DUI_NOTIFY_MAP_END()
 
-    BEGIN_MSG_MAP_EX(CDuiHostWnd)
-    MSG_WM_SIZE(OnSize)
-    MSG_WM_PRINT(OnPrint)
-    MSG_WM_PAINT(OnPaint)
-    MSG_WM_CREATE(OnCreate)
-    MSG_WM_DESTROY(OnDestroy)
-    MSG_WM_ERASEBKGND(OnEraseBkgnd)
-    MSG_WM_MOUSELEAVE(OnMouseLeave)
-    MSG_WM_MOUSEMOVE(OnMouseMove)
-    MSG_WM_LBUTTONDBLCLK(OnLButtonDblClk)
-    MSG_WM_LBUTTONDOWN(OnLButtonDown)
-    MSG_WM_MOUSEWHEEL(OnMouseWheel)
-	MSG_WM_ACTIVATE(OnActivate)
-	MSG_WM_SETFOCUS(OnSetFocus)
-	MSG_WM_KILLFOCUS(OnKillFocus)
-    MESSAGE_RANGE_HANDLER_EX(WM_MOUSEFIRST, WM_MOUSELAST, OnMouseEvent)
-    MESSAGE_RANGE_HANDLER_EX(WM_KEYFIRST, WM_KEYLAST, OnKeyEvent)
+	BEGIN_MSG_MAP_EX(CDuiHostWnd)
+		MSG_WM_SIZE(OnSize)
+		MSG_WM_PRINT(OnPrint)
+		MSG_WM_PAINT(OnPaint)
+		MSG_WM_CREATE(OnCreate)
+		MSG_WM_DESTROY(OnDestroy)
+		MSG_WM_ERASEBKGND(OnEraseBkgnd)
+		MSG_WM_MOUSELEAVE(OnMouseLeave)
+		MSG_WM_MOUSEMOVE(OnMouseMove)
+		MSG_WM_LBUTTONDBLCLK(OnLButtonDblClk)
+		MSG_WM_LBUTTONDOWN(OnLButtonDown)
+		MSG_WM_MOUSEWHEEL(OnMouseWheel)
+		MESSAGE_RANGE_HANDLER_EX(WM_MOUSEFIRST, WM_MOUSELAST, OnMouseEvent)
+		MESSAGE_RANGE_HANDLER_EX(WM_KEYFIRST, WM_KEYLAST, OnKeyEvent)
 
-    MSG_WM_SETCURSOR(OnSetCursor)
-    MSG_WM_TIMER(OnTimer)
-    MSG_WM_NCACTIVATE(OnNcActivate)
-    MSG_WM_NCCALCSIZE(OnNcCalcSize)
-    MSG_WM_NCHITTEST(OnWndNcHitTest)
-    MSG_WM_GETMINMAXINFO(OnGetMinMaxInfo)
-    MESSAGE_HANDLER_EX(UM_MSGFILTER,OnMsgFilter)
-    MSG_WM_CLOSE(OnClose)
-	MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
-    REFLECT_NOTIFY_CODE(NM_CUSTOMDRAW)
-    END_MSG_MAP()
+		MSG_WM_SETCURSOR(OnSetCursor)
+		MSG_WM_TIMER(OnTimer)
+		MSG_WM_NCACTIVATE(OnNcActivate)
+		MSG_WM_NCCALCSIZE(OnNcCalcSize)
+		MSG_WM_NCHITTEST(OnWndNcHitTest)
+		MSG_WM_GETMINMAXINFO(OnGetMinMaxInfo)
+		MESSAGE_HANDLER_EX(UM_MSGFILTER,OnMsgFilter)
+		MSG_WM_CLOSE(OnClose)
+
+		MSG_DUI_NOTIFY(IDC_RICHVIEW_WIN)
+		REFLECT_NOTIFY_CODE(NM_CUSTOMDRAW)
+	END_MSG_MAP()
 };
 
 }//namespace DuiEngine

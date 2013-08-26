@@ -1,2 +1,0 @@
-
-int DuiMessageBox(HWND hWnd, LPCTSTR lpText, LPCTSTR lpCaption, UINT uType=MB_OK);

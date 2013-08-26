@@ -127,38 +127,6 @@ __time64_t GetLastWriteTime(LPCSTR pszFileName)
 	return tmRet;
 }
 
-//将单反斜扛转换成双反斜扛
-wstring BuildPath(LPCWSTR pszPath)
-{
-	LPCWSTR p=pszPath;
-	WCHAR szBuf[MAX_PATH*2]={0};
-	WCHAR *p2=szBuf;
-	while(*p)
-	{
-		if(*p==L'\\')
-		{
-			if(*(p+1)!=L'\\')
-			{//单斜扛
-				p2[0]=p2[1]=L'\\';
-				p++;
-				p2+=2;
-			}else
-			{//已经是双斜扛
-				p2[0]=p2[1]=L'\\';
-				p+=2;
-				p2+=2;
-			}
-		}else
-		{
-			*p2=*p;
-			p++;
-			p2++;
-		}
-	}
-	*p2=0;
-	return wstring(szBuf);
-}
-
 int UpdateName2ID(map<string,int> *pmapName2ID,TiXmlDocument *pXmlDocName2ID,TiXmlElement *pXmlEleLayer,int & nCurID)
 {
 	int nRet=0;
@@ -191,7 +159,6 @@ int UpdateName2ID(map<string,int> *pmapName2ID,TiXmlDocument *pXmlDocName2ID,TiX
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	string strSkinPath;	//皮肤路径,相对于程序的.rc文件
 	vector<string> vecIdMaps;
 	string strRes;		//rc2文件名
 	string strHead;		//资源头文件,如winres.h
@@ -199,9 +166,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	char   cYes=0;		//强制改写标志
 	
 	int c;
-
+	;
 	printf("%s\n",GetCommandLineA());
-	while ((c = getopt(argc, argv, _T("i:r:h:n:y:p:"))) != EOF)
+	while ((c = getopt(argc, argv, _T("i:r:h:n:y:"))) != EOF)
 	{
 		switch (c)
 		{
@@ -210,7 +177,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		case _T('h'):strHead=optarg;break;
 		case _T('n'):strName2ID=optarg;break;
 		case _T('y'):cYes=1;optind--;break;
-		case _T('p'):strSkinPath=optarg;break;
 		}
 	}
 
@@ -252,7 +218,6 @@ int _tmain(int argc, _TCHAR* argv[])
 				if(layer && _stricmp(pXmlIdmap->Attribute("type"),"xml")==0)
 				{
 					string strXmlLayer=pXmlIdmap->Attribute("file");
-					if(!strSkinPath.empty()) strXmlLayer=strSkinPath+"\\"+strXmlLayer;
 					if(strXmlLayer.length())
 					{//找到一个窗口描述XML
 						TiXmlDocument xmlDocLayer;
@@ -342,13 +307,7 @@ int _tmain(int argc, _TCHAR* argv[])
 							pszValue=xmlEle->Attribute("id_name");
 							if(pszValue) MultiByteToWideChar(CP_UTF8,0,pszValue,-1,rec.szID,200);
 							pszValue=xmlEle->Attribute("file");
-							if(pszValue)
-							{
-								string str;
-								if(!strSkinPath.empty()){ str=strSkinPath+"\\"+pszValue;}
-								else str=pszValue;
-								MultiByteToWideChar(CP_UTF8,0,str.c_str(),str.length(),rec.szPath,MAX_PATH);
-							}
+							if(pszValue) MultiByteToWideChar(CP_UTF8,0,pszValue,-1,rec.szPath,MAX_PATH);
 
 							if(rec.szType[0] && rec.nID && rec.szPath[0])
 							{
@@ -371,8 +330,7 @@ int _tmain(int argc, _TCHAR* argv[])
 			while(it2!=vecIdMapRecord.end())
 			{
 				WCHAR szRec[2000];
-				wstring strFile=BuildPath(it2->szPath);
-				swprintf(szRec,L"DEFINE_%s(%s,\t%d,\t\"%s\")\n",it2->szType,it2->szID,it2->nID,strFile.c_str());
+				swprintf(szRec,L"DEFINE_%s(%s,\t%d,\t\"%s\")\n",it2->szType,it2->szID,it2->nID,it2->szPath);
 				strOut+=szRec;
 				it2++;
 			}

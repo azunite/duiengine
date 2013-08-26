@@ -11,31 +11,13 @@
 #include <duiwndnotify.h>
 #include <DuiCSS.h>
 
-#ifdef DLL_DUI	//DLL version duiengine support lua
-#include "..\scriptModule\luaScriptModule\luaScriptModule\luaScriptModule.h"
-
-#ifdef _DEBUG
-#pragma comment(lib,"..\\scriptModule\\luaScriptModule\\lib\\luaScriptModule_d.lib")
-#else
-#pragma comment(lib,"..\\scriptModule\\luaScriptModule\\lib\\luaScriptModule.lib")
-#endif
-
-#endif
-
-
-#include "resource.h"	//APP资源
-#include "duires/res.h" //包含DUI资源定义
-
-#include "../zlib/zconf.h"
-#include "../zlib/zlib.h"
+#include "duires/res.h"
 
 using namespace DuiEngine;
 
 #ifdef _DEBUG
 
-#if !defined(_WIN64)
-#pragma comment(lib,"zlib_d.lib")
-#endif
+# pragma comment(lib, "tinyxml_d.lib")
 
 	#ifdef DLL_DUI
 	# pragma comment(lib, "duiengine_d.lib")
@@ -44,9 +26,7 @@ using namespace DuiEngine;
 	#endif
 #else
 
-#if !defined(_WIN64)
-#pragma comment(lib,"zlib.lib")
-#endif
+# pragma comment(lib, "tinyxml.lib")
 
 	#ifdef DLL_DUI
 	# pragma comment(lib, "duiengine.lib")

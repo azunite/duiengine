@@ -1,11 +1,8 @@
 #pragma once
 
 #include "duiwndpanel.h"
-#include "DuiSystem.h"
-#include "mybuffer.h"
 
-namespace DuiEngine
-{
+namespace DuiEngine{
 
 /*
 使用另外一个资源XML来加载子元素
@@ -18,35 +15,32 @@ class DUI_EXP CDuiDialogFile : public CDuiDialog
 
 public:
 
-    virtual BOOL Load(pugi::xml_node xmlNode)
+    virtual BOOL Load(TiXmlElement* pTiXmlElem)
     {
-        if (!CDuiWindow::Load(xmlNode))
-            return FALSE;
+		if (!CDuiWindow::Load(pTiXmlElem))
+			return FALSE;
 
-        int			nChildSrc=xmlNode.attribute("src").as_int(-1);
+		int			nChildSrc=-1;
+		pTiXmlElem->Attribute("src",&nChildSrc);
 
-        if (nChildSrc == -1)
-            return FALSE;
+		if (nChildSrc == -1)
+			return FALSE;
+		CMyBuffer<char>	strXML;
+		BOOL		bRet   = DuiResManager::getSingleton().LoadResource(nChildSrc,strXML);
+		if (!bRet)	return TRUE;
 
-        DuiResProviderBase *pRes=DuiSystem::getSingleton().GetResProvider();
-        if(!pRes) return FALSE;
-
-        DWORD dwSize=pRes->GetRawBufferSize(DUIRES_XML_TYPE,nChildSrc);
-        if(dwSize==0) return FALSE;
-
-        CMyBuffer<char> strXml;
-        strXml.Allocate(dwSize);
-        pRes->GetRawBuffer(DUIRES_XML_TYPE,nChildSrc,strXml,dwSize);
-
-		pugi::xml_document xmlDoc;
-
-		if(!xmlDoc.load_buffer_inplace(strXml,strXml.size(),pugi::parse_default,pugi::encoding_utf8))
+		TiXmlDocument xmlDoc;
 		{
-			DUIASSERT(FALSE);
+			xmlDoc.Parse(strXML, NULL, TIXML_ENCODING_UTF8);
+		}
+		if (xmlDoc.Error())
+		{
+			ATLASSERT(FALSE);
 			return FALSE;
 		}
 
-        return LoadChildren(xmlDoc);
+		TiXmlElement *pSubTiElement = xmlDoc.RootElement();
+        return LoadChildren(pSubTiElement);
     }
 
 };

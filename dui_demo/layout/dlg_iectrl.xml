@@ -1,0 +1,17 @@
+﻿<layer title="IE Ctrl Test" width="600" height="400" appwin="0" ncRect="5,5,5,5"  resize="1" translucent="0"  nomaxsize="0">
+	<body>
+    <dlg id="100" pos="0,0,-0,-0" class="cls_dlg_frame">
+      <caption id="101" pos="0,0,-0,29">
+        <text pos="11,9" class="cls_txt_red">IE Ctrl Test</text>
+        <imgbtn id="1" skin="btn_sys_close"    pos="-45,0" tip="TIP" animate="0"/>
+      </caption>
+      
+      <realwnd id="1201" pos="10,30,-10,-10" wndclass="browser" wndname="http://www.baidu.com"/>
+
+    </dlg>
+	</body>
+</layer>
+
+
+
+

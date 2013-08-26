@@ -1,5 +1,0 @@
-#pragma once
-#define __DUIRES_RC
-#include "duires.h"
-
-#pragma message("include winres.rc2")

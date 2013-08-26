@@ -1,53 +1,78 @@
 #pragma once
 #include "duiwnd.h"
 #include "DuiRichEdit.h"
-#include "DuiDropDownList.h"
+#include "duiwndcmnctrl.h"
+#include "duihostwnd.h"
+#include "duilistctrl.h"
+#include <vector>
 
 namespace DuiEngine
 {
 
-#define IDC_CB_EDIT	-100
+#define IDC_LIST	100
 
 struct CBITEM
 {
-	CDuiStringT strText;
+	CString strText;
 	int iIcon;
-	LPARAM lParam;
+	DWORD dwData;
 };
 
 class CDuiComboBox;
+class CComboList : public CDuiHostWnd
+				 , public CDuiMessageFilter
+{
+public:
+	CComboList(CDuiComboBox* pOwner,int nDropHeight);
+	void DeleteItem(int iItem);
+	void UpdateItems(const CRect * prcOwner=NULL);
+protected:
+	int  OnCreate(LPCREATESTRUCT lpCreateStruct);
+	void OnKillFocus(HWND wndFocus);
+	void OnClose();
 
-class CComboEdit:public CDuiEdit
+	virtual void OnFinalMessage(HWND);
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
+	BEGIN_MSG_MAP_EX(CComboList)
+		MSG_WM_CREATE(OnCreate)
+		MSG_WM_KILLFOCUS(OnKillFocus)
+		MSG_WM_CLOSE(OnClose)
+		CHAIN_MSG_MAP(CDuiHostWnd)
+	END_MSG_MAP()
+	CDuiListBox *m_pListBox;
+	CDuiComboBox* m_pOwner;
+	int			 m_nTextID;
+	int			 m_nIconID;
+	int			m_nDropHeight;
+};
+
+class CComboEdit:public CDuiRichEdit
 {
 public:
 	CComboEdit(CDuiComboBox *pOwner);
-	virtual ~CComboEdit(){}
 
 protected:
 	void OnMouseHover(WPARAM wParam, CPoint ptPos);
 	
 	void OnMouseLeave();
 
-	void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-
-	virtual LRESULT DuiNotify(LPNMHDR pnms);
-
 	DUIWIN_BEGIN_MSG_MAP()
 		MSG_WM_MOUSEHOVER(OnMouseHover)
 		MSG_WM_MOUSELEAVE(OnMouseLeave)
-		MSG_WM_KEYDOWN(OnKeyDown)
 	DUIWIN_END_MSG_MAP()
+
+	CDuiComboBox *m_pOwner;
 };
 
-class DUI_EXP CDuiComboBox 
-	: public CDuiWindow
-	, public CDuiDropDownListOwner
+class DUI_EXP CDuiComboBox :
+	public CDuiWindow
 {
+	friend class CComboList;
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiComboBox, "combobox")
-
 public:
 	CDuiComboBox(void);
-	virtual ~CDuiComboBox(void);
+	~CDuiComboBox(void);
 
 	int SetCurSel(int iSel);
 
@@ -55,91 +80,51 @@ public:
 
 	BOOL GetItemInfo(int iItem,CBITEM *pCbItem);
 
-	LPARAM GetItemData(int iItem) const;
-
-	int SetItemData(int iItem, LPARAM lParam);
-
-	int InsertItem(int iPos,LPCTSTR pszText,int iIcon,LPARAM lParam);
+	int InsertItem(int iPos,LPCTSTR pszText,int iIcon,DWORD dwData);
 
 	BOOL DeleteItem(int iItem);
 
-	BOOL DeleteAllItem();
-
 	int GetWindowText(LPTSTR lpString, int nMaxCount );
 	
-	BOOL SetWindowText(LPCTSTR strText);
+	BOOL SetWindowText(CString strText);
 
 	virtual LRESULT DuiNotify(LPNMHDR pnms);
-
-	void DropDown();
-	void CloseUp();
-
-	CDuiDropDownListBase *GetDropDownList(){return m_pListBox;}
-protected:
-
-	HWND GetHostHwnd();
-	CDuiWindow* GetWindow();
-	int  GetListItemCount();
-	LPCTSTR	GetListItemText(int nItem);
-	int GetListItemIcon(int nItem);
-	int GetListCurSel();
-	int GetAnimateTime();
-	void OnDropDownListClose();
-
-protected:
-
-	void GetDropBtnRect(LPRECT prc);
-	virtual BOOL LoadChildren(pugi::xml_node xmlNode);	
-	virtual void GetTextRect(LPRECT pRect);
-
-	void OnPaint(CDCHandle dc);
-	void OnLButtonDown(UINT nFlags,CPoint pt);
-	void OnLButtonUp(UINT nFlags,CPoint pt);
-	void OnLButtonDbClick(UINT nFlags,CPoint pt);
-	void OnMouseMove(UINT nFlags,CPoint pt);
-	void OnMouseLeave();
-	void OnKeyDown( TCHAR nChar, UINT nRepCnt, UINT nFlags );
-	void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-
-	UINT OnGetDuiCode();
-	BOOL IsTabStop();
 
 	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 		DUIWIN_INT_ATTRIBUTE("dropdown", m_bDropdown, FALSE)
 		DUIWIN_INT_ATTRIBUTE("dropheight", m_nDropHeight, FALSE)
 		DUIWIN_INT_ATTRIBUTE("cursel", m_iCurSel, FALSE)
 		DUIWIN_SKIN_ATTRIBUTE("btnskin", m_pSkinBtn, FALSE)
-		DUIWIN_INT_ATTRIBUTE("itempanel", m_bItemPanel, FALSE)
-		DUIWIN_INT_ATTRIBUTE("animtime", m_iAnimTime, FALSE)
 	DUIWIN_DECLARE_ATTRIBUTES_END()
+protected:
+	void GetDropBtnRect(LPRECT prc);
+	virtual BOOL LoadChildren(TiXmlElement* pTiXmlChildElem);
+	
+	void OnPaint(CDCHandle dc);
+	void OnLButtonDown(UINT nFlags,CPoint pt);
+	void OnLButtonUp(UINT nFlags,CPoint pt);
+	void OnMouseMove(UINT nFlags,CPoint pt);
+	void OnMouseLeave();
 
+	void OnListClose();
 	DUIWIN_BEGIN_MSG_MAP()
 		MSG_WM_PAINT(OnPaint)
-		MSG_WM_LBUTTONDOWN(OnLButtonDown)		
+		MSG_WM_LBUTTONDOWN(OnLButtonDown)
 		MSG_WM_LBUTTONUP(OnLButtonUp)
-		MSG_WM_LBUTTONDBLCLK(OnLButtonDbClick)
 		MSG_WM_MOUSEMOVE(OnMouseMove)
 		MSG_WM_MOUSELEAVE(OnMouseLeave)
-		MSG_WM_KEYDOWN(OnKeyDown) 
-		MSG_WM_CHAR(OnChar)
 	DUIWIN_END_MSG_MAP()
-
-protected:
-
 	CDuiRichEdit *m_pEdit;
-	CDuiDropDownListBase  *m_pListBox;
-	pugi::xml_document m_xmlListStyle;
+	CComboList   *m_pListBox;
+	TiXmlElement * m_pXmlListStyle;
 	CDuiSkinBase *m_pSkinBtn;
 	DWORD		  m_dwBtnState;
 	
 	BOOL m_bDropdown;
-	BOOL m_bItemPanel;
 	int  m_nDropHeight;
-	int	m_iCurSel;
-	int  m_iAnimTime;	
+	int		m_iCurSel;
 
-    CDuiArray<CBITEM> m_arrCbItem;
-
+	std::vector<CBITEM> m_arrCbItem;
 };
 
 }//namespace

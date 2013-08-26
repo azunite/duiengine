@@ -9,67 +9,71 @@
 #include "duistd.h"
 #include "duiobject.h"
 #include "duiimgpool.h"
-#include "duiresprovider.h"
-#include "DuiSystem.h"
 
-namespace DuiEngine
-{
+namespace DuiEngine{
+
+#define IDC_AUTOID_START		65535	//自动编号的起始ID，方便在程序中动态增加图片到图片库中
 
 template<> DuiImgPool * Singleton<DuiImgPool>::ms_Singleton =0;
 
 DuiImgPool::DuiImgPool()
 {
-    m_pFunOnKeyRemoved=OnImageRemoved;
+	CDuiImgX::InitGdiplus();
+	m_pFunOnKeyRemoved=OnKeyRemoved;
+	m_uAutoID=IDC_AUTOID_START;
 }
 
 DuiImgPool::~DuiImgPool()
 {
-    RemoveAll();//需要先清理图片，再释放gdi+，否则基类释放内存时会出错。
+	CDuiImgX::UninitGdiplus();
 }
 
-CDuiImgBase * DuiImgPool::GetImage(UINT uResID,LPCTSTR pszType)
+CDuiImgBase * DuiImgPool::GetImage(UINT uResID)
 {
-    DuiResID resid(pszType,uResID);
-    if(HasKey(resid))
-    {
-        return GetKeyObject(resid);
-    }
-    else
-    {
-        DuiResProviderBase * pResProvider=DuiSystem::getSingleton().GetResProvider();
-        DUIASSERT(pResProvider);
-        CDuiImgBase *pImg=NULL;
-        if(pszType)
-        {
-            pImg=pResProvider->LoadImage(pszType,uResID);
-        }
-        else
-        {
-            //枚举所有支持的图片资源类型自动匹配
-            CDuiImgDecoder *pImgDecoder=pResProvider->GetImageDecoder();
-            DUIASSERT(pImgDecoder);
-            LPCTSTR pszTypes=pImgDecoder->GetSupportTypes();
-            while(*pszTypes)
-            {
-                if(pResProvider->HasResource(pszTypes,uResID))
-                {
-                    pImg=pResProvider->LoadImage(pszTypes,uResID);
-                    if(pImg) break;
-                }
-                pszTypes+=_tcslen(pszTypes)+1;
-            }
-        }
-        if(pImg)
-        {
-            AddKeyObject(resid,pImg);
-            if(pszType!=NULL)
+	if(HasKey(uResID)) 
+	{
+		return GetKeyObject(uResID);
+	}else
+	{
+		CDuiImgBase *pImg=new CDuiBitmap;
+		pImg->LoadImg(uResID,NULL);
+		if(pImg->IsEmpty())
+		{
+			delete pImg;
+			pImg=new CDuiImgX;
+			pImg->LoadImg(uResID,DUIRES_IMGX_TYPE);
+			if(pImg->IsEmpty())
 			{
-				pImg->AddRef();
-				AddKeyObject(DuiResID(NULL,uResID),pImg);//ID唯一时保证不使用类型也能找到该图片资源
+				delete pImg;
+				return NULL;
 			}
-        }
-        return pImg;
-    }
+		}
+		AddKeyObject(uResID,pImg);
+		return pImg;
+	}
+}
+
+//增加一个图片文件到图片库中
+//LPCTSTR pszFileName:图片文件名
+//return:图片的ID,图片加载失败返回-1
+UINT DuiImgPool::AddImage(LPCWSTR pszFileName,BOOL bBmp)
+{
+	CDuiImgBase *pImg=NULL;
+	if(bBmp)
+	{
+		pImg=new CDuiBitmap;
+	}else
+	{
+		pImg=new CDuiImgX;
+	}
+	pImg->LoadImg(pszFileName);
+	if(pImg->IsEmpty())
+	{
+		delete pImg;
+		return -1;
+	}
+	AddKeyObject(m_uAutoID,pImg);
+	return m_uAutoID++;
 }
 
 }//namespace DuiEngine

@@ -9,18 +9,14 @@
 #pragma once
 #include "DuiSingletonMap.h"
 
-namespace DuiEngine
-{
+namespace DuiEngine{
 
-class DUI_EXP DuiStringPool :public DuiSingletonMap<DuiStringPool,CDuiStringT,UINT>
+class DUI_EXP DuiString :public DuiSingletonMap<DuiString,CString,UINT>
 {
 public:
-    BOOL BuildString(CDuiStringT &strContainer);
+	BOOL BuildString(CString &strContainer);
     BOOL Init(UINT uResID);
-	BOOL Init(pugi::xml_node xmlNode);
-    LPCTSTR Get(UINT uID);
-protected:
-    CDuiStringT	m_strTmp;
+	CString Get(UINT uID);
 };
 
 }//namespace DuiEngine

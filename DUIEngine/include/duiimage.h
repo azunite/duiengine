@@ -1,126 +1,103 @@
-/********************************************************************
-	created:	2012/12/27
-	created:	27:12:2012   16:45
-	filename: 	duiimage.h
-	file base:	duiimage
-	file ext:	h
-	author:		huangjianxiong
+//////////////////////////////////////////////////////////////////////////
+//  Module: DUI Image Loader
+//	version 1.0 Huang jianxiong
+//////////////////////////////////////////////////////////////////////////
 
-	purpose:
-*********************************************************************/
 #pragma once
 
-#include "DuiImgBase.h"
 #include <GdiPlus.h>
+extern "C" IMAGE_DOS_HEADER __ImageBase;
 
-namespace DuiEngine
+namespace DuiEngine{
+
+
+class DUI_EXP CDuiImgBase : public CDuiObject
 {
+public:
+	virtual ~CDuiImgBase(){Clear();}
+	virtual void Clear(){}
+	virtual BOOL GetImageSize(SIZE & sz)=NULL;
+	virtual int GetWidth()=NULL;
+	virtual int GetHeight()=NULL;
+	virtual BOOL IsEmpty(){return TRUE;}
+	virtual BOOL BitBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,BYTE byAlpha=0xFF)=NULL;
+	virtual BOOL StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF)=NULL;
+	virtual BOOL TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF)=NULL;
+	virtual BOOL LoadImg(LPCTSTR pszFileName)=NULL;
+	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType)=NULL;
+};
 
 
 class DUI_EXP CDuiBitmap : public CDuiImgBase
 {
 public:
-    CDuiBitmap();
-    virtual ~CDuiBitmap()
-    {
-        Clear();
-    }
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiBitmap, "DuiBitmap")
+	CDuiBitmap();
 
-    virtual BOOL LoadFromResource(HINSTANCE hInst,LPCTSTR pszType,UINT uID);
-    virtual BOOL LoadFromFile(LPCTSTR pszPath);
-    virtual BOOL LoadFromMemory(LPVOID pBuf,DWORD dwSize);
+	CDuiBitmap(HBITMAP hBitmap);
 
-    CDuiBitmap(HBITMAP hBitmap);
+	operator HBITMAP()  const;
 
-    operator HBITMAP()  const;
+	virtual void Clear();
 
-    virtual void Clear();
+	virtual BOOL IsEmpty();
+	virtual BOOL GetImageSize(SIZE & sz);
 
-    virtual BOOL IsEmpty();
-    virtual BOOL GetImageSize(SIZE & sz);
+	virtual int GetWidth();
 
-    virtual int GetWidth();
+	virtual int GetHeight();
 
-    virtual int GetHeight();
+	virtual BOOL BitBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,BYTE byAlpha=0xFF);
 
-    virtual BOOL BitBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,BYTE byAlpha=0xFF);
+	virtual BOOL StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
 
-    virtual BOOL StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
+	virtual BOOL TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
 
-    virtual BOOL TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
+	virtual BOOL LoadImg(LPCTSTR pszFileName);
 
-    virtual void SetAttributes(pugi::xml_node xmlNode);
+	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType=NULL);
 
-    void SetMaskColor(COLORREF crMask)
-    {
-        m_crMask=crMask;
-    }
-
-    HBITMAP Attach(HBITMAP hBmp)
-    {
-        HBITMAP hRet=m_hBitmap;
-        m_hBitmap=hBmp;
-        return hRet;
-    }
-
-    HBITMAP Detatch()
-    {
-        return Attach(NULL);
-    }
-
-    virtual void OnFinalRelease()
-    {
-        delete this;
-    }
+	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
+		DUIWIN_COLOR_ATTRIBUTE("mask", m_crMask, TRUE)
+	DUIWIN_DECLARE_ATTRIBUTES_END()
 protected:
-    HBITMAP m_hBitmap;
-    COLORREF	m_crMask;
+	HBITMAP m_hBitmap;
+	COLORREF	m_crMask;
+	BOOL	m_bManaged;
 };
 
 class DUI_EXP CDuiImgX :public CDuiImgBase
 {
 public:
-    CDuiImgX();
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiImgX, "DuiImgX")
+	CDuiImgX();
 
-    CDuiImgX(Gdiplus::Image* pImg);
+	CDuiImgX(HBITMAP hBmp);
 
-    virtual ~CDuiImgX()
-    {
-        Clear();
-    }
+	virtual void Clear();
+	virtual BOOL IsEmpty();
+	virtual BOOL GetImageSize(SIZE &sz);
 
-    virtual BOOL LoadFromResource(HINSTANCE hInst,LPCTSTR pszType,UINT uID);
-    virtual BOOL LoadFromFile(LPCTSTR pszPath);
-    virtual BOOL LoadFromMemory(LPVOID pBuf,DWORD dwSize);
+	virtual int GetWidth();
 
-    virtual void Clear();
-    virtual BOOL IsEmpty();
-    virtual BOOL GetImageSize(SIZE &sz);
+	virtual int GetHeight();
 
-    virtual int GetWidth();
+	virtual BOOL BitBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,BYTE byAlpha=0xFF);
 
-    virtual int GetHeight();
+	virtual BOOL StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
+	virtual BOOL TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
 
-    virtual BOOL BitBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,BYTE byAlpha=0xFF);
 
-    virtual BOOL StretchBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
-    virtual BOOL TileBlt(HDC hdc,int x,int y,int nWid,int nHei,int xSrc,int ySrc,int nWidSrc,int nHeiSrc,BYTE byAlpha=0xFF);
+	virtual BOOL LoadImg(LPCTSTR pszFileName);
 
-    Gdiplus::Image * GetImage() const
-    {
-        return m_pImg;
-    }
+	virtual BOOL LoadImg(UINT nIDResource,LPCSTR pszType);
 
-    virtual void OnFinalRelease()
-    {
-        delete this;
-    }
 
-    static BOOL GdiplusStartup();
-    static void GdiplusShutdown();
+	static void InitGdiplus();
+	static void UninitGdiplus();
 protected:
-    Gdiplus::Image *m_pImg;
-    static ULONG_PTR s_gdiplusToken;
+	Gdiplus::Image *m_pImg;
+	static ULONG_PTR s_gdiplusToken;
 };
 
 }//namespace DuiEngine

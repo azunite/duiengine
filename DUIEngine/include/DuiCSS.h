@@ -1,28 +1,24 @@
 #pragma once
 
 #include "DuiSingletonMap.h"
+
 namespace DuiEngine
 {
 
-class DUI_EXP DuiCSS :public DuiSingletonMap<DuiCSS,pugi::xml_node,CDuiStringA>
+class DUI_EXP DuiCSS :public DuiSingletonMap<DuiCSS,TiXmlElement *,CStringA>
 {
 public:
-    DuiCSS()
-    {
-    }
-    virtual ~DuiCSS()
-    {
-    }
+	DuiCSS():m_pXmlDoc(NULL)
+	{
+	}
+	virtual ~DuiCSS()
+	{
+		if(m_pXmlDoc) delete m_pXmlDoc;
+	}
 
-    BOOL Init(UINT uXmlID);
-	BOOL Init(pugi::xml_node xmlNode);
-
-	pugi::xml_node GetDefAttribute(LPCSTR pszClassName);
+	BOOL Init(UINT uXmlID);
 protected:
-	void BuildClassAttribute(pugi::xml_node & xmlNode, LPCSTR pszClassName);
-	LPCSTR GetBaseClassName(LPCSTR pszClassName);
-
-	pugi::xml_document m_xmlRoot;
+	TiXmlDocument	*m_pXmlDoc;
 };
 
 }//namespace DuiEngine

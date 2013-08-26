@@ -55,18 +55,15 @@ public: \
 		{ \
 		case 0:
 
-#ifndef END_MSG_MAP
 
 #define END_MSG_MAP() \
 	break; \
 		default: \
-		DUIASSERT(FALSE); \
+		ATLASSERT(FALSE); \
 		break; \
 		} \
 		return FALSE; \
 	}
-
-#endif
 
 // Try to prevent problems with WM_CTLCOLOR* messages when
 // the message wasn't really handled
@@ -215,12 +212,12 @@ public: \
 			return TRUE; \
 	}
 
-// void OnEnable(BOOL bEnable,UINT uStatus)
-#define MSG_WM_ENABLE_EX(func) \
+// void OnEnable(BOOL bEnable)
+#define MSG_WM_ENABLE(func) \
 	if (uMsg == WM_ENABLE) \
 	{ \
 		SetMsgHandled(TRUE); \
-		func((BOOL)wParam,lParam); \
+		func((BOOL)wParam); \
 		lResult = 0; \
 		if(IsMsgHandled()) \
 			return TRUE; \

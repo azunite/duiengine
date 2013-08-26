@@ -5,8 +5,7 @@
 #pragma once
 #include "DuiSingletonMap.h"
 
-namespace DuiEngine
-{
+namespace DuiEngine{
 
 class CDuiWindow;
 // DuiWindow Handle
@@ -16,23 +15,23 @@ class DUI_EXP DuiWindowManager :public DuiSingletonMap<DuiWindowManager,CDuiWind
 {
 public:
 
-    DuiWindowManager();
+	DuiWindowManager();
 
-    ~DuiWindowManager();
+	~DuiWindowManager();
 
-    // Get DuiWindow pointer from handle
-    static CDuiWindow* GetWindow(HDUIWND hDuiWnd);
+	// Get DuiWindow pointer from handle
+	static CDuiWindow* GetWindow(HDUIWND hDuiWnd);
 
-    // Specify a handle to a DuiWindow
-    static HDUIWND NewWindow(CDuiWindow *pDuiWnd);
+	// Specify a handle to a DuiWindow
+	static HDUIWND NewWindow(CDuiWindow *pDuiWnd);
 
-    // Destroy DuiWindow
-    static BOOL DestroyWindow(HDUIWND hDuiWnd);
+	// Destroy DuiWindow
+	static BOOL DestroyWindow(HDUIWND hDuiWnd);
 protected:
 
-    CRITICAL_SECTION m_lockWndMap;
+	CRITICAL_SECTION m_lockWndMap;
 
-    HDUIWND m_hNextWnd;
+	HDUIWND m_hNextWnd;
 };
 
 }//namespace DuiEngine

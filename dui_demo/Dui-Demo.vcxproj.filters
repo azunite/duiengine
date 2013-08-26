@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4683ced7-19db-4e3d-bbae-141ad747cf07}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{e9934b7e-4eb3-462e-b6df-aab1f3a4e96c}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="duires">
+      <UniqueIdentifier>{36e47b35-403c-4877-a5b0-d11865806901}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XML">
+      <UniqueIdentifier>{197d7ece-cfa4-4f31-9b2e-d870919bf11c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource files">
+      <UniqueIdentifier>{b8577787-fbd6-46da-8f73-e97cfbdc1eb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="memleakdetect">
+      <UniqueIdentifier>{e5bf77a5-d733-40a0-9ad3-677648cbfeac}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dui-demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IECtrlDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UIHander.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>duires</Filter>
+    </ClCompile>
+    <ClCompile Include="..\memleakdetect\MemLeakDetect.cpp">
+      <Filter>memleakdetect</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IECtrlDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UIHander.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="duires\res.h">
+      <Filter>duires</Filter>
+    </ClInclude>
+    <ClInclude Include="duires\resource.h">
+      <Filter>duires</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>duires</Filter>
+    </ClInclude>
+    <ClInclude Include="duires\winres.h">
+      <Filter>duires</Filter>
+    </ClInclude>
+    <ClInclude Include="..\memleakdetect\MemLeakDetect.h">
+      <Filter>memleakdetect</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="duires\dui-demo.rc">
+      <Filter>duires</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="layout\def_objattr.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\def_skin.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\def_skin_idmap.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\def_string.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\def_style.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\dlg_iectrl.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\dlg_main.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\idmap.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\menu_test.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="layout\name2id.xml">
+      <Filter>XML</Filter>
+    </None>
+    <None Include="skins\btn_sys_close.png">
+      <Filter>resource files</Filter>
+    </None>
+    <None Include="skins\btn_sys_minimize.png">
+      <Filter>resource files</Filter>
+    </None>
+    <None Include="skins\btn_wnd_checkbox.png">
+      <Filter>resource files</Filter>
+    </None>
+    <None Include="skins\btn_wnd_radio.png">
+      <Filter>resource files</Filter>
+    </None>
+    <None Include="skins\dlg_bg_frame.png">
+      <Filter>resource files</Filter>
+    </None>
+    <None Include="skins\img_logo.ico">
+      <Filter>resource files</Filter>
+    </None>
+    <None Include="skins\main_dlg_body.png">
+      <Filter>resource files</Filter>
+    </None>
+    <None Include="skins\scrollbar.bmp">
+      <Filter>resource files</Filter>
+    </None>
+    <None Include="skins\tab_common.png">
+      <Filter>resource files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="duires\winres.rc2">
+      <Filter>duires</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

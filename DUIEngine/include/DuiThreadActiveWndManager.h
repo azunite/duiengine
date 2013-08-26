@@ -2,32 +2,31 @@
 
 #include "DuiSingletonMap.h"
 
-namespace DuiEngine
-{
+namespace DuiEngine{
 
 class DUI_EXP DuiThreadActiveWndManager: public DuiSingletonMap<DuiThreadActiveWndManager,HWND,DWORD>
 {
 public:
-    DuiThreadActiveWndManager();
+	DuiThreadActiveWndManager();
 
-    virtual ~DuiThreadActiveWndManager();
+	virtual ~DuiThreadActiveWndManager();
 
-    static HWND SetActive(HWND hWnd);
+	static HWND SetActive(HWND hWnd);
 
-    static HWND GetActive();
+	static HWND GetActive();
 
-    static void EnterPaintLock();
+	static void EnterPaintLock();
 
-    static void LeavePaintLock();
-
-protected:
-    HWND _SetActive(HWND hWnd);
-    HWND _GetActive();
+	static void LeavePaintLock();
 
 protected:
+	HWND _SetActive(HWND hWnd);
+	HWND _GetActive();
 
-    CRITICAL_SECTION		m_lockMapActive;
-    CRITICAL_SECTION		m_lockRepaint;
+protected:
+
+	CRITICAL_SECTION		m_lockMapActive;
+	CRITICAL_SECTION		m_lockRepaint;
 };
 
 }//namespace DuiEngine

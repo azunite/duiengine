@@ -9,10 +9,9 @@
 
 #include <assert.h>
 
-namespace DuiEngine
-{
+namespace DuiEngine{
 
-template <typename T> class Singleton
+template <typename T> class DUI_EXP Singleton
 {
 protected:
     static    T* ms_Singleton;
@@ -24,25 +23,14 @@ public:
         ms_Singleton = static_cast<T*>(this);
     }
     virtual ~Singleton( void )
-    {
-        assert( ms_Singleton );
-        ms_Singleton = 0;
-    }
+        {  assert( ms_Singleton );  ms_Singleton = 0;  }
     static T& getSingleton( void )
-    {
-        assert( ms_Singleton );
-        return ( *ms_Singleton );
-    }
+        {  assert( ms_Singleton );  return ( *ms_Singleton );  }
     static T* getSingletonPtr( void )
-    {
-        return ( ms_Singleton );
-    }
+        {  return ( ms_Singleton );  }
 
 private:
-    Singleton& operator=(const Singleton&)
-    {
-        return *this;
-    }
+    Singleton& operator=(const Singleton&) { return *this; }
     Singleton(const Singleton&) {}
 };
 

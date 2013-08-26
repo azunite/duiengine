@@ -1,8 +1,51 @@
-#include "duidef.h"
+// Change these values to use different versions
+#define WINVER		0x0500
+#define _WIN32_WINNT	0x0501
+#define _WIN32_IE	0x0601
+#define _RICHEDIT_VER	0x0200
+
+#undef _ATL_MIN_CRT
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_NON_CONFORMING_SWPRINTFS
+// #define _WTL_NO_CSTRING
+
+# pragma warning(disable: 4661)
+
+#include <Windows.h>
+#include <CommCtrl.h>
+#include <Shlwapi.h>
+#include <OleCtl.h>
+
+#define ATLASSERT(x)
+
+#ifndef GET_X_LPARAM
+#define GET_X_LPARAM(lParam)	((int)(short)LOWORD(lParam))
+#endif
+#ifndef GET_Y_LPARAM
+#define GET_Y_LPARAM(lParam)	((int)(short)HIWORD(lParam))
+#endif
+
+#ifndef NO_DUITYPES
+
+#define _WTYPES_NS DuiEngine
+#include "wtl.mini/duistr.h"
+#include "wtl.mini/duicrack.h"
+#include "wtl.mini/duimisc.h"
+#include "wtl.mini/duigdi.h"
+
+#endif
+
+#include "cpconv.h" //可以通过定义NO_STRCVT来屏蔽DUIEngine自带的编码转换接口
+
+#include "tinyxml.h"
+#include <string>
+
+#pragma comment(lib,"shlwapi.lib")
+#pragma comment(lib,"Msimg32.lib")
+#pragma comment(lib,"Comctl32.lib")
 
 #ifdef DLL_DUI
 # ifdef DUIENGINE_EXPORTS
-# pragma message("dll export")
 #  define DUI_EXP __declspec(dllexport)
 # else
 #  define DUI_EXP __declspec(dllimport)
@@ -11,59 +54,5 @@
 #define DUI_EXP
 #endif
 
-
-# pragma warning(disable:4661)
-# pragma warning(disable:4251)
-# pragma warning(disable:4100)	//unreferenced formal parameter
-
-#include <Windows.h>
-#include <CommCtrl.h>
-#include <Shlwapi.h>
-#include <OleCtl.h>
-#include <tchar.h>
-#include <stdio.h>
-
-//export pugixml interface
-#include "../dependencies/pugixml/pugixml.hpp"
-
-#include "DuiUtilities.h"
-
-#ifdef USING_ATL
-	#define _COLL_NS	ATL
-	#include <atlbase.h>
-	#include <atlapp.h>
-	#include <atlmisc.h>
-	#include <atlgdi.h>
-	#include <atlstr.h>
-	#include <atlcoll.h>
-	#include "wtl.mini/duicrack.h"
-	#define CDuiArray	CAtlArray
-	#define CDuiList	CAtlList
-	#define CDuiMap		CAtlMap
-	#define CDuiStringA	CAtlStringA
-	#define CDuiStringW CAtlStringW
-	#define CDuiStringT CAtlString
-	#define DUI_CA2A	CA2A
-	#define DUI_CA2W	CA2W
-	#define DUI_CW2A	CW2A
-	#define DUI_CA2T	CA2T
-	#define DUI_CW2T	CW2T
-	#define DUI_CT2A	CT2A
-	#define DUI_CT2W	CT2W
-#else//ATL_FREE
-	#define _WTYPES_NS DuiEngine
-	#define _COLL_NS	DuiEngine
-	#include "wtl.mini/duicrack.h"
-	#include "wtl.mini/duimisc.h"
-	#include "wtl.mini/duigdi.h"
-// 	#include "wtl.mini/duistr.h" 
-	#include "wtl.mini/tstring.h" 
-	#include "wtl.mini/strcpcvt.h"
-	#include "wtl.mini/duicoll.h"
-#endif//USING_ATL
-
-
-#include "DuiAttrCrack.h"
-
-#pragma comment(lib,"Msimg32.lib")
-#pragma comment(lib,"shlwapi.lib")
+#pragma warning(disable:4251)
+#pragma warning(disable:4275)

@@ -7,44 +7,132 @@ namespace DuiEngine
 
 #define DEF_ITEMHEI	20
 
-// CComboEdit
-CComboEdit::CComboEdit( CDuiComboBox *pOwner )
+CComboList::CComboList(CDuiComboBox* pOwner,int nDropHeight)
+:m_pOwner(pOwner)
+,m_nTextID(-1)
+,m_nIconID(-1)
+,m_nDropHeight(nDropHeight)
 {
-	SetOwner(pOwner);
+	MsgFilterRegister(pOwner->GetContainer()->GetHostHwnd());
+}
+
+void CComboList::DeleteItem( int iItem )
+{
+	m_pListBox->DeleteItem(iItem);
+}
+
+void CComboList::UpdateItems(const CRect * prcOwner)
+{
+	int nItems=m_pOwner->m_arrCbItem.size();
+	BOOL bShowTop=FALSE;
+	if(prcOwner)
+	{
+		int nDropHeight=m_nDropHeight;
+		if(nItems!=0 && nItems*m_pListBox->GetItemHeight()+m_pListBox->GetStyle().m_nMarginY*2<m_nDropHeight)
+		{
+			nDropHeight=nItems*m_pListBox->GetItemHeight()+m_pListBox->GetStyle().m_nMarginY*2;
+		}
+
+		MONITORINFO oMonitor = {0};
+		oMonitor.cbSize = sizeof(oMonitor);
+		::GetMonitorInfo(::MonitorFromWindow(GetContainer()->GetHostHwnd(), MONITOR_DEFAULTTOPRIMARY), &oMonitor);
+
+		if(prcOwner->bottom+nDropHeight>oMonitor.rcWork.bottom)
+		{
+			bShowTop=TRUE;
+			MoveWindow(prcOwner->left,prcOwner->top-nDropHeight,prcOwner->Width(),nDropHeight,FALSE);
+		}else
+		{
+			MoveWindow(prcOwner->left,prcOwner->bottom,prcOwner->Width(),nDropHeight,FALSE);
+		}
+	}
+	m_pListBox->SetItemCount(NULL,nItems);
+	for(int i=0;i<nItems;i++)
+	{
+		CDuiPanel *pPanel=m_pListBox->GetDuiItem(i);
+		if(m_nTextID!=-1)
+		{
+			CDuiWindow *pText=pPanel->FindChildByCmdID(m_nTextID);
+			if(pText) pText->SetInnerText(m_pOwner->m_arrCbItem[i].strText);
+		}
+		if(m_nIconID!=-1)
+		{
+			CDuiImageWnd *pIcon=(CDuiImageWnd*)pPanel->FindChildByCmdID(m_nIconID);
+			if(pIcon && pIcon->IsClass(CDuiImageWnd::GetClassName()))
+				pIcon->SetIcon(m_pOwner->m_arrCbItem[i].iIcon);
+		}
+	}
+	m_pListBox->SetCurSel(m_pOwner->m_iCurSel);
+	m_pListBox->EnsureVisible(m_pOwner->m_iCurSel);	
+	if(prcOwner)
+	{
+		AnimateWindow(m_hWnd,200,AW_SLIDE|AW_ACTIVATE|(bShowTop?AW_VER_NEGATIVE:AW_VER_POSITIVE));
+	}
+}
+
+int CComboList::OnCreate( LPCREATESTRUCT lpCreateStruct )
+{
+	int nRet=__super::OnCreate(lpCreateStruct);
+	if(nRet!=0) return nRet;
+
+	m_pListBox=new CDuiListBox;
+	InsertChild(m_pListBox);
+	m_pListBox->SetCmdID(IDC_LIST);
+
+	TiXmlElement *pXmlTemplate=(TiXmlElement *)lpCreateStruct->lpCreateParams;
+	ATLASSERT(pXmlTemplate);
+	pXmlTemplate->Attribute("id_text",&m_nTextID);
+	pXmlTemplate->Attribute("id_icon",&m_nIconID);
+
+	m_pListBox->Load(pXmlTemplate);
+	m_pListBox->SetAttribute("pos", "0,0,-0,-0", TRUE);
+	m_pListBox->SetAttribute("hottrack","1",TRUE);
+	CRect rcClient;
+	GetClientRect(&rcClient);
+	Move(&rcClient);
+	m_pListBox->SetOwner(m_pOwner);//chain notify message to combobox
+	return 0;
+}
+
+void CComboList::OnFinalMessage(HWND)
+{
+	MsgFilterUnregister(m_pOwner->GetContainer()->GetHostHwnd());
+	m_pOwner->m_pListBox=NULL;
+	delete this;
+}
+
+void CComboList::OnKillFocus( HWND wndFocus )
+{
+	PostMessage(WM_CLOSE);
+}
+
+void CComboList::OnClose()
+{
+	DefWindowProc();
+	m_pOwner->OnListClose();
+}
+
+BOOL CComboList::PreTranslateMessage( MSG* pMsg )
+{
+	return _PreTranslateMessage(pMsg);
+}
+//////////////////////////////////////////////////////////////////////////
+// CComboEdit
+CComboEdit::CComboEdit( CDuiComboBox *pOwner ) :m_pOwner(pOwner)
+{
+
 }
 
 void CComboEdit::OnMouseHover( WPARAM wParam, CPoint ptPos )
 {
 	__super::OnMouseHover(wParam,ptPos);
-	GetOwner()->DuiSendMessage(WM_MOUSEHOVER,wParam,MAKELPARAM(ptPos.x,ptPos.y));
+	m_pOwner->DuiSendMessage(WM_MOUSEHOVER,wParam,MAKELPARAM(ptPos.x,ptPos.y));
 }
 
 void CComboEdit::OnMouseLeave()
 {
 	__super::OnMouseLeave();
-	GetOwner()->DuiSendMessage(WM_MOUSELEAVE);
-}
-
-void CComboEdit::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-	CDuiWindow *pOwner = GetOwner();
-	if (pOwner && (nChar == VK_DOWN || nChar == VK_ESCAPE))
-	{
-		pOwner->DuiSendMessage(WM_KEYDOWN, nChar, MAKELONG(nFlags, nRepCnt));
-		return;
-	}
-
-	SetMsgHandled(FALSE);
-}
-
-LRESULT CComboEdit::DuiNotify( LPNMHDR pnms )
-{
-	//转发richedit的txNotify消息
-	if(pnms->code==DUINM_RICHEDIT_NOTIFY)
-	{
-		pnms->idFrom=GetOwner()->GetCmdID();
-	}
-	return __super::DuiNotify(pnms);
+	m_pOwner->DuiSendMessage(WM_MOUSELEAVE);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,77 +140,67 @@ LRESULT CComboEdit::DuiNotify( LPNMHDR pnms )
 CDuiComboBox::CDuiComboBox(void)
 :m_pSkinBtn(DuiSkinPool::getSingleton().GetSkin("comboboxbtn"))
 ,m_pEdit(NULL)
+,m_pXmlListStyle(NULL)
 ,m_iCurSel(-1)
 ,m_bDropdown(TRUE)
 ,m_nDropHeight(200)
 ,m_dwBtnState(DuiWndState_Normal)
 ,m_pListBox(NULL)
-,m_bItemPanel(FALSE)
-,m_iAnimTime(200)
 {
-	m_bTabStop=TRUE;
-	m_style.SetAttribute("align","left",TRUE);
-	m_style.SetAttribute("valign","middle",TRUE);
-
-	addEvent(DUINM_LBSELCHANGED);
-	addEvent(DUINM_LBSELCHANGING);
-	addEvent(DUINM_RICHEDIT_NOTIFY);
 }
 
 CDuiComboBox::~CDuiComboBox(void)
 {
+	if(m_pXmlListStyle) delete m_pXmlListStyle;
 }
 
 
-BOOL CDuiComboBox::LoadChildren( pugi::xml_node xmlNode )
+BOOL CDuiComboBox::LoadChildren( TiXmlElement* pTiXmlChildElem )
 {
 	BOOL bRet=FALSE;
-	pugi::xml_node xmlParent = xmlNode.parent();
-
-	DUIASSERT(xmlParent);
+	TiXmlNode *pTiXmlParent=pTiXmlChildElem->Parent();
+	ATLASSERT(pTiXmlParent);
 	//初始化列表数据
-	pugi::xml_node xmlNode_Items=xmlParent.child("items");
-	if(xmlNode_Items)
+	TiXmlElement *pTiXmlItems=pTiXmlParent->FirstChildElement("items");
+	if(pTiXmlItems)
 	{
-		pugi::xml_node xmlNode_Item=xmlNode_Items.child("item");
-		while(xmlNode_Item)
+		TiXmlElement *pItem=pTiXmlItems->FirstChildElement("item");
+		while(pItem)
 		{
 			CBITEM cbi={_T(""),0,0};
-			cbi.strText=DUI_CA2T(xmlNode_Item.attribute("text").value(),CP_UTF8);
-			cbi.iIcon=xmlNode_Item.attribute("icon").as_int(0);
-			cbi.lParam=xmlNode_Item.attribute("data").as_int(0);
-            m_arrCbItem.Add(cbi);
-			xmlNode_Item=xmlNode_Item.next_sibling("item");
+			cbi.strText=CA2T(pItem->Attribute("text"),CP_UTF8);
+			pItem->Attribute("icon",&cbi.iIcon);
+			const char *pszData=pItem->Attribute("data");
+			if(pszData) cbi.dwData=atoi(pszData);
+			m_arrCbItem.push_back(cbi);
+			pItem=pItem->NextSiblingElement("item");
 		}
 		bRet=TRUE;
 	}
-
 	//获取列表模板
-	pugi::xml_node xmlNode_lstStyle=xmlParent.child("liststyle");
-	if(xmlNode_lstStyle)
+	TiXmlElement *pTiListStyle=pTiXmlParent->FirstChildElement("liststyle");
+	if(pTiListStyle)
 	{
-		m_xmlListStyle.append_copy(xmlNode_lstStyle);
-		m_xmlListStyle.attribute("virtual").set_value(0);
+		m_pXmlListStyle=pTiListStyle->Clone()->ToElement();
 	}
 
-	DUIASSERT(m_pSkinBtn);
+	ATLASSERT(m_pSkinBtn);
 	//创建edit对象
 	if(!m_bDropdown)
 	{
 		SIZE szBtn=m_pSkinBtn->GetSkinSize();
 		m_pEdit=new CComboEdit(this);
 		InsertChild(m_pEdit);
-		pugi::xml_node xmlEditStyle=xmlParent.child("editstyle");
-		if(xmlEditStyle)
-			m_pEdit->Load(xmlEditStyle);
+		TiXmlElement *pTiEditStyle=pTiXmlParent->FirstChildElement("editstyle");
+		if(pTiEditStyle)
+			m_pEdit->Load(pTiEditStyle);
 		else
 			m_pEdit->DuiSendMessage(WM_CREATE);
-		CDuiStringA strPos;
+		CStringA strPos;
 		strPos.Format("0,0,-%d,-0",szBtn.cx);
 		m_pEdit->SetAttribute("pos",strPos,TRUE);
-		m_pEdit->SetCmdID(IDC_CB_EDIT);
 	}
-    if(m_iCurSel!=-1 && m_iCurSel>=m_arrCbItem.GetCount())
+	if(m_iCurSel!=-1 && m_iCurSel>=m_arrCbItem.size())
 		m_iCurSel=-1;
 	int iSel=m_iCurSel;
 	m_iCurSel=-1;
@@ -138,8 +216,29 @@ void CDuiComboBox::GetDropBtnRect(LPRECT prc)
 	prc->left=prc->right-szBtn.cx;
 }
 
+void CDuiComboBox::OnPaint( CDCHandle dc )
+{
 
-void CDuiComboBox::DropDown()
+	if(m_iCurSel != -1 && m_pEdit==NULL)
+	{
+		DuiDCPaint DuiDC;
+
+		BeforePaint(dc, DuiDC);
+		CRect rcClient;
+		GetClient(&rcClient);
+		SIZE szBtn=m_pSkinBtn->GetSkinSize();
+		rcClient.right-=szBtn.cx;
+
+		DuiDrawText(dc,m_strInnerText, m_strInnerText.GetLength(), rcClient, DT_LEFT|DT_VCENTER|DT_SINGLELINE|(m_style.m_bDotted?DT_WORD_ELLIPSIS:0));
+
+		AfterPaint(dc, DuiDC);
+	}
+	CRect rcBtn;
+	GetDropBtnRect(&rcBtn);
+	m_pSkinBtn->Draw(dc,rcBtn,IIF_STATE3(m_dwBtnState,DuiWndState_Normal,DuiWndState_Hover,DuiWndState_PushDown));
+}
+
+void CDuiComboBox::OnLButtonDown( UINT nFlags,CPoint pt )
 {
 	if(m_dwBtnState==DuiWndState_PushDown) return;
 	m_dwBtnState=DuiWndState_PushDown;
@@ -152,52 +251,14 @@ void CDuiComboBox::DropDown()
 	CSimpleWnd wnd(GetContainer()->GetHostHwnd());
 	wnd.ClientToScreen(&rc);
 
-	if (!m_bItemPanel)
-		m_pListBox=new CDuiDropDownList(this,m_nDropHeight);
-	else
-		m_pListBox=new CDuiDropDownListEx(this,m_nDropHeight);
+	m_pListBox=new CComboList(this,m_nDropHeight);
 
-	m_pListBox->Create(GetContainer()->GetHostHwnd(),NULL,WS_POPUP,WS_EX_TOOLWINDOW,0,0,0,0,&m_xmlListStyle);
+	m_pListBox->Create(GetContainer()->GetHostHwnd(),NULL,WS_POPUP,WS_EX_TOOLWINDOW,0,0,0,0,m_pXmlListStyle);
  	m_pListBox->UpdateItems(&rc);
-}
-
-void CDuiComboBox::CloseUp()
-{
-	m_pListBox->PostMessage(WM_CLOSE);
-	m_pListBox = NULL;
-}
-
-
-void CDuiComboBox::GetTextRect( LPRECT pRect )
-{
-	GetClient(pRect);
-	SIZE szBtn=m_pSkinBtn->GetSkinSize();
-	pRect->right-=szBtn.cx;
-}
-
-void CDuiComboBox::OnPaint( CDCHandle dc )
-{
-	if(m_iCurSel != -1 && m_pEdit==NULL)
-	{
-		__super::OnPaint(dc);
-	}
-	CRect rcBtn;
-	GetDropBtnRect(&rcBtn);
-	m_pSkinBtn->Draw(dc,rcBtn,IIF_STATE3(m_dwBtnState,DuiWndState_Normal,DuiWndState_Hover,DuiWndState_PushDown));
-}
-
-void CDuiComboBox::OnLButtonDown( UINT nFlags,CPoint pt )
-{
-	DropDown();
 }
 
 void CDuiComboBox::OnLButtonUp(UINT nFlags,CPoint pt)
 {
-}
-
-void CDuiComboBox::OnLButtonDbClick(UINT nFlags,CPoint pt)
-{	
-	DuiSendMessage( WM_LBUTTONDOWN, 0, MAKELPARAM( pt.x, pt.y ) );
 }
 
 void CDuiComboBox::OnMouseMove( UINT nFlags,CPoint pt )
@@ -233,62 +294,26 @@ void CDuiComboBox::OnMouseLeave()
 	}
 }
 
-void CDuiComboBox::OnKeyDown( TCHAR nChar, UINT nRepCnt, UINT nFlags )
-{	
-	if ( nChar == VK_DOWN)
-		DropDown();
-	else if ( nChar == VK_ESCAPE)
-		CloseUp();
-}
-
-void CDuiComboBox::OnChar(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-	if (!m_bDropdown)
-	{
-		CComboEdit *pEdit = static_cast<CComboEdit *>(FindChildByCmdID(IDC_CB_EDIT));
-		if (pEdit)
-			pEdit->DuiSendMessage(WM_CHAR, nChar, MAKELONG(nFlags, nRepCnt));
-		return;
-	}
-}
-
-UINT CDuiComboBox::OnGetDuiCode()
-{		
-	return DUIC_WANTALLKEYS;
-}
-
-BOOL CDuiComboBox::IsTabStop()
-{
-	if (m_bDropdown && m_bTabStop)
-		return TRUE;
-	return FALSE;
-}
-
 LRESULT CDuiComboBox::DuiNotify(LPNMHDR pnms)
 {
 	LRESULT lRet=0;
-	if(pnms->idFrom == IDC_DROPDOWN_LIST)
+	if(pnms->idFrom==IDC_LIST)
 	{
 		pnms->idFrom=GetCmdID();
 		if(pnms->code==DUINM_LBSELCHANGED && m_pListBox)
 		{//select item changed
 			DUINMLBSELCHANGE *pnmclk = (DUINMLBSELCHANGE *)pnms;
-			if(pnmclk->uMsg==WM_LBUTTONDOWN || pnmclk->uMsg==WM_LBUTTONUP)
+			if(pnmclk->uMsg==WM_LBUTTONUP)
 			{
-				CloseUp();
+				m_pListBox->PostMessage(WM_CLOSE);
 				SetCurSel(pnmclk->nNewSel);
-				if (!m_bDropdown && m_pEdit)
-				{
-					m_pEdit->SetDuiFocus();
-					m_pEdit->SetSel(MAKELONG(0,-1));
-				}
 				lRet=__super::DuiNotify(pnms);
 			}
 		}else
 		{
 			lRet=__super::DuiNotify(pnms);
 		}
-		pnms->idFrom=IDC_DROPDOWN_LIST;
+		pnms->idFrom=IDC_LIST;
 	}else
 	{
 		lRet=__super::DuiNotify(pnms);
@@ -304,24 +329,16 @@ int CDuiComboBox::SetCurSel( int iSel )
 		{
 			m_iCurSel=-1;
 			if(m_pEdit)
-			{
-				m_pEdit->setMutedState(true);
 				m_pEdit->SetWindowText(NULL);
-				m_pEdit->setMutedState(false);
-			}
 			else
 				SetInnerText(NULL);
 		}else
 		{
-            if(iSel>=0 && iSel<m_arrCbItem.GetCount())
+			if(iSel>=0 && iSel<m_arrCbItem.size())
 			{
 				m_iCurSel=iSel;
 				if(m_pEdit)
-				{
-					m_pEdit->setMutedState(true);
 					m_pEdit->SetWindowText(m_arrCbItem[iSel].strText);
-					m_pEdit->setMutedState(false);
-				}
 				else
 					SetInnerText(m_arrCbItem[iSel].strText);
 			}else
@@ -329,7 +346,6 @@ int CDuiComboBox::SetCurSel( int iSel )
 				return CB_ERR;
 			}
 		}
-
 		NotifyInvalidate();
 	}
 	return m_iCurSel;
@@ -342,29 +358,16 @@ int CDuiComboBox::GetCurSel()
 
 BOOL CDuiComboBox::GetItemInfo( int iItem,CBITEM *pCbItem )
 {
-    if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return FALSE;
+	if(iItem<0 || iItem>=m_arrCbItem.size()) return FALSE;
 	*pCbItem=m_arrCbItem[iItem];
 	return TRUE;
 }
 
-LPARAM CDuiComboBox::GetItemData(int iItem) const
+int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,DWORD dwData )
 {
-    if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return FALSE;
-	return m_arrCbItem[iItem].lParam;
-}
-
-int CDuiComboBox::SetItemData(int iItem, LPARAM lParam)
-{
-    if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return CB_ERR;
-	m_arrCbItem[iItem].lParam = lParam;
-	return 0;
-}
-
-int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,LPARAM lParam )
-{
-	CBITEM cbi={pszText,iIcon,lParam};
-    if(iPos<0 || iPos>m_arrCbItem.GetCount()) iPos=m_arrCbItem.GetCount();
-    m_arrCbItem.InsertAt(iPos,cbi);
+	CBITEM cbi={pszText,iIcon,dwData};
+	if(iPos<0 || iPos>m_arrCbItem.size()) iPos=m_arrCbItem.size();
+	m_arrCbItem.insert(m_arrCbItem.begin()+iPos,cbi);
 	if(m_pListBox)
 	{//update list box
 		m_pListBox->UpdateItems();
@@ -374,28 +377,13 @@ int CDuiComboBox::InsertItem(int iPos, LPCTSTR pszText,int iIcon,LPARAM lParam )
 
 BOOL CDuiComboBox::DeleteItem( int iItem )
 {
-    if(iItem<0 || iItem>=m_arrCbItem.GetCount()) return FALSE;
-	m_arrCbItem.RemoveAt(iItem);
+	if(iItem<0 || iItem>=m_arrCbItem.size()) return FALSE;
+	m_arrCbItem.erase(m_arrCbItem.begin()+iItem);
 	if(m_pListBox)
 	{//update list box
 		m_pListBox->DeleteItem(iItem);
 	}
 	return TRUE;
-}
-
-BOOL CDuiComboBox::DeleteAllItem()
-{
-	m_iCurSel=-1;
-	if(m_pEdit)
-		m_pEdit->SetWindowText(NULL);
-	else
-		SetInnerText(NULL);
-	m_arrCbItem.RemoveAll();
-	if(m_pListBox)
-		CloseUp();
-		
-	NotifyInvalidate();
-	return TRUE;	
 }
 
 int CDuiComboBox::GetWindowText( LPTSTR lpString, int nMaxCount )
@@ -413,59 +401,18 @@ int CDuiComboBox::GetWindowText( LPTSTR lpString, int nMaxCount )
 		}
 	}else
 	{
-		DUIASSERT(m_pEdit);
+		ATLASSERT(m_pEdit);
 		return m_pEdit->GetWindowText(lpString,nMaxCount);
 	}
 }
 
-BOOL CDuiComboBox::SetWindowText(LPCTSTR strText)
+BOOL CDuiComboBox::SetWindowText(CString strText)
 {
 	if(m_bDropdown) return FALSE;
 	return m_pEdit->SetWindowText(strText);
 }
 
-HWND CDuiComboBox::GetHostHwnd()
-{
-	return GetContainer()->GetHostHwnd();
-}
-
-CDuiWindow* CDuiComboBox::GetWindow()
-{
-	return this;
-}
-
-int  CDuiComboBox::GetListItemCount()
-{
-    return m_arrCbItem.GetCount();
-}
-
-LPCTSTR	CDuiComboBox::GetListItemText(int nItem)
-{
-    if (nItem < 0 || nItem >= m_arrCbItem.GetCount())
-        return NULL;
-
-    return m_arrCbItem[nItem].strText;
-}
-
-int CDuiComboBox::GetListItemIcon(int nItem)
-{
-    if (nItem < 0 || nItem >= m_arrCbItem.GetCount())
-        return -1;
-
-	return m_arrCbItem[nItem].iIcon;
-}
-
-int CDuiComboBox::GetListCurSel()
-{
-	return m_iCurSel;
-}
-
-int CDuiComboBox::GetAnimateTime()
-{
-	return m_iAnimTime;
-}
-
-void CDuiComboBox::OnDropDownListClose()
+void CDuiComboBox::OnListClose()
 {
 	m_dwBtnState=DuiWndState_Normal;
 	HDUIWND hHover=GetContainer()->GetDuiHover();
@@ -475,6 +422,7 @@ void CDuiComboBox::OnDropDownListClose()
 	}
 	NotifyInvalidate();
 }
+
 
 }//namespace DuiEngine
 
