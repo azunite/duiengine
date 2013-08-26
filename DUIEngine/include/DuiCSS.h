@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DuiSingletonMap.h"
-
 namespace DuiEngine
 {
 
@@ -17,7 +16,12 @@ public:
 
     BOOL Init(UINT uXmlID);
 	BOOL Init(pugi::xml_node xmlNode);
+
+	pugi::xml_node GetDefAttribute(LPCSTR pszClassName);
 protected:
+	void BuildClassAttribute(pugi::xml_node & xmlNode, LPCSTR pszClassName);
+	LPCSTR GetBaseClassName(LPCSTR pszClassName);
+
 	pugi::xml_document m_xmlRoot;
 };
 

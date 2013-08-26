@@ -36,12 +36,6 @@ DuiStyle::DuiStyle()
 {
 }
 
-// Get class name
-LPCSTR DuiStyle::GetName()
-{
-    return m_strClassName;
-}
-
 UINT DuiStyle::GetTextAlign()
 {
 	if(m_nTextAlign) return m_nTextAlign;

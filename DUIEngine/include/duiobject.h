@@ -40,7 +40,12 @@ public:                                                 \
         if(strcmp(GetClassName(), lpszName)  == 0) return TRUE;  \
 		return __super::IsClass(lpszName);				\
     }                                                   \
- 
+														\
+	virtual LPCSTR BaseObjectClassName()				\
+	{													\
+		return __super::GetObjectClass();				\
+	}													\
+
 
 namespace DuiEngine
 {
@@ -60,7 +65,16 @@ public:
     {
         return FALSE;
     }
-    virtual LPCSTR GetObjectClass() = 0;
+
+    virtual LPCSTR GetObjectClass()
+	{
+		return NULL;
+	}
+
+	virtual LPCSTR BaseObjectClassName()
+	{
+		return NULL;
+	}
 
     virtual BOOL Load(pugi::xml_node xmlNode)
     {
@@ -73,7 +87,14 @@ public:
         }
 #endif
         //检索并设置类的默认属性
-        LoadTemplateAttribute(GetObjectClass());
+		pugi::xml_node defAttr = DuiCSS::getSingleton().GetDefAttribute(GetObjectClass());
+		if(defAttr)
+		{
+			for (pugi::xml_attribute attr = defAttr.first_attribute(); attr; attr = attr.next_attribute())
+			{
+				SetAttribute(attr.name(), attr.value(), TRUE);
+			}
+		}
 
         //设置当前对象的属性
 		for (pugi::xml_attribute attr = xmlNode.first_attribute(); attr; attr = attr.next_attribute())
@@ -109,18 +130,15 @@ protected:
     // Access:    protected
     // Returns:   void
     // Parameter: CDuiStringA strTemplate
-    // remark: 使用属性baseClass来支持嵌套
     //************************************
-    void LoadTemplateAttribute(CDuiStringA strTemplate)
+    void LoadDefAttribute(const CDuiStringA & strClassName)
     {
-        if(!DuiCSS::getSingleton().HasKey(strTemplate)) return;
-        pugi::xml_node xmlNode=DuiCSS::getSingleton().GetKeyObject(strTemplate);
-        const char * pszBaseCls=xmlNode.attribute("baseClass").value();
-        if(pszBaseCls) LoadTemplateAttribute(pszBaseCls);//深度优先，防止属性重复问题
+        if(!DuiCSS::getSingleton().HasKey(strClassName)) return;
+        pugi::xml_node xmlNode=DuiCSS::getSingleton().GetKeyObject(strClassName);
 
 		for (pugi::xml_attribute attr= xmlNode.first_attribute(); attr; attr = attr.next_attribute())
         {
-            if(strcmp(attr.name(),"baseClass")==0) continue;
+            if(strcmp(attr.name(),"baseClass")==0) continue;//baseClass属性不需要了。huangjianxiong:2013.8.25
             SetAttribute(attr.name(), attr.value(), TRUE);
         }
     }

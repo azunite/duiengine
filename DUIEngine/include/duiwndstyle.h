@@ -36,7 +36,6 @@ class DUI_EXP DuiStyle : public CDuiObject
 public:
     DuiStyle();
 
-    CDuiStringA m_strClassName;
 
     COLORREF m_crBg;
     COLORREF m_crBgHover;
@@ -57,19 +56,12 @@ public:
     LPCTSTR m_lpCursorName;
     CDuiStringA m_strSkinName,m_strNcSkinName;
 
-    // Get class name
-    LPCSTR GetName();
-
 	UINT GetTextAlign();
 protected:
 	UINT m_nTextAlign;
 	UINT m_uAlign,m_uVAlign;
 
-    // Load style-pool from xml tree
-	static void _LoadStylePool(pugi::xml_node xmlNode);
-
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_STRING_ATTRIBUTE("name", m_strClassName, TRUE)
     DUIWIN_STRING_ATTRIBUTE("skin", m_strSkinName, TRUE)
     DUIWIN_STRING_ATTRIBUTE("ncskin", m_strNcSkinName, TRUE)
     DUIWIN_HEX_ATTRIBUTE("textmode", m_nTextAlign, TRUE)
