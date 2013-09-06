@@ -3,7 +3,6 @@
 namespace DuiEngine
 {
 
-//tolua_begin
 class DUI_EXP CDuiRef
 {
 public:
@@ -35,5 +34,5 @@ protected:
 
     int m_nRef;
 };
-//tolua_end
+
 }//namespace DuiEngine
