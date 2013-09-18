@@ -27,6 +27,63 @@ public:
 	DUIOBJ_DECLARE_CLASS_NAME(CDuiListBox2, "listboxex")
 
 };
+//派生一个只有纵向滚动条皮肤
+class CDuiVScrollBarSkin : public DuiEngine::CDuiScrollbarSkin
+{
+	DUIOBJ_DECLARE_CLASS_NAME(CDuiVScrollBarSkin, "vscrollbar")
+
+public:
+
+	CDuiVScrollBarSkin():m_nStates(3)
+	{
+
+	}
+
+	virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha=0xff)
+	{
+		if(!m_pDuiImg) return;
+		int nSbCode=LOWORD(dwState);
+		int nState=LOBYTE(HIWORD(dwState));
+		BOOL bVertical=HIBYTE(HIWORD(dwState));
+		if(bVertical)
+		{
+			CRect rcMargin(0,0,0,0);
+			rcMargin.top=m_nMagin,rcMargin.bottom=m_nMagin;
+			CRect rcSour=GetPartRect(nSbCode,nState,bVertical);
+			FrameDraw(dc, m_pDuiImg , rcSour,rcDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);
+		}
+	}
+
+	//指示滚动条皮肤是否支持显示上下箭头
+	virtual BOOL HasArrow(){return FALSE;}
+	virtual int GetIdealSize(){
+		if(!m_pDuiImg) return 0;
+		return m_pDuiImg->GetWidth()/(1+m_nStates);//图片分成4 or 5 部分横向排列，第一块是轨道，2,3,4,5分别对应滑块的正常，浮动，下压, Disable状态
+	}
+	DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
+		DUIWIN_INT_ATTRIBUTE("states",m_nStates,FALSE)
+		DUIWIN_DECLARE_ATTRIBUTES_END()
+protected:
+	//返回源指定部分在原位图上的位置。
+	CRect GetPartRect(int nSbCode, int nState,BOOL bVertical)
+	{
+		CRect rc;
+		if(!bVertical || nSbCode==SB_LINEDOWN || nSbCode==SB_LINEUP) return rc;
+
+		rc.right=GetImage()->GetWidth()/(1+m_nStates);
+		rc.bottom=GetImage()->GetHeight();
+
+		if(nSbCode == SB_PAGEUP || nSbCode == SB_PAGEDOWN)
+		{
+			return rc;
+		}
+		rc.OffsetRect(rc.Width()*(1+nState),0);
+		return rc;
+	}
+
+	int m_nStates;
+};
+
 
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*lpstrCmdLine*/, int /*nCmdShow*/)
@@ -68,6 +125,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	DuiWindowFactoryManager::getSingleton().RegisterFactory(TplDuiWindowFactory<CDuiListBox2>(),true);
 
 	//生成皮肤类厂并注册到系统
+	DuiSkinFactoryManager::getSingleton().RegisterFactory(TplSkinFactory<CDuiVScrollBarSkin>());
 	DuiSkinFactoryManager::getSingleton().RegisterFactory(TplSkinFactory<CDuiSkinGif>());
 
 

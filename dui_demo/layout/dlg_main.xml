@@ -11,11 +11,11 @@
 
       <tabctrl pos="5,29,-5,-5" id="2000" cursel="0" animatesteps="10" tabstop="0">
         <tab id="110" title="listctrl">
-          <listctrl name="lc_test" pos="10,0,-10,-10" itemHeight="20" headerHeight="30">
+          <listctrl name="lc_test" pos="10,0,-10,-10" itemHeight="20" headerHeight="30" sbskin="sb_vertical" sbwid="8">
             <header itemSkin="btn_yellow" align="left" itemSwapEnable="1" fixWidth="0" sortHeader="1">
             </header>
           </listctrl>
-          <button name="btn_ani" pos="-100,0,-26,30" class="normalbtn">ani list</button>
+          <button name="btn_ani" pos="-100,0,-56,30" class="normalbtn">ani list</button>
         </tab>
         <tab id="111" title="align">
           <text pos="100,10" pos2type="center">center align1</text>

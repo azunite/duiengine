@@ -15,7 +15,7 @@ void CDuiSkinBase::FrameDraw(CDCHandle &dc, CDuiImgBase *pImgDraw, const CRect &
 {
     CRect rcClient = rcDraw;
 
-	if(rcDraw.IsRectEmpty()) return;
+	if(rcDraw.IsRectEmpty() || rcSour.IsRectEmpty()) return;
 	int xOverflow=rcMargin.left+rcMargin.right-rcDraw.Width();
 	if(xOverflow>0)
 	{
