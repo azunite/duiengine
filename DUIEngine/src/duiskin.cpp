@@ -229,7 +229,7 @@ CRect CDuiScrollbarSkin::GetPartRect(int nSbCode, int nState,BOOL bVertical)
 		return CRect(CPoint(szFrame.cx*8,0),szFrame);
 	}else if(nSbCode==SB_THUMBGRIPPER)
 	{
-		return CRect(CPoint(szFrame.cx*8,(1+bVertical)*szFrame.cy),szFrame);
+		return CRect(CPoint(szFrame.cx*8,(1+(bVertical?0:1))*szFrame.cy),szFrame);
 	}else
 	{
 		CRect rcRet;

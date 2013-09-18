@@ -335,6 +335,7 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
     m_HitInfo=HitTest(point);
     if(m_HitInfo.uSbCode!=WORD(-1) && IsScrollBarEnable(m_HitInfo.bVertical))
     {
+		SetDuiCapture();
         if(m_HitInfo.uSbCode!=SB_THUMBTRACK)
         {
             if(m_HitInfo.uSbCode==SB_LINEUP || m_HitInfo.uSbCode== SB_LINEDOWN)
@@ -349,7 +350,6 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
         }
         else
         {
-            SetDuiCapture();
             m_bDragSb=TRUE;
             m_ptDragSb=point;
             m_nDragPos=m_HitInfo.bVertical?m_siVer.nPos:m_siHoz.nPos;
@@ -365,9 +365,9 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
 
 void CDuiPanelEx::OnNcLButtonUp(UINT nFlags,CPoint pt)
 {
+	ReleaseDuiCapture();
     if(m_bDragSb)
     {
-        ReleaseDuiCapture();
         m_bDragSb=FALSE;
         SCROLLINFO *psi=m_HitInfo.bVertical?(&m_siVer):(&m_siHoz);
         OnScroll(m_HitInfo.bVertical,SB_THUMBPOSITION,psi->nTrackPos);
@@ -391,9 +391,9 @@ void CDuiPanelEx::OnNcLButtonUp(UINT nFlags,CPoint pt)
             m_pSkinSb->Draw(hdc,rc,MAKESBSTATE(m_HitInfo.uSbCode,DuiWndState_Normal,m_HitInfo.bVertical));
             ReleaseDuiDC(hdc);
         }
-        KillDuiTimer(TIMER_SBWAIT);
-        KillDuiTimer(TIMER_SBGO);
     }
+	KillDuiTimer(TIMER_SBWAIT);
+	KillDuiTimer(TIMER_SBGO);
     m_HitInfo.uSbCode=-1;
     OnNcMouseMove(nFlags,pt);
 }
