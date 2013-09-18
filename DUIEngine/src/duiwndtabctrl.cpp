@@ -493,7 +493,7 @@ int CDuiTabCtrl::InsertItem( pugi::xml_node xmlNode,int iInsert/*=-1*/,BOOL bLoa
     if(!bLoading)
     {
 		CRect rcContainer=GetChildrenLayoutRect();
-		pChild->Move(&rcContainer);
+		pChild->DuiSendMessage(WM_WINDOWPOSCHANGED,0,(LPARAM)&rcContainer);
         NotifyInvalidate();
     }
 

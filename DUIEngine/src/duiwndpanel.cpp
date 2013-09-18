@@ -24,9 +24,9 @@ HDUIWND CDuiPanel::DuiGetHWNDFromPoint(POINT ptHitTest, BOOL bOnlyText)
 }
 
 CDuiPanelEx::CDuiPanelEx()
-    :m_pSkinSb(DuiSkinPool::getSingleton().GetSkin("sb_common"))
-    ,m_nSbArrowSize(-1)
+    :m_nSbArrowSize(-1)
     ,m_nSbWid(-1)
+	,m_pSkinSb(NULL)
     ,m_bDragSb(FALSE)
     ,m_wBarVisible(0)
     ,m_wBarEnable(DUISB_BOTH)
@@ -37,6 +37,7 @@ CDuiPanelEx::CDuiPanelEx()
     m_HitInfo.uSbCode=-1;
     m_siHoz.nTrackPos=-1;
     m_siVer.nTrackPos=-1;
+
 }
 
 BOOL CDuiPanelEx::ShowScrollBar( int wBar, BOOL bShow )
@@ -258,10 +259,11 @@ int CDuiPanelEx::OnCreate(LPVOID)
     int nRet=__super::OnCreate(NULL);
 
     if(nRet!=0) return nRet;
+	if(!m_pSkinSb) m_pSkinSb=dynamic_cast<CDuiScrollbarSkin*>(DuiSkinPool::getSingleton().GetSkin("sb_common"));
     DUIASSERT(m_pSkinSb);
-    SIZE szSbSkin=m_pSkinSb->GetSkinSize();
-    if(m_nSbWid==-1) m_nSbWid=szSbSkin.cx/9;
-    if(m_nSbArrowSize==-1) m_nSbArrowSize=szSbSkin.cx/9;
+    if(m_nSbWid==-1) m_nSbWid=m_pSkinSb->GetIdealSize();
+	if(!m_pSkinSb->HasArrow()) m_nSbArrowSize=0;
+	if(m_nSbArrowSize==-1) m_nSbArrowSize=m_nSbWid;
 
     return 0;
 }
@@ -329,6 +331,7 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
     m_HitInfo=HitTest(point);
     if(m_HitInfo.uSbCode!=WORD(-1) && IsScrollBarEnable(m_HitInfo.bVertical))
     {
+		SetDuiCapture();
         if(m_HitInfo.uSbCode!=SB_THUMBTRACK)
         {
             if(m_HitInfo.uSbCode==SB_LINEUP || m_HitInfo.uSbCode== SB_LINEDOWN)
@@ -343,7 +346,6 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
         }
         else
         {
-            SetDuiCapture();
             m_bDragSb=TRUE;
             m_ptDragSb=point;
             m_nDragPos=m_HitInfo.bVertical?m_siVer.nPos:m_siHoz.nPos;
@@ -359,12 +361,12 @@ void CDuiPanelEx::OnNcLButtonDown(UINT nFlags, CPoint point)
 
 void CDuiPanelEx::OnNcLButtonUp(UINT nFlags,CPoint pt)
 {
+	ReleaseDuiCapture();
     if(m_bDragSb)
     {
-        ReleaseDuiCapture();
         m_bDragSb=FALSE;
         SCROLLINFO *psi=m_HitInfo.bVertical?(&m_siVer):(&m_siHoz);
-        OnScroll(m_HitInfo.bVertical,SB_THUMBPOSITION,psi->nTrackPos);
+        if(psi->nTrackPos!=-1) OnScroll(m_HitInfo.bVertical,SB_THUMBPOSITION,psi->nTrackPos);
 
         CRect rcRail=GetScrollBarRect(m_HitInfo.bVertical);
         if(m_HitInfo.bVertical) rcRail.DeflateRect(0,m_nSbArrowSize);
@@ -385,9 +387,9 @@ void CDuiPanelEx::OnNcLButtonUp(UINT nFlags,CPoint pt)
             m_pSkinSb->Draw(hdc,rc,MAKESBSTATE(m_HitInfo.uSbCode,DuiWndState_Normal,m_HitInfo.bVertical));
             ReleaseDuiDC(hdc);
         }
-        KillDuiTimer(TIMER_SBWAIT);
-        KillDuiTimer(TIMER_SBGO);
     }
+	KillDuiTimer(TIMER_SBWAIT);
+	KillDuiTimer(TIMER_SBGO);
     m_HitInfo.uSbCode=-1;
     OnNcMouseMove(nFlags,pt);
 }
@@ -616,6 +618,15 @@ void CDuiPanelEx::OnShowWindow( BOOL bShow, UINT nStatus )
 		OnNcLButtonUp(0,CPoint());
 	}
 	__super::OnShowWindow(bShow,nStatus);
+}
+
+LRESULT CDuiPanelEx::OnAttrScrollbarSkin( CDuiStringA strValue,BOOL bLoading )
+{
+	CDuiSkinBase *pSbSkin=DuiSkinPool::getSingleton().GetSkin(strValue);
+	DUIASSERT(pSbSkin);
+	m_pSkinSb=dynamic_cast<CDuiScrollbarSkin*>(pSbSkin);
+	DUIASSERT(m_pSkinSb);
+	return bLoading?S_FALSE:S_OK;
 }
 //////////////////////////////////////////////////////////////////////////
 //	CDuiScrollView

@@ -215,9 +215,45 @@ void CDuiSkinGradation::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAl
 }
 
 
-CDuiScrollbarSkin::CDuiScrollbarSkin():m_nMagin(0)
+CDuiScrollbarSkin::CDuiScrollbarSkin():m_nMagin(0),m_bHasGripper(FALSE)
 {
+	
+}
 
+CRect CDuiScrollbarSkin::GetPartRect(int nSbCode, int nState,BOOL bVertical)
+{
+	CSize sz=GetSkinSize();
+	CSize szFrame(sz.cx/9,sz.cx/9);
+	if(nSbCode==SB_CORNOR)
+	{
+		return CRect(CPoint(szFrame.cx*8,0),szFrame);
+	}else if(nSbCode==SB_THUMBGRIPPER)
+	{
+		return CRect(CPoint(szFrame.cx*8,(1+(bVertical?0:1))*szFrame.cy),szFrame);
+	}else
+	{
+		CRect rcRet;
+		int iPart=-1;
+		switch(nSbCode)
+		{
+		case SB_LINEUP:
+			iPart=0;
+			break;
+		case SB_LINEDOWN:
+			iPart=1;
+			break;
+		case SB_THUMBTRACK:
+			iPart=2;
+			break;
+		case SB_PAGEUP:
+		case SB_PAGEDOWN:
+			iPart=3;
+			break;
+		}
+		if(!bVertical) iPart+=4;
+		
+		return CRect(CPoint(szFrame.cx*iPart,szFrame.cy*nState),szFrame);
+	}
 }
 
 void CDuiScrollbarSkin::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha)
@@ -227,58 +263,22 @@ void CDuiScrollbarSkin::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAl
     int nState=LOBYTE(HIWORD(dwState));
     BOOL bVertical=HIBYTE(HIWORD(dwState));
     CRect rcMargin(0,0,0,0);
-
-    if(nSbCode==SB_CORNOR)
-    {
-        CSize sz=GetSkinSize();
-        CSize szFrame(sz.cx/9,sz.cx/9);
-        CRect rcSour(szFrame.cx*8,0,szFrame.cx*9,szFrame.cy);
-        FrameDraw(dc, m_pDuiImg , rcSour,rcDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);
-        return ;
-    }
-    int iPart=-1;
-    switch(nSbCode)
-    {
-    case SB_LINEUP:
-        iPart=0;
-        break;
-    case SB_LINEDOWN:
-        iPart=1;
-        break;
-    case SB_THUMBTRACK:
-        iPart=2;
-        break;
-    case SB_PAGEUP:
-    case SB_PAGEDOWN:
-        iPart=3;
-        break;
-    }
-    if(!bVertical) iPart+=4;
-
-    CSize sz=GetSkinSize();
-    CSize szFrame(sz.cx/9,sz.cx/9);
-    CRect rcSour(CPoint(szFrame.cx*iPart,szFrame.cy*nState),szFrame);
-
     if(bVertical)
         rcMargin.top=m_nMagin,rcMargin.bottom=m_nMagin;
     else
         rcMargin.left=m_nMagin,rcMargin.right=m_nMagin;
 
+	CRect rcSour=GetPartRect(nSbCode,nState,bVertical);
     FrameDraw(dc, m_pDuiImg , rcSour,rcDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);
 
-    if(nSbCode==SB_THUMBTRACK)
+    if(nSbCode==SB_THUMBTRACK && m_bHasGripper)
     {
-        CSize sz=GetSkinSize();
-        CSize szFrame(sz.cx/9,sz.cx/9);
-        int nOffset = bVertical ? szFrame.cy : 2*szFrame.cy;
-        rcSour.SetRect(szFrame.cx*8,nOffset,szFrame.cx*9,nOffset+szFrame.cy);
-        CRect rcThumbDraw(0, 0, szFrame.cx, szFrame.cy);
+		rcSour=GetPartRect(SB_THUMBGRIPPER,0,bVertical);
         if (bVertical)
-            rcThumbDraw.OffsetRect(0, (rcDraw.Height() - szFrame.cy) / 2);
+			rcDraw.top+=(rcDraw.Height()-rcSour.Height())/2,rcDraw.bottom=rcDraw.top+rcSour.Height();
         else
-            rcThumbDraw.OffsetRect((rcDraw.Width() - szFrame.cx) / 2, 0);
-        rcThumbDraw.OffsetRect(rcDraw.TopLeft());
-        FrameDraw(dc, m_pDuiImg , rcSour,rcThumbDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);
+			rcDraw.left+=(rcDraw.Width()-rcSour.Width())/2,rcDraw.right=rcDraw.left+rcSour.Width();
+        FrameDraw(dc, m_pDuiImg , rcSour,rcDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);
     }
 }
 

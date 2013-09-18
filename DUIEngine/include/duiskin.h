@@ -167,6 +167,7 @@ public:
 
 #define MAKESBSTATE(sbCode,nState,bVertical) MAKELONG((sbCode),MAKEWORD((nState),(bVertical)))
 #define SB_CORNOR		10
+#define SB_THUMBGRIPPER	11	//滚动条上的可拖动部分
 
 #define THUMB_MINSIZE	18
 
@@ -178,14 +179,24 @@ public:
 
     CDuiScrollbarSkin();
 
-    virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha);
+    virtual void Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAlpha=0xff);
 
-public:
+	//指示滚动条皮肤是否支持显示上下箭头
+	virtual BOOL HasArrow(){return TRUE;}
+	virtual int GetIdealSize(){
+		if(!m_pDuiImg) return 0;
+		return m_pDuiImg->GetWidth()/9;
+	}
+
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_INT_ATTRIBUTE("magin",m_nMagin,FALSE)
+		DUIWIN_INT_ATTRIBUTE("magin",m_nMagin,FALSE)
+		DUIWIN_INT_ATTRIBUTE("hasgripper",m_bHasGripper,FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 protected:
+	//返回源指定部分在原位图上的位置。
+	CRect GetPartRect(int nSbCode, int nState,BOOL bVertical);
     int			m_nMagin;
+	BOOL		m_bHasGripper;
 };
 
 class DUI_EXP CDuiSkinMenuBorder : public CDuiSkinImgFrame

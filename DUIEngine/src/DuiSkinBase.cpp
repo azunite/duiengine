@@ -11,9 +11,27 @@ BOOL CDuiSkinBase::ExtentBlt(CDuiImgBase *pImgDraw,BOOL bTile,HDC hdc,int x,int 
     else return pImgDraw->StretchBlt(hdc,x,y,nWid,nHei,xSrc,ySrc,nWidSrc,nHeiSrc,byAlpha);
 }
 
-void CDuiSkinBase::FrameDraw(CDCHandle &dc, CDuiImgBase *pImgDraw, const CRect &rcSour,const  CRect &rcDraw,const  CRect &rcMargin, COLORREF crBg, UINT uDrawPart ,BOOL bTile,BYTE byAlpha/*=0xFF*/)
+void CDuiSkinBase::FrameDraw(CDCHandle &dc, CDuiImgBase *pImgDraw, const CRect &rcSour,const  CRect &rcDraw, CRect rcMargin, COLORREF crBg, UINT uDrawPart ,BOOL bTile,BYTE byAlpha/*=0xFF*/)
 {
     CRect rcClient = rcDraw;
+
+	if(rcDraw.IsRectEmpty() || rcSour.IsRectEmpty()) return;
+	int xOverflow=rcMargin.left+rcMargin.right-rcDraw.Width();
+	if(xOverflow>0)
+	{
+		rcMargin.left-=xOverflow/2;
+		rcMargin.right-=xOverflow/2;
+		if(rcMargin.left<0) {rcMargin.right+=-rcMargin.left;rcMargin.left=0;}
+		else if(rcMargin.right<0) {rcMargin.left+=-rcMargin.right;rcMargin.right=0;}
+	}
+	int yOverflow=rcMargin.top+rcMargin.bottom-rcDraw.Height();
+	if(yOverflow>0)
+	{
+		rcMargin.top-=xOverflow/2;
+		rcMargin.bottom-=xOverflow/2;
+		if(rcMargin.top<0) {rcMargin.bottom+=-rcMargin.top;rcMargin.top=0;}
+		else if(rcMargin.bottom<0) {rcMargin.top+=-rcMargin.bottom;rcMargin.bottom=0;}
+	}
 
     DUIASSERT(dc.m_hDC);
     DUIASSERT(!pImgDraw->IsEmpty());

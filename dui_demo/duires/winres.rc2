@@ -49,4 +49,5 @@ DEFINE_IMGX(IDP_SLIDETHUMB,	505,	"skins\\slider.png")
 DEFINE_IMGX(IDP_PROG_BAR,	506,	"skins\\mini_progress_bar.png")
 DEFINE_IMGX(IDP_PROG_BG,	507,	"skins\\mini_progress_bg.png")
 DEFINE_IMGX(IDP_BTN_YELLOW,	510,	"skins\\btn_normal_yellow.png")
+DEFINE_IMGX(IDP_VSCROLLBAR,	511,	"skins\\vscrollbar.png")
 /*----------------------------RES_BUILDER:end------------------------------------->*/

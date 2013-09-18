@@ -56,3 +56,4 @@
 <resid type="IMGX" id_name="IDP_PROG_BAR"						id="506" file="skins\mini_progress_bar.png"/>
 <resid type="IMGX" id_name="IDP_PROG_BG"						id="507" file="skins\mini_progress_bg.png"/>
 <resid type="IMGX" id_name="IDP_BTN_YELLOW"  id="510"  file="skins\btn_normal_yellow.png" />
+<resid type="IMGX" id_name="IDP_VSCROLLBAR"  id="511"  file="skins\vscrollbar.png" />

@@ -127,8 +127,10 @@ protected:
 
 	void ScrollUpdate();
 
+	LRESULT OnAttrScrollbarSkin(CDuiStringA strValue,BOOL bLoading);
+
     SCROLLINFO m_siVer,m_siHoz;
-    CDuiSkinBase *m_pSkinSb;
+    CDuiScrollbarSkin *m_pSkinSb;
     int			m_nSbArrowSize;
     int			m_nSbWid;
     CPoint		m_ptDragSb;
@@ -144,11 +146,11 @@ protected:
 	DWORD		m_dwUpdateInterval;
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-    DUIWIN_SKIN_ATTRIBUTE("sbskin", m_pSkinSb, FALSE)
-    DUIWIN_INT_ATTRIBUTE("sbarrowsize", m_nSbArrowSize, FALSE)
-    DUIWIN_INT_ATTRIBUTE("sbwid", m_nSbWid, FALSE)
-    DUIWIN_INT_ATTRIBUTE("sbenable", m_wBarEnable, FALSE)
-	DUIWIN_UINT_ATTRIBUTE("updateinterval", m_dwUpdateInterval, FALSE)
+		DUIWIN_CUSTOM_ATTRIBUTE("sbskin",OnAttrScrollbarSkin)
+		DUIWIN_INT_ATTRIBUTE("sbarrowsize", m_nSbArrowSize, FALSE)
+		DUIWIN_INT_ATTRIBUTE("sbwid", m_nSbWid, FALSE)
+		DUIWIN_INT_ATTRIBUTE("sbenable", m_wBarEnable, FALSE)
+		DUIWIN_UINT_ATTRIBUTE("updateinterval", m_dwUpdateInterval, FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 
     DUIWIN_BEGIN_MSG_MAP()
