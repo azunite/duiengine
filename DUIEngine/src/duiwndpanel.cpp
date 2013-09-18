@@ -370,7 +370,7 @@ void CDuiPanelEx::OnNcLButtonUp(UINT nFlags,CPoint pt)
     {
         m_bDragSb=FALSE;
         SCROLLINFO *psi=m_HitInfo.bVertical?(&m_siVer):(&m_siHoz);
-        OnScroll(m_HitInfo.bVertical,SB_THUMBPOSITION,psi->nTrackPos);
+        if(psi->nTrackPos!=-1) OnScroll(m_HitInfo.bVertical,SB_THUMBPOSITION,psi->nTrackPos);
 
         CRect rcRail=GetScrollBarRect(m_HitInfo.bVertical);
         if(m_HitInfo.bVertical) rcRail.DeflateRect(0,m_nSbArrowSize);
