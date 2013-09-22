@@ -62,8 +62,6 @@ void DuiFontPool::SetDefaultFont(LPCTSTR lpszFaceName, LONG lSize)
 
 HFONT DuiFontPool::_CreateDefaultGUIFont()
 {
-    DWORD dwSysVer = ::GetVersion();
-
     ::GetObjectA(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &m_lfDefault);
 
     m_lfDefault.lfHeight = _GetFontAbsHeight(m_lFontSize);

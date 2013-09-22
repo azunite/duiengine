@@ -54,7 +54,6 @@ BOOL DuiStringPool::Init( pugi::xml_node xmlNode )
 		DUIASSERT(FALSE);
 		return FALSE;
 	}
-	LPCSTR lpszStringID = NULL;
 	UINT uStringID = 0;
 
 	for (pugi::xml_node xmlStr=xmlNode.child("s"); xmlStr; xmlStr=xmlStr.next_sibling("s"))

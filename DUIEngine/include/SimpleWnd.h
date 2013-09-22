@@ -255,7 +255,7 @@ public:
 
             MONITORINFO minfo;
             minfo.cbSize = sizeof(MONITORINFO);
-            BOOL bResult = ::GetMonitorInfo(hMonitor, &minfo);
+            ::GetMonitorInfo(hMonitor, &minfo);
 
             rcArea = minfo.rcWork;
 #endif

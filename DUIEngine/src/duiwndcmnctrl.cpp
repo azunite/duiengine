@@ -34,7 +34,6 @@ void CDuiStatic::DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UIN
         POINT pt= {pRect->left,pRect->top};
         GetTextExtentPoint(hdc,_T("A"),1,&szChar);
         int nLineHei=szChar.cy;
-        const TCHAR *ELLIPSIS_DOTS = _T("...");
 		int nRight=pRect->right;
 		pRect->right=pRect->left;
         while(i<cchText)

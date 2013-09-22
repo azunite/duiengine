@@ -643,7 +643,6 @@ CDuiWindow * CDuiWindow::LoadXmlChildren(LPCSTR utf8Xml)
 {
 	pugi::xml_document xmlDoc;
 	if(!xmlDoc.load_buffer(utf8Xml,strlen(utf8Xml),pugi::parse_default,pugi::encoding_utf8)) return NULL;
-    CDuiWindow *pCurLast=m_pLastChild;
     BOOL bLoaded=LoadChildren(xmlDoc.first_child());
     if(!bLoaded) return NULL;
     if(!m_rcWindow.IsRectEmpty())
