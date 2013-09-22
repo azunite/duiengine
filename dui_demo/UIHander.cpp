@@ -23,6 +23,7 @@ public:
 			*ppvObject=(IUnknown*) this,hr=S_OK;
 		else if(riid==__uuidof(IDropTarget))
 			*ppvObject=(IDropTarget*)this,hr=S_OK;
+		if(SUCCEEDED(hr)) AddRef();
 		return hr;
 
 	}

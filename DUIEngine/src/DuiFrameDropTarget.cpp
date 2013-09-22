@@ -34,6 +34,7 @@ namespace DuiEngine{
 		DTMAP::CPair *pPair=m_mapDropTarget.Lookup(hDuiWnd);
 		if(!pPair) return FALSE;
 		pPair->m_value->Release();
+		m_mapDropTarget.RemoveKey(hDuiWnd);
 		return TRUE;
 	}
 

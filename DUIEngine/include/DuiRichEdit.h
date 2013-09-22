@@ -178,6 +178,118 @@ protected:
 #define HIMETRIC_PER_INCH 2540
 #endif
 
+class CRicheditDropTarget : public IDropTarget
+{
+public:
+	CRicheditDropTarget(ITextServices *pTxtSvr):pserv(pTxtSvr),nRef(1)
+	{
+		DUIASSERT(pserv);
+		pserv->AddRef();
+	}
+
+	~CRicheditDropTarget()
+	{
+		DUIASSERT(pserv);
+		pserv->Release();
+	}
+
+	//IUnkown
+	virtual HRESULT STDMETHODCALLTYPE QueryInterface( 
+		/* [in] */ REFIID riid,
+		/* [iid_is][out] */ __RPC__deref_out void __RPC_FAR *__RPC_FAR *ppvObject)
+	{
+		HRESULT hr=S_FALSE;
+		if(riid==__uuidof(IUnknown))
+			*ppvObject=(IUnknown*) this,hr=S_OK;
+		else if(riid==__uuidof(IDropTarget))
+			*ppvObject=(IDropTarget*)this,hr=S_OK;
+		if(SUCCEEDED(hr)) AddRef();
+		return hr;
+	}
+
+	virtual ULONG STDMETHODCALLTYPE AddRef( void){return ++nRef;}
+
+	virtual ULONG STDMETHODCALLTYPE Release( void) { 
+		ULONG uRet= -- nRef;
+		if(uRet==0) delete this;
+		return uRet;
+	}
+
+	//IDropTarget
+	virtual HRESULT STDMETHODCALLTYPE DragEnter( 
+		/* [unique][in] */ __RPC__in_opt IDataObject *pDataObj,
+		/* [in] */ DWORD grfKeyState,
+		/* [in] */ POINTL pt,
+		/* [out][in] */ __RPC__inout DWORD *pdwEffect)
+	{
+		HRESULT hr=S_FALSE;
+		IDropTarget *pDrapTarget=NULL;
+		hr=pserv->TxGetDropTarget(&pDrapTarget);
+		if(SUCCEEDED(hr))
+		{
+			hr=pDrapTarget->DragEnter(pDataObj,grfKeyState,pt,pdwEffect);
+			*pdwEffect = DROPEFFECT_COPY;
+			pDrapTarget->Release();
+		}
+		return hr;
+	}
+
+	virtual HRESULT STDMETHODCALLTYPE DragOver( 
+		/* [in] */ DWORD grfKeyState,
+		/* [in] */ POINTL pt,
+		/* [out][in] */ __RPC__inout DWORD *pdwEffect)	
+	{
+		HRESULT hr=S_FALSE;
+		IDropTarget *pDrapTarget=NULL;
+		hr=pserv->TxGetDropTarget(&pDrapTarget);
+		if(SUCCEEDED(hr))
+		{
+			hr=pDrapTarget->DragOver(grfKeyState,pt,pdwEffect);
+			*pdwEffect = DROPEFFECT_COPY;
+			pDrapTarget->Release();
+		}
+		return hr;
+	}
+
+
+	virtual HRESULT STDMETHODCALLTYPE DragLeave( void) 
+	{
+		HRESULT hr=S_FALSE;
+		IDropTarget *pDrapTarget=NULL;
+		hr=pserv->TxGetDropTarget(&pDrapTarget);
+		if(SUCCEEDED(hr))
+		{
+			hr=pDrapTarget->DragLeave();
+			pDrapTarget->Release();
+		}
+		return hr;
+	}
+
+
+	virtual HRESULT STDMETHODCALLTYPE Drop( 
+		/* [unique][in] */ __RPC__in_opt IDataObject *pDataObj,
+		/* [in] */ DWORD grfKeyState,
+		/* [in] */ POINTL pt,
+		/* [out][in] */ __RPC__inout DWORD *pdwEffect)
+	{
+		HRESULT hr=S_FALSE;
+		IDropTarget *pDrapTarget=NULL;
+		hr=pserv->TxGetDropTarget(&pDrapTarget);
+		if(SUCCEEDED(hr))
+		{
+			hr=pDrapTarget->Drop(pDataObj,grfKeyState,pt,pdwEffect);
+			pDrapTarget->Release();
+		}
+		return hr;
+	}
+
+
+
+protected:
+	ITextServices	*pserv;		    // pointer to Text Services object
+	LONG			nRef;
+};
+
 class DUI_EXP CDuiRichEdit :public CDuiPanelEx
 {
     friend class CDuiTextHost;
@@ -279,6 +391,8 @@ protected:
 
     LRESULT OnSetTextColor(const CDuiStringA &  strValue,BOOL bLoading);
 
+	void OnEnableDragDrop(BOOL bEnable);
+
 protected:
     DUIWIN_BEGIN_MSG_MAP()
     MSG_WM_CREATE(OnCreate)
@@ -327,7 +441,7 @@ protected:
     CRect		m_rcInsetPixel;			// inset margin in pixel
     TEXTMETRIC	m_tmFont;				//
     DWORD	m_dwStyle;
-
+	
     UINT	m_fEnableAutoWordSel	:1;	// enable Word style auto word selection?
     UINT	m_fWordWrap			:1;	// Whether control should word wrap
     UINT	m_fRich				:1;	// Whether control is rich text
@@ -338,6 +452,7 @@ protected:
     UINT	m_fWantTab			:1;	// Whether control will deal with tab input
     UINT	m_fSingleLineVCenter:1;	// Whether control that is single line will be vertical centered
     UINT	m_fScrollPending	:1; // Whether scroll is activated by richedit or by panelex.
+	UINT	m_fEnableDragDrop	:1;	// 允许在该控件中使用拖放
     CDuiTextHost	*m_pTxtHost;
 };
 
