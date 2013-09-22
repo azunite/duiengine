@@ -431,23 +431,22 @@ namespace DuiEngine
 		CRect rcItem(rcClient.left,rcClient.top,rcClient.left,rcClient.bottom);
 		int iDragTo=LOWORD(dwDragTo);
 		int iDragFrom=LOWORD(m_dwHitTest);
+
+		CDuiArray<int> items;
 		for(int i=0;i<m_arrItems.GetCount();i++)
 		{
-			if((i==iDragTo && iDragTo<=iDragFrom) || (i==iDragTo+1 && iDragTo>iDragFrom))
-			{
-				rcItem.OffsetRect(m_arrItems[iDragFrom].cx,0);
-			}
-			if(i==iDragFrom) continue;
-
-			rcItem.left=rcItem.right;
-			rcItem.right=rcItem.left+m_arrItems[i].cx;
-			DrawItem(dc,rcItem,m_arrItems.GetData()+i);
+			if(i!=iDragFrom) items.Add(i);
 		}
-		if(rcItem.right<rcClient.right)
+		items.InsertAt(iDragTo,iDragFrom);
+		
+		for(int i=0;i<items.GetCount();i++)
 		{
 			rcItem.left=rcItem.right;
-			rcItem.right=rcClient.right;
-			m_pSkinItem->Draw(dc,rcItem,0);
+			rcItem.right=rcItem.left+m_arrItems[items[i]].cx;
+			if(items[i]!=iDragFrom)
+				DrawItem(dc,rcItem,m_arrItems.GetData()+items[i]);
+			else//draw background
+				m_pSkinItem->Draw(dc,rcItem,0);
 		}
 		AfterPaint(dc,duidc);
 		ReleaseDuiDC(dc);
