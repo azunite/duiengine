@@ -189,7 +189,7 @@ public:
 	}
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-		DUIWIN_INT_ATTRIBUTE("magin",m_nMagin,FALSE)
+		DUIWIN_INT_ATTRIBUTE("margin",m_nMagin,FALSE)
 		DUIWIN_INT_ATTRIBUTE("hasgripper",m_bHasGripper,FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 protected:

@@ -145,7 +145,7 @@ BOOL DuiSystem::Init( UINT uXmlResID ,LPCTSTR pszType/*=DUIRES_XML_TYPE*/ )
 	if(xmlFont)
 	{
 		int nSize=xmlFont.attribute("size").as_int(12);
-		DuiFontPool::getSingleton().SetDefaultFont(DUI_CA2T(xmlFont.attribute("face").value()),nSize);
+		DuiFontPool::getSingleton().SetDefaultFont(DUI_CA2T(xmlFont.attribute("face").value(),CP_UTF8),nSize);
 	}
 	//load string table
 	pugi::xml_node xmlStr=xmlDoc.first_child().child("string");

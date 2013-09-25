@@ -169,11 +169,16 @@ protected:
 
     static COLORREF HexStringToColor(LPCSTR lpszValue)
     {
-        return RGB(
-                   HexStringToULong(lpszValue, 2),
-                   HexStringToULong(lpszValue + 2, 2),
-                   HexStringToULong(lpszValue + 4, 2)
-               );
+		COLORREF cr=RGB(
+			HexStringToULong(lpszValue, 2),
+			HexStringToULong(lpszValue + 2, 2),
+			HexStringToULong(lpszValue + 4, 2)
+			);
+		if(strlen(lpszValue)>6)
+		{
+			cr |= HexStringToULong(lpszValue + 6, 2)<<24;
+		}
+		return cr;
     }
 
 #ifdef	_DEBUG

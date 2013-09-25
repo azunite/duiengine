@@ -159,6 +159,8 @@ public:
     BOOL SetSkin(CDuiSkinBase *pSkin,int nSubID=0);
 
     BOOL SetIcon(int nSubID);
+
+	CDuiSkinBase * GetSkin(){return m_pSkin;}
 protected:
 	virtual CSize GetDesiredSize(LPRECT pRcContainer);
 
