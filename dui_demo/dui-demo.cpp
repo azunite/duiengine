@@ -48,7 +48,7 @@ public:
 		if(bVertical)
 		{
 			CRect rcMargin(0,0,0,0);
-			rcMargin.top=m_nMagin,rcMargin.bottom=m_nMagin;
+			rcMargin.top=m_nMargin,rcMargin.bottom=m_nMargin;
 			CRect rcSour=GetPartRect(nSbCode,nState,bVertical);
 			FrameDraw(dc, m_pDuiImg , rcSour,rcDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);
 		}

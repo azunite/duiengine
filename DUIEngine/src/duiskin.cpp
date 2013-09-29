@@ -215,7 +215,7 @@ void CDuiSkinGradation::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAl
 }
 
 
-CDuiScrollbarSkin::CDuiScrollbarSkin():m_nMagin(0),m_bHasGripper(FALSE)
+CDuiScrollbarSkin::CDuiScrollbarSkin():m_nMargin(0),m_bHasGripper(FALSE)
 {
 	
 }
@@ -264,9 +264,9 @@ void CDuiScrollbarSkin::Draw(CDCHandle dc, CRect rcDraw, DWORD dwState,BYTE byAl
     BOOL bVertical=HIBYTE(HIWORD(dwState));
     CRect rcMargin(0,0,0,0);
     if(bVertical)
-        rcMargin.top=m_nMagin,rcMargin.bottom=m_nMagin;
+        rcMargin.top=m_nMargin,rcMargin.bottom=m_nMargin;
     else
-        rcMargin.left=m_nMagin,rcMargin.right=m_nMagin;
+        rcMargin.left=m_nMargin,rcMargin.right=m_nMargin;
 
 	CRect rcSour=GetPartRect(nSbCode,nState,bVertical);
     FrameDraw(dc, m_pDuiImg , rcSour,rcDraw,rcMargin, CLR_INVALID, m_uDrawPart,m_bTile,byAlpha);

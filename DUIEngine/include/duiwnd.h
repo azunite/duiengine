@@ -428,7 +428,6 @@ public:
 
     virtual BOOL OnDuiNcHitTest(CPoint pt);
 
-    virtual BOOL RedrawRegion(CDCHandle& dc, CRgn& rgn);
 
     virtual BOOL IsClipClient()
     {
@@ -437,6 +436,16 @@ public:
 
     virtual void OnAttributeChanged(const CDuiStringA & strAttrName,BOOL bLoading,HRESULT hRet);
 public:
+	//************************************
+	// Method:    RedrawRegion
+	// Function:  将窗口及子窗口内容绘制到DC
+	// Access:    public 
+	// Returns:   BOOL
+	// Qualifier:
+	// Parameter: CDCHandle & dc
+	// Parameter: CRgn & rgn
+	//************************************
+	BOOL RedrawRegion(CDCHandle& dc, CRgn& rgn);
 
     //************************************
     // Method:    GetDuiDC
@@ -495,6 +504,14 @@ public:
     //************************************
     BOOL AnimateWindow(DWORD dwTime,DWORD dwFlags);
 protected:
+	typedef enum _PRSTATE{
+		PRS_LOOKSTART=0,	//查找开始窗口
+		PRS_DRAWING,		//窗口渲染中
+		PRS_MEETEND			//碰到指定的结束窗口
+	} PRSTATE;
+	static BOOL _PaintRegion(CDCHandle& dc, CRgn& rgn,CDuiWindow *pWndCur,CDuiWindow *pStart,CDuiWindow *pEnd,CDuiWindow::PRSTATE & prState);
+
+
     CRect		m_rcGetDC;
     DWORD		m_gdcFlags;
     int			m_nSaveDC;
@@ -648,43 +665,6 @@ protected:
 	//************************************
 	LPCSTR ParsePosition(const char * pszPos,DUIDLG_POSITION_ITEM &pos);
 
-   //************************************
-    // Method:    _PaintBackground
-    // Function:  从顶层窗口开始绘制窗口内容到指定DC，到pEnd时结束绘制。
-    // Access:    protected
-    // Returns:   BOOL 返回TRUE时结束递归
-    // Parameter: HDC hdc	目标DC
-    // Parameter: CRect * pRc	目标位置
-    // Parameter: CDuiWindow * pCurWnd 当前窗口指针
-    // Parameter: CDuiWindow * pEnd		结束窗口
-    // remark: 函数递归调用
-    //************************************
-    static BOOL _PaintBackground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pEnd);
-
-	//************************************
-	// Method:    GetPrevVisibleWindow :获得指定窗口的前一个可见窗口
-	// FullName:  DuiEngine::CDuiWindow::GetPrevVisibleWindow
-	// Access:    protected static 
-	// Returns:   CDuiWindow *
-	// Qualifier:
-	// Parameter: CDuiWindow * pWnd	:当前窗口
-	// Parameter: const CRect rcDraw :目标位置
-	//************************************
-	static CDuiWindow *GetPrevVisibleWindow(CDuiWindow *pWnd,const CRect & rcDraw);
-
-    //************************************
-    // Method:    _PaintForeground
-    // Function:  从pStart指定的窗口开始绘制pRc的内容，直接窗口链结尾
-    // Access:    protected static
-    // Returns:   void
-    // Parameter: HDC hdc	目标DC
-    // Parameter: CRect * pRc	目标位置
-    // Parameter: CDuiWindow * pCurWnd 当前窗口指针
-    // Parameter: CDuiWindow * pStart 开始绘制位置
-    // Parameter: BOOL & bInRange	pCurWnd是否在绘制链中
-    // remark:  函数递归调用
-    //************************************
-    static void _PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pStart,BOOL &bInRange);
 	
 	//************************************
 	// Method:    GetNextVisibleWindow 获得指定窗口的下一个可见窗口

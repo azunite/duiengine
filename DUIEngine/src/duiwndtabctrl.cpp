@@ -3,87 +3,100 @@
 
 namespace DuiEngine
 {
+	class CDuiTabSlider : public CDuiWindow
+	{
+		DUIOBJ_DECLARE_CLASS_NAME(CDuiTabSlider, "tabslider")
 
-void CDuiTabSlide::SetPage1( CDuiWindow *pPage1 )
-{
-    DUIASSERT(!m_hMemDC && !m_hBmp);
+	public:
+		CDuiTabSlider( CDuiTabCtrl *pTabCtrl =NULL) :m_hMemDC(NULL),m_hBmp(NULL)
+		{
+			if(pTabCtrl)
+			{
+				CRect rcPage=pTabCtrl->GetChildrenLayoutRect();
+				CDCHandle dcPage=pTabCtrl->GetDuiDC(&rcPage,OLEDC_NODRAW);
+				m_hMemDC=CreateCompatibleDC(dcPage);
+				m_hBmp=CGdiAlpha::CreateBitmap32(dcPage,rcPage.Width()*2,rcPage.Height());
+				::SelectObject(m_hMemDC,m_hBmp);
+				pTabCtrl->ReleaseDuiDC(dcPage);
+				pTabCtrl->InsertChild(this);
+				Move(rcPage);
+				SetVisible(FALSE);
+			}
+		}
 
-    CRect rcPage=m_rcWindow;
-    CDCHandle dcPage=pPage1->GetDuiDC(&rcPage,OLEDC_NODRAW);
-    m_hMemDC=CreateCompatibleDC(dcPage);
-    m_hBmp=CGdiAlpha::CreateBitmap32(dcPage,rcPage.Width()*2,rcPage.Height());
-    ::SelectObject(m_hMemDC,m_hBmp);
+		virtual ~CDuiTabSlider()
+		{
+			if(GetParent())
+			{
+				GetParent()->RemoveChild(this);
+				if(m_hMemDC)	DeleteDC(m_hMemDC);
+				if(m_hBmp)	DeleteObject(m_hBmp);
+				m_hMemDC=NULL;
+				m_hBmp=NULL;
+			}
+		}
 
-    CRgn  rngNull;
-    pPage1->PaintBackground(dcPage,&rcPage);
-    int nSaveDC=dcPage.SaveDC();
-    pPage1->BeforePaintEx(dcPage);
-    pPage1->RedrawRegion(dcPage,rngNull);
-    dcPage.RestoreDC(nSaveDC);
+		void Slide(SLIDEDIR sd,int nSteps=20)
+		{
+			CRect rcPage=m_rcWindow;
 
-    BitBlt(m_hMemDC,0,0,rcPage.Width(),rcPage.Height(),dcPage,rcPage.left,rcPage.top,SRCCOPY);
-    pPage1->ReleaseDuiDC(dcPage);
-}
+			SetVisible(TRUE);
 
-void CDuiTabSlide::SetPage2( CDuiWindow *pPage2 )
-{
-    DUIASSERT(m_hMemDC && m_hBmp);
-    CRect rcPage=m_rcWindow;
-    CDCHandle dcPage=pPage2->GetDuiDC(&rcPage,OLEDC_NODRAW);
+			BringWindowToTop();
+			for(int i=0; i<nSteps; i++)
+			{
+				CDCHandle dcPage=GetDuiDC(NULL,OLEDC_OFFSCREEN);
+				switch(sd)
+				{
+				case SD_LEFTRIGHT:
+					BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width()*(i+1)/nSteps,rcPage.Height(),m_hMemDC,rcPage.Width()+rcPage.Width()*(nSteps-i-1)/nSteps,0,SRCCOPY);
+					BitBlt(dcPage,rcPage.left+rcPage.Width()*(i+1)/nSteps,rcPage.top,rcPage.Width()*(nSteps-i-1)/nSteps,rcPage.Height(),m_hMemDC,0,0,SRCCOPY);
+					break;
+				case SD_RIGHTLEFT:
+					BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height(),m_hMemDC,rcPage.Width()*(i+1)/nSteps,0,SRCCOPY);
+					break;
+				case SD_TOPBOTTOM:
+					BitBlt(dcPage,rcPage.left,rcPage.top+rcPage.Height()*(nSteps-i-1)/nSteps,rcPage.Width(),rcPage.Height()*(i+1)/nSteps,
+						m_hMemDC,rcPage.Width(),0,SRCCOPY);//new
+					BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,
+						m_hMemDC,0,rcPage.Height()*(i+1)/nSteps,SRCCOPY);//old
+					break;
+				case SD_BOTTOMTOP:
+					BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height()*(i+1)/nSteps,
+						m_hMemDC,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,SRCCOPY);//new
+					BitBlt(dcPage,rcPage.left,rcPage.top+rcPage.Height()*(i+1)/nSteps,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,
+						m_hMemDC,0,0,SRCCOPY);//old
+					break;
+				}
+				PaintForeground(dcPage,&rcPage);
+				ReleaseDuiDC(dcPage);
+				Sleep(10);
+			}
 
-    CRgn  rngNull;
-    pPage2->PaintBackground(dcPage,&rcPage);
-    int nSaveDC=dcPage.SaveDC();
-    pPage2->BeforePaintEx(dcPage);
-    pPage2->RedrawRegion(dcPage,rngNull);
-    dcPage.RestoreDC(nSaveDC);
-    BitBlt(m_hMemDC,rcPage.Width(),0,rcPage.Width(),rcPage.Height(),dcPage,rcPage.left,rcPage.top,SRCCOPY);
-    pPage2->ReleaseDuiDC(dcPage);
-}
+			SetVisible(FALSE);
+		}
 
-void CDuiTabSlide::Slide( SLIDEDIR sd,int nSteps/*=20*/ )
-{
-    CRect rcPage=m_rcWindow;
+		void InitPage(BOOL bPage1)
+		{
+			CRect rcPage;
+			GetRect(&rcPage);
+			CDCHandle dcPage=GetDuiDC(&rcPage,OLEDC_NODRAW);
+			PaintBackground(dcPage,&rcPage);
+			BitBlt(m_hMemDC,bPage1?0:rcPage.Width(),0,rcPage.Width(),rcPage.Height(),dcPage,rcPage.left,rcPage.top,SRCCOPY);
+			ReleaseDuiDC(dcPage);
+		}
+	protected:
 
-    SetVisible(TRUE);
+		void OnPaint(CDCHandle dc)
+		{
+		}
 
-    BringWindowToTop();
-    for(int i=0; i<nSteps; i++)
-    {
-        CDCHandle dcPage=GetDuiDC(NULL,OLEDC_OFFSCREEN);
-        switch(sd)
-        {
-        case SD_LEFTRIGHT:
-            BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width()*(i+1)/nSteps,rcPage.Height(),m_hMemDC,rcPage.Width()+rcPage.Width()*(nSteps-i-1)/nSteps,0,SRCCOPY);
-            BitBlt(dcPage,rcPage.left+rcPage.Width()*(i+1)/nSteps,rcPage.top,rcPage.Width()*(nSteps-i-1)/nSteps,rcPage.Height(),m_hMemDC,0,0,SRCCOPY);
-            break;
-        case SD_RIGHTLEFT:
-            BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height(),m_hMemDC,rcPage.Width()*(i+1)/nSteps,0,SRCCOPY);
-            break;
-        case SD_TOPBOTTOM:
-            BitBlt(dcPage,rcPage.left,rcPage.top+rcPage.Height()*(nSteps-i-1)/nSteps,rcPage.Width(),rcPage.Height()*(i+1)/nSteps,
-                   m_hMemDC,rcPage.Width(),0,SRCCOPY);//new
-            BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,
-                   m_hMemDC,0,rcPage.Height()*(i+1)/nSteps,SRCCOPY);//old
-            break;
-        case SD_BOTTOMTOP:
-            BitBlt(dcPage,rcPage.left,rcPage.top,rcPage.Width(),rcPage.Height()*(i+1)/nSteps,
-                   m_hMemDC,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,SRCCOPY);//new
-            BitBlt(dcPage,rcPage.left,rcPage.top+rcPage.Height()*(i+1)/nSteps,rcPage.Width(),rcPage.Height()*(nSteps-i-1)/nSteps,
-                   m_hMemDC,0,0,SRCCOPY);//old
-            break;
-        }
-        PaintForeground(dcPage,&rcPage);
-        ReleaseDuiDC(dcPage);
-        Sleep(10);
-    }
-
-    DeleteDC(m_hMemDC);
-    DeleteObject(m_hBmp);
-    m_hMemDC=NULL;
-    m_hBmp=NULL;
-    SetVisible(FALSE);
-}
+		HDC m_hMemDC;
+		HBITMAP m_hBmp;
+		DUIWIN_BEGIN_MSG_MAP()
+			MSG_WM_PAINT(OnPaint)
+		DUIWIN_END_MSG_MAP()
+	};
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -326,11 +339,6 @@ void CDuiTabCtrl::OnDestroy()
     m_lstPages.RemoveAll();
 }
 
-LRESULT CDuiTabCtrl::OnCreate( LPVOID )
-{
-    InsertChild(&m_tabSlide);
-    return 0;
-}
 
 BOOL CDuiTabCtrl::SetCurSel( int nIndex )
 {
@@ -360,13 +368,12 @@ BOOL CDuiTabCtrl::SetCurSel( int nIndex )
     GetItemRect(nIndex, rcItem);
     NotifyInvalidateRect(rcItem);
 
+	CDuiTabSlider *pTabSlider=NULL;
+
     if(m_nAnimateSteps && IsVisible(TRUE) && nOldPage!=-1)
     {
-        CDuiTab *pTab=GetItem(nOldPage);
-        CRect rcTab;
-        pTab->GetRect(&rcTab);
-        m_tabSlide.Move(rcTab);
-        m_tabSlide.SetPage1(pTab);
+		pTabSlider=new CDuiTabSlider(this);
+		pTabSlider->InitPage(TRUE);
     }
 
 	if(nOldPage!=-1)
@@ -390,7 +397,7 @@ BOOL CDuiTabCtrl::SetCurSel( int nIndex )
     nms2.uTabItemIDNew = nIndex;
     nms2.uTabItemIDOld = nOldPage;
 
-    if(m_nAnimateSteps && IsVisible(TRUE) && nOldPage!=-1)
+    if(pTabSlider)
     {
         SLIDEDIR sd=SD_RIGHTLEFT;
         if(m_nTabAlign==AlignTop)
@@ -403,9 +410,11 @@ BOOL CDuiTabCtrl::SetCurSel( int nIndex )
             if(nOldPage<nIndex) sd=SD_BOTTOMTOP;
             else sd=SD_TOPBOTTOM;
         }
-        m_tabSlide.SetPage2(GetItem(m_nCurrentPage));
+        pTabSlider->InitPage(FALSE);
 
-        m_tabSlide.Slide(sd,m_nAnimateSteps);
+        pTabSlider->Slide(sd,m_nAnimateSteps);
+
+		delete pTabSlider;
     }
     DuiNotify((LPNMHDR)&nms2);
     if(IsVisible(TRUE))

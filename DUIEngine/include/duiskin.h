@@ -189,13 +189,13 @@ public:
 	}
 
     DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
-		DUIWIN_INT_ATTRIBUTE("margin",m_nMagin,FALSE)
+		DUIWIN_INT_ATTRIBUTE("margin",m_nMargin,FALSE)
 		DUIWIN_INT_ATTRIBUTE("hasgripper",m_bHasGripper,FALSE)
     DUIWIN_DECLARE_ATTRIBUTES_END()
 protected:
 	//返回源指定部分在原位图上的位置。
 	CRect GetPartRect(int nSbCode, int nState,BOOL bVertical);
-    int			m_nMagin;
+    int			m_nMargin;
 	BOOL		m_bHasGripper;
 };
 

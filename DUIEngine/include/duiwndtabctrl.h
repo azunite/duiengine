@@ -55,37 +55,10 @@ typedef enum tagSLIDEDIR
     SD_BOTTOMTOP,
 } SLIDEDIR;
 
-class DUI_EXP CDuiTabSlide : public CDuiWindow
-{
-    DUIOBJ_DECLARE_CLASS_NAME(CDuiTabSlide, "tabslide")
-
-public:
-    CDuiTabSlide():m_hMemDC(NULL),m_hBmp(NULL)
-    {
-    }
-
-    virtual ~CDuiTabSlide() {}
-
-    void SetPage1(CDuiWindow *pPage1);
-
-    void SetPage2(CDuiWindow *pPage2);
-
-    void Slide(SLIDEDIR sd,int nSteps=20);
-
-    void OnPaint(CDCHandle dc)
-    {
-    }
-
-protected:
-    HDC m_hMemDC;
-    HBITMAP m_hBmp;
-    DUIWIN_BEGIN_MSG_MAP()
-    MSG_WM_PAINT(OnPaint)
-    DUIWIN_END_MSG_MAP()
-};
-
 class DUI_EXP CDuiTabCtrl : public CDuiPanel
 {
+	friend class CDuiTabSlider;
+
     DUIOBJ_DECLARE_CLASS_NAME(CDuiTabCtrl, "tabctrl")
 
 protected:
@@ -105,8 +78,6 @@ protected:
     int m_nTabAlign;
 
     CDuiArray<CDuiTab*> m_lstPages;
-
-    CDuiTabSlide	m_tabSlide;
 
     enum
     {
@@ -175,10 +146,7 @@ protected:
 
     void OnDestroy();
 
-    LRESULT OnCreate(LPVOID);
-
     DUIWIN_BEGIN_MSG_MAP()
-    MSG_WM_CREATE(OnCreate)
     MSG_WM_PAINT(OnPaint)
     MSG_WM_DESTROY(OnDestroy)
     MSG_WM_LBUTTONDOWN(OnLButtonDown)

@@ -23,6 +23,9 @@
           <text pos="200,50" pos2type="righttop">align right top</text>
           <text pos="200,70" pos2type="righttop">align right top 2</text>
           <check pos="200,90" pos2type="righttop">check right top</check>
+
+          <text pos="200,110" class="cls_txt_red">check right top</text>
+          <text pos="200,130,400,300" align="left" valign="top">check right top</text>
         </tab>
         <tab id="113" title="miscellaneous" sep="5">
           <animateimg name="ani_test" pos="20,100" skin="icons"/>

@@ -52,6 +52,7 @@ public:
     CDuiStatic():m_bMultiLines(0),m_nLineInter(5)
     {
         m_bMsgTransparent=TRUE;
+		m_style.SetAttribute("align","left");
     }
     virtual void DuiDrawText(HDC hdc,LPCTSTR pszBuf,int cchText,LPRECT pRect,UINT uFormat);
 
@@ -75,6 +76,10 @@ class DUI_EXP CDuiLink : public CDuiWindow
     DUIOBJ_DECLARE_CLASS_NAME(CDuiLink, "link")
 
 public:
+	CDuiLink()
+	{
+		m_style.SetAttribute("align","left");
+	}
 
 protected:
     virtual void OnAttributeFinish(pugi::xml_node xmlNode);

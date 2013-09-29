@@ -694,50 +694,8 @@ BOOL CDuiWindow::NeedRedrawWhenStateChange()
 
 BOOL CDuiWindow::RedrawRegion(CDCHandle& dc, CRgn& rgn)
 {
-	if(!IsVisible(TRUE)) return FALSE;
-    if (rgn.IsNull() || rgn.RectInRegion(m_rcWindow))
-    {
-
-        CRect rcClient;
-        GetClient(&rcClient);
-        if(rgn.IsNull() || rgn.RectInRegion(rcClient))
-        {
-            CRgn rgnOldClip;
-            if(IsClipClient())
-            {
-                dc.GetClipRgn(rgnOldClip);
-                CRgn rgn;
-                rgn.CreateRectRgnIndirect(&rcClient);
-                dc.SelectClipRgn(rgn,RGN_AND);
-            }
-            DuiSendMessage(WM_ERASEBKGND, (WPARAM)(HDC)dc);
-            DuiSendMessage(WM_PAINT, (WPARAM)(HDC)dc);
-
-            DuiDCPaint DuiDC;
-
-            BeforePaint(dc, DuiDC);	//让子窗口继承父窗口的属性
-
-            CDuiWindow *pChild=GetDuiWindow(GDUI_FIRSTCHILD);
-            while(pChild)
-            {
-                if (pChild->IsVisible(TRUE))
-                {
-                    pChild->RedrawRegion(dc, rgn);
-                }
-                pChild=pChild->GetDuiWindow(GDUI_NEXTSIBLING);
-            }
-
-            AfterPaint(dc, DuiDC);
-            if(IsClipClient())
-            {
-                dc.SelectClipRgn(rgnOldClip);
-            }
-        }
-        DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link
-        return TRUE;
-    }
-
-    return FALSE;
+	PRSTATE prState=PRS_LOOKSTART;
+	return _PaintRegion(dc,rgn,this,this,NULL,prState);
 }
 
 void CDuiWindow::OnAttributeChanged( const CDuiStringA & strAttrName,BOOL bLoading,HRESULT hRet )
@@ -1283,7 +1241,7 @@ void CDuiWindow::OnLButtonUp(UINT nFlags,CPoint pt)
     LPCTSTR lpszUrl = GetLinkUrl();
     if (lpszUrl && lpszUrl[0])
     {
-        HINSTANCE hRet = ::ShellExecute(NULL, L"open", lpszUrl, NULL, NULL, SW_SHOWNORMAL);
+        ::ShellExecute(NULL, L"open", lpszUrl, NULL, NULL, SW_SHOWNORMAL);
     }
     else if (GetCmdID())
     {
@@ -1388,9 +1346,6 @@ LPCSTR CDuiWindow::ParsePosition(const char * pszPos,DUIDLG_POSITION_ITEM &pos)
 HRESULT CDuiWindow::OnAttributePosition(const CDuiStringA& strValue, BOOL bLoading)
 {
     if (strValue.IsEmpty()) return E_FAIL;
-
-    LPCSTR lpszValue = strValue;
-    int nPos = 0, nPosPrev = 0;
 
 	m_dlgpos.nCount=0;
 	LPCSTR pszValue=strValue;
@@ -1661,95 +1616,103 @@ void CDuiWindow::PaintBackground( HDC hdc,LPRECT pRc )
     CRect rcDraw=m_rcWindow;
     if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
 
-	CDuiWindow *pEnd=GetPrevVisibleWindow(this,rcDraw);
-    if(pEnd)
-    {
-		CDuiWindow *pTopWnd=GetTopLevelParent();
- 		CDCHandle dc(hdc); 
-		int nSavedDC=dc.SaveDC();
-		CRgn rgn;
-		rgn.CreateRectRgnIndirect(&rcDraw);
-		CPoint ptOrg;
-		dc.GetViewportOrg(&ptOrg);
-		rgn.OffsetRgn(ptOrg);
-		dc.SelectClipRgn(rgn,RGN_AND);
-		dc.FillSolidRect(pRc,0);//清除残留的alpha值
-       _PaintBackground(hdc,&rcDraw,pTopWnd,pEnd);
-	   dc.RestoreDC(nSavedDC);
-   }
+	CDuiWindow *pTopWnd=GetTopLevelParent();
+	CDCHandle dc(hdc); 
+	int nSavedDC=dc.SaveDC();
+	CRgn rgn;
+	rgn.CreateRectRgnIndirect(&rcDraw);
+	dc.SelectClipRgn(rgn,RGN_AND);
+	dc.FillSolidRect(rcDraw,0);//清除残留的alpha值
+	PRSTATE prState=PRS_LOOKSTART;
+	_PaintRegion(dc,rgn,pTopWnd,pTopWnd,this,prState);
+	dc.RestoreDC(nSavedDC);
 }
 
-
-CDuiWindow * CDuiWindow::GetPrevVisibleWindow( CDuiWindow *pWnd ,const CRect & rcDraw)
+BOOL CDuiWindow::_PaintRegion( CDCHandle& dc, CRgn& rgn,CDuiWindow *pWndCur,CDuiWindow *pStart,CDuiWindow *pEnd,CDuiWindow::PRSTATE & prState )
 {
-	if(!pWnd) return NULL;
-	CDuiWindow *pPrevSibling=pWnd->GetDuiWindow(GDUI_PREVSIBLING);
-	if(pPrevSibling && pPrevSibling->IsVisible(TRUE) && !(pPrevSibling->m_rcWindow & rcDraw).IsRectEmpty())//上一窗口可见而且与指定矩形有交集时，找到窗口
-		return pPrevSibling;
-	else if (pPrevSibling)	return GetPrevVisibleWindow(pPrevSibling,rcDraw);
-	CDuiWindow *pParent=pWnd->GetParent();
-	if(!pParent) return NULL;
-	if(pParent->IsVisible(TRUE) && !(pParent->m_rcWindow & rcDraw).IsRectEmpty())
-		return pParent;
-	return GetPrevVisibleWindow(pParent,rcDraw);
+	if (!pWndCur->IsVisible(TRUE) || (!rgn.IsNull() && !rgn.RectInRegion(pWndCur->m_rcWindow)))
+	{
+		return FALSE;
+	}
+	if(prState == PRS_DRAWING && pWndCur == pEnd)
+	{
+		prState=PRS_MEETEND;
+	}
+
+	if(prState == PRS_MEETEND)
+	{
+		return FALSE;
+	}
+
+	if(prState == PRS_LOOKSTART && pWndCur==pStart)
+	{
+		prState=PRS_DRAWING;//开始进行绘制
+	}
+
+	PRSTATE prsBack=prState;	//保存当前的绘制状态,在递归结束后根据这个状态来判断是否需要绘制非客户区
+
+	CRect rcClient;
+	pWndCur->GetRect(&rcClient);
+	if(rgn.IsNull() || rgn.RectInRegion(rcClient))
+	{//重绘客户区
+		CRgn rgnOldClip;
+		if(prsBack == PRS_DRAWING)
+		{
+			if(pWndCur->IsClipClient())
+			{
+				dc.GetClipRgn(rgnOldClip);
+				CRgn rgn;
+				rgn.CreateRectRgnIndirect(&rcClient);
+				dc.SelectClipRgn(rgn,RGN_AND);
+			}
+			pWndCur->DuiSendMessage(WM_ERASEBKGND, (WPARAM)(HDC)dc);
+			pWndCur->DuiSendMessage(WM_PAINT, (WPARAM)(HDC)dc);
+		}
+
+		DuiDCPaint DuiDC;
+
+		pWndCur->BeforePaint(dc, DuiDC);	//让子窗口继承父窗口的属性
+
+		CDuiWindow *pChild=pWndCur->GetDuiWindow(GDUI_FIRSTCHILD);
+		while(pChild)
+		{
+			if(pChild==pEnd) break;
+			_PaintRegion(dc, rgn,pChild,pStart,pEnd,prState);
+			if(prState == PRS_MEETEND)
+				break;
+			pChild=pChild->GetDuiWindow(GDUI_NEXTSIBLING);
+		}
+
+		pWndCur->AfterPaint(dc, DuiDC);
+		if(prsBack == PRS_DRAWING && pWndCur->IsClipClient())
+		{
+			dc.SelectClipRgn(rgnOldClip);
+		}
+	}
+	if(prsBack == PRS_DRAWING) 
+		pWndCur->DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link
+
+	return prState==PRS_DRAWING || prState == PRS_MEETEND;
 }
-
-BOOL CDuiWindow::_PaintBackground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pEnd)
-{
-    if(!pCurWnd->IsVisible(TRUE) || ((*pRc)&pCurWnd->m_rcWindow).IsRectEmpty())
-        return FALSE;
-
-    BOOL bRet=FALSE;
-
-    pCurWnd->DuiSendMessage(WM_ERASEBKGND, (WPARAM)hdc);
-    pCurWnd->DuiSendMessage(WM_PAINT, (WPARAM)hdc);
-
-    DuiDCPaint DuiDC;
-    CDCHandle dc(hdc);
-    pCurWnd->BeforePaint(dc, DuiDC);	//让子窗口继承父窗口的属性
-
-    CDuiWindow *pChild=pCurWnd->GetDuiWindow(GDUI_FIRSTCHILD);
-    while(pChild)
-    {
-        bRet=_PaintBackground(hdc,pRc,pChild,pEnd);
-        if(bRet) break;
-        pChild=pChild->GetDuiWindow(GDUI_NEXTSIBLING);
-    }
-    pCurWnd->AfterPaint(dc, DuiDC);
-
-    pCurWnd->DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link
-
-	return (pCurWnd==pEnd || bRet);
-}
-
-
 
 void CDuiWindow::PaintForeground( HDC hdc,LPRECT pRc )
 {
     CRect rcDraw=m_rcWindow;
     if(pRc) rcDraw.IntersectRect(rcDraw,pRc);
 
-
     CDuiWindow *pStart=GetNextVisibleWindow(this,rcDraw);
 
     if(pStart)
     {
-        BOOL bInRange=FALSE;
-
-		CDCHandle dc(hdc); 
-		int nSavedDC=dc.SaveDC();
+		PRSTATE prState=PRS_LOOKSTART;
 		CRgn rgn;
-		rgn.CreateRectRgnIndirect(&rcDraw);
-		CPoint ptOrg;
-		dc.GetViewportOrg(&ptOrg);
-		rgn.OffsetRgn(ptOrg);
+		rgn.CreateRectRgnIndirect(rcDraw);
+		CDCHandle dc(hdc);
+		int nSavedDC=dc.SaveDC();
 		dc.SelectClipRgn(rgn,RGN_AND);
-
-		CDuiWindow *pTopWnd=GetTopLevelParent();
-        _PaintForeground(hdc,&rcDraw,pTopWnd,pStart,bInRange);
-
+		_PaintRegion(CDCHandle(hdc),rgn,this,pStart,NULL,prState);
 		dc.RestoreDC(nSavedDC);
-    }
+	}
 }
 
 
@@ -1761,37 +1724,6 @@ CDuiWindow * CDuiWindow::GetNextVisibleWindow( CDuiWindow *pWnd ,const CRect &rc
 		return pNextSibling;
 	else if (pNextSibling)	return GetNextVisibleWindow(pNextSibling,rcDraw);
 	else return GetNextVisibleWindow(pWnd->GetParent(),rcDraw);
-}
-
-void CDuiWindow::_PaintForeground(HDC hdc,CRect *pRc,CDuiWindow *pCurWnd,CDuiWindow *pStart,BOOL &bInRange)
-{
-    DUIASSERT(pStart->IsVisible(TRUE));
-
-    if(!pCurWnd->IsVisible(TRUE) || ((*pRc)&pCurWnd->m_rcWindow).IsRectEmpty())
-        return ;
-
-    if(!bInRange && pCurWnd==pStart) bInRange=TRUE;//开始进行绘制
-
-    if(bInRange)
-    {
-        pCurWnd->DuiSendMessage(WM_ERASEBKGND, (WPARAM)hdc);
-        pCurWnd->DuiSendMessage(WM_PAINT, (WPARAM)hdc);
-    }
-
-    DuiDCPaint DuiDC;
-    CDCHandle dc(hdc);
-    pCurWnd->BeforePaint(dc, DuiDC);	//让子窗口继承父窗口的属性
-
-    CDuiWindow *pChild=pCurWnd->GetDuiWindow(GDUI_FIRSTCHILD);
-    while(pChild)
-    {
-        _PaintForeground(hdc,pRc,pChild,pStart,bInRange);
-        pChild=pChild->GetDuiWindow(GDUI_NEXTSIBLING);
-    }
-
-    pCurWnd->AfterPaint(dc, DuiDC);
-
-    pCurWnd->DuiSendMessage(WM_NCPAINT, (WPARAM)(HDC)dc);//ncpaint should be placed in tail of paint link
 }
 
 void CDuiWindow::DrawAniStep( CRect rcFore,CRect rcBack,HDC dcFore,HDC dcBack,CPoint ptAnchor)
@@ -1814,8 +1746,7 @@ void CDuiWindow::DrawAniStep( CRect rcWnd,HDC dcFore,HDC dcBack,BYTE byAlpha)
 		bf.BlendOp=AC_SRC_OVER;
 		bf.AlphaFormat=0;//AC_SRC_ALPHA
 		bf.SourceConstantAlpha=byAlpha;
-		BOOL bRet=AlphaBlend(dc,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dcFore,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),bf);
-		int a=bRet;
+		AlphaBlend(dc,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dcFore,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),bf);
 	}else if(byAlpha==0)
 	{
 		BitBlt(dc,rcWnd.left,rcWnd.top,rcWnd.Width(),rcWnd.Height(),dcBack,rcWnd.left,rcWnd.top,SRCCOPY);

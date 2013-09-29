@@ -17,8 +17,8 @@
 			bgdown="C6E2FD" bguphover="FEFEFE" bgdownhover="DBEDFE" 
 			bguppush="C6E2FD" bgdownpush="FEFEFE"/>
 
-  <scrollbar name="sb_common" src="104" magin="3"/>
-  <vscrollbar name="sb_vertical" src="511" magin="3"/>
+  <scrollbar name="sb_common" src="104" margin="3"/>
+  <vscrollbar name="sb_vertical" src="511" margin="3"/>
 
   <imgframe name="skin_editnc" src="105" subwidth="26" left="2" top="2"/>
   <imgframe name="skin_split_vert" src="106" top="20" bottom="10"/>

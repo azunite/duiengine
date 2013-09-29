@@ -154,11 +154,13 @@ void CDuiFrame::OnFrameMouseMove(UINT uFlag,CPoint pt)
                 m_bNcHover=bNcHover;
                 if(m_bNcHover)
                 {
+					pHover->DuiSendMessage(WM_MOUSELEAVE);
                     pHover->DuiSendMessage(WM_NCMOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
                 }
                 else
                 {
                     pHover->DuiSendMessage(WM_NCMOUSELEAVE);
+					pHover->DuiSendMessage(WM_MOUSEHOVER,uFlag,MAKELPARAM(pt.x,pt.y));
                 }
             }
         }
