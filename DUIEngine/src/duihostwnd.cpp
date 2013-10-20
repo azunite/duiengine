@@ -56,7 +56,6 @@ HWND CDuiHostWnd::Create(HWND hWndParent,LPCTSTR lpWindowName, DWORD dwStyle,DWO
     if(m_uResID)  Load(m_uResID);
 
 	if(nWidth==0 || nHeight==0) CenterWindow(hWnd);
-    SendMessage(WM_INITDIALOG, (WPARAM)hWnd);
     return hWnd;
 }
 
@@ -197,10 +196,14 @@ UINT_PTR CDuiHostWnd::DoModal(HWND hWndParent/* = NULL*/, LPRECT rect /*= NULL*/
 
     HWND hWndLastActive = DuiThreadActiveWndManager::SetActive(m_hWnd);
 
-	if(m_dwDlgExStyle&WS_EX_TOOLWINDOW)
-		::ShowWindow(m_hWnd,SW_SHOWNOACTIVATE);
-	else
-		::ShowWindow(m_hWnd,SW_SHOWNORMAL);
+	if(INITCODE_NOTSHOW!=SendMessage(WM_INITDIALOG, (WPARAM)m_hWnd))
+	{//根据INITDIALOG的返回值还判断是不是将窗口显示出来。返回INITCODE_NOTSHOW时窗口不显示。
+	
+		if(m_dwDlgExStyle&WS_EX_TOOLWINDOW)
+			::ShowWindow(m_hWnd,SW_SHOWNOACTIVATE);
+		else
+			::ShowWindow(m_hWnd,SW_SHOWNORMAL);
+	}
 
     _ModalMessageLoop();
 
