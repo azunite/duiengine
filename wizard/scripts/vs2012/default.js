@@ -31,7 +31,7 @@ function CreateCustomProject(strProjectName, strProjectPath)
 	{
 		var strProjTemplatePath = wizard.FindSymbol('PROJECT_TEMPLATE_PATH');
 		var strProjTemplate = '';
-		strProjTemplate = strProjTemplatePath + '\\default.vcxprog';
+		strProjTemplate = strProjTemplatePath + '\\default.vcxproj';
 
 		var Solution = dte.Solution;
 		var strSolutionName = "";
@@ -47,7 +47,7 @@ function CreateCustomProject(strProjectName, strProjectPath)
 		}
 
 		var strProjectNameWithExt = '';
-		strProjectNameWithExt = strProjectName + '.vcxprog';
+		strProjectNameWithExt = strProjectName + '.vcxproj';
 
 		var oTarget = wizard.FindSymbol("TARGET");
 		var prj;
