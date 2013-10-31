@@ -11,6 +11,14 @@
 #define IDC_VSDIR2                      1004
 #define IDC_DUIENGINEDIR                1004
 #define IDC_BROWSE2                     1005
+#define IDC_VS2005                      1006
+#define IDC_VS2008                      1007
+#define IDC_VS2010                      1008
+#define IDC_VS2012                      1009
+#define IDC_LIST1                       1011
+#define IDC_LOG                         1011
+#define IDC_BUTTON1                     1012
+#define IDC_SETOUTSOFT                  1012
 
 // Next default values for new objects
 // 
@@ -18,7 +26,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        201
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1004
+#define _APS_NEXT_CONTROL_VALUE         1013
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="wizard.setup"
 	ProjectGUID="{024405BD-B704-45D2-8094-8385C84B2BBF}"
+	RootNamespace="wizard.setup"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -247,5 +248,9 @@
 		</Filter>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="wizard.setup.rc"
+		/>
 	</Globals>
 </VisualStudioProject>
