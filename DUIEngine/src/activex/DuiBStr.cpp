@@ -1,7 +1,7 @@
 #include "duistd.h"
 
 #include "activex/DuiBStr.h"
-#include "activex/DuiComPtr.h"
+// #include "activex/DuiComPtr.h"
 
 namespace DuiEngine
 {
@@ -10,7 +10,6 @@ namespace DuiEngine
 
         CDuiBStr::~CDuiBStr()
         {
-            COMPILE_ASSERT(sizeof(CDuiBStr)==sizeof(BSTR), ScopedBstrSize);
             SysFreeString(bstr_);
         }
 

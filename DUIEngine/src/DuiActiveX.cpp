@@ -1,63 +1,94 @@
 #include "duistd.h"
-#include "activex/DuiActiveX.h"
+#include "activex/DuiAxContainer.h"
 #include "activex/DuiBStr.h"
+#include "DuiActiveX.h"
 
 namespace DuiEngine
 {
+//////////////////////////////////////////////////////////////////////////
+	class CDuiAxContainerImpl : public CDuiAxContainer,public IAxHostDelegate
+	{
+	public:
+		CDuiAxContainerImpl(CDuiActiveX *pOwner):m_pOwner(pOwner)
+		{
+			SetAxHost(this);
+		}
+	protected:
+		virtual HWND GetAxHostWindow() const
+		{
+			return m_pOwner->GetContainer()->GetHostHwnd();
+		}
+		virtual void OnAxActivate(IUnknown *pCtrl)
+		{
+			m_pOwner->OnAxActivate(pCtrl);
+		}
+
+		virtual void OnAxInvalidate(LPCRECT pRect,BOOL bErase)
+		{
+			m_pOwner->NotifyInvalidateRect(pRect);
+		}
+
+		virtual void OnAxSetCapture(BOOL fCapture)
+		{
+			if(fCapture)
+			{
+				m_pOwner->SetDuiCapture();
+			}else
+			{
+				m_pOwner->ReleaseDuiCapture();
+			}
+		}
+		
+		virtual HRESULT OnAxGetDC(LPCRECT pRect, DWORD grfFlags, HDC *phDC)
+		{
+			return S_FALSE;
+			*phDC=m_pOwner->GetDuiDC((const LPRECT)pRect,grfFlags);
+			return S_OK;
+		}
+
+		virtual HRESULT OnAxReleaseDC(HDC hdc)
+		{
+			return S_FALSE;
+			m_pOwner->ReleaseDuiDC(hdc);
+			return S_OK;
+		}
+
+		CDuiActiveX *m_pOwner;
+	};
+
+//////////////////////////////////////////////////////////////////////////
 
 	CDuiActiveX::CDuiActiveX() 
-		: ax_host_(new CDuiAxHost(this))
+		: m_axContainer(new CDuiAxContainerImpl(this))
 		,m_clsid(CLSID_NULL)
 		,m_bDelayInit(FALSE)
 	{
 	}
 
 	CDuiActiveX::~CDuiActiveX() {
-		delete ax_host_;
+		delete m_axContainer;
 	}
 
 
 	BOOL CDuiActiveX::InitActiveX()
 	{
-		ax_host_->CreateControl(m_clsid);
 		if(m_bDelayInit)
 		{
-			if(ax_host_->activex_control())
+			BOOL bRet=m_axContainer->CreateControl(m_rcWindow,m_clsid);
+			if(bRet)
 			{
-				ax_host_->SetRect(m_rcWindow);
+				m_axContainer->ActivateAx(NULL);
 				SetActiveXVisible(IsVisible(TRUE));
 			}
 			m_bDelayInit=FALSE;//·ÀÖ¹ÖØÈë
 		}
 		OnInitActiveXFinished();
-		return ax_host_!=NULL;
+		return m_axContainer!=NULL;
 	}
 
 	void CDuiActiveX::OnPaint(CDCHandle dc)
 	{
-		ax_host_->Draw(dc, m_rcWindow);
-	}
-
-	// Overridden from CDuiAxHostDelegate:
-	HWND CDuiActiveX::GetAxHostWindow() const
-	{
-		return m_pContainer->GetHostHwnd();
-	}
-
-	void CDuiActiveX::OnAxCreate(CDuiAxHost* host)
-	{
-	}
-
-	void CDuiActiveX::OnAxInvalidate(CRect& rect)
-	{
-		NotifyInvalidateRect(rect);
-	}
-
-
-	void CDuiActiveX::OnAxSetCapture( BOOL fCapture )
-	{
-		if(fCapture) SetDuiCapture();
-		else ReleaseDuiCapture();
+		m_axContainer->Draw(dc, m_rcWindow);
 	}
 
 	int CDuiActiveX::OnCreate( LPVOID )
@@ -70,7 +101,10 @@ namespace DuiEngine
 
 	void CDuiActiveX::OnSize( UINT nType, CSize size )
 	{
-		if(ax_host_->activex_control()) ax_host_->SetRect(m_rcWindow);		
+		if(m_axContainer->GetActiveXControl())
+		{
+			m_axContainer->OnPosRectChange(m_rcWindow);		
+		}
 	}
 
 	void CDuiActiveX::OnShowWindow( BOOL bShow, UINT nStatus )
@@ -84,15 +118,15 @@ namespace DuiEngine
 
 	LRESULT CDuiActiveX::OnMouseEvent( UINT uMsg,WPARAM wp,LPARAM lp )
 	{
-		if(!ax_host_->activex_control()) return 0;
+		if(!m_axContainer->GetActiveXControl()) return 0;
 		if(uMsg==WM_LBUTTONDOWN) SetDuiFocus();
-		return ax_host_->OnWindowMessage(uMsg, wp, lp);
+		return m_axContainer->OnWindowMessage(uMsg, wp, lp);
 	}
 
 	LRESULT CDuiActiveX::OnKeyEvent( UINT uMsg,WPARAM wp,LPARAM lp )
 	{
-		if(!ax_host_->activex_control()) return 0;
-		return ax_host_->OnWindowMessage(uMsg, wp, lp);
+		if(!m_axContainer->GetActiveXControl()) return 0;
+		return m_axContainer->OnWindowMessage(uMsg, wp, lp);
 	}
 
 	HRESULT CDuiActiveX::OnAttrClsid(const CDuiStringA & strValue,BOOL bLoading)
@@ -105,17 +139,16 @@ namespace DuiEngine
 		HRESULT hr=E_FAIL;
 		if( szCLSID[0] == L'{' ) hr=::CLSIDFromString(szCLSID, &m_clsid);
 		else hr=::CLSIDFromProgID(szCLSID, &m_clsid);
-		
+
 		if(!SUCCEEDED(hr)) return S_FALSE;
 		return S_OK;
 	}
 
 	void CDuiActiveX::SetActiveXVisible( BOOL bVisible )
 	{
-		if(ax_host_->activex_control() && !ax_host_->IsWindowless())
+		if(m_axContainer->GetActiveXControl())
 		{
-			CDuiComPtr<IOleWindow> ole_window;
-			ole_window.QueryFrom(ax_host_->activex_control());
+			CDuiComQIPtr<IOleWindow> ole_window=m_axContainer->GetActiveXControl();
 			if(!ole_window)
 			{
 				return ;
@@ -132,33 +165,10 @@ namespace DuiEngine
 		}
 	}
 
-
-//////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
 	CDuiFlashCtrl::CDuiFlashCtrl()
 	{
 		m_clsid=__uuidof(ShockwaveFlashObjects::ShockwaveFlash);
-	}
-
-	void CDuiFlashCtrl::OnAxCreate( CDuiAxHost* host )
-	{
-		HRESULT hr = flash_.QueryFrom(ax_host_->activex_control());
-		if(flash_)
-		{
-			hr = flash_->put_WMode(L"Transparent");
-		}
-	}
-
-	bool CDuiFlashCtrl::Play( LPCWSTR pszUrl )
-	{
-		if(!flash_)
-		{
-			return false;
-		}
-
-		flash_->Stop();
-		flash_->put_Movie(CDuiBStr(pszUrl));
-		flash_->Play();
-		return true;
 	}
 
 	//////////////////////////////////////////////////////////////////////////
@@ -168,12 +178,12 @@ namespace DuiEngine
 		m_clsid=__uuidof(WMPLib::WindowsMediaPlayer);
 	}
 
-	void CDuiMediaPlayer::OnAxCreate( CDuiAxHost* host )
+	void CDuiMediaPlayer::OnAxActivate(IUnknown *pUnknwn)
 	{
-		HRESULT hr = wmp_.QueryFrom(ax_host_->activex_control());
+		wmp_=pUnknwn;
 		if(wmp_)
 		{
-			hr = wmp_->put_windowlessVideo(VARIANT_TRUE);
+			wmp_->put_windowlessVideo(VARIANT_TRUE);
 		}
 	}
 
@@ -190,5 +200,4 @@ namespace DuiEngine
 	}
 
 }//end of namespace DuiEngine
-
 

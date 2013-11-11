@@ -50,6 +50,8 @@
 	#define DUI_CW2T	CW2T
 	#define DUI_CT2A	CT2A
 	#define DUI_CT2W	CT2W
+	#define CDuiComPtr	CComPtr
+	#define CDuiComQIPtr	CComQIPtr
 #else//ATL_FREE
 	#define _WTYPES_NS DuiEngine
 	#define _COLL_NS	DuiEngine
@@ -60,6 +62,9 @@
 	#include "wtl.mini/tstring.h" 
 	#include "wtl.mini/strcpcvt.h"
 	#include "wtl.mini/duicoll.h"
+	#include "atl.mini/atldef.h"
+	#include "atl.mini/duicomcli.h"
+
 #endif//USING_ATL
 
 

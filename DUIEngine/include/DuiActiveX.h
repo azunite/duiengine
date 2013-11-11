@@ -1,20 +1,23 @@
 #pragma once
 #include "duiwnd.h"
-#include "DuiAxHost.h"
+#include "activex/flash10t.tlh"
+#include "activex/wmp.tlh"
 
-#include "flash10t.tlh"
-#include "wmp.tlh"
 
 namespace DuiEngine
 {
-	class DUI_EXP CDuiActiveX : public CDuiWindow, public CDuiAxHostDelegate
+
+	class DUI_EXP CDuiActiveX : public CDuiWindow
 	{
+		friend class CDuiAxContainerImpl;
 	public:
 		DUIOBJ_DECLARE_CLASS_NAME(CDuiActiveX, "activex")
 		explicit CDuiActiveX();
 		virtual ~CDuiActiveX();
 
 	protected:
+		virtual void OnAxActivate(IUnknown *pUnknwn){}
+
 		int OnCreate(LPVOID);
 		void OnSize(UINT nType, CSize size);
 		void OnPaint(CDCHandle dc);
@@ -25,11 +28,6 @@ namespace DuiEngine
 		virtual UINT OnGetDuiCode(){return DUIC_WANTALLKEYS;}
 
 		virtual BOOL IsTabStop(){return TRUE;}
-		// Overridden from CDuiAxHostDelegate:
-		virtual HWND GetAxHostWindow() const;
-		virtual void OnAxCreate(CDuiAxHost* host);
-		virtual void OnAxInvalidate(CRect& rect);
-		virtual void OnAxSetCapture(BOOL fCapture);
 
 		HRESULT OnAttrClsid(const CDuiStringA & strValue,BOOL bLoading);
 		DUIWIN_BEGIN_MSG_MAP()
@@ -51,7 +49,7 @@ namespace DuiEngine
 		BOOL InitActiveX();
 		void SetActiveXVisible(BOOL bVisible);
 	protected:
-		CDuiAxHost * ax_host_;
+		CDuiAxContainerImpl * m_axContainer;
 		CLSID	m_clsid;
 		BOOL		m_bDelayInit;
 	};
@@ -66,15 +64,17 @@ namespace DuiEngine
 		{
 			return flash_;
 		}
-		bool Play(LPCWSTR pszUrl);
 
 	protected:
-		virtual void OnAxCreate(CDuiAxHost* host);
-		virtual void OnInitActiveXFinished(){
-			if(!m_strUrl.IsEmpty() && flash_)
+		virtual void OnAxActivate(IUnknown *pUnknwn)
+		{
+			flash_=pUnknwn;
+			if(flash_)
 			{
-				Play(m_strUrl);
+				flash_->put_WMode(bstr_t(_T("transparent")));
+				flash_->put_Movie(bstr_t(m_strUrl));
 			}
+
 		}
 
 		DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
@@ -83,8 +83,9 @@ namespace DuiEngine
 
 		CDuiStringW m_strUrl;
 
-		CDuiComPtr<ShockwaveFlashObjects::IShockwaveFlash> flash_;
+		CDuiComQIPtr<ShockwaveFlashObjects::IShockwaveFlash> flash_;
 	};
+
 
 	class DUI_EXP CDuiMediaPlayer :public CDuiActiveX
 	{
@@ -106,14 +107,15 @@ namespace DuiEngine
 			}
 		}
 
-		virtual void OnAxCreate(CDuiAxHost* host);
+		virtual void OnAxActivate(IUnknown *pUnknwn);
 
 		DUIWIN_DECLARE_ATTRIBUTES_BEGIN()
 			DUIWIN_WSTRING_ATTRIBUTE("url",m_strUrl,FALSE)
 		DUIWIN_DECLARE_ATTRIBUTES_END()
 
 		CDuiStringW m_strUrl;
-		CDuiComPtr<WMPLib::IWMPPlayer4> wmp_;
+		CDuiComQIPtr<WMPLib::IWMPPlayer4> wmp_;
 	};
 
-}//end of namespace DuiEngine
+}
+

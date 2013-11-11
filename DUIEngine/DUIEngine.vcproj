@@ -771,6 +771,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\DuiActiveX.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\activex\DuiAxContainer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\DuiCalendar.cpp"
 				>
 			</File>
@@ -1074,14 +1082,6 @@
 				Name="activex"
 				>
 				<File
-					RelativePath=".\src\activex\DuiActiveX.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\src\activex\DuiAxHost.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\src\activex\DuiBStr.cpp"
 					>
 				</File>
@@ -1125,7 +1125,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\atl.mini\atldef.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\auto_reset.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\DuiActiveX.h"
 				>
 			</File>
 			<File
@@ -1133,7 +1141,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\activex\DuiAxContainer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\activex\DuiAxUtil.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\duicolor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\atl.mini\duicomcli.h"
 				>
 			</File>
 			<File
@@ -1360,19 +1380,7 @@
 				Name="activex"
 				>
 				<File
-					RelativePath=".\include\activex\DuiActiveX.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\activex\DuiAxHost.h"
-					>
-				</File>
-				<File
 					RelativePath=".\include\activex\DuiBStr.h"
-					>
-				</File>
-				<File
-					RelativePath=".\include\activex\DuiComPtr.h"
 					>
 				</File>
 			</Filter>
