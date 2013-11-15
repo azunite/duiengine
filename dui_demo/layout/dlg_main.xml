@@ -24,8 +24,8 @@
           <text pos="200,70" pos2type="righttop">align right top 2</text>
           <check pos="200,90" pos2type="righttop">check right top</check>
 
-          <text pos="200,110" class="cls_txt_red">check right top</text>
-          <text pos="200,130,400,300" align="left" valign="top">check right top</text>
+          <text pos="200,110" class="cls_txt_red">text left top</text>
+          <text pos="200,130,400,300" align="left" valign="top">text left top</text>
         </tab>
         <tab id="113" title="miscellaneous" sep="5">
           <animateimg name="ani_test" pos="20,100" skin="icons"/>
@@ -219,13 +219,13 @@
         <tab id="120" title="splitwnd">
           <splitrow id="1180" pos="10,0,-10,-10" skinsep="skin_split_horz" sepsize="6">
             <pane idealsize="250" minsize="30" priority="0" crbg="FF0000">
-              <flash pos="0,0,-0,-0" name="ctrl_flash" url="http://player.ku6.com/refer/Z8kgmuUYqXdnwv8L/v.swf" delayinit="1"/>
+              <flash pos="0,0,-0,-0" name="ctrl_flash" url="http://www.flash1890.com/swf3/mtv/20131031/asnw.swf" delayinit="1"/>
               <text pos="|-50,|-20">pane1 priority=2</text>
             </pane>
             <pane idealsize="400" minsize="30" priority="1">
               <splitcol id="1180" pos="0,0,-0,-0" skinsep="skin_split_vert" sepsize="6">
                 <pane idealsize="200" minsize="30" priority="0" crbg="000088">
-<!--                   <mediaplayer pos="0,0,-0,-0" name="ctrl_media" url="E:\dui.work\x-framework\bin\fullscreen.wmv" delayinit="1"/> -->
+<!--                   <mediaplayer pos="0,0,-0,-0" name="ctrl_media" url="E:\DUI.WORK\x-framework\bin\fullscreen.wmv" delayinit="1"/> -->
                   <text pos="|-50,|-20">pane2.1 priority=0</text>
                 </pane>
                 <pane idealsize="400" minsize="30" priority="1" crbg="008800">
