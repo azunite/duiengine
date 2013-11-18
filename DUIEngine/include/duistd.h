@@ -36,6 +36,10 @@
 	#include <atlgdi.h>
 	#include <atlstr.h>
 	#include <atlcoll.h>
+	#include <atlcomcli.h>
+	#define CDuiComPtr	CComPtr
+	#define CDuiComQIPtr	CComQIPtr
+
 	#include "wtl.mini/duicrack.h"
 	#define CDuiArray	CAtlArray
 	#define CDuiList	CAtlList
@@ -50,8 +54,6 @@
 	#define DUI_CW2T	CW2T
 	#define DUI_CT2A	CT2A
 	#define DUI_CT2W	CT2W
-	#define CDuiComPtr	CComPtr
-	#define CDuiComQIPtr	CComQIPtr
 #else//ATL_FREE
 	#define _WTYPES_NS DuiEngine
 	#define _COLL_NS	DuiEngine

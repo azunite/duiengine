@@ -8,8 +8,8 @@
 // See these sources for detailed information regarding the	
 // Active Template Library product.
 
-#ifndef __ATLCOMCLI_H__
-#define __ATLCOMCLI_H__
+#ifndef __DUICOMCLI_H__
+#define __DUICOMCLI_H__
 
 #pragma once
 
@@ -28,7 +28,7 @@ namespace DuiEngine
 // Smart Pointer helpers
 
 
-inline IUnknown* AtlComPtrAssign(_Inout_opt_ _Deref_post_opt_valid_  IUnknown** pp, _In_opt_ IUnknown* lp)
+inline IUnknown* DuiComPtrAssign(_Inout_opt_ _Deref_post_opt_valid_  IUnknown** pp, _In_opt_ IUnknown* lp)
 {
 	if (pp == NULL)
 		return NULL;
@@ -41,7 +41,7 @@ inline IUnknown* AtlComPtrAssign(_Inout_opt_ _Deref_post_opt_valid_  IUnknown** 
 	return lp;
 }
 
-inline IUnknown* AtlComQIPtrAssign(_Inout_opt_ _Deref_post_opt_valid_ IUnknown** pp, _In_opt_ IUnknown* lp, REFIID riid)
+inline IUnknown* DuiComQIPtrAssign(_Inout_opt_ _Deref_post_opt_valid_ IUnknown** pp, _In_opt_ IUnknown* lp, REFIID riid)
 {
 	if (pp == NULL)
 		return NULL;
@@ -60,7 +60,7 @@ inline IUnknown* AtlComQIPtrAssign(_Inout_opt_ _Deref_post_opt_valid_ IUnknown**
 // COM Smart pointers
 
 template <class T>
-class _NoAddRefReleaseOnCComPtr : public T
+class _DuiNoAddRefReleaseOnCComPtr : public T
 {
 	private:
 		STDMETHOD_(ULONG, AddRef)()=0;
@@ -112,10 +112,10 @@ public:
 		DUIASSERT(p==NULL);
 		return &p;
 	}
-	_NoAddRefReleaseOnCComPtr<T>* operator->() const throw()
+	_DuiNoAddRefReleaseOnCComPtr<T>* operator->() const throw()
 	{
 		DUIASSERT(p!=NULL);
-		return (_NoAddRefReleaseOnCComPtr<T>*)p;
+		return (_DuiNoAddRefReleaseOnCComPtr<T>*)p;
 	}
 	bool operator!() const throw()
 	{
@@ -230,7 +230,7 @@ public:
 	{
         if(*this!=lp)
         {
-    		return static_cast<T*>(AtlComPtrAssign((IUnknown**)&p, lp));
+    		return static_cast<T*>(DuiComPtrAssign((IUnknown**)&p, lp));
         }
         return *this;
 	}
@@ -239,7 +239,7 @@ public:
 	{
         if( !IsEqualObject(lp) )
         {
-    		return static_cast<T*>(AtlComQIPtrAssign((IUnknown**)&p, lp, __uuidof(T)));
+    		return static_cast<T*>(DuiComQIPtrAssign((IUnknown**)&p, lp, __uuidof(T)));
         }
         return *this;
 	}
@@ -247,7 +247,7 @@ public:
 	{
         if(*this!=lp)
         {
-    		return static_cast<T*>(AtlComPtrAssign((IUnknown**)&p, lp));
+    		return static_cast<T*>(DuiComPtrAssign((IUnknown**)&p, lp));
         }
         return *this;
 	}
@@ -273,7 +273,7 @@ public:
 	{
         if(*this!=lp)
         {
-            return static_cast<IDispatch*>(AtlComPtrAssign((IUnknown**)&p, lp));
+            return static_cast<IDispatch*>(DuiComPtrAssign((IUnknown**)&p, lp));
         }
         return *this;
 	}
@@ -281,7 +281,7 @@ public:
 	{
         if(*this!=lp)
         {
-    		return static_cast<IDispatch*>(AtlComPtrAssign((IUnknown**)&p, lp.p));
+    		return static_cast<IDispatch*>(DuiComPtrAssign((IUnknown**)&p, lp.p));
         }
         return *this;
 	}
@@ -448,7 +448,7 @@ public:
 	{
         if(*this!=lp)
         {
-		    return static_cast<T*>(AtlComPtrAssign((IUnknown**)&p, lp));
+		    return static_cast<T*>(DuiComPtrAssign((IUnknown**)&p, lp));
         }
         return *this;
 	}
@@ -456,7 +456,7 @@ public:
 	{
         if(*this!=lp)
         {
-    		return static_cast<T*>(AtlComPtrAssign((IUnknown**)&p, lp.p));
+    		return static_cast<T*>(DuiComPtrAssign((IUnknown**)&p, lp.p));
         }
         return *this;
 	}
@@ -464,7 +464,7 @@ public:
 	{
         if(*this!=lp)
         {
-    		return static_cast<T*>(AtlComQIPtrAssign((IUnknown**)&p, lp, *piid));
+    		return static_cast<T*>(DuiComQIPtrAssign((IUnknown**)&p, lp, *piid));
         }
         return *this;
 	}
@@ -493,7 +493,7 @@ public:
         if(*this!=lp)
         {
 		    //Actually do a QI to get identity
-		    return AtlComQIPtrAssign((IUnknown**)&p, lp, __uuidof(IUnknown));
+		    return DuiComQIPtrAssign((IUnknown**)&p, lp, __uuidof(IUnknown));
         }
         return *this;
 	}
@@ -502,7 +502,7 @@ public:
 	{
         if(*this!=lp)
         {
-    		return AtlComPtrAssign((IUnknown**)&p, lp.p);
+    		return DuiComPtrAssign((IUnknown**)&p, lp.p);
         }
         return *this;
 	}
@@ -516,4 +516,4 @@ typedef CDuiComQIPtr<IDispatch, &__uuidof(IDispatch)> CComDispatchDriver;
 #pragma warning (pop)	
 
 
-#endif	// __ATLCOMCLI_H__
+#endif	// __DUICOMCLI_H__
